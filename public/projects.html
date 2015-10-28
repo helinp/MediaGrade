@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="<?= $lang['LANG'] ?>">
+
+    <head>
+        <meta charset="utf-8">
+        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/css/bootstrap-theme.min.css" rel="stylesheet"/>
+        <link href="/css/styles.css" rel="stylesheet"/>
+
+        <?php if (isset($title)): ?>
+            <title>MediaGrade: <?= htmlspecialchars($title) ?></title>
+        <?php else: ?>
+            <title>MediaGrade</title>
+        <?php endif ?>
+
+        <script src="/js/jquery-1.11.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/scripts.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div id="header">
+                <h1><a href="/"><img alt="MediaGrade" src="/img/logo.png"/></a></h1>
+            </div>
+
+            <div id="middle">
+            
+            <ul class="nav nav-pills">
+                <li><a href="submit.php"><?=$lang['SUBMIT']?></a></li>
+                <li><a href="account.php"><?=$lang['ACCOUNT']?></a></li>
+                <li><a href="index.php"><?=$lang['MAIN']?></a></li>
+                <li><a href="logout.php"><strong><?=$lang['LOGOUT']?></strong></a></li>
+            </ul>
+            
+                <div id="projects">
+      
+                    <nav class="project" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <ul itemprop="project">
+                                <li><h3>Projet 1</h3></li>
+                                <li>
+                                    <ul>
+                                        <li itemprop="<?=$lang['INSTRUCTIONS']?>"><a href="instructions.php"><?=$lang['INSTRUCTIONS']?></a></li>
+                                        <li itemprop="<?=$lang['SUBMIT']?>"><a href="submit.php"><?=$lang['SUBMIT']?></a></li>
+                                        <li itemprop="<?=$lang['RESULTS']?>"><a href="results.php"><?=$lang['RESULTS']?></a></li>
+                                    </ul>
+                                </li>
+                        </ul>
+                    </nav>
+                </div>
+            
+            
+            </div>
+
+            <div id="footer">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
+
+
+

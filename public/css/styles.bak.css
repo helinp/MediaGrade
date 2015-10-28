@@ -1,0 +1,86 @@
+/**
+ * styles.css
+ *
+ * Computer Science 50
+ * Problem Set 7
+ *
+ * Global CSS.
+ */
+
+.container
+{
+    /* center contents */
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+#middle .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+#header
+{
+    /* shrink bottom's font size */
+    font-size: smaller;
+text-align: center;
+    /* surround with whitespace */
+    margin: 20px;
+}
+
+#menu, #footer
+{
+    text-align: center;
+}
+
+
+#middle .nav 
+{
+    display: inline-block;
+}
+
+#middle
+{
+    width:100%;
+}
+
+#projects
+{
+    display: block;
+    float:left;
+    width:15em;
+    position:relative;  
+}  
+
+.project ul li
+{
+    padding:0;
+    list-style-type: none;
+}
+
+.project ul li ul
+{
+    padding:0 0 0 1em;
+}
+
+.project h3
+{
+    margin: 0;
+    font-size: 1.2em;
+    font-weight:bold;
+}
+
+#content
+{
+    display: block;
+}
+
+#footer
+{
+    clear:both;
+}
