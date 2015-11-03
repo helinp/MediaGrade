@@ -4,19 +4,19 @@
         
         <form action="index.php" role="form" enctype="multipart/form-data" method="post" data-toggle="validator">
             <div class="form-group">  
-    <h4><span class="glyphicon glyphicon-download-alt"></span> <?= $lang['SUBMIT_FILE'] ?></h4>            
-   <input type="hidden" name="project_id" value="<?= $project_id ?>" />
-     
-               <label for="inputfile"><?= $lang['SELECT_FILE'] ?></label>
-               <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
-               <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file" required>
-               <p class="help-block with-errors">Max. 200 Mo.</p>
-                   
-             </div>
+     <?php if (!empty($extension)):?>
+                <h5><span class="glyphicon glyphicon-download-alt"></span> <?= $lang['SUBMIT_FILE'] ?></h5>            
+                <input type="hidden" name="project_id" value="<?= $project_id ?>" />
+                <label for="inputfile"><?= $lang['SELECT_FILE'] ?></label>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
+                <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file" required>
+                <p class="help-block with-errors">Max. 200 Mo.</p>
+     <?php endif ?>              
+            </div>
             
        <?php if(isset($questions)): ?>    
          
-            <h4><span class="glyphicon glyphicon-pencil"></span><?= $lang['SELF_ASSESSMENT'] ?></h4>
+            <h5><span class="glyphicon glyphicon-pencil"></span><?= $lang['SELF_ASSESSMENT'] ?></h5>
 
             <div class="well">       
                <?php foreach($questions as $question): ?> 

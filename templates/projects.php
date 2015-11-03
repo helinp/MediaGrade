@@ -3,8 +3,8 @@
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
     <?php foreach ($projects as $project):?>
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
-            <ul  class="list-group small" itemprop="project">
-                    <li><h4><?= $project["project_name"]?></h4></summary></li>
+            <ul  class="list-group small nav nav-stacked" itemprop="project">
+                    <li><h5 style="margin-bottom:0"><?= "P" . $project["periode"] . " / " . $project["project_name"]?></h5><em><?= "Deadline: " . $project["deadline"]?></em</li>
                     <li>
                             <ul>
                                 <li itemprop="<?=$lang['INSTRUCTIONS']?>"><a class="list-group-item <?php if(isset($_GET["project"])) {if($_GET["project"] == $project["project_id"]){echo("active");}};?>" href="?project=<?= $project["project_id"]?>"><span class="glyphicon glyphicon-chevron-right pull-right"></span><?=$lang['INSTRUCTIONS']?></a></li>

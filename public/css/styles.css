@@ -1,7 +1,5 @@
-#content
-{
-    padding-top: 2.5em
-}
+
+
 
 .col-centered
 {
@@ -11,13 +9,7 @@
 
 .container
 {
-    -moz-box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
-    -webkit-box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
-    background-color: white;
-    box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
-    padding: 0 2em;
-
-    
+    background: white;
 }
 
 .list-group-item
@@ -48,6 +40,20 @@
     min-height: 100vh;
 }
 
+main
+{
+    padding-bottom:5em;
+
+}
+
+aside
+{
+    padding-top:2em;
+    border-right: lightgray solid 1px;
+    margin-right:-1px;
+}
+
+
 aside ul
 {
     padding-left: 0
@@ -60,7 +66,7 @@ aside ul
 
 body
 {
-    background-image: url('/img/wallpaper-1.jpg');
+    background: url('/img/wallpaper-1.jpg') fixed;
     -webkit-background-size: cover; 
     -moz-background-size: cover; 
     -ms-background-size: cover; 
@@ -97,7 +103,7 @@ header h1
 main
 {
     padding-bottom: 2em;
-    padding-top: 2em;
+    padding-top: 0;
 }
 
 main.col-md-12
@@ -113,20 +119,21 @@ main.col-md-12
         width: auto;
     }
 
-nav + .row
+main .row:first-child, main form:first-child
 {
-    margin-top: 2em
+    padding-top:2em;
 }
 
 nav .container
 {
-    -moz-box-shadow: none;
+    /**-moz-box-shadow: none;
     -webkit-box-shadow: none;
     background-color: #0B3269;
-    box-shadow: none;
-    margin-bottm: -10px;
-    padding-bottom: 0;
+    box-shadow: none;*/
+    padding-bottom: 0;background-color: #0B3269;
 }
+
+
 
 nav h3
 {
@@ -173,6 +180,12 @@ span.clear-icon
 textarea {
    resize: none;
    width:400px;
+}
+
+video {
+
+margin: 0 auto; 
+   
 }
 
 
@@ -249,8 +262,14 @@ textarea {
 .slider input {
   display: none;
 }
+.tooltip.top .tooltip-arrow {
+    border-top-color:#ededed;
+}
 .slider .tooltip-inner {
-  white-space: nowrap;
+width:auto;
+background:#ededed;
+color: black;
+white-space:nowrap;
 }
 .slider-track {
   position: absolute;

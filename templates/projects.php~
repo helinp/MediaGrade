@@ -3,10 +3,8 @@
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
     <?php foreach ($projects as $project):?>
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
-            <ul  class="list-group small" itemprop="project">
-                    <details><summary>
-                    <li><h4><?= $project["project_name"]?></h4> </li></summary>
-                    
+            <ul  class="list-group small nav nav-stacked" itemprop="project">
+                    <li><h5><?= "P" . $project["periode"] . " / " . $project["project_name"]?></h5><em style="margin-top:0"><?= "Deadline: " . $project["deadline"]?></em</li>
                     <li>
                             <ul>
                                 <li itemprop="<?=$lang['INSTRUCTIONS']?>"><a class="list-group-item <?php if(isset($_GET["project"])) {if($_GET["project"] == $project["project_id"]){echo("active");}};?>" href="?project=<?= $project["project_id"]?>"><span class="glyphicon glyphicon-chevron-right pull-right"></span><?=$lang['INSTRUCTIONS']?></a></li>
@@ -14,8 +12,6 @@
                                 <li itemprop="<?=$lang['RESULTS']?>"><a class="list-group-item <?php if(isset($_GET["results"])) {if($_GET["results"] == $project["project_id"]){echo("active");}};?>"  href="?results=<?= $project["project_id"]?>"><span class="glyphicon glyphicon-chevron-right pull-right"></span><?=$lang['RESULTS']?></a></li>
                             </ul>
                     </li>
-                   
-                    </details>
             </ul>
         </nav>
     <?php endforeach?>    

@@ -11,46 +11,44 @@
     // declares variable to use it out of scope
     $medias = [];
     
-    // opens table to get content
-    $users = query("SELECT * FROM users");
+    // Get
+    
+    if (isset($_GET["my"]))
+    {
+        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class
+                            FROM submitted 
+                            LEFT JOIN users
+                                ON users.id = submitted.user_id
+                            LEFT JOIN projects
+                                ON submitted.project_id = projects.project_id
+                            WHERE users.id = ?",
+                            $_SESSION["id"]);   
+    }
+    else
+    {
+        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class
+                            FROM submitted 
+                            LEFT JOIN users
+                                ON users.id = submitted.user_id
+                            LEFT JOIN projects
+                                ON submitted.project_id = projects.project_id
+                            ORDER BY users.class, users.name");       
+    }
     
     // fills variable $media[]
-    foreach ($users as $user)
+    foreach ($projects as $project)
     {
-        // gets  users projects
-        $query = 'SELECT file_path, project_id  FROM submitted ';
-
-        // get only user's project if requested
-        if (isset($_GET["my"]))
-        {
-               settype($_SESSION["id"], 'integer');
-               $query .= ' WHERE user_id = ' . $_SESSION["id"];
-        }
-        
-        // makes query
-		// dump($query);
-		$files = query($query);
-
-		// fills variable
-        foreach ($files as $file)
-        {
-            
-            $projects = query("SELECT project_name FROM projects WHERE project_id = ?", $file["project_id"]);
-            
-            // empty results
-            if(!isset($projects[0]["project_name"])) $projects[0]["project_name"] = "";
-            
-            $medias[] = [             
-                "file" => $file["file_path"],
-                "name" => $user["name"], 
-                "class" => $user["class"],
-                "last_name" => $user["last_name"],
-                "project_name" => $projects[0]["project_name"]
-                ];
-        };
+        // empty results
+        if(!isset($projects[0]["project_name"])) $projects[0]["project_name"] = "";
+           
+        $medias[] = [             
+            "file" => $project["file_path"],
+            "name" => $project["name"], 
+            "class" => $project["class"],
+            "last_name" => $project["last_name"],
+            "project_name" => $project["project_name"]
+            ];
     };
-    
-    //dump($medias);
-    
+            
     render("gallery.php", ["title" => "Hall of fame", "medias" => $medias], true);        
 ?>

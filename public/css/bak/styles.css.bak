@@ -1,3 +1,7 @@
+#content
+{
+    padding-top: 0em;
+}
 
 
 
@@ -9,7 +13,13 @@
 
 .container
 {
-    background: white;
+    -moz-box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
+    -webkit-box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
+    /*background-color: white;*/
+    box-shadow: -1px 6px 14px 0 rgba(0,0,0,0.45);
+    padding: 0 2em;
+    background: rgba(0, 0, 0, 0.7);
+    
 }
 
 .list-group-item
@@ -33,45 +43,12 @@
         color: #FFF
     }
 
-.affix-top,.affix{
-	position: static;
-}
-
-@media (min-width: 979px) {
-  #sidebar.affix-top {
-    position: static;
-  	margin-top:30px;
-  	width:228px;
-  }
-  
-  #sidebar.affix {
-    position: fixed;
-    top:70px;
-    width:228px;
-  }
-}
-
-
 .vertical-center
 {
     align-items: center;
     display: flex;
     min-height: 100vh;
 }
-
-main
-{
-    padding-bottom:5em;
-
-}
-
-aside
-{
-    padding-top:2em;
-    border-right: lightgray solid 1px;
-    margin-right:-1px;
-}
-
 
 aside ul
 {
@@ -85,7 +62,7 @@ aside ul
 
 body
 {
-    background: url('/img/wallpaper-1.jpg') fixed;
+    background-image: url('/img/wallpaper-1.jpg');
     -webkit-background-size: cover; 
     -moz-background-size: cover; 
     -ms-background-size: cover; 
@@ -138,9 +115,9 @@ main.col-md-12
         width: auto;
     }
 
-main .row:first-child, main form:first-child
+nav + .row
 {
-    padding-top:2em;
+    margin-top: 2em
 }
 
 nav .container
@@ -149,7 +126,8 @@ nav .container
     -webkit-box-shadow: none;
     background-color: #0B3269;
     box-shadow: none;*/
-    padding-bottom: 0;background-color: #0B3269;
+    margin-bottm: -10px;
+    padding-bottom: 0;
 }
 
 

@@ -22,11 +22,7 @@
     {
         redirect("login.php");
     }
-    
-    
-    
-    
-    
+     
     /**
      *  POST
      *
@@ -35,22 +31,87 @@
     if (!empty($_POST["skill_id"]) && !empty($_POST["skill"]))
     {
          query("INSERT INTO skills (skill_id, skill) VALUES (?, ?) 
-                ON DUPLICATE KEY UPDATE skill_id = skill_id, skill = skill", 
-                $_POST["skill_id"], $_POST["skill"] ); 
+                ON DUPLICATE KEY UPDATE skill = ?", 
+                $_POST["skill_id"], $_POST["skill"], $_POST["skill"] ); 
          
-         redirect("skills.php");   
+         redirect("config.php?skills");   
     }
-    elseif (!empty($_POST["del"]))
+    elseif (!empty($_POST["del_skill"]))
     {
-        $delete = explode("+++", $_POST["del"][0]);
+        $delete = explode("+++", $_POST["del_skill"][0]);
         query("DELETE FROM skills WHERE skill_id = ? AND skill = ?", $delete[0], $delete[1]);  
-        redirect("skills.php"); 
+        
+        redirect("config.php?skills"); 
     }    
-   
-    // TODO remove user
+    elseif (!empty($_POST["del_user"]))
+    {
+        $delete = explode("_", $_POST["del_user"][0]);
+        
+        // don't remove last admin or current user
+        if(count(query("SELECT is_staff FROM users WHERE id = ?", $delete[1])) == 1 || $_SESSION["id"] == $delete[1])
+        {
+           apologize("Cannot delete current user or last admin.");
+        }
+        else
+        {
+            query("DELETE FROM users WHERE id = ?", $delete[1]);  
+            redirect("config.php?users"); 
+        }
+    }       
+    // add user
+    elseif (!empty($_POST["add_user"]))
+    {
+        
+        // check if all fields are filled
+        if (empty($_POST["class"]) || empty($_POST["name"]) || empty($_POST["last_name"]) || empty($_POST["username"]) || empty($_POST["password"]))
+        {
+            apologize("All fields must be filled.");
+        }
+        
+        // check if user already exist
+        if (!query("SELECT id FROM users WHERE username = ?",$_POST["username"]))
+        {
+            query("INSERT INTO users (username, name, last_name, class, hash) VALUES (?, ?, ?, ?, ?)",
+                    $_POST["username"], $_POST["name"], $_POST["last_name"], $_POST["class"], crypt($_POST["password"]));
+            
+            redirect("config.php?users"); 
+        }
+        else
+        {
+            apologize("User already exist.");
+        }
+    }    
+    // TODO commit changes
+    elseif (!empty($_POST["update_user"]))
+    {
+        $user_id = $_POST["update_user"][0];
+        
+        // checks if all fields are filled
+        if (empty($_POST["class"][$user_id]) || empty($_POST["name"][$user_id]) || empty($_POST["last_name"][$user_id]) || empty($_POST["username"][$user_id]))
+        {
+            apologize("All fields must be filled.");
+        }
+        else
+        {
+            // update all but password
+            if (empty($_POST["password"][$user_id]))
+            {
+                query("UPDATE users SET class = ?, name = ?, last_name = ?, username = ?, is_staff = 0 WHERE id = ?",
+                    $_POST["class"][$user_id], $_POST["name"][$user_id], $_POST["last_name"][$user_id], $_POST["username"][$user_id], $user_id);
+            }
+            // update all password inclued
+            else
+            {
+                query("UPDATE users SET class = ?, name = ?, last_name = ?, username = ?, is_staff = 0, hash = ? WHERE id = ?",
+                    $_POST["class"][$user_id], $_POST["name"][$user_id], $_POST["last_name"][$user_id], $_POST["username"][$user_id], crypt($_POST["password"][$user_id]), $user_id);
+            }
+        }
+        redirect("config.php?users");
+                
+        //if password value then change pass
+    }
     
-        // don't remove last admin
-   
+       
     /**
      *  GET
      *
@@ -58,13 +119,13 @@
     if(isset($_GET["skills"]))
     {    
         // renders
-        render_admin("skills.php", ["title" => $lang['ADMIN'],  
+        render_admin("skills.php", ["title" => $lang['ADMIN_SKILLS'],  
             "skills" => $skills], false);
     }
     else //if(isset($_GET["users"]))
     {    
         // renders
-        render_admin("users.php", ["title" => $lang['ADMIN'],  
+        render_admin("users.php", ["title" => $lang['ADMIN_USERS'],  
             "users" => $users], false);
     }
 ?>

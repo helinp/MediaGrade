@@ -3,9 +3,10 @@
         <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
             <ul class="list-group small" itemprop="project">
+                                                <li><a class="list-group-item<?= (isset($_GET["class"]) ? "" : " active") ?>" href="rating.php">Toutes les classes<span class="glyphicon glyphicon-pencil pull-right"></a></li>
                     <?php foreach($classes as $class): ?>
                         <?php if(!empty($class["class"])): ?>
-                            <li><a class="list-group-item" href="rating.php?class=<?= trim($class["class"], " ")?>"><?= $class["class"]  ?><span class="glyphicon glyphicon-pencil pull-right"></a></li>
+                            <li><a class="list-group-item<?= (isset($_GET["class"]) ? ($_GET["class"] == $class["class"] ? " active" : "") : ""); ?>" href="rating.php?class=<?= trim($class["class"], " ")?>"><?= $class["class"]  ?><span class="glyphicon glyphicon-pencil pull-right"></a></li>
                         <?php endif ?>
                     <?php endforeach ?><li>
             </ul>
@@ -17,17 +18,16 @@
         <div class="row">
              <?php foreach($users as $user): ?>
             <div class="col-md-3 thumb"> 
-              <div class="well  bg-warning">  
+              <div class="well">  
                 <dl>
-                    <dt><?= $user["last_name"] . " ". substr($user["name"], 0, 2) . "." ?></dt>
+                    <dt><?= strtoupper($user["last_name"]) . " ". substr($user["name"], 0, 2) . "." ?></dt>
                     
                     <?php foreach($user["projects"] as $project): ?>
-                        <dd><a href="?rate=<?= $project["project_id"]?>&user=<?= $user["id"]?>" class="text-muted" ><?= $project["project_name"]?></a></dd>
+                        <dd><?= ($project["is_rated"] ? '<span style="color:green" class="glyphicon glyphicon-check"></span> ' : ($project["is_submitted"] ? '<span style="color:red" class="glyphicon glyphicon-edit"></span> ' : '<span style="color:gray" class="glyphicon glyphicon-inbox"></span> ')); ?><a href="?rate=<?= $project["project_id"]?>&user=<?= $user["id"]?>" class="text-muted" ><?= $project["project_name"]?></a></dd>
                     <?php endforeach ?>
                     
                     
                     
-                    <dd><span style="font-size:0.7em;" class="glyphicon glyphicon-pencil"></span> <a href="#"  class="text-info">Projet 2</a> </dd>
                 
                 </dl>
             </div>

@@ -1,6 +1,4 @@
-   
  <?php 
-                    
                     function results($group_id, $results)
                     {
                         $string = "";

@@ -2,18 +2,18 @@
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
             <ul class="list-group small" itemprop="project">
-                    <li><a class="list-group-item" href="config.php?skills">Compétences<span class="glyphicon glyphicon-pencil pull-right"></a></li>
+                    <li><a class="list-group-item active" href="config.php?skills">Compétences<span class="glyphicon glyphicon-pencil pull-right"></a></li>
                     <li><a class="list-group-item" href="config.php?users">Liste élèves<span class="glyphicon glyphicon-pencil pull-right"></a></li>
             </ul>
         </nav>
     </aside>
-    
+
     <main class="col-md-10" id="content">
-           
+               
            <form action="config.php" method="post" role="form">
                <table id="rows" class="table">         
-     	            <col width="10%">
-                    <col width="85%">
+     	            <col width="5%">
+                    <col width="90%">
                     <col width="5%">
      	            <thead>
 	                    <tr>
@@ -34,8 +34,8 @@
 
            <form action="config.php" method="post" role="form">
                <table id="rows" class="table table-striped">
-         	            <col width="10%">
-                        <col width="85%">
+         	            <col width="5%">
+                        <col width="90%">
                         <col width="5%">
 	                <tbody>
                <?php foreach($skills as $skill): ?>
@@ -43,7 +43,7 @@
                             <td><?= $skill["skill_id"] ?></td>
                             <td><?= $skill["skill"] ?></td>
                             <td>
-                                <button type="submit" class="btn btn-danger btn-xs" name="del[]" value="<?=  $skill["skill_id"] . "+++" . $skill["skill"] ?>"><span class="glyphicon glyphicon-trash"></span></button>
+                                <button type="submit" class="btn btn-danger btn-xs" name="del_skill[]" value="<?=  $skill["skill_id"] . "+++" . $skill["skill"] ?>"><span class="glyphicon glyphicon-trash"></span></button>
                             </td>
                         </tr>
                <?php endforeach?> 

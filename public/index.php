@@ -53,7 +53,7 @@
         // check query
         if ($query == false)
         {
-            apologize($lang["USER_EXPLOIT"]);
+            render_projects("results.php", ["title" => "Résultats", "projects" => $projects, "content" => "<p>Aucun résultat disponible.</p>"]);
         }
         else
         {
@@ -107,11 +107,11 @@
                 }
 
             }  
-            
             render_projects("submit.php", ["title" => "Remise", 
                         "projects" => $projects, 
                         "questions" => $questions, 
-                        "project_id" => $_GET["submit"]
+                        "project_id" => $_GET["submit"],
+                        "extension" => $project[0]["extension"]
                         ]);                                       
         }
     }
@@ -180,7 +180,7 @@
         query("REPLACE INTO submitted (project_id, user_id, answers, file_path) VALUES (?, ?, ?, ?)", $_POST["project_id"], $_SESSION["id"], serialize($answers), $upload_file);
         
         // TODO make thumbnails for gallery and admin 
-                
+        sendamail(ADMIN_MAIL, "Projet remis", "SUBMITTED PROJECT ". $_POST["project_id"] ."\nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
         inform($lang['PROJECT_SAVED']);
     }
         

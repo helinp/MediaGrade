@@ -98,11 +98,33 @@ $lang['DEL_CURSOR'] = " Supprimer le critère";  // mind the first space!
 $lang['SELF_ASSESSMENT'] = "Auto-évaluation";
 $lang['ADD_QUESTION'] = " Ajouter une question";// mind the first space!
 $lang['SAVE_PROJECT'] = "Sauver le projet";
-$lang['DEL_PROJECT'] = " Supprimer le projet"; // mind the first space!
+$lang['DEL_PROJECT'] = " Supprimer le projet";  // mind the first space!
 
 //  form control
 $lang['REQUIRED_NAME'] = "Nom requis";
 $lang['REQUIRED_DATE'] = "Date de remise requise";
 $lang['UNVALID_DATE'] = "Date non valide";
+
+// rating
+$lang['NO_HTML5_VIDEO'] = "Il semble que votre navigateur ne supporte pas la vidéo en HTML5. Vous pouvez la télécharger";
+$lang['HERE'] = "ici";
+$lang['RATING'] = "Pondération";
+$lang['SAVE_RATING'] = " Sauver l'évaluation";  // mind the first space!
+$lang['NOT_SUBMITTED'] = "Travail non remis";
+
+$lang['VOTE_00'] = "Travail non remis";
+$lang['VOTE_01'] = "Travail non satisfaisant ";
+$lang['VOTE_02'] = "Travail non satisfaisant ";
+$lang['VOTE_03'] = "Travail non satisfaisant ";
+$lang['VOTE_04'] = "Travail non satisfaisant ";
+$lang['VOTE_05'] = "Travail à la limite de l’acceptable";
+$lang['VOTE_06'] = "Travail très faible";
+$lang['VOTE_07'] = "Travail faible";
+$lang['VOTE_08'] = "Travail satisfaisant";
+$lang['VOTE_09'] = "Travail excellent";
+$lang['VOTE_10'] = "Travail exceptionnel";
+
+$lang['ADMIN_SKILLS'] = "Administration des compétences";
+$lang['ADMIN_USERS'] = "Administration des utilisateurs";
 
 ?>

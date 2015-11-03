@@ -4,7 +4,7 @@
            <ul class="nav navbar-nav">
                 <li <?php if(isset($_GET["$title"]))  {if($title == "Projets") echo("class=\"active\"");}?>><a href="index.php"><span class="glyphicon glyphicon-film"></span> <?=$lang['SUBMIT']?></a></li>
                 <li <?php if(isset($_GET["$title"]))  {if($title == "Mes compétences") echo("class=\"active\"");}?>><a href="gradebook.php"><span class="glyphicon glyphicon-list-alt"></span> <?=$lang['GRADE_BOOK']?></a></li>
-                <li <?php if(isset($_GET["$title"]))  {if($title == "Gallerie") echo("class=\"active\"");}?>><a href="gallery.php?my"><span class="glyphicon glyphicon-sunglasses"></span> <?=$lang['MY_GALLERY']?></a></li>
+                <li <?php if(isset($_GET["$title"]))  {if($title == "Gallerie") echo("class=\"active\"");}?>><a href="gallery.php?my"><span class="glyphicon glyphicon-briefcase"></span> <?=$lang['MY_GALLERY']?></a></li>
                 <li <?php if(isset($_GET["$title"]))  {if($title == "Gallerie") echo("class=\"active\"");}?>><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?=$lang['GALLERY']?></a></li>
             </ul>
             

@@ -196,7 +196,7 @@
         if ($_POST["project_id"] === "-1")
         {
            // add new project in table projects
-           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
                      $_POST["periode"], 
                      $upload_file, 
                      $_POST["deadline"], 
@@ -205,17 +205,20 @@
                      $assessments, 
                      $auto_assessments, 
                      $_POST["assessment_type"], 
-                     implode(",", $skills)
+                     implode(",", $skills),
+                     $_POST["extension"]
                 );
         }
         else
         {
+            dump($_POST);
             // updates project
             query("UPDATE projects 
-                      SET periode = ?, instructions = ?, deadline = ?, project_name = ?, class = ?, assessment_id = ?, auto_assessment_id = ?, skill_id = ?
+                      SET periode = ?, instructions = ?, deadline = ?, project_name = ?, class = ?, assessment_id = ?, auto_assessment_id = ?, skill_id = ?, extension = ?
                       WHERE project_id = ?", 
                        $_POST["periode"], $upload_file, $_POST["deadline"], 
                        $_POST["project_name"], $_POST["class"], $assessments, $auto_assessments, implode(",", $skills), 
+                       $_POST["extension"],
                        $_POST["project_id"]);
         }
         
@@ -228,11 +231,11 @@
      **/
     elseif(isset($_GET["project"]))
     {
-        // gets current project
-        $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
-        
         // gets projects for side menu
         $projects = query("SELECT * FROM projects");
+        
+        // gets current project
+        $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
         
         // gets selected criteria and cursors from database
         $assessments_id = explode(",", $curr_project[0]["assessment_id"]);
@@ -345,7 +348,8 @@
             "assessment_id" => "",
             "auto_assessment_id" => "",
             "assessment_type" => "",
-            "skill_id" => ""
+            "skill_id" => "",
+            "extension" => ""
             ];
             
         // creates dummy empty array

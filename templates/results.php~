@@ -1,6 +1,7 @@
    <main class="col-md-10">
        
        <?php if (is_array($content)):?>
+           
            <table class="table table-hover">
                 <thead>
                   <tr>

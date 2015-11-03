@@ -360,7 +360,7 @@
 			var $this = $(this),
 				data = $this.data('slider'),
 				options = typeof option === 'object' && option;
-			if (!data)  {
+			if (true)  {
 				$this.data('slider', (data = new Slider(this, $.extend({}, $.fn.slider.defaults,options))));
 			}
 			if (typeof option == 'string') {
