@@ -218,10 +218,10 @@
             $username = query("SELECT name, last_name FROM users WHERE id = ?", $_SESSION["id"]);
                 
             // render menu
-            if($menu === true) require("../templates/admin_menu.php");
+            require("../templates/admin_menu.php");
 
              // render side menu
-            require("../templates/admin_projects.php");
+            if($menu === true) require("../templates/admin_projects.php");
                    
             // render template
             require("../templates/$template");

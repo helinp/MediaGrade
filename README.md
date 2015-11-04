@@ -22,6 +22,7 @@ TODO
 - Prevent from duplicate project name
 - Allow to replace instructions pdf on create project page 
 - Add audio files display 
+- Remove hardcoded data
 
 FUTURE IMPLEMENTATIONS
 ----------------------

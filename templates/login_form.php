@@ -13,7 +13,5 @@
             </div>
         </fieldset>
     </form>
-    <div>
-        <?= $lang['OR']?> <a href="register.php"><?= $lang['REGISTER'] ?></a>.
-    </div>
+    
 </main>

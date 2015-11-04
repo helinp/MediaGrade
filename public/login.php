@@ -41,6 +41,8 @@
                 $_SESSION["class"] = $row["class"];
                 $_SESSION["name"] = $row["name"];
                 $_SESSION["last_name"] = $row["last_name"];
+                $_SESSION["admin"] = $row["is_staff"];
+                
                 // redirect to portfolio
                 redirect("/");
             }

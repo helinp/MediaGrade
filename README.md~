@@ -15,13 +15,14 @@ Please forgive english approximation I used declaring variables.
 TODO
 ----
 
-- Severe code optimisation required (too many queries).
+- Severe code optimisation required (too many queries, redudancy).
 - Format new submission mail alert
 - Make thumbnails of submitted images
 - User cannot review self-assessment answers
 - Prevent from duplicate project name
 - Allow to replace instructions pdf on create project page 
 - Add audio files display 
+- Dynamic class on templates
 
 FUTURE IMPLEMENTATIONS
 ----------------------

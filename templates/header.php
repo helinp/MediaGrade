@@ -36,7 +36,7 @@
     <body>
       
 <div class="container ">
-    <?php if (isset($title)) if($title === "Log In"): ?>
+    <?php if(in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php"])): ?>
     <div class="row text-center">
             
         <header class="col-md-12">
