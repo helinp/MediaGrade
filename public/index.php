@@ -16,7 +16,7 @@
         $project = query("SELECT auto_assessment_id, project_name FROM projects WHERE project_id = ?", $_POST["project_id"]);
         $project_name = $project[0]["project_name"];
         
-        $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "", $project_name);
+        $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "_", $project_name);
         $sanitized_project_name = preg_replace("/_+/", "", $sanitized_project_name ); 
         
         // rename file LASTNAME_Name_Project.ext
@@ -105,7 +105,7 @@
         }
         else
         {
-            if (is_file(ROOT_DIR . $project[0]["instructions"]))
+            if (is_file($project[0]["instructions"]))
             {
                 $content = "<object data='". $project[0]["instructions"] ."#view=FitBH&navpanes=0&pagemode=thumbs' 
                             type='application/pdf' 

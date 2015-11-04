@@ -47,7 +47,7 @@
          *
          */           
         if(empty($_POST["project_name"]) || empty($_POST["skills"]) || empty($_POST["assessment_type"]) 
-           || empty($_POST["deadline"]) || empty($_POST["criterion-0"]) 
+           || empty($_POST["deadline"]) || empty($_POST["criterion"]) 
            || empty($_POST["periode"]) || empty($_POST["class"]))
         {
                apologize("FORM'S NOT COMPLETE");
@@ -55,9 +55,18 @@
         
         if(is_uploaded_file($_FILES['submitted_file']['tmp_name']))
         {
+            $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "_", $_POST["project_name"]);
+            $sanitized_project_name = preg_replace("/_+/", "_", $sanitized_project_name ); 
+            
+            
+            // rename file CLASS_PERIODE_Project.ext
+            $extension = pathinfo($_FILES['submitted_file']['name'], PATHINFO_EXTENSION);
+            $rename = strtoupper(strip_tags($_POST["class"])) . "_" .  strip_tags($_POST["periode"]) . "_" . $sanitized_project_name . "." . strip_tags($extension);
+            
+            
             // puts the file in ./upload/class/periode_#   TODO: add class_year     
-            $upload_dir = UPLOAD_DIR . $_POST["class"] . "/p" . $_POST["periode"] . "/";
-            $upload_file = $upload_dir . basename($_FILES['submitted_file']['name']);
+            $upload_dir = "uploads/". $_POST["class"] . "/p" . $_POST["periode"] . "/";
+            $upload_file = $upload_dir . $rename;
             
             // checks RFI check
             if (!empty(stristr(basename($_FILES['submitted_file']['name']), "php")))
@@ -82,16 +91,20 @@
             }
             
             // creates directory if doesn't exit
-            if (!is_dir($upload_dir) && !mkdir($upload_dir, 0777, true))
+            if (!is_dir($upload_dir) && !mkdir($upload_dir, 0774, true))
             {
                 apologize($lang['DIR_CREATION_ERROR'] . $upload_dir);
             }
-
+            
             // uploads the file
             if (!move_uploaded_file($_FILES['submitted_file']['tmp_name'], $upload_file)) 
             {
                apologize(USER_EXPLOIT);
             }
+            
+            chmod($upload_file, 0774);
+            
+            inform("Project updated!");
          }
          
          // if no file uploaded by user

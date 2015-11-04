@@ -86,7 +86,7 @@
         query("COMMIT");
         
         // TODO make thumbnails for gallery and admin 
-        sendamail(ADMIN_MAIL, "Project submitted", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
+        sendamail(ADMIN_MAIL, "Project submitted!", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
         inform($lang['PROJECT_SAVED']);
     }
             
@@ -105,7 +105,7 @@
         }
         else
         {
-            if (is_file(ROOT_DIR . $project[0]["instructions"]))
+            if (is_file($project[0]["instructions"]))
             {
                 $content = "<object data='". $project[0]["instructions"] ."#view=FitBH&navpanes=0&pagemode=thumbs' 
                             type='application/pdf' 
