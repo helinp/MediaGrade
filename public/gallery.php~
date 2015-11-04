@@ -15,7 +15,7 @@
     
     if (isset($_GET["my"]))
     {
-        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class
+        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class, extension
                             FROM submitted 
                             LEFT JOIN users
                                 ON users.id = submitted.user_id
@@ -26,7 +26,7 @@
     }
     else
     {
-        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class
+        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class, extension
                             FROM submitted 
                             LEFT JOIN users
                                 ON users.id = submitted.user_id
@@ -34,7 +34,7 @@
                                 ON submitted.project_id = projects.project_id
                             ORDER BY users.class, users.name");       
     }
-    
+    dump($projects);
     // fills variable $media[]
     foreach ($projects as $project)
     {
@@ -46,7 +46,8 @@
             "name" => $project["name"], 
             "class" => $project["class"],
             "last_name" => $project["last_name"],
-            "project_name" => $project["project_name"]
+            "project_name" => $project["project_name"],
+            "extension" => $project["extension"]
             ];
     };
             

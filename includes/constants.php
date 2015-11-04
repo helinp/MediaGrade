@@ -22,7 +22,7 @@
     define("USERNAME", "jharvard");
     
     // absolute address
-    define("FULL_URL", "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+    define("FULL_URL", "http://final_project/");
     
     // No reply mail 
     define("NO_REPLY_MAIL", "no-reply@yopmail.com");

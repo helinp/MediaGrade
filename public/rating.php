@@ -112,7 +112,7 @@
                        ON users.id = submitted.user_id
                        AND submitted.project_id = ?
                        WHERE users.class = ? 
-                       ORDER BY last_name", 
+                       ORDER BY last_name ASC, submitted.id ASC", 
                        $_GET["rate"], $user["class"]); 
         
         
@@ -135,7 +135,7 @@
         $submitted = query("SELECT file_path FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
         
         $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
-            
+        
         (empty($rated) ? $is_rated = false : $is_rated = true);
         
         // CRITERIA STUFF
@@ -167,11 +167,10 @@
         }  
         // END CRITERIA STUFF
         
-        
         // renders
         render_admin("rating.php", ["title" => $lang['ADMIN'],  
             "skills" => $skills, "user" => $user, "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated,
-            "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion], false);
+            "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]], false);
     }
     else
     {

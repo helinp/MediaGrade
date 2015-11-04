@@ -41,19 +41,17 @@
             redirect("admin.php");
         }
         
-        // debug
-        // dump($_POST);
-        
+
         /*
          * checks if form is full and download the file
          *
          */           
-        /*if(empty($_POST["project_name"]) || empty($_POST["skills"]) || empty($_POST["assessment_type"]) 
+        if(empty($_POST["project_name"]) || empty($_POST["skills"]) || empty($_POST["assessment_type"]) 
            || empty($_POST["deadline"]) || empty($_POST["criterion-0"]) 
            || empty($_POST["periode"]) || empty($_POST["class"]))
         {
                apologize("FORM'S NOT COMPLETE");
-        }*/
+        }
         
         if(is_uploaded_file($_FILES['submitted_file']['tmp_name']))
         {
@@ -95,6 +93,7 @@
                apologize(USER_EXPLOIT);
             }
          }
+         
          // if no file uploaded by user
          else
          {
@@ -126,13 +125,15 @@
             
             $assessments .= query("SELECT id FROM assessment WHERE objective = ? AND criteria = ? AND `cursor` = ?", 
             $objective, $_POST["criterion"][$i], $_POST["cursor"][$i])[0]["id"] . ",";
+            
             // increment key
             $i++;
         }
         
         // removes last comma
         $assessments = rtrim($assessments, ",");
-        // dump($assessments);  
+
+
         /**
          *  Update AUTO_ASSESSMENT table and puts ids in string $auto_assessment
          *

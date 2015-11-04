@@ -14,15 +14,24 @@
         <div class="row">
             <div class="col-md-12">       
                 <h4><?= $user["class"]?> // <?= $user["name"] . " " . $user["last_name"]?></h4>
+                
                 <?php if (isset($submitted[0]["file_path"])): ?>
-                <video width="50%" controls preload="metadata">
-                    <source src="<?= $submitted[0]["file_path"]?>" type="video/mp4">
-                    <source src="mov_bbb.ogg" type="video/ogg">
-                    <p><?= $lang['NO_HTML5_VIDEO'] ?> <a href="<?= $submitted[0]["file_path"]?>"><?= $lang['HERE'] ?></a></p>
-                </video>       
+                    <?php if ($extension == "mp4" || $extension == "mov" || $extension == "avi"): ?>
+                        <video width="50%" controls preload="metadata">
+                            <source src="<?= $submitted[0]["file_path"]?>" type="video/mp4">
+                            <source src="mov_bbb.ogg" type="video/ogg">
+                            <p><?= $lang['NO_HTML5_VIDEO'] ?> <a href="<?= $submitted[0]["file_path"]?>"><?= $lang['HERE'] ?></a></p>
+                        </video>       
+                    <?php elseif($extension == "jpg" || $extension == "png" || $extension == "gif"): ?>
+                    
+                        <img src="<?= $submitted[0]["file_path"]?>" />
+                    
+                    <?php endif ?>
+                <pre><?= $submitted[0]["file_path"]?></pre>
                 <?php else: ?>
                 <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= $lang['NOT_SUBMITTED'] ?></div>
                 <?php endif ?>
+            
             </div>
         </div>
          <div class="row">  
