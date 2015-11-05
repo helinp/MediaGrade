@@ -57,17 +57,17 @@
     // user list page
     if (!empty($_GET["class"]))
     {
-        $users = query("SELECT id, username, name, last_name, class
+        $users = query("SELECT id, username, name, last_name, class 
                          FROM users 
                          WHERE class = ? AND `is_staff` = 0 
-                         ORDER BY username",
+                         ORDER BY last_name",
                          $_GET["class"]); 
         
         $i = 0;
         foreach ($users as $user)
         {
             $j = 0;
-            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type
+            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type, periode
                              FROM `projects` WHERE class = ?", $users[$i]["class"]); 
             
             // Checks if already rated
@@ -183,7 +183,7 @@
         foreach ($users as $user)
         {
             $j = 0;
-            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type
+            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type, periode
                                             FROM `projects` 
                                             WHERE class = ?", 
                                             $users[$i]["class"]); 

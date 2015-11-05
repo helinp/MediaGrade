@@ -24,10 +24,10 @@
                         </video>       
                     <?php elseif($extension == "jpg" || $extension == "png" || $extension == "gif"): ?>
                     
-                        <img src="<?= $submitted[0]["file_path"]?>" />
+                        <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" src="<?= $submitted[0]["file_path"]?>" height="300px" />
                     
                     <?php endif ?>
-                <?= $submitted[0]["file_path"]?>
+                <pre style="margin-top:1em"><a target="_blank" href="<?= $submitted[0]["file_path"]?>"><?= $submitted[0]["file_path"]?></a></pre>
                 <?php else: ?>
                 <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= $lang['NOT_SUBMITTED'] ?></div>
                 <?php endif ?>

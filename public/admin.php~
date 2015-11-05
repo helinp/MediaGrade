@@ -103,6 +103,8 @@
             }
             
             chmod($upload_file, 0774);
+            
+            
          }
          
          // if no file uploaded by user
@@ -115,27 +117,28 @@
          * UPDATE ASSESSMENT TABLE WITH USER $_POST DATA
          * 
          */
-        
-        // insert or update criteria in assessment table
-        
-        // objective
-        $count_objective = 0;
-        
         $i = 0;
         
         foreach($_POST["objective"] as $objective)
         {
+            // insert or update criteria in assessment table
+            query(" INSERT 
+                    INTO assessment (objective, criteria, `cursor`) 
+                    VALUES (?, ?, ?) 
+                    ", 
+                $objective, 
+                $_POST["criterion"][$i], 
+                $_POST["cursor"][$i] );
             
-            //$check = query("SELECT id FROM assessment WHERE objective = ? AND criteria = ? AND `cursor` = ?", 
-             //              $objective, $_POST["criterion"][$i], $_POST["cursor"][$i]);
-                            
-            query("INSERT INTO assessment (objective, criteria, `cursor`) VALUES (?, ?, ?) 
-                ON DUPLICATE KEY UPDATE objective = objective, criteria=criteria, `cursor`=`cursor`", 
-                $objective, $_POST["criterion"][$i], $_POST["cursor"][$i] );
-            
-            
-            $assessments .= query("SELECT id FROM assessment WHERE objective = ? AND criteria = ? AND `cursor` = ?", 
-            $objective, $_POST["criterion"][$i], $_POST["cursor"][$i])[0]["id"] . ",";
+            // concatenate ids in variable 
+            $assessments .= query(" SELECT id 
+                                    FROM assessment 
+                                    WHERE objective = ? 
+                                    AND criteria = ? 
+                                    AND `cursor` = ?", 
+                                    $_POST["objective"][$i],
+                                    $_POST["criterion"][$i], 
+                                    $_POST["cursor"][$i])[0]["id"] . ",";
             
             // increment key
             $i++;
@@ -151,9 +154,9 @@
          **/
         $auto_assessments = "";
         
-        if(isset($POST["user_eval"]))
+        if(!empty($_POST["user_eval"]))
         {
-            foreach($POST["user_eval"] as $user_eval)
+            foreach($_POST["user_eval"] as $user_eval)
             {                   
                 // checks if entry already exists
                 $auto_assessment_id = query("SELECT * FROM auto_assesment WHERE question = ?", $user_eval);
@@ -174,9 +177,9 @@
             }
         }
         
-        if(isset($POST["data_eval_id"]))
+        if(!empty($_POST["data_eval_id"]))
         {        
-            foreach($POST["data_eval_id"] as $data_eval)
+            foreach($_POST["data_eval_id"] as $data_eval)
             {
                 $auto_assessments .= $data_eval . ",";
             }
@@ -185,7 +188,7 @@
         // removes last comma
         $auto_assessments = rtrim($auto_assessments, ",");
 
-        
+        dump($auto_assessments);
         /**
          * UPDATE PROJECTS TABLE
          *
@@ -232,8 +235,8 @@
                        $_POST["extension"],
                        $_POST["project_id"]);
         }
-        
-        redirect("admin.php");
+        inform("Project updated!");
+        // redirect("admin.php");
     }
    
     /**

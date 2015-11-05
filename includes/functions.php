@@ -218,7 +218,7 @@
             $username = query("SELECT name, last_name FROM users WHERE id = ?", $_SESSION["id"]);
                 
             // render menu
-            require("../templates/admin_menu.php");
+            require("../templates/menu.php");
 
              // render side menu
             if($menu === true) require("../templates/admin_projects.php");

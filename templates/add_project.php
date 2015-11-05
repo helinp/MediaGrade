@@ -127,8 +127,7 @@
 		                    <td><input class="typeahead_criteria form-control input-sm" placeholder="Critère" value="<?= $row["criterion"] ?>" name="criterion[]" required /></td>
 		                    <td>
 		                        <textarea class="typeahead_cursors form-control input-sm" cols="50" rows="3"  
-                                    placeholder="<?= $lang['NEW_CRITERION'] ?>" name="cursor[]"><?= $row["cursor"] ?>
-                                </textarea>
+                                    placeholder="<?= $lang['NEW_CRITERION'] ?>" name="cursor[]"><?= $row["cursor"] ?></textarea>
                             </td>
 		                    <td> <input class="form-control input-sm" value="5" name="coefficient[]" required size="2" /></td>
 		                    <td> <button type="button" class="btn btn-info btn-xs btn-danger pull-right" onClick="deleteRow('rows', this)"><span class="glyphicon glyphicon-remove"></span> Supprimer</button></td>

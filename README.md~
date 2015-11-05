@@ -15,14 +15,15 @@ Please forgive english approximation I used declaring variables.
 TODO
 ----
 
-- Severe code optimisation required (too many queries, redudancy).
-- Format new submission mail alert
-- Make thumbnails of submitted images
-- User cannot review self-assessment answers
-- Prevent from duplicate project name
-- Allow to replace instructions pdf on create project page 
-- Add audio files display 
-- Dynamic class on templates
+- PATCH / Severe code optimisation required (too many queries, redudancy).
+- PATCH / Format new submission mail alert
+- NEW   / Make thumbnails of submitted images
+- NEW   / User cannot review self-assessment answers
+- PATCH / Prevent from duplicate project name
+- PATCH / User have to reupload PDF when project is updated
+- PATCH / Add audio files display 
+- PATCH / Remove hardcoded data
+- PATCH / Format deadline displayed date
 
 FUTURE IMPLEMENTATIONS
 ----------------------
@@ -31,3 +32,4 @@ FUTURE IMPLEMENTATIONS
 - Results PDF export (by student, project and class)
 - fixed aside menu (CSS)
 - add users from CSV file
+- Skills use statistics

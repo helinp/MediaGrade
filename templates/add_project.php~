@@ -87,7 +87,7 @@
                     <div class="form-group">  
                         <label class="control-label">Extension du fichier attendu</label>            
                         <select class="form-control" name="extension">
-                            <option <?= ($curr_project["extension"] == "" ? " selected" : "")?>>Pas de remise fichier</option>
+                            <option value="" <?= ($curr_project["extension"] == "" ? " selected" : "")?>>Pas de remise fichier</option>
                             <option<?= ($curr_project["extension"] == "gif" ? " selected" : "")?>>gif</option>
                             <option<?= ($curr_project["extension"] == "jpg" ? " selected" : "")?>>jpg</option>
                             <option<?= ($curr_project["extension"] == "mov" ? " selected" : "")?>>mov</option>

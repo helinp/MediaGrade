@@ -177,17 +177,29 @@ span.clear-icon
     margin: 0;
 }
 
-textarea {
+textarea 
+{
    resize: none;
    width:400px;
 }
 
-video {
+video 
+{
 
 margin: 0 auto; 
    
 }
 
+.well-bkg
+{
+    background-color:#fff;
+    min-height:150px;
+}
+.rating-list dt
+{
+     border-bottom: 1px dotted lightgray;
+     margin-bottom: 0.4em;
+}
 
 /******** SLIDERS *****************/
 
