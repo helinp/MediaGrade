@@ -4,7 +4,9 @@
     <?php foreach ($projects as $project):?>
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
             <ul  class="list-group small nav nav-stacked" itemprop="project">
-                    <li><h5 style="margin-bottom:0"><?= "P" . $project["periode"] . " / " . $project["project_name"]?></h5><em><?= "Deadline: " . $project["deadline"]?></em</li>
+                    <li><h5 style="margin-bottom:0"><?= "P" . $project["periode"] . " / " . $project["project_name"]?></h5>
+                        <?= (!empty($project["user_id"]) ? '<span class="glyphicon glyphicon-ok" style="color:#5cb85c;"></span> <em  style="color:#5cb85c;">' . 'Projet remis</em>' : '<em>' . 'Deadline: ' . $project["deadline"] . '</em>') ?>
+                    </li>
                     <li>
                             <ul>
                                 <li itemprop="<?=$lang['INSTRUCTIONS']?>"><a class="list-group-item <?php if(isset($_GET["project"])) {if($_GET["project"] == $project["project_id"]){echo("active");}};?>" href="?project=<?= $project["project_id"]?>"><span class="glyphicon glyphicon-chevron-right pull-right"></span><?=$lang['INSTRUCTIONS']?></a></li>

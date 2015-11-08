@@ -17,10 +17,7 @@ $lang['LAST_NAME'] = "Nom";
 $lang['PASSWORD'] = "Mot de passe";
 $lang['CONFIRM_PASSWORD'] = "Confirmez le mot de passe";
 $lang['PASSWORD_MISMATCH'] = "Les mots de passe ne correspondent pas";
-$lang['REGISTER'] = "créer un compte";
 $lang['EMAIL'] = "Courriel";
-$lang['OR'] = "ou";
-$lang['REGISTER'] = "S'enregistrer";
  
 $lang['BACK'] = "Retour";
 
@@ -31,7 +28,7 @@ $lang['ALL_FIELDS_REQUIRED'] = "Tous les champs sont obligatoires!";
 $lang['PROVIDE_EMAIL'] = "Courriel non valide";
 $lang['SAFE_PASSWORD'] = "Votre mot de passe doit contenir au moins 8 caractères, dont 1 en majuscule et 1 chiffre.";
 $lang['ALREADY_USER'] = "Courriel ou nom d'utilisateur déjà utilisé";
-$lang['USER_EXPLOIT'] = "Touche pas à ça, p'tit con!<br /><small>Tiré du film \"La 7<sup>e</sup> compagnie\" de Robert Lamoureux, 1973.</small>";
+$lang['USER_EXPLOIT'] = "\"Touche pas à ça, p'tit con!\""; /** <br /><small>Tiré du film \"La 7<sup>e</sup> compagnie\" de Robert Lamoureux, 1973.</small>";*/
 $lang['USER_INCLUSION_EXPLOIT'] = "Tentative de RFI détectée...";
 $lang['HOWTO_PROJECTS'] = "<h4>Bienvenue!</h4> <p>Comment utiliser l'interface?</p>";
 $lang['NO_INSTRUCTIONS'] = "Désolé, les consignes ne sont pas (encore) disponibles.";
@@ -41,8 +38,10 @@ $lang['DIR_CREATION_ERROR'] = "Erreur lors de la création du répertoire.";
 $lang['NO_FILE'] = "Choisissez un fichier!";
 $lang['SELECT_FILE'] = "Sélectionnez un fichier";
 $lang['REQUIRED_ANSWER'] = "Réponse requise!";
+$lang['REQUIRED_ANSWER'] = "Réponse requise!";
+
 // inform
-$lang['PROJECT_SAVED'] = "Votre projet a bien été sauvegardé sur le serveur.";
+$lang['INVALID_USER_PASS'] = "Nom d'utilisateur ou mot de passe invalide.";
 
 // Menu
 $lang['GRADES'] = "Évaluations";
@@ -64,6 +63,8 @@ $lang['NO_PDF_READER'] = "<p>It appears your Web browser is not configured to di
 $lang['SUBMIT_FILE'] = "Remise du fichier";  
 $lang['SELF_ASSESSMENT'] = "Auto-évaluation";
 $lang['SUBMIT_WORK'] = "Je remets mon travail";
+$lang['DISACTIVATE_PROJECT'] = "Désactiver projet";
+$lang['ACTIVATE_PROJECT'] = "Activer projet";
 
 // results
 $lang['NOT_GRADED_YET'] = "<p>Votre travail n'a pas encore été évalué.</p>";   
@@ -76,6 +77,7 @@ $lang['PROJECT_NOT_FOUND'] = "Le projet n'a pas été trouvé";
 // add project
 $lang['PROJECT_TITLE'] = "Titre du projet"; 
 $lang['PROJECT_INFO'] = "Informations générales";
+$lang['PROJECT_FILE_INFO'] = "Consignes";
 $lang['ASSESSMENT_TYPE'] = "Type d'évaluation";
 $lang['ASSESSMENT_TYPE_1'] = "Formative";
 $lang['ASSESSMENT_TYPE_2'] = "Certificative";
@@ -84,7 +86,7 @@ $lang['ASSESSMENT_TYPE_4'] = "Sommative";
 $lang['PRESS_CTRL_SELECT'] = "Appuyez sur CTRL pour une sélection multiple";   
 $lang['SKILLS_SEEN'] = "Compétences travaillées"; 
 $lang['UPLOAD_INSTRUCTIONS'] = "Téléverser les consignes";
-$lang['ONLY_PDF_ALLOWED'] = "Format PDF seulement";
+$lang['ONLY_PDF_ALLOWED'] = "Format PDF uniquement";
 $lang['CRITERIA'] = "Critères";
 $lang['SKILLS_GROUP'] = "Objectifs";
 $lang['ASSESSMENT_GRID'] = "Grille d'évaluation";
@@ -124,5 +126,7 @@ $lang['VOTE_08'] = "Travail satisfaisant";
 $lang['VOTE_09'] = "Travail excellent";
 $lang['VOTE_10'] = "Travail exceptionnel";
 
+$lang['ADMIN_SKILLS'] = "Administration des compétences";
+$lang['ADMIN_USERS'] = "Administration des utilisateurs";
 
 ?>

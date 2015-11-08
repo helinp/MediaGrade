@@ -4,8 +4,18 @@
     require("../includes/config.php"); 
 
     // opens table for content
-    $projects = query("SELECT * FROM projects WHERE class = ?", $_SESSION["class"]);
+    $projects = query(" SELECT projects.project_id, project_name, periode, instructions, deadline, class, assessment_id, auto_assessment_id, user_id, file_path
+                        FROM projects 
+                        LEFT JOIN submitted
+                        ON projects.project_id = submitted.project_id
+                        AND submitted.user_id = ?
+                        WHERE class = ?
+                        AND is_activated = 1", 
+                        $_SESSION["id"], 
+                        $_SESSION["class"]
+                        );
 
+                            
     /**
      *   POST METHOD
      *
@@ -97,7 +107,12 @@
     */
     if (!empty($_GET["project"]))
     {
-        $project = query("SELECT instructions FROM projects WHERE project_id = ?", $_GET["project"]);
+        $project = query("  SELECT instructions
+                            FROM projects 
+                            WHERE project_id = ?",
+                            $_GET["project"]
+                            );
+        //dump($project);
         
         if ($project == false)
         {
@@ -164,8 +179,14 @@
     elseif (!empty($_GET["submit"]))
     {
         // reads from project table
-        $project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["submit"]);
-        
+        $project = query("  SELECT projects.project_id, `periode`, `instructions`, `deadline`, `project_name`, `class`, `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, extension, file_path   
+                            FROM projects 
+                            LEFT JOIN submitted
+                            ON projects.project_id = submitted.project_id
+                            AND submitted.user_id = ?
+                            WHERE projects.project_id = ?", 
+                            $_SESSION["id"],
+                            $_GET["submit"]);
         
         if ($project == false)
         {
@@ -192,7 +213,8 @@
 
             }  
             render_projects("submit.php", ["title" => "Remise", 
-                        "projects" => $projects, 
+                        "projects" => $projects,
+                        "project_data" => $project[0], 
                         "questions" => $questions, 
                         "project_id" => $_GET["submit"],
                         "extension" => $project[0]["extension"]

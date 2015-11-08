@@ -4,7 +4,7 @@
             <?=$lang['SORRY']?>
         </p>
         <p class="text-danger">
-            <?= $message ?>
+            <?= htmlspecialchars($message) ?>
         </p>
 
         <a href="javascript:history.go(-1);"><?=$lang['BACK']?></a>

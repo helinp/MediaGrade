@@ -72,9 +72,14 @@
 			        </div>
 			    </div>
             </div>
+            
+            <hr/>
+            
             <div class="row">
                 <div class = "col-xs-10">
+                
                     <div class="form-group">  
+                       <h4><?=$lang['PROJECT_FILE_INFO']?></h4>  
                         <label class="control-label"><?= $lang['UPLOAD_INSTRUCTIONS'] ?></label>            
                         <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                         <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file">
@@ -127,8 +132,7 @@
 		                    <td><input class="typeahead_criteria form-control input-sm" placeholder="Critère" value="<?= $row["criterion"] ?>" name="criterion[]" required /></td>
 		                    <td>
 		                        <textarea class="typeahead_cursors form-control input-sm" cols="50" rows="3"  
-                                    placeholder="<?= $lang['NEW_CRITERION'] ?>" name="cursor[]"><?= $row["cursor"] ?>
-                                </textarea>
+                                    placeholder="<?= $lang['NEW_CRITERION'] ?>" name="cursor[]"><?= $row["cursor"] ?></textarea>
                             </td>
 		                    <td> <input class="form-control input-sm" value="5" name="coefficient[]" required size="2" /></td>
 		                    <td> <button type="button" class="btn btn-info btn-xs btn-danger pull-right" onClick="deleteRow('rows', this)"><span class="glyphicon glyphicon-remove"></span> Supprimer</button></td>
@@ -177,22 +181,19 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary"><?= $lang['SAVE_PROJECT'] ?></button> 
                         <input type="hidden" name="project_id" value="<?php if(isset($_GET["project"])) {echo($_GET["project"]);} else {echo("-1");}; ?>">
+                        <?php if(isset($_GET["project"])): ?> 
+                        
+                        <button type="submit" class="btn btn-danger  pull-right" name="delete_project" value="<?= $_GET["project"] ?>"><span class="glyphicon glyphicon-remove"></span><?= $lang['DEL_PROJECT'] ?></button>
+                        
+                        <button type="submit" class="btn btn-warning  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $_GET["project"] ?>">
+                            <span class="glyphicon glyphicon-ban-circle"></span> <?= ($project["is_activated"] ? $lang['DISACTIVATE_PROJECT'] : $lang['ACTIVATE_PROJECT'])?>
+                        </button>
+                        
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
         </form>    
-                
-        <?php if(isset($_GET["project"])): ?>    
-        <div class = "row">
-            <div class = "col-xs-10">            
-                <form action="admin.php" method="post" enctype="multipart/form-data">
-                    <button type="submit" class="btn btn-danger  pull-right" name="remove_levels" value="delete"><span class="glyphicon glyphicon-remove"></span><?= $lang['DEL_PROJECT'] ?></button>
-                    <input type="hidden" name="delete" value="<?= $_GET["project"] ?>">
-                </form>
-            </div>
-        </div>
-        <?php endif ?>
-
    </main>
    
 <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>

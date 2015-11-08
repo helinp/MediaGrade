@@ -31,12 +31,22 @@
     // gets post from user 
     if (!empty($_POST))
     {
+        // check if disactivate action is requested
+        if(isset($_POST["disactivate_project"]))
+        {
+            query(" UPDATE projects 
+                    SET is_activated = NOT is_activated
+                    WHERE project_id = ?", $_POST["delete_project"]);
+            
+            redirect("admin.php");
+        }
+        
         // check if delete action is requested
-        if(isset($_POST["delete"]))
+        if(isset($_POST["delete_project"]))
         {
             // TODO ask confirmation
             
-            query("DELETE FROM projects WHERE project_id = ?", $_POST["delete"]);
+            query("DELETE FROM projects WHERE project_id = ?", $_POST["delete_project"]);
             
             redirect("admin.php");
         }
@@ -121,15 +131,14 @@
         
         foreach($_POST["objective"] as $objective)
         {
-            // insert or update criteria in assessment table
-            query(" INSERT 
-                    INTO assessment (objective, criteria, `cursor`) 
-                    VALUES (?, ?, ?) 
-                    ", 
-                $objective, 
-                $_POST["criterion"][$i], 
-                $_POST["cursor"][$i] );
             
+            // insert or update criteria in assessment table
+            query(" INSERT INTO assessment
+                    VALUES(DEFAULT, ?, ?, ?)", 
+                    $_POST["objective"][$i], 
+                    $_POST["criterion"][$i], 
+                    $_POST["cursor"][$i]);
+
             // concatenate ids in variable 
             $assessments .= query(" SELECT id 
                                     FROM assessment 
@@ -188,7 +197,6 @@
         // removes last comma
         $auto_assessments = rtrim($auto_assessments, ",");
 
-        dump($auto_assessments);
         /**
          * UPDATE PROJECTS TABLE
          *
@@ -250,6 +258,9 @@
         
         // gets current project
         $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
+        
+        if(!$curr_project){apologize($lang['USER_EXPLOIT']);}
+        
         
         // gets selected criteria and cursors from database
         $assessments_id = explode(",", $curr_project[0]["assessment_id"]);

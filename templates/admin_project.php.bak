@@ -80,7 +80,11 @@
 			        </div>
 			    </div>
             </div>
+           
+            <hr/>
+           
             <div class="form-group">  
+                <h4><?=$lang['PROJECT_FILE_INFO']?></h4>
                 <label class="control-label">Téléverser les consignes</label>            
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file" required>
@@ -88,9 +92,6 @@
             </div>
                         
             <hr/> 
-            
-            
-            
             
             <h4>Grille d'évaluation</h4>      
             <div id="cloned">

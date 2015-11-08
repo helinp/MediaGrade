@@ -10,7 +10,13 @@
 .container
 {
     background: white;
+    -webkit-border-radius: 0 0 7px 0 7px;
+    -moz-border-radius: 0 0 7px 0 7px;
+    border-radius: 0 0 7px 7px;
+    
 }
+
+
 
 .list-group-item
 {
@@ -66,14 +72,12 @@ aside ul
 
 body
 {
-    background: url('/img/wallpaper-1.jpg') fixed;
+    background: url('/img/wallpaper-2.jpg') fixed;
     -webkit-background-size: cover; 
     -moz-background-size: cover; 
     -ms-background-size: cover; 
     -o-background-size: cover; 
     background-size: cover;
-    
-     
   
     background-color: #2664BB;
     padding-top: 50px;
@@ -87,6 +91,8 @@ footer .container
     box-shadow: none;
     margin-bottom: 2em;
     padding: 1em 0 .5em;
+    
+    
 }
 
 h1
@@ -130,10 +136,14 @@ nav .container
     -webkit-box-shadow: none;
     background-color: #0B3269;
     box-shadow: none;*/
-    padding-bottom: 0;background-color: #0B3269;
+    padding-bottom: 0;
+    background-color: #0B3269;
+    // background-image: url('../img/banner_av.jpg');
+    
+        -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
-
-
 
 nav h3
 {
@@ -193,7 +203,7 @@ margin: 0 auto;
 .well-bkg
 {
     background-color:#fff;
-    min-height:200px;
+    min-height:150px;
 }
 .rating-list dt
 {
@@ -201,6 +211,10 @@ margin: 0 auto;
      margin-bottom: 0.4em;
 }
 
+.bs-docs-sidebar
+{
+    // height: 100vh;
+}
 /******** SLIDERS *****************/
 
 /*!

@@ -1,11 +1,12 @@
 <main class="col-md-12">
     <div class="row">
         <p class="lead text-danger">
-        Ok!
+            Ok!
         </p>
         <p class="text-danger">
             <?= htmlspecialchars($message) ?>
         </p>
+        <a href="/"><?=$lang['BACK']?></a>
     </div>
 </main>
-<a href="/">Back to Main</a>
+

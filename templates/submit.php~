@@ -4,13 +4,16 @@
         
         <form action="index.php" role="form" enctype="multipart/form-data" method="post" data-toggle="validator">
             <div class="form-group">  
-     <?php if (!empty($project["extension"])):?>
+     <?php if (!empty($extension)):?>
                 <h5><span class="glyphicon glyphicon-download-alt"></span> <?= $lang['SUBMIT_FILE'] ?></h5>            
                 <input type="hidden" name="project_id" value="<?= $project_id ?>" />
                 <label for="inputfile"><?= $lang['SELECT_FILE'] ?></label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file" required>
+                
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <p class="help-block with-errors">Max. 200 Mo.</p>
+                <?= (empty($project_data["file_path"]) ? "" : '<label for="inputfile">Fichier remis:</label><pre>'. $project_data["file_path"] .'</pre>') ?>
      <?php endif ?>              
             </div>
             

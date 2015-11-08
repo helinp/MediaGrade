@@ -35,15 +35,16 @@
 
     <body>
       
-<div class="container ">
-    <?php if(in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php"]) || $title == "Information" || $title == "Erreur"): ?>
+
+    <?php if(in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php"])): ?>
+<div class="container" style="min-height:0;">
     <div class="row text-center">
             
         <header class="col-md-12">
             <h1><a href="/"><img alt="MediaGrade" src="/img/logo.png"/></a></h1>
         </header>
    </div>  
-   <?php endif ?>     
-            
-            
+   <?php else: ?>     
+<div class="container ">            
+   <?php endif ?>           
             

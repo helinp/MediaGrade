@@ -10,7 +10,10 @@
                 <label for="inputfile"><?= $lang['SELECT_FILE'] ?></label>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <input id="inputfile" name="submitted_file" data-error="<?= $lang['NO_FILE'] ?>"  type="file" required>
+                
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <p class="help-block with-errors">Max. 200 Mo.</p>
+                <?= (empty($project_data["file_path"]) ? "" : '<input type="hidden" name="submited" value="1" /><label for="inputfile">Fichier remis:</label><pre>'. $project_data["file_path"] .'</pre>') ?>
      <?php endif ?>              
             </div>
             
