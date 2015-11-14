@@ -18,16 +18,15 @@
                 <?php if (isset($submitted[0]["file_path"])): ?>
                     <?php if ($extension == "mp4" || $extension == "mov" || $extension == "avi"): ?>
                         <video width="50%" controls preload="metadata">
-                            <source src="<?= $submitted[0]["file_path"]?>" type="video/mp4">
-                            <source src="mov_bbb.ogg" type="video/ogg">
+                            <source src="<?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?>" type="video/mp4">
                             <p><?= $lang['NO_HTML5_VIDEO'] ?> <a href="<?= $submitted[0]["file_path"]?>"><?= $lang['HERE'] ?></a></p>
                         </video>       
-                    <?php elseif($extension == "jpg" || $extension == "png" || $extension == "gif"): ?>
+                    <?php elseif($extension == "jpg" || $extension == "jpeg" || $extension == "png" || $extension == "gif"): ?>
                     
-                        <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" src="<?= $submitted[0]["file_path"]?>" height="300px" />
+                        <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" src="<?= $submitted[0]["file_path"] . "thumb_" . $submitted[0]["file_name"]?>" height="300px" />
                     
                     <?php endif ?>
-                <pre style="margin-top:1em"><a target="_blank" href="<?= $submitted[0]["file_path"]?>"><?= $submitted[0]["file_path"]?></a></pre>
+                <pre style="margin-top:1em"><a href="<?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?>"><?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?></a></pre>
                 <?php else: ?>
                 <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= $lang['NOT_SUBMITTED'] ?></div>
                 <?php endif ?>
@@ -35,48 +34,60 @@
             </div>
         </div>
          <div class="row">  
+             
             <!-- CRITERIA -->
             <div class="col-md-12">  
-            
-            <form action="rating.php" method="post" id="form" role="form">
-             <table id="rows" class="table table-striped">         
-     	            <col width="10%">
-                    <col width="15%">
-                    <col width="55%">
-                    <col width="10%">
-     	            <thead>
-	                    <tr>
-		                    <th><?= $lang['SKILLS_GROUP'] ?></th>
-		                    <th><?= $lang['CRITERIA'] ?></th>
-		                    <th><?= $lang['CURSORS'] ?></th>
-		                    <th><?= $lang['RATING'] ?></th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-                     <?php foreach ($criteria as $key_obj => $objective): ?> 
-                        <?php foreach ($objective as $key_cri => $criterion): ?>
-                            <?php foreach ($criterion as $cursor => $val): ?>   
-                        <tr>
-                            <td><?= $key_obj ?></td>
-                            <td><?= $key_cri ?></td>
-                            <td><?= $val ?></td>
-                            <td><input type="text" class="slider" data-slider-value="<?php if($is_rated) echo($rated[$cursor]["user_grade"]); 
-                            else echo("5") ?>" value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : "5") ?>
-                            " data-slider-min="0" data-slider-max="10" name="eval[]" >
-                                <input type="hidden" name="eval_cursor[]" value="<?= $id_criterion[$cursor]?>">
-                            </td>
-                        </tr>
+                
+                <?php if(!empty($self_assessments)): ?>
+                <h4>Auto-évaluation</h4>
+                <?php foreach($self_assessments as $self_assessment):?>
+                    <?= "<b>" . $self_assessment["question"] . "</b><p>". $self_assessment["answer"] ."</p>"?>
+                <?php endforeach ?>
+                
+                <hr />
+                <?php endif ?>
+                <h4>Évaluation</h4>
+                <form action="rating.php" method="post" id="form" role="form">
+                 <table id="rows" class="table table-striped">         
+         	            <col width="10%">
+                        <col width="15%">
+                        <col width="55%">
+                        <col width="10%">
+         	            <thead>
+	                        <tr>
+		                        <th><?= $lang['SKILLS_GROUP'] ?></th>
+		                        <th><?= $lang['CRITERIA'] ?></th>
+		                        <th><?= $lang['CURSORS'] ?></th>
+		                        <th><?= $lang['RATING'] ?></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+                         <?php foreach ($criteria as $key_obj => $objective): ?> 
+                            <?php foreach ($objective as $key_cri => $criterion): ?>
+                                <?php foreach ($criterion as $cursor => $val): ?>   
+                            <tr>
+                                <td><?= $key_obj ?></td>
+                                <td><?= $key_cri ?></td>
+                                <td><?= $val ?></td>
+                                <td><input type="text" class="slider" data-slider-value="<?php if($is_rated) echo($rated[$cursor]["user_grade"]); 
+                                else echo("5") ?>" value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : "5") ?>
+                                " data-slider-min="0" data-slider-max="10" name="eval[]" >
+                                    <input type="hidden" name="eval_cursor[]" value="<?= $id_criterion[$cursor]?>">
+                                </td>
+                            </tr>
+                                <?php endforeach ?> 
                             <?php endforeach ?> 
-                        <?php endforeach ?> 
-                     <?php endforeach ?> 
-                    </tbody>
-                </table>
+                         <?php endforeach ?> 
+                        </tbody>
+                    </table>
+                    
+                <!-- END CRITERIA -->
+                <hr />
+                
                 <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save"></span><?=$lang['SAVE_RATING']?></button>        
-            </div> 
-            <!-- END CRITERIA -->
-            <input type="hidden" name="user_id" value="<?= $user["id"] ?>">
-            <input type="hidden" name="project" value="<?= $project["project_id"] ?>">    
-        </form>
+                <input type="hidden" name="user_id" value="<?= $user["id"] ?>">
+                <input type="hidden" name="project" value="<?= $project["project_id"] ?>">    
+            </form>
         </div>     
     </main>
     

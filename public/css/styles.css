@@ -71,12 +71,12 @@ aside ul
 
 body
 {
-    background: url('/img/wallpaper-2.jpg') fixed;
+    /* background: url('/img/wallpaper-2.jpg') fixed;
     -webkit-background-size: cover; 
     -moz-background-size: cover; 
     -ms-background-size: cover; 
     -o-background-size: cover; 
-    background-size: cover;
+    background-size: cover;*/
   
     background-color: #2664BB;
     padding-top: 50px;
@@ -214,6 +214,12 @@ margin: 0 auto;
 {
     // height: 100vh;
 }
+
+.thumbnail video 
+{
+}
+
+
 /******** SLIDERS *****************/
 
 /*!

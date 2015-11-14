@@ -18,8 +18,17 @@ $lang['PASSWORD'] = "Mot de passe";
 $lang['CONFIRM_PASSWORD'] = "Confirmez le mot de passe";
 $lang['PASSWORD_MISMATCH'] = "Les mots de passe ne correspondent pas";
 $lang['EMAIL'] = "Courriel";
- 
+$lang['TEACHER'] = "Professeur";
 $lang['BACK'] = "Retour";
+
+// Profil
+$lang['MY_PROFILE'] = "Mon profil";
+$lang['CHANGE_PASS'] = "Changer de mot de passe";
+$lang['ACTUAL_PASS'] = "Mot de passe actuel";
+$lang['NEW_PASS'] = "Nouveau mot de passe";
+$lang['CONFIRM_PASS'] = "Confirmez le mot de passe";
+$lang['MODIFY'] = "Modifier";
+$lang['MY_MAIL'] = "Mon adresse courriel";
 
 // Error messages
 $lang['SORRY'] = "Désolé!";
@@ -30,7 +39,7 @@ $lang['SAFE_PASSWORD'] = "Votre mot de passe doit contenir au moins 8 caractère
 $lang['ALREADY_USER'] = "Courriel ou nom d'utilisateur déjà utilisé";
 $lang['USER_EXPLOIT'] = "\"Touche pas à ça, p'tit con!\""; /** <br /><small>Tiré du film \"La 7<sup>e</sup> compagnie\" de Robert Lamoureux, 1973.</small>";*/
 $lang['USER_INCLUSION_EXPLOIT'] = "Tentative de RFI détectée...";
-$lang['HOWTO_PROJECTS'] = "<h4>Bienvenue!</h4> <p>Comment utiliser l'interface?</p>";
+
 $lang['NO_INSTRUCTIONS'] = "Désolé, les consignes ne sont pas (encore) disponibles.";
 $lang['MAX_SIZE_REACHED'] = "Taille de fichier supérieure à 200 Mo. Vérifiez votre exportation.";
 $lang['UNEXPECTED_FILE_TYPE'] = "Format de fichier inattendu.";
@@ -55,6 +64,13 @@ $lang['MY_GALLERY'] = "Mes projets";
 $lang['GRADE_BOOK'] = "Mes compétences";
 $lang['LOGOUT'] = "Déconnection";
 
+$lang['MANAGE_PROJECTS'] = "Gérer les projets";
+$lang['RATE'] = "Corriger";
+$lang['CONFIG'] = "Configuration";
+$lang['NEW_PROJECT'] = "Nouveau projet";
+
+
+
 // java
 $lang['NO_PDF_READER'] = "<p>It appears your Web browser is not configured to display PDF files. 
                             No worries, just <a href='123.pdf'>click here to download the PDF file.</a></p>";
@@ -65,9 +81,11 @@ $lang['SELF_ASSESSMENT'] = "Auto-évaluation";
 $lang['SUBMIT_WORK'] = "Je remets mon travail";
 $lang['DISACTIVATE_PROJECT'] = "Désactiver le projet";
 $lang['ACTIVATE_PROJECT'] = "Activer le projet";
+$lang['SUBMITTED_FILE'] = "Fichier remis:"; 
 
 // results
 $lang['NOT_GRADED_YET'] = "<p>Votre travail n'a pas encore été évalué.</p>";   
+$lang['PERCENT'] = "Pourcentage"; 
 
 // admin
 $lang['PROJECT_LEN'] = "Durée du projet";
@@ -88,9 +106,13 @@ $lang['SKILLS_SEEN'] = "Compétences travaillées";
 $lang['UPLOAD_INSTRUCTIONS'] = "Téléverser les consignes";
 $lang['ONLY_PDF_ALLOWED'] = "Format PDF uniquement";
 $lang['CRITERIA'] = "Critères";
+$lang['CRITERION'] = "Critère";
 $lang['SKILLS_GROUP'] = "Objectifs";
+$lang['SKILL'] = "Objectif";
+$lang['COEFFICIENT'] = "Coéfficient";
 $lang['ASSESSMENT_GRID'] = "Grille d'évaluation";
 $lang['CURSORS'] = "Indicateurs (l'élève a:)";
+$lang['CURSOR'] = "Indicateurs (l'élève a:)";
 $lang['CLASS'] = "Classe";
 $lang['DEADLINE'] = "Date de remise";
 $lang['NEW_CRITERION'] = "Nouveau critère";
@@ -101,6 +123,9 @@ $lang['SELF_ASSESSMENT'] = "Auto-évaluation";
 $lang['ADD_QUESTION'] = " Ajouter une question";// mind the first space!
 $lang['SAVE_PROJECT'] = "Sauver le projet";
 $lang['DEL_PROJECT'] = " Supprimer le projet";  // mind the first space!
+$lang['PROJECT_SAVED'] = "Votre projet à bien été remis";
+$lang['EXPECTED_FILE'] = "Extension du fichier attendu";
+$lang['NO_EXPECTED_FILE'] = "Pas de remise fichier";
 
 //  form control
 $lang['REQUIRED_NAME'] = "Nom requis";
@@ -128,5 +153,20 @@ $lang['VOTE_10'] = "Travail exceptionnel";
 
 $lang['ADMIN_SKILLS'] = "Administration des compétences";
 $lang['ADMIN_USERS'] = "Administration des utilisateurs";
+
+
+$lang['HOWTO_PROJECTS'] = "<h4>Bienvenue, " . (isset($_SESSION["name"]) ? $_SESSION["name"] : "") . "!</h4> 
+<p>Vous êtes sur la plateforme de remise de vos masters.</p> 
+
+<p>Le menu \"" . $lang['SUBMIT'] . "\" vous donne accès aux consignes, à un formulaire de remise et à vos résultats des différents projets.<br />
+
+Le menu \"" . $lang['GRADE_BOOK'] . "\" retrace dans un graphique la progression de vos habilités audiovisuelles. Il se complètera au fur et à mesure de l'année.</p/>
+
+<p>Enfin, les menus \"" . $lang['MY_GALLERY'] . "\" et \"" . $lang['GALLERY'] . "\" vous donnent l'aperçu de vos projets et de ceux de vos camarades.</p>
+
+
+<p>Bon travail!</p>
+<br />
+<p>P. Hélin</p>";
 
 ?>

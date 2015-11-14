@@ -10,7 +10,7 @@
                         echo(" active");
                     }; 
                     
-                    ?>" href="admin.php">Nouveau projet<span class="glyphicon glyphicon-pencil pull-right"></span></a></li>
+                    ?>" href="admin.php"><?= $lang['NEW_PROJECT']?><span class="glyphicon glyphicon-pencil pull-right"></span></a></li>
     <?php foreach ($projects as $project):?>
                     <li><a class="list-group-item<?php 
                     

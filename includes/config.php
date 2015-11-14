@@ -13,14 +13,14 @@
     ini_set("display_errors", true);
     error_reporting(E_ALL);
 
+    // enable sessions
+    session_start();
+    
     // requirements
     require("constants.php");
     require("functions.php");
     require("langs/be_FR.php");
  
-    // enable sessions
-    session_start();
-
     // avoids question mark char coding error
     query("SET NAMES utf8");   
     

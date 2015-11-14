@@ -22,7 +22,7 @@
                         }
                     }
                     
-                    ?>" href="admin.php?project=<?= $project["project_id"]; ?>"><?= ($project["is_activated"] ? '' : '<span class="glyphicon glyphicon-ban-circle" style="color:d9534f"></span> ')?><b><?= $project["class"] . " / " . $project["project_name"] . "</b><br /><em>P" . $project["periode"] . " / " . $project["deadline"] ?></em><span class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
+                    ?>" href="admin.php?project=<?= $project["project_id"]; ?>"><?= ($project["is_activated"] ? '' : '<span class="glyphicon glyphicon-ban-circle" style="color:#d9534f"></span> ')?><b><?= $project["class"] . " / " . $project["project_name"] . "</b><br /><em>P" . $project["periode"] . " / " . $project["deadline"] ?></em><span class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
     <?php endforeach?>
             </ul>
         </nav>

@@ -90,9 +90,9 @@
             <div class="row">
                 <div class = "col-xs-10">
                     <div class="form-group">  
-                        <label class="control-label">Extension du fichier attendu</label>            
+                        <label class="control-label"><?= $lang['EXPECTED_FILE'] ?></label>            
                         <select class="form-control" name="extension">
-                            <option value="" <?= ($curr_project["extension"] == "" ? " selected" : "")?>>Pas de remise fichier</option>
+                            <option value="" <?= ($curr_project["extension"] == "" ? " selected" : "")?>><?= $lang['NO_EXPECTED_FILE'] ?></option>
                             <option<?= ($curr_project["extension"] == "gif" ? " selected" : "")?>>gif</option>
                             <option<?= ($curr_project["extension"] == "jpg" ? " selected" : "")?>>jpg</option>
                             <option<?= ($curr_project["extension"] == "mov" ? " selected" : "")?>>mov</option>
@@ -112,10 +112,10 @@
                     <table id="rows" class="table">
 	                    <thead>
 	                    <tr>
-		                    <th>Objectif</th>
-		                    <th>Critère</th>
-		                    <th>Indicateur (l'élève a:)</th>
-		                    <th>Coefficient</th>
+		                    <th><?=$lang['SKILL']?></th>
+		                    <th><?=$lang['CRITERION']?></th>
+		                    <th><?=$lang['CURSOR']?></th>
+		                    <th><?=$lang['COEFFICIENT']?></th>
 		                    <th></th>
 	                    </tr>
 	                    </thead>

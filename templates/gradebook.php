@@ -1,17 +1,26 @@
  <?php 
-                    function results($group_id, $results)
+                    function results($results)
                     {
                         $string = "";
-                                              
-                        foreach ($results[$group_id] as $result)
-                        {
-                            
-                                $string .= ("[Date.UTC(20" . str_replace("-", ",", $result["date"]) . "), " . $result["user_grade"] . "], \n");                       
-                           
-                        }  
                         
-                        print(substr("$string", 0, -2));
+                        foreach ($results as $skill => $node)                      
+                        {
+                            $string .= "name:'" . $skill . "',\ndata:[";
+                        
+                            foreach ($node as $result)
+                            {
+                                $string .= ("[Date.UTC(" . str_replace("-", ",", $result["date"]) . "), " . $result["AVG(user_grade)"] * 10 . "], \n");                       
+                            }  
+                            
+                            $string = substr("$string", 0, -3);
+                            $string .= "]}, {"; 
+                        }
+                        $string = substr("$string", 0, -3);
+                        //
+                        
+                        print($string);
                     }
+                    //dump(results("COMPRENDRE", $results));
                     ?>  
    <main class="col-md-10">         
        
@@ -25,7 +34,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: 'Compétences'
+                        text: '<?= $lang['SKILLS'] ?>'
                     },
                     subtitle: {
                         text: ''
@@ -40,7 +49,7 @@
                     },
                     yAxis: {
                         title: {
-                            text: 'Pourcentage'
+                            text: '<?= $lang['PERCENT'] ?>'
                         }
                     },
                     plotOptions: {
@@ -52,30 +61,16 @@
                         }
                     },
                     series: [{
-                        name: 'FAIRE',
-                        data: [
-                        <?= results("F", $results); ?>]
-                    }, {
-                        name: 'COMPRENDRE',
-                        data: [
-                        <?= results("C", $results); ?>]
-                    }, {
-                        name: 'APPRECIER',
-                        data: [
-                        <?= results("A", $results); ?>]
-                    }, {
-                        name: 'REGARDER ET ECOUTER',
-                        data: [<?= results("R", $results); ?>]
-                    }, {
-                        name: 'S\'EXPRIMER',
-                        data: [<?= results("E", $results); ?>]
-                    }]
+                        
+                        <?= results($results); ?>
+                    ]
                 });
         });
     </script>
-
-    <div id="chart1" class="col-centered"></div>
-
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div id="chart1" style="margin-top:1em;" class="col-md-10"></div>
+    </div>
      
                     
     

@@ -111,7 +111,7 @@
 You have requested to have your password reset for your account.\r\n
 Please visit this url to reset your password:\r\n". $reset_password_url . "\r\n
 If you received this email in error, you can safely ignore this email.\r\n\r\n
-The pset7 Finance Team.\r\n";
+MediaGrade Team.\r\n";
                 
                  // Send mail
                  sendamail($_POST["email"], $subject, $message);

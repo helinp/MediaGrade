@@ -36,7 +36,7 @@
         {
             query(" UPDATE projects 
                     SET is_activated = NOT is_activated
-                    WHERE project_id = ?", $_POST["delete_project"]);
+                    WHERE project_id = ?", $_POST["disactivate_project"]);
             
             redirect("admin.php");
         }
@@ -113,7 +113,7 @@
             }
             
             chmod($upload_file, 0774);
-            
+            // chmod upload dir
             
          }
          
@@ -219,7 +219,7 @@
         if ($_POST["project_id"] === "-1")
         {
            // add new project in table projects
-           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)", 
                      $_POST["periode"], 
                      $upload_file, 
                      $_POST["deadline"], 
@@ -254,7 +254,7 @@
     elseif(isset($_GET["project"]))
     {
         // gets projects for side menu
-        $projects = query("SELECT * FROM projects");
+        $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC ");
         
         // gets current project
         $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
@@ -267,10 +267,12 @@
 
         $i = 0;
         $query = "SELECT * FROM assessment WHERE";
+        
         foreach ($assessments_id as $assessment_id)
         {
             $query .= " id= " . $assessment_id . " OR";
         }   
+        
         $query = rtrim($query, " OR"); 
        
         //dump($query);
@@ -344,7 +346,7 @@
         else
         {
             //dump($curr_project[0]);
-            render_admin("add_project.php", ["title" => "Modifier un projet", "projects" => $projects, 
+            render_admin("add_project.php", ["title" => $lang['MANAGE_PROJECTS'], "projects" => $projects, 
                 "curr_project" => $curr_project[0], "skills" => $skills, "self_assessments" => $auto_assessments, 
                 "skills_selected" => $skills_selected, "rows" => $rows, "objectives_list" => $objectives]);           
         }
@@ -358,7 +360,7 @@
     {
         
         // gets projects for side menu
-        $projects = query("SELECT * FROM projects");
+        $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC ");
         
         // TODO:  autocomplete criteria and cursors 
         

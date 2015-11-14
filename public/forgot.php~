@@ -96,7 +96,7 @@
                 $hash = rand(10000,99999) . uniqid($row[0]["username"], true);  
                
                 // makes recovery url
-                $reset_password_url = FULL_URL . "?lost=" . sha1("$hash");
+                $reset_password_url = FULL_URL . "forgot.php?lost=" . sha1("$hash");
                 
                 // stores id and hash in database and updates is already exist
                 query("INSERT INTO lost_password(id, hash) VALUES(?, ?) ON DUPLICATE KEY UPDATE hash = ?", $row[0]["id"], sha1("$hash"), sha1("$hash"));

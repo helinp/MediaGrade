@@ -13,7 +13,7 @@
                 
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                 <p class="help-block with-errors">Max. 200 Mo.</p>
-                <?= (empty($project_data["file_path"]) ? "" : '<label for="inputfile">Fichier remis:</label><pre>'. $project_data["file_path"] .'</pre>') ?>
+                <?= (empty($project_data["file_name"]) ?  '' : '<p>' . $lang['SUBMITTED_FILE'] . '<a href="' . $project_data["file_path"] . $project_data["file_name"] . '">' . $project_data["file_path"] . $project_data["file_name"] . '</a></p>') ?>
      <?php endif ?>              
             </div>
             

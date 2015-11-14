@@ -21,7 +21,7 @@
     // enable sessions
     session_start();
 
-    // avoid question mark char coding error
+    // avoids question mark char coding error
     query("SET NAMES utf8");   
     
     // require authentication for all pages except /login.php, /logout.php, and /register.php

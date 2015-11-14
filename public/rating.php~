@@ -22,22 +22,44 @@
      *
      */
     // gets results
-    
     if (!empty($_POST["eval"]))
     {
        // puts results in database
        foreach($_POST["eval"] as $key => $eval)
        {
             
-            if(empty(query("SELECT id FROM results WHERE user_id = ? AND project_id = ? AND skill_id = ?", $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key])))
+            if(empty(query("SELECT id 
+                            FROM results 
+                            WHERE user_id = ? 
+                            AND project_id = ? 
+                            AND skill_id = ?", 
+                            $_POST["user_id"], 
+                            $_POST["project"], 
+                            $_POST["eval_cursor"][$key])))
             {
-                query("INSERT INTO results (user_id, project_id, skill_id, user_grade) VALUES (?, ?, ?, ?)", $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval);
+                query(" INSERT 
+                        INTO results (user_id, project_id, skill_id, user_grade, date) 
+                        VALUES (?, ?, ?, ?, ?)", 
+                        $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval, date("Y-m-d"));
             }
             else
             {
                 query("START TRANSACTION");
-                    query("DELETE FROM results WHERE user_id = ? AND project_id = ? AND skill_id = ?", $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key]);
-                    query("INSERT INTO results (user_id, project_id, skill_id, user_grade) VALUES (?, ?, ?, ?)", $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval);
+                   
+                    query(" DELETE 
+                            FROM results 
+                            WHERE user_id = ? 
+                            AND project_id = ? 
+                            AND skill_id = ?", 
+                            $_POST["user_id"], 
+                            $_POST["project"], 
+                            $_POST["eval_cursor"][$key]);
+                            
+                    query(" INSERT 
+                            INTO results (user_id, project_id, skill_id, user_grade, date) 
+                            VALUES (?, ?, ?, ?, ?)", 
+                            $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval, date("Y-m-d"));
+                
                 query("COMMIT");
             }
             
@@ -93,7 +115,7 @@
              $i++;
         }
         // renders
-        render_admin("rating_list.php", ["title" => $lang['ADMIN'],  
+        render_admin("rating_list.php", ["title" => $lang['RATE'],  
             "skills" => $skills, "users" => $users, "classes" => $classes ], false);
     }
     
@@ -106,7 +128,7 @@
                        FROM users WHERE `id` = ?", $_GET["user"])[0]; 
                        
         // gets users and join submitted
-        $users = query("SELECT users.id, name, last_name, file_path, answers
+        $users = query("SELECT users.id, name, last_name, file_path, file_name, answers
                        FROM users 
                        LEFT JOIN submitted
                        ON users.id = submitted.user_id
@@ -132,10 +154,26 @@
         $project = query("SELECT project_name, project_id, deadline, assessment_type
                              FROM `projects` WHERE  `project_id` = ?", $_GET["rate"])[0];
                              
-        $submitted = query("SELECT file_path FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
+        $submitted = query("SELECT file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
         
         $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
         
+        if($submitted) 
+        {
+            $self_assessments = unserialize($submitted[0]["answers"]);
+            
+            // get self_assessment questions
+            foreach ($self_assessments as $key => $self_assessment)
+            {
+                $query = query("SELECT question FROM auto_assesment WHERE id = ?", $self_assessment["id"]);
+                $self_assessments[$key]["question"] = $query[0]["question"];
+            }
+        }
+        else
+        {
+            $self_assessments = array();
+        }
+               
         (empty($rated) ? $is_rated = false : $is_rated = true);
         
         // CRITERIA STUFF
@@ -168,8 +206,8 @@
         // END CRITERIA STUFF
         
         // renders
-        render_admin("rating.php", ["title" => $lang['ADMIN'],  
-            "skills" => $skills, "user" => $user, "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated,
+        render_admin("rating.php", ["title" => $lang['RATE'],  
+            "skills" => $skills, "user" => $user, "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
             "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]], false);
     }
     else
@@ -183,7 +221,7 @@
         foreach ($users as $user)
         {
             $j = 0;
-            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type
+            $users[$i]["projects"] = query("SELECT project_name, project_id, deadline, assessment_type, periode
                                             FROM `projects` 
                                             WHERE class = ?", 
                                             $users[$i]["class"]); 

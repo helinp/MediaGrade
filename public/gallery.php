@@ -15,7 +15,7 @@
     
     if (isset($_GET["my"]))
     {
-        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class, extension
+        $projects = query(" SELECT user_id, file_path, file_name, submitted.project_id, project_name, name, last_name, users.class, extension
                             FROM submitted 
                             LEFT JOIN users
                                 ON users.id = submitted.user_id
@@ -26,13 +26,13 @@
     }
     else
     {
-        $projects = query(" SELECT user_id, file_path, submitted.project_id, project_name, name, last_name, users.class, extension
+        $projects = query(" SELECT user_id, file_path, file_name, submitted.project_id, project_name, name, last_name, users.class, extension
                             FROM submitted 
                             LEFT JOIN users
                                 ON users.id = submitted.user_id
                             LEFT JOIN projects
                                 ON submitted.project_id = projects.project_id
-                            ORDER BY users.class, users.name");       
+                            ORDER BY users.class, submitted.project_id, users.name");       
     }
 
     // fills variable $media[]
@@ -42,7 +42,8 @@
         if(!isset($projects[0]["project_name"])) $projects[0]["project_name"] = "";
            
         $medias[] = [             
-            "file" => $project["file_path"],
+            "file" => $project["file_path"] . $project["file_name"],
+            "thumbnail" => $project["file_path"] . "thumb_" . $project["file_name"],
             "name" => $project["name"], 
             "class" => $project["class"],
             "last_name" => $project["last_name"],
