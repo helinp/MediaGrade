@@ -325,7 +325,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `hash`, `name`, `last_name`, `cl
 (120, 'Leonard', '', 'password', 'Audrey', 'Rosario', '6AV', 0),
 (188, 'lriley6', '', 'LKYRBBJU', 'Maëlys', 'Riley', '5AV', 0),
 (121, 'Orla', '', 'password', 'Aquila', 'Craig', '6AV', 0),
-(1, 'pierreh', 'pierre.helin@gmail.com', '$1$i.zcqGEf$fl9RNjbptZpzA5.GZVGZ9.', 'Pierre', 'Hélin', '', 1),
+(1, 'pierreh', 'pierre@yopmail.com', '$1$i.zcqGEf$fl9RNjbptZpzA5.GZVGZ9.', 'Pierre', 'Hel', '', 1),
 (182, 'rgonzales0', '', 'ntCHuePj', 'Andréa', 'Gonzales', '3AV', 0),
 (119, 'Riley', '', 'password', 'Emmanuel', 'House', '5AV', 0),
 (201, 'rrileyj', '', 'sdHbBDRp7r', 'Stévina', 'Riley', '5AV', 0),

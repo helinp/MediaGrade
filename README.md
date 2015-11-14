@@ -40,3 +40,4 @@ FUTURE IMPLEMENTATIONS
 - add users from CSV file
 - Used skills statistics
 - multi teachers support
+- clean database and files

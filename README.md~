@@ -1,4 +1,4 @@
-# MediaGrade ALPHA
+# MediaGrade BETA
 CS50x Final Project
 
 This is an education web application.
@@ -26,7 +26,7 @@ TODO
 - PATCH / Format new submission mail alert
 - NEW   / User cannot review self-assessment answers
 - PATCH / Prevent from duplicate project name
-- PATCH / User have to reupload PDF when project is updated
+- PATCH / Users have to reupload PDF when project is updated
 - PATCH / Add audio files display 
 - PATCH / Remove hardcoded data
 - PATCH / Format displayed deadline date
