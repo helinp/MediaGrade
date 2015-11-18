@@ -3,7 +3,7 @@
            <div class="col-md-12">
        <?php if (is_array($content)):?>
            
-           <table class="table table-hover">
+           <table class="table table-hover ">
                 <thead>
                   <tr>
                     <th>Compétence</th>

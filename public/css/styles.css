@@ -215,10 +215,27 @@ margin: 0 auto;
     // height: 100vh;
 }
 
-.thumbnail video 
-{
+/**** ROTATE TABLE HEADER CLASS ****/
+
+/*
+ * Trick credit from
+ * https://css-tricks.com/rotated-table-column-headers/ 
+ * by Chris Coyier
+**/
+
+th.rotate {
+  white-space: nowrap;
 }
 
+th.rotate > div {
+  transform: 
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  padding-left: 0;
+}
 
 /******** SLIDERS *****************/
 

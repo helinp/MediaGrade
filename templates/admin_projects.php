@@ -1,8 +1,7 @@
 
- <div class="row">
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav>
-            <ul class="list-group small" itemprop="project">
+            <ul class="list-group small">
                     <li><a class="list-group-item alert-info<?php 
                     
                     if(!isset($curr_project["project_id"]))

@@ -1,4 +1,3 @@
- <div class="row">
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
             <ul class="list-group small" itemprop="project">

@@ -26,12 +26,13 @@
         $project = query("SELECT auto_assessment_id, project_name FROM projects WHERE project_id = ?", $_POST["project_id"]);
         $project_name = $project[0]["project_name"];
         
+        $sanitized_user_name = preg_replace("/[^a-zA-Z0-9_]/", "x", strtoupper($_SESSION["last_name"]) . "_" .  $_SESSION["name"]);
         $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "_", $project_name);
-        $sanitized_project_name = preg_replace("/_+/", "", $sanitized_project_name ); 
+        $sanitized_project_name = preg_replace("/_+/", "x", $sanitized_project_name ); 
         
         // rename file LASTNAME_Name_Project.ext
         $extension = strtolower(pathinfo($_FILES['submitted_file']['name'], PATHINFO_EXTENSION));
-        $rename = strtoupper($_SESSION["last_name"]) . "_" .  $_SESSION["name"] . "_" . $sanitized_project_name . "." . $extension;
+        $rename =  $sanitized_user_name . "_" . $sanitized_project_name . "." . $extension;
         
         // puts the file in ./upload/class/periode_#   TODO: add class_year     
         $upload_dir = "uploads/" . $projects[0]["class"] . "/p" . $projects[0]["periode"] . "/";
@@ -58,7 +59,7 @@
         }
         
         // creates directory if doesn't exit
-        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0774, true))
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true))
         {
             apologize( $lang['DIR_CREATION_ERROR'] . $upload_dir);
         }
@@ -69,15 +70,15 @@
            apologize($lang['USER_EXPLOIT']);
         }
         
-        // set files & directory mode
-        chmod($upload_file, 0774);
-        chmod($upload_dir, 0774);
+        // sets files & directory mode
+        chmod($upload_file, 0755);
+        chmod($upload_dir, 0755);
         
         // create thumbnail
         if($extension == "jpg" || $extension == "png" || $extension == "gif" || $extension == "jpeg" ) 
         { 
             make_thumbnail($upload_file, $upload_file_thumb, 500);
-            chmod($upload_file_thumb, 0774); 
+            chmod($upload_file_thumb, 0755); 
         }
         
         

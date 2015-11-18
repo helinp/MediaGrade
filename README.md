@@ -22,7 +22,7 @@ Actuals functionalities
 TODO
 ----
 
-- PATCH / Severe code optimisation required (too many queries, redudancy).
+- PATCH / Severe code optimisation required (as: too many queries, redudancy).
 - PATCH / Format new submission mail alert
 - NEW   / User cannot review self-assessment answers
 - PATCH / Prevent from duplicate project name
@@ -36,8 +36,9 @@ FUTURE IMPLEMENTATIONS
 
 - Historic of submitted works
 - Results PDF export (by student, project and class)
-- fixed aside menu (CSS)
-- add users from CSV file
-- Used skills statistics
-- multi teachers support
-- clean database and files
+- Fixed aside menu (CSS)
+- Add users from CSV file
+- Statistics!
+- Multi teachers support
+- Clean database and files
+- Function to sort tables

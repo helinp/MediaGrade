@@ -13,7 +13,7 @@
                 <div class = "col-xs-3">
                     <label for="title"><?= $lang['ASSESSMENT_TYPE'] ?></label>
                     <select class="form-control" name="assessment_type" required>
-                        <option<?php if($curr_project["assessment_type"] === $lang['ASSESSMENT_TYPE_1']) echo(" selected"); ?>><?=$lang['ASSESSMENT_TYPE_1']?></option>
+                        <option  <?php if($curr_project["assessment_type"] === $lang['ASSESSMENT_TYPE_1']) echo(" selected"); ?>><?=$lang['ASSESSMENT_TYPE_1']?></option>
                         <option<?php if($curr_project["assessment_type"] === $lang['ASSESSMENT_TYPE_2']) echo(" selected"); ?>><?=$lang['ASSESSMENT_TYPE_2']?></option>
                         <option<?php if($curr_project["assessment_type"] === $lang['ASSESSMENT_TYPE_3']) echo(" selected"); ?>><?=$lang['ASSESSMENT_TYPE_3']?></option>
                         <option<?php if($curr_project["assessment_type"] === $lang['ASSESSMENT_TYPE_4']) echo(" selected"); ?>><?=$lang['ASSESSMENT_TYPE_4']?></option>
@@ -23,7 +23,7 @@
                         
                     <label for="title">Période</label>
                     <select class="form-control" name="periode">
-                        <option <?php if($curr_project["periode"] === "1") echo(" selected"); ?>>1</option>
+                        <option  <?php if($curr_project["periode"] === "1") echo(" selected"); ?>>1</option>
                         <option<?php if($curr_project["periode"] === "2") echo(" selected"); ?>>2</option>
                         <option<?php if($curr_project["periode"] === "3") echo(" selected"); ?>>3</option>
                         <option<?php if($curr_project["periode"] === "4") echo(" selected"); ?>>4</option>
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label for="title"><?= $lang['CLASS'] ?></label>
                         <select class="form-control" name="class" required>
-                            <option value="3AV" <?php if($curr_project["class"] === "3AV") echo(" selected"); ?>>3AV</option>
+                            <option  <?php if($curr_project["class"] === "3AV") echo(" selected"); ?>>3AV</option>
                             <option<?php if($curr_project["class"] === "4AV") echo(" selected"); ?>>4AV</option>
                             <option<?php if($curr_project["class"] === "5AV") echo(" selected"); ?>>5AV</option>
                             <option<?php if($curr_project["class"] === "6AV") echo(" selected"); ?>>6AV</option>
@@ -92,7 +92,8 @@
                     <div class="form-group">  
                         <label class="control-label"><?= $lang['EXPECTED_FILE'] ?></label>            
                         <select class="form-control" name="extension">
-                            <option value="" <?= ($curr_project["extension"] == "" ? " selected" : "")?>><?= $lang['NO_EXPECTED_FILE'] ?></option>
+                            <option  <?= ($curr_project["extension"] == "" ? " selected" : "")?>><?= $lang['NO_EXPECTED_FILE'] ?></option>
+                            <option disabled>---</option>
                             <option<?= ($curr_project["extension"] == "gif" ? " selected" : "")?>>gif</option>
                             <option<?= ($curr_project["extension"] == "jpg" ? " selected" : "")?>>jpg</option>
                             <option<?= ($curr_project["extension"] == "mov" ? " selected" : "")?>>mov</option>
@@ -125,7 +126,7 @@
 		                    <td>
 		                        <select class="form-control input-sm" name="objective[]" required>
                                                                 <?php foreach($objectives_list as $objective_list): ?>   
-                                                                <option <?php if($objective_list == $row["objective"]) echo("selected") ?>><?= $objective_list ?></option>
+                                                                <option  <?php if($objective_list == $row["objective"]) echo("selected") ?>><?= $objective_list ?></option>
                                                                 <?php endforeach ?>
                                                             </select>
                                                         </td>

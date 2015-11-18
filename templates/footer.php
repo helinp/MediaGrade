@@ -1,5 +1,4 @@
         
-               </div> <!-- Row-->
            </div> <!-- Container-->
           
 		   <footer class="footer">

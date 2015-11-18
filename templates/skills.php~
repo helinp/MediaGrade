@@ -2,8 +2,8 @@
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
             <ul class="list-group small" itemprop="project">
-                    <li><a class="list-group-item <?php if($lang['ADMIN_SKILLS'] === $title) echo("active");?>" href="config.php?skills">Compétences<span class="glyphicon glyphicon-pencil pull-right"></a></li>
-                    <li><a class="list-group-item <?php if($lang['ADMIN_USERS'] === $title) echo("active");?>" href="config.php?users">Liste élèves<span class="glyphicon glyphicon-pencil pull-right"></a></li>
+                    <li><a class="list-group-item active" href="config.php?skills">Compétences<span class="glyphicon glyphicon-pencil pull-right"></a></li>
+                    <li><a class="list-group-item" href="config.php?users">Liste élèves<span class="glyphicon glyphicon-pencil pull-right"></a></li>
             </ul>
         </nav>
     </aside>

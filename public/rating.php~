@@ -158,15 +158,18 @@
         
         $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
         
-        if($submitted) 
+        if($submitted)
         {
-            $self_assessments = unserialize($submitted[0]["answers"]);
-            
-            // get self_assessment questions
-            foreach ($self_assessments as $key => $self_assessment)
-            {
-                $query = query("SELECT question FROM auto_assesment WHERE id = ?", $self_assessment["id"]);
-                $self_assessments[$key]["question"] = $query[0]["question"];
+            if ($submitted[0]["answers"] !== 's:0:"";')
+            { 
+                $self_assessments = unserialize($submitted[0]["answers"]);
+                
+                // get self_assessment questions
+                foreach ($self_assessments as $key => $self_assessment)
+                {
+                    $query = query("SELECT question FROM auto_assesment WHERE id = ?", $self_assessment["id"]);
+                    $self_assessments[$key]["question"] = $query[0]["question"];
+                }
             }
         }
         else
