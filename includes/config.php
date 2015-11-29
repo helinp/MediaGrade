@@ -19,8 +19,29 @@
     // requirements
     require("constants.php");
     require("functions.php");
-    require("langs/be_FR.php");
- 
+
+    /**
+     *  Languages
+     *
+     */
+    if (!defined("LANG"))
+    {
+        $lang["browser"] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+
+        switch ($lang["browser"])
+        {
+            case "fr":
+            $lang["file"] = "langs/be_FR.php";
+            break;
+            
+            default:
+            $lang["file"] = "langs/us_EN.php";
+            break;
+        }
+        
+        require_once($lang["file"]);
+    }
+    
     // avoids question mark char coding error
     query("SET NAMES utf8");   
     

@@ -3,26 +3,6 @@
     // configuration
     require("../includes/config.php"); 
 
-    // get competences from database
-    $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id"); 
-
-    // get users
-    $users = array();
-    $classes = query("SELECT class FROM users ORDER BY class");
-    
-    foreach($classes as $class )
-    {
-        $users[$class["class"]] = 
-        query("SELECT * FROM users WHERE class = ? ORDER BY class, username ", $class["class"]);
-        
-    }
-
-    // checks if user is admin
-    if (!query("SELECT is_staff FROM users WHERE id = ? AND is_staff = 1", $_SESSION["id"]))
-    {
-        redirect("login.php");
-    }
-     
     /**
      *  POST
      *
@@ -34,14 +14,14 @@
                 ON DUPLICATE KEY UPDATE skill = ?", 
                 $_POST["skill_id"], $_POST["skill"], $_POST["skill"] ); 
          
-         redirect("config.php?skills");   
+         redirect("adm_config.php?skills");   
     }
     elseif (!empty($_POST["del_skill"]))
     {
         $delete = explode("+++", $_POST["del_skill"][0]);
         query("DELETE FROM skills WHERE skill_id = ? AND skill = ?", $delete[0], $delete[1]);  
         
-        redirect("config.php?skills"); 
+        redirect("adm_config.php?skills"); 
     }    
     elseif (!empty($_POST["del_user"]))
     {
@@ -55,7 +35,7 @@
         else
         {
             query("DELETE FROM users WHERE id = ?", $delete[1]);  
-            redirect("config.php?users"); 
+            redirect("adm_config.php?users"); 
         }
     }       
     // add user
@@ -74,7 +54,7 @@
             query("INSERT INTO users (username, name, last_name, class, hash) VALUES (?, ?, ?, ?, ?)",
                     $_POST["username"], $_POST["name"], $_POST["last_name"], $_POST["class"], crypt($_POST["password"]));
             
-            redirect("config.php?users"); 
+            redirect("adm_config.php?users"); 
         }
         else
         {
@@ -106,11 +86,18 @@
                     $_POST["class"][$user_id], $_POST["name"][$user_id], $_POST["last_name"][$user_id], $_POST["username"][$user_id], crypt($_POST["password"][$user_id]), $user_id);
             }
         }
-        redirect("config.php?users");
+        redirect("adm_config.php?users");
                 
         //if password value then change pass
     }
-    
+    elseif(!empty($_POST["message_board"]))
+    { 
+        $input = html_purify($_POST["message_board"]);
+        
+        query("UPDATE config SET content = ? WHERE type='welcome_message'", $input);
+        
+        goto adm_welcome;
+    }
        
     /**
      *  GET
@@ -118,14 +105,51 @@
      */
     if(isset($_GET["skills"]))
     {    
+        // get competences from database
+        $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id"); 
+    
         // renders
-        render_admin("skills.php", ["title" => $lang['ADMIN_SKILLS'],  
+        render_admin("adm_skills.php", ["title" =>  LABEL_ADMIN_SKILLS,  
             "skills" => $skills], false);
+    }
+    elseif(isset($_GET["welcome"]))
+    {    
+        adm_welcome:
+        
+        $query = query("SELECT content FROM config WHERE type = 'welcome_message'");
+        
+        $message = "";
+        
+        if($query)
+        {
+            $message = $query[0]["content"];
+        }
+        
+        
+        // renders
+        render_admin("adm_message_board.php", ["title" =>  LABEL_ADMIN_SKILLS, "message" => $message], false);
     }
     else //if(isset($_GET["users"]))
     {    
+        // get users
+        $users = array();
+        $classes = query("SELECT class FROM users ORDER BY class");
+        
+        foreach($classes as $class )
+        {
+            $users[$class["class"]] = 
+            query("SELECT * FROM users WHERE class = ? ORDER BY class, username ", $class["class"]);
+            
+        }
+
+        // checks if user is admin
+        if (!query("SELECT is_staff FROM users WHERE id = ? AND is_staff = 1", $_SESSION["id"]))
+        {
+            redirect("login.php");
+        }
+            
         // renders
-        render_admin("users.php", ["title" => $lang['ADMIN_USERS'],  
+        render_admin("adm_users.php", ["title" =>  LABEL_ADMIN_USERS,  
             "users" => $users], false);
     }
 ?>

@@ -2,34 +2,15 @@
 
     // configuration
     require("../includes/config.php"); 
-
-    // get competences from database
-    $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id "); 
-
-    // select objectives name
-    $objectives = array_column(query("SELECT DISTINCT objective FROM assessment ORDER BY objective"), "objective");
-
-    // get questions and ids from auto_assessment and fills array 
-    $auto_assessments = query("SELECT * FROM auto_assesment LIMIT 5");
+    
+    // redirect if user is not admin
+    if (!$_SESSION["admin"]) redirect("index.php");
 
     
-    // adds ckecked value
-    foreach(array_keys($auto_assessments) as $key)
-    {
-        $auto_assessments[$key]["checked"] = "";
-    }
-            
-    // declare array to vaoid error if empty
-    $skills_selected = array();    
-    $assessments = "";
-    
-    // checks if user is admin
-    if (!query("SELECT is_staff FROM users WHERE id = ? AND is_staff = 1", $_SESSION["id"]))
-    {
-        redirect("login.php");
-    }
-    
-    // gets post from user 
+    /**
+     *  POST
+     *
+     **/  
     if (!empty($_POST))
     {
         // check if disactivate action is requested
@@ -61,7 +42,7 @@
            || empty($_POST["deadline"]) || empty($_POST["criterion"]) 
            || empty($_POST["periode"]) || empty($_POST["class"]))
         {
-               apologize("FORM'S NOT COMPLETE");
+               apologize(LABEL_FORM_NOT_COMPLETE);
         }
         
         if(is_uploaded_file($_FILES['submitted_file']['tmp_name']))
@@ -83,13 +64,13 @@
             if (!empty(stristr(basename($_FILES['submitted_file']['name']), "php")))
             {
                 sendamail(ADMIN_MAIL, "Tentative de RFI", "USER_INCLUSION_EXPLOIT \nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);
-                apologize($lang['USER_INCLUSION_EXPLOIT']);
+                apologize(LABEL_USER_INCLUSION_EXPLOIT);
             }
             
             // checks file size
             if ($_FILES['submitted_file']['size'] >  MAX_UPLOAD_FILE_SIZE)
             {
-                apologize($lang['MAX_SIZE_REACHED']);
+                apologize(LABEL_MAX_SIZE_REACHED);
             }
             
             // checks file mime type TODO: get mime type from database 
@@ -98,13 +79,13 @@
                 && $_FILES['submitted_file']['type'] != 'text/pdf' && $_FILES['submitted_file']['type'] != 'text/x-pdf')
             {
                 // dump($_FILES['submitted_file']);
-                apologize($lang['UNEXPECTED_FILE_TYPE']);
+                apologize(LABEL_UNEXPECTED_FILE_TYPE);
             }
             
             // creates directory if doesn't exit
             if (!is_dir($upload_dir) && !mkdir($upload_dir, 0774, true))
             {
-                apologize($lang['DIR_CREATION_ERROR'] . $upload_dir);
+                apologize(LABEL_DIR_CREATION_ERROR . $upload_dir);
             }
             
             // uploads the file
@@ -114,7 +95,6 @@
             }
             
             chmod($upload_file, 0774);
-            // chmod upload dir TODO
             
          }
          
@@ -244,15 +224,17 @@
                        $_POST["extension"],
                        $_POST["project_id"]);
         }
-        inform("Project updated!");
-        // redirect("admin.php");
+        
+        inform(LABEL_PROJECT_UPDATED);
     }
    
     /**
-     *      RESULTS
+     *      $_GET
      *  
      **/
-    elseif(isset($_GET["results"]))
+    
+    
+    if(isset($_GET["results"]))
     {
         
         // get results
@@ -321,23 +303,48 @@
             $averages[ strtoupper($user["last_name"]) . " " . $user["name"][0] . "." ] = $average[0]["AVG(user_grade)"];
         }
                 
-        render_admin("admin_results.php", ["title" => $lang['ADMIN'], "results" => $results, "projects" => $projects, 
+        render_admin("adm_results.php", ["title" =>  LABEL_ADMIN, "results" => $results, "projects" => $projects, 
                     "objectives" => $objectives, "averages" => $averages, "user_class" => $users[0]["class"]], false); 
     }
     
     /**
-     * RENDERS EXISTING PROJECT PAGE
+     * RENDERS PROJECT PAGES
      *
      **/
-    elseif(isset($_GET["project"]))
+     
+    // get competences from database
+    $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id "); 
+
+    // select objectives name
+    $objectives = array_column(query("SELECT DISTINCT objective FROM assessment ORDER BY objective"), "objective");
+
+    // get questions and ids from auto_assessment and fills array 
+    $auto_assessments = query("SELECT * FROM auto_assesment LIMIT 5");
+
+    // adds checked value
+    foreach(array_keys($auto_assessments) as $key)
     {
-        // gets projects for side menu
-        $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC");
-        
+        $auto_assessments[$key]["checked"] = "";
+    }
+            
+    // declare array to vaoid error if empty
+    $skills_selected = array();    
+    $assessments = "";
+     
+    // gets projects for side menu
+    $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC ");
+    
+    // gets classes for <select> in templace adm_add_project  
+    $classes = query("SELECT DISTINCT class FROM users ORDER BY class"); 
+
+    // Renders open project page
+    if(isset($_GET["project"]))
+    {
+       
         // gets current project
         $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
         
-        if(!$curr_project){apologize($lang['USER_EXPLOIT']);}
+        if(!$curr_project){apologize(LABEL_USER_EXPLOIT);}
         
         
         // gets selected criteria and cursors from database
@@ -401,8 +408,6 @@
             // remove last 'AND' from query
             $query = rtrim($query, "AND ");
                
-            // adds selected assessements TODO Does not work
-            // dump($query);
             $autoassesment_id = query($query);
               
             foreach($autoassesment_id as $id)
@@ -419,14 +424,14 @@
         
         if (!$curr_project)
         {
-            apologize($lang['PROJECT_NOT_FOUND']);
+            apologize(LABEL_PROJECT_NOT_FOUND);
         }
         else
         {
             //dump($curr_project[0]);
-            render_admin("add_project.php", ["title" => $lang['MANAGE_PROJECTS'], "projects" => $projects, 
+            render_admin("adm_add_project.php", ["title" =>  LABEL_MANAGE_PROJECTS, "projects" => $projects, 
                 "curr_project" => $curr_project[0], "skills" => $skills, "self_assessments" => $auto_assessments, 
-                "skills_selected" => $skills_selected, "rows" => $rows, "objectives_list" => $objectives]);           
+                "skills_selected" => $skills_selected, "rows" => $rows, "objectives_list" => $objectives, "classes" => $classes]);           
         }
     }
     
@@ -436,19 +441,13 @@
      **/
     else
     {
-        
-        // gets projects for side menu
-        $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC ");
-        
-        // TODO:  autocomplete criteria and cursors 
-        
         $criteria_autocomplete = "";
         $i = 0;
         
         $curr_project = [
             "periode" => "",
             "deadline" => "",
-            "project_name" => $lang['PROJECT_LEN'],
+            "project_name" =>  LABEL_PROJECT_TITLE,
             "class" => "",
             "assessment_id" => "",
             "auto_assessment_id" => "",
@@ -467,8 +466,9 @@
           
         
         // TODO simplificate array
-        render_admin("add_project.php", ["title" => $lang['ADMIN'], "projects" => $projects, 
+        render_admin("adm_add_project.php", ["title" =>  LABEL_ADMIN, "projects" => $projects, 
             "skills" => $skills, "curr_project" => $curr_project, "self_assessments" => $auto_assessments, 
-            "skills_selected" => $skills_selected, "objectives_list" => $objectives, "rows" => $rows]);
+            "skills_selected" => $skills_selected, "objectives_list" => $objectives, "rows" => $rows, "classes" => $classes]);
     }
+
 ?>

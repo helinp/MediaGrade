@@ -17,11 +17,11 @@
         // validate submission
         if (empty($_POST["password"]))
         {
-            apologize($lang['PROVIDE_USERNAME']);
+            apologize(LABEL_PROVIDE_USERNAME);
         }
         elseif (empty($_POST["username"]))
         {
-            apologize($lang['PROVIDE_PASSWORD']);
+            apologize( LABEL_PROVIDE_PASSWORD);
         }
 
         // query database for user
@@ -49,7 +49,7 @@
         }
 
         // else apologize
-        apologize($lang['INVALID_USER_PASS']);
+        apologize(LABEL_INVALID_USER_PASS);
     }
 
 ?>

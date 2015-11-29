@@ -34,7 +34,7 @@
                         type: 'line'
                     },
                     title: {
-                        text: '<?= $lang['SKILLS'] ?>'
+                        text: '<?= LABEL_SKILLS ?>'
                     },
                     subtitle: {
                         text: ''
@@ -49,7 +49,7 @@
                     },
                     yAxis: {
                         title: {
-                            text: '<?= $lang['PERCENT'] ?>'
+                            text: '<?= LABEL_PERCENT ?>'
                         }
                     },
                     plotOptions: {

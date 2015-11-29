@@ -6,7 +6,7 @@
         <p class="text-danger">
             <?= htmlspecialchars($message) ?>
         </p>
-        <a href="/"><?=$lang['BACK']?></a>
+        <a href="/"><?= LABEL_BACK ?></a>
     </div>
 </main>
 

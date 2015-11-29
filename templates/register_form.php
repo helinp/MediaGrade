@@ -2,25 +2,25 @@
     <form action="register.php" method="post">
         <fieldset>
             <div class="form-group">
-                <input autofocus class="form-control" name="name" placeholder="<?= $lang['NAME'] ?>" type="text"/>
+                <input autofocus class="form-control" name="name" placeholder="<?= LABEL_NAME ?>" type="text"/>
             </div>
             <div class="form-group">
-                <input autofocus class="form-control" name="lastname" placeholder="<?= $lang['LAST_NAME'] ?>" type="text"/>
+                <input autofocus class="form-control" name="lastname" placeholder="<?= LABEL_LAST_NAME ?>" type="text"/>
             </div>
             <div class="form-group">
-                <input autofocus class="form-control" name="username" placeholder="<?= $lang['USERNAME'] ?>" type="text"/>
+                <input autofocus class="form-control" name="username" placeholder="<?= LABEL_USERNAME ?>" type="text"/>
             </div>
             <div class="form-group">
-                <input class="form-control" name="email" placeholder="<?= $lang['EMAIL'] ?>" type="text"/>
+                <input class="form-control" name="email" placeholder="<?= LABEL_EMAIL ?>" type="text"/>
             </div>
             <div class="form-group">
-                <input class="form-control" name="password" placeholder="<?= $lang['PASSWORD'] ?>" type="password"/>
+                <input class="form-control" name="password" placeholder="<?= LABEL_PASSWORD ?>" type="password"/>
             </div>
             <div class="form-group">
-                <input class="form-control" name="confirmation" placeholder="<?= $lang['CONFIRM_PASSWORD'] ?>" type="password"/>
+                <input class="form-control" name="confirmation" placeholder="<?= LABEL_CONFIRM_PASSWORD ?>" type="password"/>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default"><?= $lang['REGISTER'] ?></button>
+                <button type="submit" class="btn btn-default"><?= LABEL_REGISTER ?></button>
             </div>
         </fieldset>
     </form>

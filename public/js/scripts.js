@@ -4,7 +4,26 @@ var PDFObject=function(y){if(!y||!y.url){return false;}var w="1.2",b=y.id||false
 
 $(document).ready(function() {
 
-    function search(query, cb)
+    function searchCursor(query, cb)
+    {
+        // get places matching query (asynchronously)
+        var parameters = {
+            cursor: query
+        };
+        $.getJSON("search.php", parameters)
+        .done(function(data, textStatus, jqXHR) {
+
+            // call typeahead's callback with search results (i.e., places)
+            cb(data);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+
+            // log error to browser's console
+            console.log(errorThrown.toString());
+        });
+    }
+
+    function searchCriterion(query, cb)
     {
         // get places matching query (asynchronously)
         var parameters = {
@@ -23,6 +42,7 @@ $(document).ready(function() {
         });
     }
 
+
     // configure typeahead
     // https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
     $(".typeahead_criteria").typeahead({
@@ -33,7 +53,7 @@ $(document).ready(function() {
         minLength: 1, 
     },
     {
-        source: search,
+        source: searchCriterion,
         displayKey: "criteria",
         templates: {
             suggestion: _.template("<p><%- criteria %></p>")
@@ -48,7 +68,7 @@ $(document).ready(function() {
         minLength: 1, 
     },
     {
-        source: search,
+        source: searchCursor,
         displayKey: "cursor",
         templates: {
             suggestion: _.template("<p style='border-bottom: 1px dotted lightgray;padding:0.5em 0;'><%- cursor %></p>")

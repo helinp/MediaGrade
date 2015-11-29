@@ -43,31 +43,31 @@
         if (!empty(stristr(basename($_FILES['submitted_file']['name']), "php")))
         {
             sendamail(ADMIN_MAIL, "Tentative de RFI", "USER_INCLUSION_EXPLOIT \nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);
-            apologize($lang['USER_INCLUSION_EXPLOIT']);
+            apologize(LABEL_USER_INCLUSION_EXPLOIT);
         }
         
         // checks file size
         if ($_FILES['submitted_file']['size'] >  MAX_UPLOAD_FILE_SIZE)
         {
-            apologize($lang['MAX_SIZE_REACHED']);
+            apologize(LABEL_MAX_SIZE_REACHED);
         }
         
         // checks file mime type TODO: get mime type from database 
         if($_FILES['submitted_file']['type'] != 'image/jpeg' && $_FILES['submitted_file']['type'] != 'video/mp4')
         {
-            apologize($lang['UNEXPECTED_FILE_TYPE']);
+            apologize(LABEL_UNEXPECTED_FILE_TYPE);
         }
         
         // creates directory if doesn't exit
         if (!is_dir($upload_dir) && !mkdir($upload_dir, 0755, true))
         {
-            apologize( $lang['DIR_CREATION_ERROR'] . $upload_dir);
+            apologize( LABEL_DIR_CREATION_ERROR . $upload_dir);
         }
 
         // uploads the file
         if (!move_uploaded_file($_FILES['submitted_file']['tmp_name'], $upload_file)) 
         {
-           apologize($lang['USER_EXPLOIT']);
+           apologize(LABEL_USER_EXPLOIT);
         }
         
         // sets files & directory mode
@@ -109,7 +109,7 @@
         query("COMMIT");
         
         sendamail(ADMIN_MAIL, "Project submitted!", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
-        inform($lang['PROJECT_SAVED']);
+        inform(LABEL_PROJECT_SAVED);
     }
             
    
@@ -128,7 +128,7 @@
         
         if ($project == false)
         {
-            apologize($lang['USER_EXPLOIT']);
+            apologize(LABEL_USER_EXPLOIT);
         }
         else
         {
@@ -139,16 +139,16 @@
                             width='80%' 
                             height='100%'>
 
-                            ". $lang['NO_PDF_READER'] . $project[0]["instructions"] . "
+                            ". LABEL_NO_PDF_READER . $project[0]["instructions"] . "
 
                             </object>";
             }
             else
             {
-                $content = "<p>" . $lang['NO_INSTRUCTIONS'] . "</p>";
+                $content = "<p>" . LABEL_NO_INSTRUCTIONS . "</p>";
             }
                                 
-            render_projects("content.php", ["title" => $lang['SUBMIT'], "projects" => $projects, "content" => $content]);
+            render_projects("content.php", ["title" => LABEL_SUBMIT, "projects" => $projects, "content" => $content]);
         }
     }
     elseif (!empty($_GET["results"]))
@@ -164,7 +164,7 @@
         // check query
         if ($query == false)
         {
-            render_projects("results.php", ["title" => $lang['RESULTS'], "projects" => $projects, "content" => "<p>Aucun résultat disponible.</p>"]);
+            render_projects("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => "<p>". LABEL_NO_AVAILABLE_RESULTS ."</p>"]);
         }
         else
         {
@@ -178,11 +178,11 @@
             // if not, inform user.
             else
             {
-                $content = $lang['NOT_GRADED_YET'];
+                $content = LABEL_NOT_GRADED_YET;
             }
             
             // dump($content);
-            render_projects("results.php", ["title" => $lang['RESULTS'], "projects" => $projects, "content" => $content[0]]);
+            render_projects("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => $content[0]]);
         }
         
         
@@ -203,7 +203,7 @@
         
         if ($project == false)
         {
-            apologize($lang['USER_EXPLOIT']);
+            apologize(LABEL_USER_EXPLOIT);
         }
         else
         {         
@@ -225,7 +225,7 @@
                 }
 
             }  
-            render_projects("submit.php", ["title" => $lang['SUBMIT'], 
+            render_projects("submit.php", ["title" => LABEL_SUBMIT, 
                         "projects" => $projects,
                         "project_data" => $project[0], 
                         "questions" => $questions, 
@@ -237,8 +237,22 @@
     else
     {
 
-        if($_SESSION["admin"]) redirect("admin.php");
-        render_projects("content.php", ["title" => "Projets", "projects" => $projects, "content" => $lang['HOWTO_PROJECTS']]);    
+        if($_SESSION["admin"]) redirect("grade.php");
+        
+        $query = query("SELECT content FROM config WHERE type = 'welcome_message'");
+           
+        $message = "";
+        
+        if($query)
+        {
+            $message = $query[0]["content"];
+        }
+            
+        // replace user's variables
+        $message = str_replace("%user_name%", $_SESSION["name"], $message);
+        $message = str_replace("%user_lastname%", $_SESSION["last_name"], $message);
+            
+        render_projects("content.php", ["title" => "Projets", "projects" => $projects, "content" => $message]);    
 
     }
 

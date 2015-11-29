@@ -14,10 +14,10 @@
             <div id="navbar" class="navbar-collapse collapse">
                <ul class="nav navbar-nav">
                <?php if($_SESSION["admin"]):?>
-                    <li><a href="admin.php"><span class="glyphicon glyphicon-film"></span> <?=$lang['MANAGE_PROJECTS']?> </a></li>
-                    <li><a href="rating.php"><span class="glyphicon glyphicon-list-alt"></span> <?=$lang['RATE']?></a></li>
+                    <li><a href="admin.php"><span class="glyphicon glyphicon-film"></span> <?= LABEL_MANAGE_PROJECTS ?> </a></li>
+                    <li><a href="grade.php"><span class="glyphicon glyphicon-list-alt"></span> <?= LABEL_RATE ?></a></li>
                     <li>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span>  <?=$lang['RESULTS']?>  <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span>  <?= LABEL_RESULTS ?>  <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu">
                                
                             <?php foreach($classes as $class): ?> 
@@ -28,20 +28,30 @@
                         
                     </li>
                <?php else: ?>
-                    <li><a href="index.php"><span class="glyphicon glyphicon-film"></span> <?=$lang['SUBMIT']?></a></li>
-                    <li><a href="gradebook.php"><span class="glyphicon glyphicon-list-alt"></span> <?=$lang['GRADE_BOOK']?></a></li>
-                    <li><a href="gallery.php?my"><span class="glyphicon glyphicon-briefcase"></span> <?=$lang['MY_GALLERY']?></a></li>
+                    <li><a href="index.php"><span class="glyphicon glyphicon-film"></span> <?= LABEL_SUBMIT ?></a></li>
+                    <li><a href="gradebook.php"><span class="glyphicon glyphicon-list-alt"></span> <?=LABEL_GRADE_BOOK ?></a></li>
+                    <li><a href="gallery.php?my"><span class="glyphicon glyphicon-briefcase"></span> <?=LABEL_MY_GALLERY ?></a></li>
                <?php endif ?>
-                    <li><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?=$lang['GALLERY']?></a></li>
+                    <li><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?=LABEL_GALLERY ?></a></li>
                </ul>
                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="config.php"><span class="glyphicon glyphicon-briefcase"></span> <?=$lang['CONFIG']?></a></li>
+               <?php if($_SESSION["admin"]):?>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <?=LABEL_CONFIG ?> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="config.php?welcome"><?= LABEL_CONFIG_WELCOME ?></a></li>
+                            <li><a href="config.php?skills"><?= LABEL_SKILLS ?></a></li>
+                            <li><a href="config.php?users"><?= LABEL_CLASS_ROLL ?></a></li>
+                        </ul>
+                    </li>
+                    
+               <?php endif ?>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <?= $username[0]["name"] . " " . $username[0]["last_name"] ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <li><a href="profile.php">Profil</a></li>
+                            <li><a href="profile.php"><?= LABEL_MY_PROFILE ?></a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><span class="glyphicon glyphicon-log-in"></span> <?=$lang['LOGOUT']?></a></li>
+                            <li><a href="logout.php"><span class="glyphicon glyphicon-log-in"></span> <?= LABEL_LOGOUT ?></a></li>
                         </ul>
                     </li>
                </ul>

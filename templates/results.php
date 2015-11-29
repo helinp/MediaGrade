@@ -6,19 +6,15 @@
            <table class="table table-hover ">
                 <thead>
                   <tr>
-                    <th>Compétence</th>
-                    <th>Critère</th>
-                    <th>Curseur (L'élève a:)</th>
-                    <th>Résultat</th>
+                    <th><?= LABEL_SKILLS ?></th>
+                    <th><?= LABEL_CRITERION ?></th>
+                    <th><?= LABEL_CURSOR ?></th>
+                    <th><?= LABEL_RESULTS ?></th>
                   </tr>
                 </thead>
                 
-                
-         
-                
                 <tbody>
                  
-                
               <?php foreach($content as $result)
                     {
                         $result["max_grade"] = 10; // for future implementation
