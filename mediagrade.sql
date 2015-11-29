@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 18, 2015 at 09:39 PM
+-- Generation Time: Nov 29, 2015 at 03:28 PM
 -- Server version: 5.5.44-0ubuntu0.14.04.1-log
 -- PHP Version: 5.5.9-1ubuntu4.12
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `mediagrade`
 --
-CREATE DATABASE IF NOT EXISTS `mediagrade` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `mediagrade`;
 
 -- --------------------------------------------------------
 
@@ -35,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `assessment` (
   `cursor` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=245 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=246 ;
 
 --
 -- Dumping data for table `assessment`
@@ -102,7 +100,8 @@ INSERT INTO `assessment` (`id`, `objective`, `criteria`, `cursor`) VALUES
 (241, 'FAIRE', 'Qualité technique', 'produit une bande sonore respectant les normes de diffusion (niveau, qualité\r\néchantillonnage, mixage).                             '),
 (242, 'FAIRE', 'Qualité technique', 'monté de façon fluide et rythmée, sans faux raccord ni image parasite.'),
 (243, 'FAIRE', 'Qualité technique', 'cadré en coupant proprement les éléments constitutifs de la composition et en évitant\r\nd’y inclure des éléments parasites.'),
-(244, 'FAIRE', 'Qualité technique', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready.');
+(244, 'FAIRE', 'Qualité technique', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready.'),
+(245, 'CONNAITRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et ');
 
 -- --------------------------------------------------------
 
@@ -115,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `auto_assesment` (
   `question` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `auto_assesment`
@@ -141,6 +140,26 @@ CREATE TABLE IF NOT EXISTS `auto_check` (
   `lenght` time NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `config`
+--
+
+CREATE TABLE IF NOT EXISTS `config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `config`
+--
+
+INSERT INTO `config` (`id`, `type`, `content`) VALUES
+(2, 'welcome_message', '<h4>Bienvenue, %user_name% !</h4>\r\n<p>Vous &ecirc;tes sur la plateforme de remise de vos masters.</p>\r\n<p>Le menu "Projets" vous donne acc&egrave;s aux consignes, &agrave; un formulaire de remise et &agrave; vos r&eacute;sultats des diff&eacute;rents projets. Le menu "Mes comp&eacute;tences" retrace dans un graphique la progression de vos habilit&eacute;s audiovisuelles. Il se compl&egrave;tera au fur et &agrave; mesure de l''ann&eacute;e.</p>\r\n<p>Enfin, les menus "Mes projets" et "Hall of fame" vous donnent l''aper&ccedil;u de vos projets et de ceux de vos camarades.</p>\r\n<p>Bon travail!</p>\r\n<p>P. H&eacute;lin&nbsp;</p>\r\n<p><video src="http://player.vimeo.com/external/138946032.sd.mp4?s=43df5df0d733011263687d20a47557e4" width="300" height="150"></video></p>\r\n<p>https://vimeo.com/channels/staffpicks/138946032</p>\r\n<p>&lt;scri</p>');
 
 -- --------------------------------------------------------
 
@@ -176,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `is_activated` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`project_id`),
   KEY `id` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `projects`
@@ -187,7 +206,8 @@ INSERT INTO `projects` (`project_id`, `periode`, `instructions`, `deadline`, `pr
 (15, 1, '', '2015-10-28', 'Diaphragme', '3AV', '28,30,75,92', '', 'Formative', 'F2', '', 0),
 (16, 1, '', '2015-10-28', 'LightPainting', '3AV', '28,30,75,92', '', 'Formative', 'A4,A5,A6,A7,A8,C1', 'jpg', 1),
 (17, 1, '', '2015-10-30', 'Ateliers', '5AV', '30,149,231,232', '1,2', 'Formative', 'A1,C1,C5,C7,E4,E6,F1,F2,F3,F5,F7,F8,F9', 'jpg', 1),
-(18, 3, '', '2015-12-31', 'Les clônes', '5AV', '158,214,215,217', '1', 'Certificative', 'F3,F5,F7,F8,F9', 'jpg', 1);
+(18, 3, '', '2015-12-31', 'Les clônes', '5AV', '158,214,215,217', '1', 'Certificative', 'F3,F5,F7,F8,F9', 'jpg', 1),
+(19, 1, '', '2015-11-12', 'Project Name', '3AV', '245', '1', 'Formative', 'A3,A4', 'mp4', 1);
 
 -- --------------------------------------------------------
 
@@ -204,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `results` (
   `max_grade` text COLLATE utf8_unicode_ci,
   `user_grade` mediumint(9) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=198 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
 
 --
 -- Dumping data for table `results`
@@ -241,10 +261,10 @@ INSERT INTO `results` (`id`, `user_id`, `project_id`, `skill_id`, `date`, `max_g
 (191, 194, 18, 214, '2015-11-18', NULL, 8),
 (192, 194, 18, 215, '2015-11-18', NULL, 7),
 (193, 194, 18, 217, '2015-11-18', NULL, 8),
-(194, 194, 17, 30, '2015-11-18', NULL, 8),
-(195, 194, 17, 149, '2015-11-18', NULL, 7),
-(196, 194, 17, 231, '2015-11-18', NULL, 4),
-(197, 194, 17, 232, '2015-11-18', NULL, 2);
+(198, 194, 17, 30, '2015-11-29', NULL, 8),
+(199, 194, 17, 149, '2015-11-29', NULL, 7),
+(200, 194, 17, 231, '2015-11-29', NULL, 4),
+(201, 194, 17, 232, '2015-11-29', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -259,14 +279,14 @@ CREATE TABLE IF NOT EXISTS `skills` (
   PRIMARY KEY (`skill_id`),
   UNIQUE KEY `skill_id` (`skill_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=45 ;
 
 --
 -- Dumping data for table `skills`
 --
 
 INSERT INTO `skills` (`id`, `skill_id`, `skill`) VALUES
-(24, 'A1', 'Construire le jugement éclairé en structurant la pensée critique (tant vis-à-vis de ses propres réalisations que de celles des autres) et permettre d’échanger ses raisons d’aimer en argumentant :\nau regard de la logique documentaire ou du reportage qui, là où elle est invoquée, implique une approche objective ;\nau regard du « quotient créateur » (puissance transformatrice, originalité de l’apport…) ;\nau regard des possibilités connotatives (ouverture ou fermeture du sens) ;\nau regard de l’existence formelle, visuelle et sonore (image, musique, texte, voix…) constitutive de l’œuvre (espace, composition, tension, formes, valeurs, couleurs, textures, proportions, lumières, échelle, mouvement, raccords, temps…), mais aussi dans le rapport de la forme et du contenu ;\nau regard de sa lisibilité et de son intelligibilité, notamment dans la relation aux conditions de production et de réception ;\nau regard de la norme et du hors norme des codes esthétiques.'),
+(24, 'A1', 'Construire le jugement éclairé en structurant la pensée critique (tant vis-à-vis de ses propres réalisations que de celles des autres) et permettre d’échanger ses raisons d’aimer en argumentant : au regard de la logique documentaire ou du reportage qui, là où elle est invoquée, implique une approche objective ; au regard du « quotient créateur » (puissance transformatrice, originalité de l’apport…) ; au regard des possibilités connotatives (ouverture ou fermeture du sens) ; au regard de l’existence formelle, visuelle et sonore (image, musique, texte, voix…) constitutive de l’œuvre (espace, composition, tension, formes, valeurs, couleurs, textures, proportions, lumières, échelle, mouvement, raccords, temps…), mais aussi dans le rapport de la forme et du contenu ; au regard de sa lisibilité et de son intelligibilité, notamment dans la relation aux conditions de production et de réception ; au regard de la norme et du hors norme des codes esthétiques.'),
 (25, 'A2', 'Enrichir son jugement esthétique par l’éclairage de connaissances pertinentes du contexte d’émergence de l’œuvre.'),
 (26, 'A3', 'Lire et comprendre le fonctionnement des documents audiovisuels existants (presse, annonces, clips, vidéos…), de manière à en assurer la compréhension (aspects sociologiques, sémiologiques, psychologiques…) et la critique de même qu’à pouvoir en évaluer l’impact sur le public.'),
 (27, 'A4', 'Apprécier la richesse de ses racines et de son identité culturelle. Imposer le respect naturel et la valorisation des patrimoines.'),
