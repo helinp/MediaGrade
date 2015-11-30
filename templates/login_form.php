@@ -14,6 +14,6 @@
         </fieldset>
         
     </form>
-        <h5><?= LABEL_DEMO_ACCOUNTS ?></h5>
+        <h5 onclick="return confirm('Are you sure you want to do that?');"><?= LABEL_DEMO_ACCOUNTS ?></h5>
         <code>student 123456</code><br /> <code>teacher 123456</code>
 </main>

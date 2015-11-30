@@ -52,5 +52,5 @@
             ];
     };
             
-    render("gallery.php", ["title" => "Hall of fame", "medias" => $medias], true);        
+    render("gallery.php", ["title" => "Hall of fame", "medias" => $medias]);        
 ?>

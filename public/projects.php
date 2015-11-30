@@ -20,7 +20,7 @@
                     SET is_activated = NOT is_activated
                     WHERE project_id = ?", $_POST["disactivate_project"]);
             
-            redirect("admin.php");
+            render;
         }
         
         // check if delete action is requested
@@ -30,7 +30,7 @@
             
             query("DELETE FROM projects WHERE project_id = ?", $_POST["delete_project"]);
             
-            redirect("admin.php");
+            render;
         }
         
 
@@ -233,85 +233,8 @@
      *  
      **/
     
+    render:
     
-    if(isset($_GET["results"]))
-    {
-        
-        // get results
-        if(!empty($_GET["results"]))
-        {
-            $users = query("SELECT id, last_name, name, class FROM users WHERE class = ? AND is_staff = false ORDER BY last_name", $_GET["results"]);
-        }
-        
-        if (empty($users) || !isset($_GET["results"]) || empty($_GET["results"]))
-        {
-            $first_class = query("SELECT DISTINCT class FROM users WHERE is_staff = 0 ORDER BY class")[0]["class"];
-            $users = query("SELECT id, last_name, name, class FROM users WHERE is_staff = false AND class=? ORDER BY class, last_name", $first_class);
-        }
-        
-        $results = "";
-        
-        if (isset($_GET["period"]))
-        {
-            $projects = query("SELECT project_name, project_id FROM projects WHERE class = ? AND periode = ?", $users[0]['class'], $_GET["period"]);
-        }
-        if (!isset($_GET["period"]) || empty($_GET["period"]) || empty($projects) )
-        {
-            $projects = query("SELECT project_name, project_id FROM projects WHERE class = ?", $users[0]['class']);
-        }
-        
-        $objectives = query("SELECT DISTINCT objective FROM assessment ORDER BY objective");
-       
-        $average = "";
-
-        foreach($users as $user)
-        {
-
-            foreach($projects as $key => $project)
-            {
-                
-                foreach($objectives as $objective)
-                {
-                    $query = query("SELECT assessment.id, AVG(user_grade) 
-                                    FROM results 
-                                    LEFT JOIN assessment
-                                    ON results.skill_id = assessment.id 
-                                    WHERE results.project_id = ?
-                                    AND user_id = ? 
-                                    AND objective = ?
-                                    GROUP BY objective",
-                                    $project['project_id'],
-                                    $user["id"],
-                                    $objective["objective"]
-                                    );
-                    
-                    if(empty($query[0]["AVG(user_grade)"])) $query[0]["AVG(user_grade)"] = "--";
-
-                    $results[ strtoupper($user["last_name"]) . " " . $user["name"][0] . "." ][ $project["project_name"] ][ $objective["objective"] ] = $query;
-                    
-                   
-                }
-            }
-            
-            // results average 
-            $average = query("SELECT AVG(user_grade) FROM results WHERE user_id = ?", $user["id"]);
-            
-            // if query didn't found anything
-            if(empty($average[0]["AVG(user_grade)"])) $average[0]["AVG(user_grade)"] = "--";
-            
-            // put in variable
-            $averages[ strtoupper($user["last_name"]) . " " . $user["name"][0] . "." ] = $average[0]["AVG(user_grade)"];
-        }
-                
-        render_admin("adm_results.php", ["title" =>  LABEL_ADMIN, "results" => $results, "projects" => $projects, 
-                    "objectives" => $objectives, "averages" => $averages, "user_class" => $users[0]["class"]], false); 
-    }
-    
-    /**
-     * RENDERS PROJECT PAGES
-     *
-     **/
-     
     // get competences from database
     $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id "); 
 
@@ -334,9 +257,6 @@
     // gets projects for side menu
     $projects = query("SELECT * FROM projects ORDER BY periode DESC, project_id DESC ");
     
-    // gets classes for <select> in templace adm_add_project  
-    $classes = query("SELECT DISTINCT class FROM users ORDER BY class"); 
-
     // Renders open project page
     if(isset($_GET["project"]))
     {
@@ -429,9 +349,9 @@
         else
         {
             //dump($curr_project[0]);
-            render_admin("adm_add_project.php", ["title" =>  LABEL_MANAGE_PROJECTS, "projects" => $projects, 
+            render("adm_projects.php", ["title" =>  LABEL_MANAGE_PROJECTS, "projects" => $projects, 
                 "curr_project" => $curr_project[0], "skills" => $skills, "self_assessments" => $auto_assessments, 
-                "skills_selected" => $skills_selected, "rows" => $rows, "objectives_list" => $objectives, "classes" => $classes]);           
+                "skills_selected" => $skills_selected, "rows" => $rows, "objectives_list" => $objectives]);           
         }
     }
     
@@ -466,9 +386,9 @@
           
         
         // TODO simplificate array
-        render_admin("adm_add_project.php", ["title" =>  LABEL_ADMIN, "projects" => $projects, 
+        render("adm_projects.php", ["title" =>  LABEL_ADMIN, "projects" => $projects, 
             "skills" => $skills, "curr_project" => $curr_project, "self_assessments" => $auto_assessments, 
-            "skills_selected" => $skills_selected, "objectives_list" => $objectives, "rows" => $rows, "classes" => $classes]);
+            "skills_selected" => $skills_selected, "objectives_list" => $objectives, "rows" => $rows]);
     }
 
 ?>

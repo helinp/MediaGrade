@@ -14,8 +14,6 @@
 
     // get users
     $users = array();
-    $classes = query("SELECT DISTINCT class FROM users ORDER BY class");
-    
     
     /**
      *  POST
@@ -115,8 +113,8 @@
              $i++;
         }
         // renders
-        render_admin("adm_grade_list.php", ["title" =>  LABEL_RATE,  
-            "skills" => $skills, "users" => $users, "classes" => $classes ], false);
+        render("adm_grade_list.php", ["title" =>  LABEL_RATE,  
+            "skills" => $skills, "users" => $users]);
     }
     
     // render rating page
@@ -213,9 +211,9 @@
         // END CRITERIA STUFF
         
         // renders
-        render_admin("adm_grade.php", ["title" =>  LABEL_RATE,  
+        render("adm_grade.php", ["title" =>  LABEL_RATE,  
             "skills" => $skills, "user" => $user, "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
-            "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]], false);
+            "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]]);
     }
     else
     {
@@ -249,8 +247,8 @@
              }
              $i++;
         }
-        render_admin("adm_grade_list.php", ["title" =>  LABEL_ADMIN,  
-                        "classes" => $classes, "users" => $users ], false);   
+        render("adm_grade_list.php", ["title" =>  LABEL_ADMIN,  
+                        "users" => $users ]);   
     }
     
 ?>

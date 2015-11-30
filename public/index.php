@@ -148,7 +148,7 @@
                 $content = "<p>" . LABEL_NO_INSTRUCTIONS . "</p>";
             }
                                 
-            render_projects("content.php", ["title" => LABEL_SUBMIT, "projects" => $projects, "content" => $content]);
+            render("content.php", ["title" => LABEL_SUBMIT, "projects" => $projects, "content" => $content]);
         }
     }
     elseif (!empty($_GET["results"]))
@@ -164,7 +164,7 @@
         // check query
         if ($query == false)
         {
-            render_projects("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => "<p>". LABEL_NO_AVAILABLE_RESULTS ."</p>"]);
+            render("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => "<p>". LABEL_NO_AVAILABLE_RESULTS ."</p>"]);
         }
         else
         {
@@ -182,7 +182,7 @@
             }
             
             // dump($content);
-            render_projects("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => $content[0]]);
+            render("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => $content[0]]);
         }
         
         
@@ -225,7 +225,7 @@
                 }
 
             }  
-            render_projects("submit.php", ["title" => LABEL_SUBMIT, 
+            render("submit.php", ["title" => LABEL_SUBMIT, 
                         "projects" => $projects,
                         "project_data" => $project[0], 
                         "questions" => $questions, 
@@ -252,7 +252,7 @@
         $message = str_replace("%user_name%", $_SESSION["name"], $message);
         $message = str_replace("%user_lastname%", $_SESSION["last_name"], $message);
             
-        render_projects("content.php", ["title" => "Projets", "projects" => $projects, "content" => $message]);    
+        render("content.php", ["title" => "Projets", "projects" => $projects, "content" => $message]);    
 
     }
 

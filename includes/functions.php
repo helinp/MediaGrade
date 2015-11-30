@@ -210,112 +210,31 @@
     /**
      * Renders template, passing in values.
      */
-    function render_admin($template, $values = [], $menu = true)
-    {
-               
-        // if template exists, render it
-        if (file_exists("../templates/$template"))
-        {
-            // extract variables into local scope
-            extract($values);
-           
-            // render header
-            require("../templates/header.php");
-            
-            // TODO Remove
-            // extract username
-            $username = query("SELECT name, last_name FROM users WHERE id = ?", $_SESSION["id"]);
-                
-            // get classes for menu results
-            $classes = query("SELECT DISTINCT class FROM users WHERE is_staff = 0 ORDER BY class");
-        
-            // get periods
-            $periods = query("SELECT DISTINCT periode FROM projects ORDER BY periode"); 
-        
-            // render menu
-            require("../templates/menu.php");
-
-             // render side menu
-            if($menu === true) require("../templates/adm_projects.php");
-                   
-            // render template
-            require("../templates/$template");
-
-            // render footer
-            require("../templates/footer.php");
-        }
-
-        // else err
-        else
-        {
-            trigger_error("Invalid template: $template", E_USER_ERROR);
-        }
-    }
-    
-    /**
-     * Renders template, passing in values.
-     */
-    function render($template, $values = [], $menu = false)
+     function render($template, $values = [], $menu = true)
     {
         // if template exists, render it
         if (file_exists("../templates/$template"))
         {
             // extract variables into local scope
             extract($values);
-                     
+            
             // render header
             require("../templates/header.php");
             
-            if ($menu === true)
+            // render user side menu
+            if ($menu)
             {
-                // extract username
-                $username = query("SELECT name, last_name FROM users WHERE id = ?", $_SESSION["id"]);
-                
-                // get classes for menu results
-                $classes = query("SELECT DISTINCT class FROM users WHERE is_staff = 0 ORDER BY class");
-                
+                // render admin side menu
+                if($_SESSION["admin"]) 
+                {
+                    // gets classes for <select> in templace adm_add_project  
+                    $classes = query("SELECT DISTINCT class FROM users WHERE is_staff = 0 ORDER BY class");
+                }
+ 
                 // render template
                 require("../templates/menu.php");
             }
-        
-            // render template
-            require("../templates/$template");
-
-            // render footer
-            require("../templates/footer.php");
-        }
-
-        // else err
-        else
-        {
-            trigger_error("Invalid template: $template", E_USER_ERROR);
-        }
-    }
-
-
- /**
-     * Renders template project, passing in values.
-     */
-    function render_projects($template, $values = [])
-    {
-        // if template exists, render it
-        if (file_exists("../templates/$template"))
-        {
-            // extract variables into local scope
-            extract($values);
             
-            // extract username
-            $username = query("SELECT name, last_name FROM users WHERE id = ?", $_SESSION["id"]); 
-              
-            // render header
-            require("../templates/header.php");
-          
-            // render template
-            require("../templates/menu.php");
-
-            // render template
-            require("../templates/projects.php");
-                        
             // render template
             require("../templates/$template");
 

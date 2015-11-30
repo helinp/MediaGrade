@@ -109,8 +109,8 @@
         $skills = query("SELECT skill, skill_id FROM skills ORDER BY skill_id"); 
     
         // renders
-        render_admin("adm_skills.php", ["title" =>  LABEL_ADMIN_SKILLS,  
-            "skills" => $skills], false);
+        render("adm_skills.php", ["title" =>  LABEL_ADMIN_SKILLS,  
+            "skills" => $skills], true, true);
     }
     elseif(isset($_GET["welcome"]))
     {    
@@ -127,7 +127,7 @@
         
         
         // renders
-        render_admin("adm_message_board.php", ["title" =>  LABEL_ADMIN_SKILLS, "message" => $message], false);
+        render("adm_message_board.php", ["title" =>  LABEL_ADMIN_SKILLS, "message" => $message], true, true);
     }
     else //if(isset($_GET["users"]))
     {    
@@ -149,7 +149,7 @@
         }
             
         // renders
-        render_admin("adm_users.php", ["title" =>  LABEL_ADMIN_USERS,  
-            "users" => $users], false);
+        render("adm_users.php", ["title" =>  LABEL_ADMIN_USERS,  
+            "users" => $users], true, true);
     }
 ?>

@@ -1,9 +1,9 @@
    <aside id="projects" class="col-md-2 bs-docs-sidebar">
        <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
            <ul class="list-group small" itemprop="project">
-                       <li><a class="list-group-item<?= (isset($_GET["period"]) ? "" : " active") ?>" href="admin.php?results"><?= LABEL_ALL_PERIODS ?><span class="glyphicon glyphicon-th-list pull-right"></span></a></li>
+                       <li><a class="list-group-item<?= (isset($_GET["period"]) ? "" : " active") ?>" href="results.php?class=<?= (isset($_GET["class"]) ? trim($_GET["class"], " ") : "") ?>"><?= LABEL_ALL_PERIODS ?><span class="glyphicon glyphicon-th-list pull-right"></span></a></li>
                    <?php foreach($periods as $period): ?>
-                       <li><a class="list-group-item<?= (!empty($_GET["period"]) ? ($_GET["period"] == $period["periode"] ? " active" : "") : "" ); ?>" href="admin.php?results=<?= trim($_GET["results"], " ")?>&amp;period=<?= trim($period["periode"], " ")?>"><?= LABEL_PERIOD ?> <?= $period["periode"]  ?><span class="glyphicon glyphicon-th-list pull-right"></span></a></li>
+                       <li><a class="list-group-item<?= (!empty($_GET["period"]) ? ($_GET["period"] == $period["periode"] ? " active" : "") : "" ); ?>" href="results.php?class=<?= (isset($_GET["class"]) ? trim($_GET["class"], " ") : "") ?>&amp;period=<?= trim($period["periode"], " ")?>"><?= LABEL_PERIOD ?> <?= $period["periode"]  ?><span class="glyphicon glyphicon-th-list pull-right"></span></a></li>
                    <?php endforeach ?>
            </ul>
        </nav>
@@ -20,7 +20,7 @@
                 
                 <thead>
                   <tr>
-                    <th><?= LABEL_STUDENTS_FROM ?> <?= $user_class ?></th>
+                    <th><?= LABEL_STUDENTS_FROM ?> <?= $users_class ?></th>
                     <?php foreach($projects as $project): ?>
                    
                         <?php foreach ($objectives as $key => $objective): ?>

@@ -14,14 +14,14 @@
             <div id="navbar" class="navbar-collapse collapse">
                <ul class="nav navbar-nav">
                <?php if($_SESSION["admin"]):?>
-                    <li><a href="admin.php"><span class="glyphicon glyphicon-film"></span> <?= LABEL_MANAGE_PROJECTS ?> </a></li>
+                    <li><a href="projects.php"><span class="glyphicon glyphicon-film"></span> <?= LABEL_MANAGE_PROJECTS ?> </a></li>
                     <li><a href="grade.php"><span class="glyphicon glyphicon-list-alt"></span> <?= LABEL_RATE ?></a></li>
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span>  <?= LABEL_RESULTS ?>  <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu">
                                
                             <?php foreach($classes as $class): ?> 
-                            <li><a href="admin.php?results=<?= trim($class["class"], " ") ?>"><?= $class["class"] ?></a></li>
+                            <li><a href="results.php?class=<?= trim($class["class"], " ") ?>"><?= $class["class"] ?></a></li>
                             <?php endforeach ?>
                         </ul>
                         
@@ -47,7 +47,7 @@
                     
                <?php endif ?>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <?= $username[0]["name"] . " " . $username[0]["last_name"] ?> <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <?= $_SESSION["name"] . " " .$_SESSION["last_name"] ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li><a href="profile.php"><?= LABEL_MY_PROFILE ?></a></li>
                             <li class="divider"></li>

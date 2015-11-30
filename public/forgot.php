@@ -60,7 +60,7 @@
         // check if hash exists in database
         if (!empty($check))
         {
-            render("change_password.php", ["title" => "Change Password", "hash" => $_GET["lost"]]);
+            render("change_password.php", ["title" => "Change Password", "hash" => $_GET["lost"]], false);
         }
         
         // redirects if invalid hash

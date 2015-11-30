@@ -18,7 +18,7 @@
      	            <thead>
 	                    <tr>
 		                    <th>Groupe</th>
-		                    <th>Compétence</th>
+		                    <th><?= LABEL_SKILL ?></th>
 		                    <th></th>
 	                    </tr>
 	                </thead>
