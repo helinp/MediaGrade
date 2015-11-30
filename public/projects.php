@@ -109,6 +109,7 @@
          * 
          */
         $i = 0;
+        $assessments = "";
         
         foreach($_POST["objective"] as $objective)
         {
