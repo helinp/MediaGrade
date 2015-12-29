@@ -72,7 +72,7 @@
      */
     function inform($message)
     {
-        render("inform.php", ["title" => "Information", "message" => $message]);
+        render("inform.php", ["title" => "Information", "message" => $message], false);
         exit;
     }
     
@@ -81,7 +81,7 @@
      */
     function apologize($message)
     {
-        render("apology.php", ["title" => "Erreur", "message" => $message]);
+        render("apology.php", ["title" => "Erreur", "message" => $message], false);
         exit;
     }
 

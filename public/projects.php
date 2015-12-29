@@ -20,7 +20,7 @@
                     SET is_activated = NOT is_activated
                     WHERE project_id = ?", $_POST["disactivate_project"]);
             
-            render;
+            goto render;
         }
         
         // check if delete action is requested
@@ -30,7 +30,7 @@
             
             query("DELETE FROM projects WHERE project_id = ?", $_POST["delete_project"]);
             
-            render;
+            goto render;
         }
         
 
@@ -191,7 +191,7 @@
         
         foreach ($_POST["skills"] as $id)
         {
-            array_push($skills, substr($id, 0, 2));
+            array_push($skills, $id);
         }
 
         /**

@@ -39,9 +39,18 @@
     // pdf files directory TODO: fix manual URL
     define("ROOT_DIR", "/home/jharvard/vhosts/$_SERVER[HTTP_HOST]/public");
    
+    // is demo version?
+    define("DEMO_VERSION", false);
+
    // max size of uploaded files in octet TODO: see php.ini
-   define("MAX_UPLOAD_FILE_SIZE", "209715200");
-   
+   if (DEMO_VERSION)
+   {
+       define("MAX_UPLOAD_FILE_SIZE", "715200");
+   }
+   else
+   {
+       define("MAX_UPLOAD_FILE_SIZE", "209715200");
+   }
    // allowed html tags
    define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
    

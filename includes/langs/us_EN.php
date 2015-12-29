@@ -57,7 +57,7 @@
     define('LABEL_RESULTS', 'Results');
     define('LABEL_INSTRUCTIONS', 'Instructions');
     define('LABEL_SUBMIT', 'Submit');
-    define('LABEL_SKILLS', 'Skills');
+    define('LABEL_SKILLS', 'Knowledge');
     define('LABEL_ACCOUNT', 'Account');
     define('LABEL_GALLERY', 'Hall of Fame');
     define('LABEL_MY_GALLERY', 'My projects');
@@ -83,7 +83,7 @@
     define('LABEL_NOT_GRADED_YET', '<p> Your work has not been graded yet </ p>.');
     define('LABEL_PERCENT', 'Percentage');
     define('LABEL_ALL_PERIODS', 'All periods');
-    define('LABEL_STUDENTS_FROM', 'Class:');
+    define('LABEL_STUDENTS_FROM', 'Grade:');
     define('LABEL_PERIOD', 'Period');  
     define('LABEL_AVERAGE', 'Average'); 
   
@@ -96,14 +96,14 @@
     // Add project
     define('LABEL_PROJECT_TITLE', 'Project Name');
     define('LABEL_PROJECT_INFO', 'General information');
-    define('LABEL_PROJECT_FILE_INFO', 'instructions');
+    define('LABEL_PROJECT_FILE_INFO', 'Instructions');
     define('LABEL_ASSESSMENT_TYPE', 'Evaluation type');
     define('LABEL_ASSESSMENT_TYPE_1', 'Formative');
     define('LABEL_ASSESSMENT_TYPE_2', 'Certification');
     define('LABEL_ASSESSMENT_TYPE_3', 'Diagnosis');
     define('LABEL_ASSESSMENT_TYPE_4', 'Summative');
     define('LABEL_PRESS_CTRL_SELECT', 'Press <kbd>CTRL</kbd> for multiple selection');
-    define('LABEL_SKILLS_SEEN', 'Learning skills');
+    define('LABEL_SKILLS_SEEN', 'Knowledge (Students will be able to:)');
     define('LABEL_UPLOAD_INSTRUCTIONS', 'Upload instructions');
     define('LABEL_ONLY_PDF_ALLOWED', 'PDF only');
     define('LABEL_CRITERIA', 'Criteria');
@@ -112,9 +112,9 @@
     define('LABEL_SKILL', 'Objective');
     define('LABEL_COEFFICIENT', 'Factor');
     define('LABEL_ASSESSMENT_GRID', 'Assessment Grid');
-    define('LABEL_CURSORS', 'Cursors (the student has:)');
-    define('LABEL_CURSOR', 'Cursor (the student has:)');
-    define('LABEL_CLASS', 'Class');
+    define('LABEL_CURSORS', 'Evidences (the student is able to:)');
+    define('LABEL_CURSOR', 'Evidence (the student  is able to:)');
+    define('LABEL_CLASS', 'Grade / Group');
     define('LABEL_DEADLINE', 'Deadline');
     define('LABEL_NEW_CRITERION', 'New criterion');
     define('LABEL_ADD_CRITERION', 'Add criterion'); // Mind the first space!
@@ -142,7 +142,7 @@
     define('LABEL_RATING', 'Grade');
     define('LABEL_SAVE_RATING', 'Save assessment'); // Mind the first space!
     define('LABEL_NOT_SUBMITTED', 'Work not submitted');
-    define('LABEL_EVERY_CLASSES', 'Every classes');
+    define('LABEL_EVERY_CLASSES', 'Every grades');
     define('LABEL_NO_AVAILABLE_RESULTS', 'No result available.');
     
     define('LABEL_VOTE_00', 'FX');
@@ -156,7 +156,7 @@
     define('LABEL_VOTE_08', 'B');
     define('LABEL_VOTE_09', 'A');
     define('LABEL_VOTE_10', 'A+');
-    define('LABEL_ADMIN_SKILLS', 'Skills management');
+    define('LABEL_ADMIN_SKILLS', 'Knowledge management');
     define('LABEL_ADMIN_USERS', 'User management');
   
     // settings

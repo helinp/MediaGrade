@@ -3,7 +3,7 @@
             <h4><?= $project["project_name"]?></h4> 
             <ul class="list-group small" itemprop="project">
                 <?php foreach($users as $user_list): ?>    
-                    <li><a class="list-group-item <?= ($user_list["id"] == $_GET["user"]) ? "active" : ""?>" href="grade.php?rate=<?= $project["project_id"] ?>&amp;user=<?= $user_list["id"]?>"> <?= strtoupper($user_list["last_name"]) . " " . $user_list["name"]?><span class="<?= ($user_list["is_rated"] ? "glyphicon glyphicon-check" : "glyphicon glyphicon-pencil") ?> pull-right"></span></a></li>
+                    <li><a class="list-group-item <?= ($user_list["id"] == $_GET["user"]) ? "active" : ""?>" href="grade.php?rate=<?= $project["project_id"] ?>&amp;user=<?= $user_list["id"]?>"> <?= strtoupper($user_list["last_name"]) . " " . $user_list["name"]?><span class="pull-right <?= ($user_list["is_submitted"] ? ($user_list["is_rated"] ? "glyphicon glyphicon-check\" style=\"color:green;\"" : "glyphicon glyphicon-pencil\"") : "\"") ?>></span></a></li>
                 <?php endforeach ?>
             </ul>
         </nav>
@@ -133,8 +133,3 @@
 
     </script>
         
-    <script>
-    myVideoPlayer.addEventListener('loadedmetadata', function() {
-    console.log(videoPlayer.duration);
-    });
-    </script>

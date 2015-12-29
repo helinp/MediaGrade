@@ -26,9 +26,9 @@
                         <?php foreach ($objectives as $key => $objective): ?>
                         
                         <th class="rotate" >
-                            <div><span><small style="margin-left:-2.4em;"><span class="glyphicon glyphicon-arrow-right"></span> <?= $project["project_name"] ?></small></span></div>
+                            <div><span><small style="margin-left:-2.4em;"><?= (strlen($project["project_name"]) > 13 ? substr($project["project_name"], 0, 13) . '...' : $project["project_name"])?></small></span></div>
                         
-                            <div><span class="text-muted"><small><?= $objective["objective"]?></small></span></div>
+                            <div><span class="text-muted"><small><span class="glyphicon glyphicon-arrow-right"></span> <?= $objective["objective"]?></small></span></div>
                         </th>
                         <?php endforeach ?>
                    

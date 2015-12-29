@@ -39,9 +39,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <?=LABEL_CONFIG ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="config.php?welcome"><?= LABEL_CONFIG_WELCOME ?></a></li>
                             <li><a href="config.php?skills"><?= LABEL_SKILLS ?></a></li>
                             <li><a href="config.php?users"><?= LABEL_CLASS_ROLL ?></a></li>
+                            <li><a href="config.php?welcome"><?= LABEL_CONFIG_WELCOME ?></a></li>
+
                         </ul>
                     </li>
                     

@@ -56,7 +56,7 @@
     define('LABEL_GRADES', 'Évaluations');
     define('LABEL_RESULTS', 'Résultats');
     define('LABEL_INSTRUCTIONS', 'Consignes');
-    define('LABEL_SUBMIT', 'Sauver');
+    define('LABEL_SUBMIT', 'Remise');
     define('LABEL_SKILLS', 'Compétences');
     define('LABEL_ACCOUNT', 'Compte');
     define('LABEL_GALLERY', 'Hall of Fame');

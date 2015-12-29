@@ -42,7 +42,7 @@
         // checks RFI check
         if (!empty(stristr(basename($_FILES['submitted_file']['name']), "php")))
         {
-            sendamail(ADMIN_MAIL, "Tentative de RFI", "USER_INCLUSION_EXPLOIT \nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);
+            if (!DEMO_VERSION) sendamail(ADMIN_MAIL, "Tentative de RFI", "USER_INCLUSION_EXPLOIT \nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);
             apologize(LABEL_USER_INCLUSION_EXPLOIT);
         }
         
@@ -108,7 +108,7 @@
                 $_POST["project_id"], $_SESSION["id"], serialize($answers), $upload_dir, $rename);
         query("COMMIT");
         
-        sendamail(ADMIN_MAIL, "Project submitted!", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
+        if (!DEMO_VERSION) sendamail(ADMIN_MAIL, "Project submitted!", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
         inform(LABEL_PROJECT_SAVED);
     }
             

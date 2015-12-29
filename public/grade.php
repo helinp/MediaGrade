@@ -123,7 +123,8 @@
     
         // getting generic data 
         $user = query("SELECT id, username, name, last_name, class
-                       FROM users WHERE `id` = ?", $_GET["user"])[0]; 
+                       FROM users WHERE `id` = ?", $_GET["user"]); 
+        if (!$user) apologize(LABEL_USER_EXPLOIT);
                        
         // gets users and join submitted
         $users = query("SELECT users.id, name, last_name, file_path, file_name, answers
@@ -133,7 +134,7 @@
                        AND submitted.project_id = ?
                        WHERE users.class = ? 
                        ORDER BY last_name ASC, submitted.id ASC", 
-                       $_GET["rate"], $user["class"]); 
+                       $_GET["rate"], $user[0]["class"]); 
         
         
         $i = 0;
@@ -212,7 +213,7 @@
         
         // renders
         render("adm_grade.php", ["title" =>  LABEL_RATE,  
-            "skills" => $skills, "user" => $user, "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
+            "skills" => $skills, "user" => $user[0], "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
             "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]]);
     }
     else

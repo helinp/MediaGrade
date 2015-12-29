@@ -217,8 +217,13 @@ margin: 0 auto;
 {
     // height: 100vh;
 }
-
-
+.ellipsis
+{
+    white-space: nowrap;
+    width: 100%;                
+    overflow: hidden;  /* "overflow" value must be different from "visible" */                
+    text-overflow: ellipsis;
+}
 
 /**** ROTATE TABLE HEADER CLASS ****/
 

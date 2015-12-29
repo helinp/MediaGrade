@@ -1,4 +1,14 @@
 
+    <script>
+        $(function() {
+            $('#select_skills option').each(function() {
+                var myStr = $(this).text();
+                var len = $(this).width();
+                if(myStr.length > 15){$(this).text(myStr.substring(0, 70) + '...');}
+            });
+        });
+    </script>   
+   
     <aside id="projects" class="col-md-2 bs-docs-sidebar">
         <nav>
             <ul class="list-group small">
@@ -66,7 +76,9 @@
                 <div class = "col-xs-4">
                     <div class="form-group">
                         <label for="title"><?=  LABEL_CLASS ?></label>
-                        <select class="form-control" name="class" required>
+                        <select class="form-control" name="class" style=" white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;" required>
                         <?php foreach($classes as $key => $class): ?>
                             <option  <?php if($curr_project["class"] === $class["class"]) echo(" selected"); ?>><?= $class["class"] ?></option>
                         <?php endforeach ?>
@@ -91,9 +103,9 @@
                 <div class = "col-xs-10">
                     <div class="form-group">
                         <label for="title"><?=  LABEL_SKILLS_SEEN ?></label>
-                        <select multiple class="form-control" name="skills[]" required style="resize:both">
+                        <select id="select_skills" multiple class="form-control" name="skills[]" required style="resize:both">
                         <?php foreach ($skills as $skill): ?>
-                            <option<?php if(in_array($skill["skill_id"], $skills_selected)) echo(" selected"); ?>><?= $skill["skill_id"] . " " . $skill["skill"]?></option>
+                            <option<?= (in_array($skill["skill_id"], $skills_selected) ? ' selected' : '') ?> value="<?= $skill['skill_id'] ?>"><?= $skill["skill_id"] . " " . $skill["skill"]?></option>
                         <?php endforeach ?>
                         </select>
                         <p class="help-block with-errors"><?=  LABEL_PRESS_CTRL_SELECT ?></p>

@@ -93,8 +93,8 @@
             else
             {
                 // creates a very simple hash
-                $hash = rand(10000,99999) . uniqid($row[0]["username"], true);  
-               
+                $hash = bin2hex(openssl_random_pseudo_bytes(50));  
+
                 // makes recovery url
                 $reset_password_url = FULL_URL . "forgot.php?lost=" . sha1("$hash");
                 
@@ -123,7 +123,7 @@ MediaGrade Team.\r\n";
     }
     else
     {
-        render("forgot_form.php");    
+        render("forgot_form.php", ["title" => LABEL_FORGOT_PASS], false);    
     }
 
 ?>

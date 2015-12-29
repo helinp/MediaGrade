@@ -6,7 +6,7 @@
         <p class="text-danger">
             <?= htmlspecialchars($message) ?>
         </p>
-        <a href="/"><?= LABEL_BACK ?></a>
+        <a  href="javascript:history.go(-1);" ><?= LABEL_BACK ?></a>
     </div>
 </main>
 
