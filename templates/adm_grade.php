@@ -12,26 +12,49 @@
     <main class="col-md-10" id="content">
         <div class="row">
             <div class="col-md-12">       
+     
                 <h4><?= $user["class"]?> // <?= $user["name"] . " " . $user["last_name"]?></h4>
-                
-                <?php if (isset($submitted[0]["file_path"])): ?>
-                    <?php if ($extension == "mp4" || $extension == "mov" || $extension == "avi"): ?>
-                        <video width="50%" controls preload="metadata">
-                            <source src="<?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?>" type="video/mp4">
-                            <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $submitted[0]["file_path"]?>"><?= LABEL_HERE ?></a></p>
-                        </video>       
-                    <?php elseif($extension == "jpg" || $extension == "jpeg" || $extension == "png" || $extension == "gif"): ?>
-                    
-                        <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" src="<?= $submitted[0]["file_path"] . "thumb_" . $submitted[0]["file_name"]?>" />
-                    
-                    <?php endif ?>
-                <pre style="margin-top:1em"><a href="<?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?>"><?= $submitted[0]["file_path"] . $submitted[0]["file_name"] ?></a></pre>
-                <?php else: ?>
-                <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= LABEL_NOT_SUBMITTED ?></div>
-                <?php endif ?>
-            
             </div>
         </div>
+        
+        <div class="row">
+                  
+            <?php if(count($submitted) < 7) { $max_files = 6 ; $cols = 4;} else { $max_files = 12 ; $cols = 2;} ?>
+                <?php foreach(range(0, $max_files) as $count): ?>
+                <div class="col-md-<?= $cols ?>"> 
+            
+                    <?php if (isset($submitted[$count]["file_path"])): ?>
+                        <?php if ($extension == "mp4" || $extension == "mov" || $extension == "avi"): ?>
+                            <video width="50%" controls preload="metadata">
+                                <source src="<?= $submitted[$count]["file_path"] . $submitted[$count]["file_name"] ?>" type="video/mp4">
+                                <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $submitted[$count]["file_path"]?>"><?= LABEL_HERE ?></a></p>
+                            </video>       
+                        <?php elseif($extension == "jpg" || $extension == "jpeg" || $extension == "png" || $extension == "gif"): ?>
+                        
+                            <a href="<?= $submitted[$count]["file_path"] . $submitted[$count]["file_name"] ?>">
+                                <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" 
+                            
+                                width="100%" src="<?= $submitted[$count]["file_path"] . "thumb_" . $submitted[$count]["file_name"]?>" />
+                                </a>
+                        
+                        <?php endif ?>
+                     <?php endif ?>
+                </div>
+                <?php endforeach ?>
+              
+             
+       </div>
+       <div class="row">
+            <div class="col-md-12">         
+                <?php if (!isset($submitted[0]["file_path"])): ?>
+                <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= LABEL_NOT_SUBMITTED ?></div>
+                <?php endif ?>
+            </div>
+           
+
+        </div>
+        
+        
          <div class="row">  
              
             <!-- CRITERIA -->

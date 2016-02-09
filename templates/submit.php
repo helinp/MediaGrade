@@ -1,18 +1,23 @@
         <?php include('projects_nav.php'); ?> 
        <main class="col-md-10">         
             <form action="index.php" role="form" enctype="multipart/form-data" method="post" data-toggle="validator">
-                <div class="form-group">  
+                <div class="form-group"> 
+                <h5><span class="glyphicon glyphicon-download-alt"></span> <?= ($number_of_files > 1 ? LABEL_SUBMIT_FILES : LABEL_SUBMIT_FILE) ?></h5>  
+         <?php while($number_of_files--): ?>
          <?php if (!empty($extension)):?>
-                    <h5><span class="glyphicon glyphicon-download-alt"></span> <?= LABEL_SUBMIT_FILE ?></h5>            
+                               
                     <input type="hidden" name="project_id" value="<?= $project_id ?>" />
                     <label for="inputfile"><?= LABEL_SELECT_FILE ?></label>
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
-                    <input id="inputfile" name="submitted_file" data-error="<?= LABEL_NO_FILE ?>"  type="file" required>
+                    <input id="inputfile" name="submitted_file[]" data-error="<?= LABEL_NO_FILE ?>"  type="file" <?= (!empty($project_data[$number_of_files - 1]["file_name"]) ? '' : 'required') ?>
                     
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                     <p class="help-block with-errors">Max. <?= number_format(MAX_UPLOAD_FILE_SIZE / 1000000, 2) ?> Mo.</p>
-                    <?= (empty($project_data["file_name"]) ?  '' : '<p>' . LABEL_SUBMITTED_FILE . ' <a href="' . $project_data["file_path"] . $project_data["file_name"] . '">' . $project_data["file_path"] . $project_data["file_name"] . '</a></p>') ?>
-         <?php endif ?>              
+                    <?= (empty($project_data[$number_of_files - 1]["file_name"]) ?  '' : '<p>' . LABEL_SUBMITTED_FILE . ' <a href="' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '">' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '</a></p>') ?>
+         <?php endif ?> 
+                    <hr />
+         <?php endwhile ?>             
+                    
                 </div>
                 
            <?php if(isset($questions)): ?>    

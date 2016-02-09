@@ -128,7 +128,7 @@
                  </div>
             </div>
             <div class="row">
-                <div class = "col-xs-10">
+                <div class = "col-xs-4">
                     <div class="form-group">  
                         <label class="control-label"><?=  LABEL_EXPECTED_FILE ?></label>            
                         <select class="form-control" name="extension">
@@ -142,6 +142,17 @@
                             <option<?= ($curr_project["extension"] == "wav" ? " selected" : "")?>>wav</option>
                         </select>
                     </div>
+                 </div>
+                 <div class = "col-xs-4">
+                    <div class="form-group">  
+                        <label class="control-label"><?=  LABEL_HOW_MANY_FILES ?></label>            
+                        <select class="form-control" name="number_of_files">
+                        <?php $n = 1; while($n <= 8): ?> 
+                            <option<?= ($curr_project["number_of_files"] == $n ? " selected" : "")?>><?= $n ?></option>
+                        <?php $n++; endwhile ?>
+                        </select>
+                    </div>
+                    <div class = "col-xs-2"></div>
                  </div>
             </div>                 
             
@@ -226,7 +237,7 @@
                         
                         <button type="submit" class="btn btn-danger  pull-right" name="delete_project" value="<?= $_GET["project"] ?>"><span class="glyphicon glyphicon-remove"></span><?=  LABEL_DEL_PROJECT ?></button>
                         
-                        <button type="submit" class="btn btn-warning  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $_GET["project"] ?>">
+                        <button type="submit" class="btn <?= ($curr_project['is_activated'] ? 'btn-warning' : 'btn-success') ?>  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $_GET["project"] ?>">
                             <span class="glyphicon glyphicon-ban-circle"></span> <?= ($curr_project["is_activated"] ?  LABEL_DISACTIVATE_PROJECT :  LABEL_ACTIVATE_PROJECT)?>
                         </button>
                         

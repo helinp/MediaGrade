@@ -74,6 +74,7 @@
     
     // Submit
     define('LABEL_SUBMIT_FILE', 'Submit file');
+    define('LABEL_SUBMIT_FILES', 'Submit files');
     define('LABEL_SUBMIT_WORK', 'I submit my project');
     define('LABEL_DISACTIVATE_PROJECT', 'Disactivate project ');
     define('LABEL_ACTIVATE_PROJECT', 'Activate project');
@@ -127,6 +128,7 @@
     define('LABEL_PROJECT_SAVED', 'Project Saved!');
     define('LABEL_EXPECTED_FILE', ' Expected file extension');
     define('LABEL_NO_EXPECTED_FILE', 'No file requested');
+    define('LABEL_HOW_MANY_FILES', 'Number of requested files');
     define('LABEL_DELETE', 'Delete');
     define('LABEL_PROJECT_UPDATED', 'Project updated!');
     

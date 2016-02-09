@@ -51,7 +51,7 @@
             $sanitized_project_name = preg_replace("/_+/", "_", $sanitized_project_name ); 
             
             
-            // rename file CLASS_PERIODE_Project.ext
+            // renames file CLASS_PERIODE_Project.ext
             $extension = pathinfo($_FILES['submitted_file']['name'], PATHINFO_EXTENSION);
             $rename = strtoupper(strip_tags($_POST["class"])) . "_" .  strip_tags($_POST["periode"]) . "_" . $sanitized_project_name . "." . strip_tags($extension);
             
@@ -201,7 +201,7 @@
         if ($_POST["project_id"] === "-1")
         {
            // add new project in table projects
-           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)", 
+           query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)", 
                      $_POST["periode"], 
                      $upload_file, 
                      $_POST["deadline"], 
@@ -211,18 +211,20 @@
                      $auto_assessments, 
                      $_POST["assessment_type"], 
                      implode(",", $skills),
-                     $_POST["extension"]
+                     $_POST["extension"],
+                     $_POST["number_of_files"]
                 );
         }
         else
         {
             // updates project
             query("UPDATE projects 
-                      SET periode = ?, instructions = ?, deadline = ?, project_name = ?, class = ?, assessment_id = ?, auto_assessment_id = ?, skill_id = ?, extension = ?
+                      SET periode = ?, instructions = ?, deadline = ?, project_name = ?, class = ?, assessment_id = ?, auto_assessment_id = ?, skill_id = ?, extension = ?, number_of_files = ?
                       WHERE project_id = ?", 
                        $_POST["periode"], $upload_file, $_POST["deadline"], 
                        $_POST["project_name"], $_POST["class"], $assessments, $auto_assessments, implode(",", $skills), 
                        $_POST["extension"],
+                       $_POST["number_of_files"],
                        $_POST["project_id"]);
         }
         
@@ -374,7 +376,8 @@
             "auto_assessment_id" => "",
             "assessment_type" => "",
             "skill_id" => "",
-            "extension" => ""
+            "extension" => "",
+            "number_of_files" => ""
             ];
             
         // creates dummy empty array

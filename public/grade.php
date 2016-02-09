@@ -133,6 +133,7 @@
                        ON users.id = submitted.user_id
                        AND submitted.project_id = ?
                        WHERE users.class = ? 
+                       GROUP BY users.id
                        ORDER BY last_name ASC, submitted.id ASC", 
                        $_GET["rate"], $user[0]["class"]); 
         

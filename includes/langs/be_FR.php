@@ -75,7 +75,8 @@
                                 No worries, just <a href="123.pdf">click here to download the PDF file.</a></p>');
                                 
     // submit
-    define('LABEL_SUBMIT_FILE', 'Remise du fichier');  
+    define('LABEL_SUBMIT_FILE', 'Remise du fichier');
+    define('LABEL_SUBMIT_FILES', 'Remise des fichiers'); 
     define('LABEL_SELF_ASSESSMENT', 'Auto-évaluation');
     define('LABEL_SUBMIT_WORK', 'Je remets mon travail');
     define('LABEL_DISACTIVATE_PROJECT', 'Désactiver le projet');
@@ -127,9 +128,10 @@
     define('LABEL_ADD_QUESTION', ' Ajouter une question');// mind the first space!
     define('LABEL_SAVE_PROJECT', 'Sauver le projet');
     define('LABEL_DEL_PROJECT', ' Supprimer le projet');  // mind the first space!
-    define('LABEL_PROJECT_SAVED', 'Votre projet à bien été remis');
+    define('LABEL_PROJECT_SAVED', 'Votre projet a bien été remis');
     define('LABEL_EXPECTED_FILE', 'Extension du fichier attendu');
     define('LABEL_NO_EXPECTED_FILE', 'Pas de remise fichier');
+    define('LABEL_HOW_MANY_FILES', 'Nombre de fichiers à remettre');
     define('LABEL_DELETE', 'Supprimer');
     define('LABEL_PROJECT_UPDATED', 'Projet mis à jour!');
     
