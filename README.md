@@ -11,8 +11,13 @@ As a belgian teacher of video and photo production, I wanted to set up a platfor
 Students can upload requested projects, access instructions, get assessement and view others projects submissions.
 Further features will show up as it still a Work in Progress...
 
+Previews:
 
-Actuals functionalities
+https://www.youtube.com/watch?v=-Toms9O7ZUM
+http://mg.pierrehelin.eu
+
+
+Current functionalities
 -----------------------
 - Register and update students,
 - Add generic skills (belgian system)
