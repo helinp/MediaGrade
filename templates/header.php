@@ -32,9 +32,9 @@
         <script src="/js/bloodhound.js"></script>
         <script src="/js/scripts.js"></script>        
     </head>
-
+    
     <body>
-      
+    <?php include_once("../includes/analyticstracking.php") ?>
 
     <?php if(in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php"])): ?>
 <div class="container" style="min-height:0;-webkit-border-radius: 7px;-moz-border-radius: 7px;border-radius: 7px;">

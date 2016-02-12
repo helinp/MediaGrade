@@ -1,5 +1,5 @@
    <nav class="navbar navbar-default navbar-fixed-top" id="menu">
-       <div class="container" <?= ($_SESSION["admin"] ? 'style="background-color:#482084;"' : '') ?>>     
+       <div class="container" <?= (@$_SESSION["admin"] ? 'style="background-color:#482084;"' : '') ?>>     
              <!-- <img class="navbar-brand" alt="MediaGrade" src="/img/logo.png" />-->
              <div class="navbar-header">
              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -13,7 +13,7 @@
                
             <div id="navbar" class="navbar-collapse collapse">
                <ul class="nav navbar-nav">
-               <?php if($_SESSION["admin"]):?>
+               <?php if(@$_SESSION["admin"]):?>
                     <li><a href="projects.php"><span class="glyphicon glyphicon-film"></span> <?= LABEL_MANAGE_PROJECTS ?> </a></li>
                     <li><a href="grade.php"><span class="glyphicon glyphicon-list-alt"></span> <?= LABEL_RATE ?></a></li>
                     <li>
@@ -35,7 +35,7 @@
                     <li><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?=LABEL_GALLERY ?></a></li>
                </ul>
                <ul class="nav navbar-nav navbar-right">
-               <?php if($_SESSION["admin"]):?>
+               <?php if(@$_SESSION["admin"]):?>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <?=LABEL_CONFIG ?> <span class="caret"></span></a>
                         <ul class="dropdown-menu">

@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 3.4.11.1deb2+deb7u1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Nov 29, 2015 at 03:28 PM
--- Server version: 5.5.44-0ubuntu0.14.04.1-log
--- PHP Version: 5.5.9-1ubuntu4.12
+-- Client: localhost
+-- Généré le: Ven 12 Février 2016 à 12:42
+-- Version du serveur: 5.5.44
+-- Version de PHP: 5.5.30-1~dotdeb+7.1
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `mediagrade`
+-- Base de données: `mediagrade`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assessment`
+-- Structure de la table `assessment`
 --
 
 CREATE TABLE IF NOT EXISTS `assessment` (
@@ -33,43 +33,27 @@ CREATE TABLE IF NOT EXISTS `assessment` (
   `cursor` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=246 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=258 ;
 
 --
--- Dumping data for table `assessment`
+-- Contenu de la table `assessment`
 --
 
 INSERT INTO `assessment` (`id`, `objective`, `criteria`, `cursor`) VALUES
 (28, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
 (29, 'FAIRE', 'Conformité de la production', 'nommé correctement le fichier'),
 (30, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
-(75, 'CONNAITRE', 'regardé', 'le cours impassiblement'),
-(87, 'CONNAITRE', 'regardé2', 'le cours impassiblement2                       '),
-(88, 'CONNAITRE', 'regardé3', 'le cours impassiblement3'),
-(92, 'CONNAITRE', 'imaginé', 'un monde meilleur'),
 (149, 'FAIRE', 'Qualité technique', 'monté la capsule de façon fluide et rythmée, sans faux raccord ni image parasite.                   '),
 (150, 'FAIRE', 'Qualité technique', 'produit une bande sonore respectant les normes de diffusion (niveau, qualité\r\néchantillonnage, mixag'),
 (151, 'FAIRE', 'Qualité de la production', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready'),
 (158, 'FAIRE', 'Qualité technique', 'produit une bande sonore respectant les normes de diffusion (niveau, qualité\r\néchantillonnage, mixage).                             '),
 (159, 'FAIRE', 'Qualité de la production', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready.                          '),
-(195, 'CONNAITRE', 'bugcrit', 'indicbug'),
-(197, 'CONNAITRE', 'regardé', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
-(198, 'CONNAITRE', 'regardé', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
-(199, 'CONNAITRE', 'regardé', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
-(200, 'CONNAITRE', 'regardé', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
-(201, 'CONNAITRE', 'regardé', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
 (202, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
 (203, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
-(204, 'CONNAITRE', 'regardé', 'le cours impassiblement'),
-(205, 'CONNAITRE', 'imaginé', 'un monde meilleur'),
 (206, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
 (207, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
-(208, 'CONNAITRE', 'regardé', 'le cours impassiblement'),
-(209, 'CONNAITRE', 'imaginé', 'un monde meilleur'),
 (210, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
 (211, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
-(212, 'CONNAITRE', 'regardé', 'le cours impassiblement'),
-(213, 'CONNAITRE', 'imaginé', 'un monde meilleur'),
 (214, 'FAIRE', 'Qualité technique', 'monté de façon fluide et rythmée, sans faux raccord ni image parasite.'),
 (215, 'FAIRE', 'Qualité technique', 'cadré en coupant proprement les éléments constitutifs de la composition et en évitant\r\nd’y inclure des éléments parasites.'),
 (216, 'FAIRE', 'Qualité technique', 'produit une bande sonore respectant les normes de diffusion (niveau, qualité\r\néchantillonnage, mixage).'),
@@ -101,12 +85,24 @@ INSERT INTO `assessment` (`id`, `objective`, `criteria`, `cursor`) VALUES
 (242, 'FAIRE', 'Qualité technique', 'monté de façon fluide et rythmée, sans faux raccord ni image parasite.'),
 (243, 'FAIRE', 'Qualité technique', 'cadré en coupant proprement les éléments constitutifs de la composition et en évitant\r\nd’y inclure des éléments parasites.'),
 (244, 'FAIRE', 'Qualité technique', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready.'),
-(245, 'CONNAITRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et ');
+(245, 'FAIRE', 'Qualité technique', 'produit une bande sonore respectant les normes de diffusion (niveau, qualité\r\néchantillonnage, mixage).                             '),
+(246, 'FAIRE', 'Qualité technique', 'monté de façon fluide et rythmée, sans faux raccord ni image parasite.'),
+(247, 'FAIRE', 'Qualité technique', 'cadré en coupant proprement les éléments constitutifs de la composition et en évitant\r\nd’y inclure des éléments parasites.'),
+(248, 'FAIRE', 'Qualité technique', 'produit une image nette, sans grain, avec une lumière adéquate et pouvant être\r\ndiffusée en HD Ready.'),
+(249, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
+(250, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
+(251, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
+(252, 'FAIRE', 'Conformité de la production', 'nommé correctement le fichier'),
+(253, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
+(254, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
+(255, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.'),
+(256, 'FAIRE', 'Conformité de la production', 'produit un travail correspondant aux consignes, mis sa photo dans le répertoire MASTER approprié et '),
+(257, 'FAIRE', 'Conformité de la production', 'crée une production complète d’une durée min. de 20 sec et max. de 30 sec.');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `auto_assesment`
+-- Structure de la table `auto_assesment`
 --
 
 CREATE TABLE IF NOT EXISTS `auto_assesment` (
@@ -114,10 +110,10 @@ CREATE TABLE IF NOT EXISTS `auto_assesment` (
   `question` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `auto_assesment`
+-- Contenu de la table `auto_assesment`
 --
 
 INSERT INTO `auto_assesment` (`id`, `question`) VALUES
@@ -127,7 +123,7 @@ INSERT INTO `auto_assesment` (`id`, `question`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `auto_check`
+-- Structure de la table `auto_check`
 --
 
 CREATE TABLE IF NOT EXISTS `auto_check` (
@@ -144,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `auto_check` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `config`
+-- Structure de la table `config`
 --
 
 CREATE TABLE IF NOT EXISTS `config` (
@@ -155,16 +151,44 @@ CREATE TABLE IF NOT EXISTS `config` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `config`
+-- Contenu de la table `config`
 --
 
 INSERT INTO `config` (`id`, `type`, `content`) VALUES
-(2, 'welcome_message', '<h4>Bienvenue, %user_name% !</h4>\r\n<p>Vous &ecirc;tes sur la plateforme de remise de vos masters.</p>\r\n<p>Le menu "Projets" vous donne acc&egrave;s aux consignes, &agrave; un formulaire de remise et &agrave; vos r&eacute;sultats des diff&eacute;rents projets. Le menu "Mes comp&eacute;tences" retrace dans un graphique la progression de vos habilit&eacute;s audiovisuelles. Il se compl&egrave;tera au fur et &agrave; mesure de l''ann&eacute;e.</p>\r\n<p>Enfin, les menus "Mes projets" et "Hall of fame" vous donnent l''aper&ccedil;u de vos projets et de ceux de vos camarades.</p>\r\n<p>Bon travail!</p>\r\n<p>P. H&eacute;lin&nbsp;</p>\r\n<p><video src="http://player.vimeo.com/external/138946032.sd.mp4?s=43df5df0d733011263687d20a47557e4" width="300" height="150"></video></p>\r\n<p>https://vimeo.com/channels/staffpicks/138946032</p>\r\n<p>&lt;scri</p>');
+(2, 'welcome_message', '<h4>Bienvenue, %user_name% !</h4>\r\n<p>Vous &ecirc;tes sur la plateforme de remise de vos masters.</p>\r\n<p>Le menu "Projets" vous donne acc&egrave;s aux consignes, &agrave; un formulaire de remise et &agrave; vos r&eacute;sultats des diff&eacute;rents projets. Le menu "Mes comp&eacute;tences" retrace dans un graphique la progression de vos habilit&eacute;s audiovisuelles. Il se compl&egrave;tera au fur et &agrave; mesure de l''ann&eacute;e.</p>\r\n<p>Enfin, les menus "Mes projets" et "Hall of fame" vous donnent l''aper&ccedil;u de vos projets et de ceux de vos camarades.</p>\r\n<p>Bon travail!</p>\r\n<p>P. H&eacute;lin</p>');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lost_password`
+-- Structure de la table `files_format`
+--
+
+CREATE TABLE IF NOT EXISTS `files_format` (
+  `mime` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `extension` tinytext COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Contenu de la table `files_format`
+--
+
+INSERT INTO `files_format` (`mime`, `extension`) VALUES
+('audio/mpeg', 'mp3'),
+('audio/mp3', 'mp3'),
+('audio/x-wav', 'wav'),
+('audio/wav', 'wav'),
+('image/gif', 'gif'),
+('image/jpeg', 'jpeg'),
+('image/jpeg', 'jpg'),
+('image/png', 'png'),
+('video/mpeg', 'mpg'),
+('video/mp4', 'mp4'),
+('video/quicktime', 'mov');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `lost_password`
 --
 
 CREATE TABLE IF NOT EXISTS `lost_password` (
@@ -177,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `lost_password` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `projects`
+-- Structure de la table `projects`
 --
 
 CREATE TABLE IF NOT EXISTS `projects` (
@@ -192,27 +216,27 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `assessment_type` text NOT NULL,
   `skill_id` tinytext NOT NULL,
   `extension` text NOT NULL,
+  `number_of_files` tinyint(4) NOT NULL DEFAULT '1',
   `is_activated` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`project_id`),
   KEY `id` (`project_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
--- Dumping data for table `projects`
+-- Contenu de la table `projects`
 --
 
-INSERT INTO `projects` (`project_id`, `periode`, `instructions`, `deadline`, `project_name`, `class`, `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, `extension`, `is_activated`) VALUES
-(9, 3, '', '2015-12-14', 'Philadelphia', '3AV', '28,29,30', '', 'Diagnostique', 'F1,F2,F3', 'jpg', 1),
-(15, 1, '', '2015-10-28', 'Diaphragme', '3AV', '28,30,75,92', '', 'Formative', 'F2', '', 0),
-(16, 1, '', '2015-10-28', 'LightPainting', '3AV', '28,30,75,92', '', 'Formative', 'A4,A5,A6,A7,A8,C1', 'jpg', 1),
-(17, 1, '', '2015-10-30', 'Ateliers', '5AV', '30,149,231,232', '1,2', 'Formative', 'A1,C1,C5,C7,E4,E6,F1,F2,F3,F5,F7,F8,F9', 'jpg', 1),
-(18, 3, '', '2015-12-31', 'Les clônes', '5AV', '158,214,215,217', '1', 'Certificative', 'F3,F5,F7,F8,F9', 'jpg', 1),
-(19, 1, '', '2015-11-12', 'Project Name', '3AV', '245', '1', 'Formative', 'A3,A4', 'mp4', 1);
+INSERT INTO `projects` (`project_id`, `periode`, `instructions`, `deadline`, `project_name`, `class`, `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, `extension`, `number_of_files`, `is_activated`) VALUES
+(9, 2, '', '2015-12-14', 'Philadelphia', '3AV', '28,29,30', '', 'Diagnostique', 'F1,F2,F3', 'jpg', 1, 1),
+(15, 3, '', '2015-10-28', 'Diaphragme', '3AV', '28,30', '', 'Formative', 'F2,F3', 'jpg', 1, 0),
+(16, 3, '', '2015-10-28', 'LightPainting', '3AV', '28,30', '', 'Formative', 'A4,A5,A6,A7,A8,C1', 'jpg', 1, 1),
+(17, 1, '', '2015-10-30', 'Ateliers', '5AV', '30,149,231,232', '1,2', 'Formative', 'A1,C1,C5,C7,E4,E6,F1,F2,F3,F5,F7,F8,F9', 'jpg', 1, 1),
+(18, 1, '', '2015-12-31', 'Les clônes', '5AV', '158,214,215,217', '1', 'Certificative', 'F3,F5,F7,F8,F9', 'jpg', 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `results`
+-- Structure de la table `results`
 --
 
 CREATE TABLE IF NOT EXISTS `results` (
@@ -224,10 +248,10 @@ CREATE TABLE IF NOT EXISTS `results` (
   `max_grade` text COLLATE utf8_unicode_ci,
   `user_grade` mediumint(9) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=215 ;
 
 --
--- Dumping data for table `results`
+-- Contenu de la table `results`
 --
 
 INSERT INTO `results` (`id`, `user_id`, `project_id`, `skill_id`, `date`, `max_grade`, `user_grade`) VALUES
@@ -235,13 +259,8 @@ INSERT INTO `results` (`id`, `user_id`, `project_id`, `skill_id`, `date`, `max_g
 (157, 194, 15, 149, '2015-11-05', NULL, 5),
 (158, 194, 15, 75, '2015-11-08', NULL, 5),
 (159, 198, 15, 75, '2015-11-06', NULL, 5),
-(160, 198, 9, 28, '2015-11-05', NULL, 7),
-(161, 198, 9, 29, '2015-11-18', NULL, 10),
 (162, 194, 9, 30, '2015-11-18', NULL, 9),
 (167, 194, 16, 28, '2015-11-18', NULL, 8),
-(168, 198, 16, 30, '2015-11-18', NULL, 6),
-(169, 198, 16, 75, '2015-11-18', NULL, 7),
-(170, 198, 16, 92, '2015-11-18', NULL, 4),
 (171, 196, 16, 28, '2015-11-18', NULL, 6),
 (172, 196, 16, 30, '2015-11-18', NULL, 7),
 (173, 196, 16, 75, '2015-11-18', NULL, 10),
@@ -261,15 +280,20 @@ INSERT INTO `results` (`id`, `user_id`, `project_id`, `skill_id`, `date`, `max_g
 (191, 194, 18, 214, '2015-11-18', NULL, 8),
 (192, 194, 18, 215, '2015-11-18', NULL, 7),
 (193, 194, 18, 217, '2015-11-18', NULL, 8),
-(198, 194, 17, 30, '2015-11-29', NULL, 8),
-(199, 194, 17, 149, '2015-11-29', NULL, 7),
-(200, 194, 17, 231, '2015-11-29', NULL, 4),
-(201, 194, 17, 232, '2015-11-29', NULL, 2);
+(194, 194, 17, 30, '2015-11-18', NULL, 8),
+(195, 194, 17, 149, '2015-11-18', NULL, 7),
+(196, 194, 17, 231, '2015-11-18', NULL, 4),
+(197, 194, 17, 232, '2015-11-18', NULL, 2),
+(206, 198, 9, 28, '2015-12-02', NULL, 7),
+(207, 198, 9, 29, '2015-12-02', NULL, 10),
+(208, 198, 9, 30, '2015-12-02', NULL, 7),
+(213, 198, 15, 28, '2015-11-02', NULL, 8),
+(214, 198, 15, 30, '2015-11-02', NULL, 10);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `skills`
+-- Structure de la table `skills`
 --
 
 CREATE TABLE IF NOT EXISTS `skills` (
@@ -279,14 +303,14 @@ CREATE TABLE IF NOT EXISTS `skills` (
   PRIMARY KEY (`skill_id`),
   UNIQUE KEY `skill_id` (`skill_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
 --
--- Dumping data for table `skills`
+-- Contenu de la table `skills`
 --
 
 INSERT INTO `skills` (`id`, `skill_id`, `skill`) VALUES
-(24, 'A1', 'Construire le jugement éclairé en structurant la pensée critique (tant vis-à-vis de ses propres réalisations que de celles des autres) et permettre d’échanger ses raisons d’aimer en argumentant : au regard de la logique documentaire ou du reportage qui, là où elle est invoquée, implique une approche objective ; au regard du « quotient créateur » (puissance transformatrice, originalité de l’apport…) ; au regard des possibilités connotatives (ouverture ou fermeture du sens) ; au regard de l’existence formelle, visuelle et sonore (image, musique, texte, voix…) constitutive de l’œuvre (espace, composition, tension, formes, valeurs, couleurs, textures, proportions, lumières, échelle, mouvement, raccords, temps…), mais aussi dans le rapport de la forme et du contenu ; au regard de sa lisibilité et de son intelligibilité, notamment dans la relation aux conditions de production et de réception ; au regard de la norme et du hors norme des codes esthétiques.'),
+(24, 'A1', 'Construire le jugement éclairé en structurant la pensée critique (tant vis-à-vis de ses propres réalisations que de celles des autres) et permettre d’échanger ses raisons d’aimer en argumentant :\nau regard de la logique documentaire ou du reportage qui, là où elle est invoquée, implique une approche objective ;\nau regard du « quotient créateur » (puissance transformatrice, originalité de l’apport…) ;\nau regard des possibilités connotatives (ouverture ou fermeture du sens) ;\nau regard de l’existence formelle, visuelle et sonore (image, musique, texte, voix…) constitutive de l’œuvre (espace, composition, tension, formes, valeurs, couleurs, textures, proportions, lumières, échelle, mouvement, raccords, temps…), mais aussi dans le rapport de la forme et du contenu ;\nau regard de sa lisibilité et de son intelligibilité, notamment dans la relation aux conditions de production et de réception ;\nau regard de la norme et du hors norme des codes esthétiques.'),
 (25, 'A2', 'Enrichir son jugement esthétique par l’éclairage de connaissances pertinentes du contexte d’émergence de l’œuvre.'),
 (26, 'A3', 'Lire et comprendre le fonctionnement des documents audiovisuels existants (presse, annonces, clips, vidéos…), de manière à en assurer la compréhension (aspects sociologiques, sémiologiques, psychologiques…) et la critique de même qu’à pouvoir en évaluer l’impact sur le public.'),
 (27, 'A4', 'Apprécier la richesse de ses racines et de son identité culturelle. Imposer le respect naturel et la valorisation des patrimoines.'),
@@ -332,7 +356,7 @@ INSERT INTO `skills` (`id`, `skill_id`, `skill`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `submitted`
+-- Structure de la table `submitted`
 --
 
 CREATE TABLE IF NOT EXISTS `submitted` (
@@ -342,30 +366,27 @@ CREATE TABLE IF NOT EXISTS `submitted` (
   `file_name` text COLLATE utf8_unicode_ci NOT NULL,
   `answers` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   `project_id` int(11) NOT NULL,
-  UNIQUE KEY `id` (`id`),
-  KEY `id_2` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=53 ;
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=67 ;
 
 --
--- Dumping data for table `submitted`
+-- Contenu de la table `submitted`
 --
 
-INSERT INTO `submitted` (`id`, `user_id`, `file_path`, `file_name`, `answers`, `project_id`) VALUES
-(41, 194, 'uploads/5AV/p1/', 'FOSTER_Maïlys_Ateliers.jpg', 'a:2:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:4:"Rien";}i:1;a:2:{s:2:"id";s:1:"2";s:6:"answer";s:5:"Tout!";}}', 17),
-(42, 116, 'uploads/5AV/p1/', 'TURNER_Holly_Ateliers.jpg', 'a:2:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:6:"Aucune";}i:1;a:2:{s:2:"id";s:1:"2";s:6:"answer";s:12:"De la bombe!";}}', 17),
-(43, 116, 'uploads/5AV/p1/', 'TURNER_Holly_Lesclnes.jpg', 'a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:6:"Aucune";}}', 18),
-(44, 120, 'uploads/5AV/p1/', 'ROSARIO_Audrey_Ateliers.jpg', 'a:2:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:1:"1";}i:1;a:2:{s:2:"id";s:1:"2";s:6:"answer";s:1:"2";}}', 17),
-(45, 120, 'uploads/5AV/p1/', 'ROSARIO_Audrey_Lesclnes.jpg', 'a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:3:"123";}}', 18),
-(47, 198, 'uploads/3AV/p3/', 'JORDAN_Gaëlle_LightPainting.jpg', 's:0:"";', 16),
-(48, 198, 'uploads/3AV/p3/', 'JORDAN_Gaëlle_Philadelphia.jpg', 's:0:"";', 9),
-(49, 196, 'uploads/3AV/p3/', 'KNIGHT_Céline_LightPainting.jpg', 's:0:"";', 16),
-(50, 191, 'uploads/3AV/p3/', 'EDWARDS_Béatrice_Philadelphia.jpg', 's:0:"";', 9),
-(52, 194, 'uploads/5AV/p1/', 'FOSTER_Maxxlys_Les_cl_nes.jpg', 'a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:26:"Tout a été à merveille!";}}', 18);
+INSERT INTO `submitted` (`id`, `user_id`, `file_path`, `file_name`, `answers`, `project_id`, `time`) VALUES
+(44, 120, 'uploads/5AV/p1/', 'ROSARIO_Audrey_Ateliers.jpg', 'a:2:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:1:"1";}i:1;a:2:{s:2:"id";s:1:"2";s:6:"answer";s:1:"2";}}', 17, '0000-00-00 00:00:00'),
+(45, 120, 'uploads/5AV/p1/', 'ROSARIO_Audrey_Lesclnes.jpg', 'a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:3:"123";}}', 18, '0000-00-00 00:00:00'),
+(49, 196, 'uploads/3AV/p3/', 'KNIGHT_Céline_LightPainting.jpg', 's:0:"";', 16, '0000-00-00 00:00:00'),
+(57, 198, 'uploads/3AV/p3/', 'JORDAN_Gaxxlle_Philadelphia.jpg', 's:0:"";', 9, '0000-00-00 00:00:00'),
+(64, 194, 'uploads/5AV/p1/', 'FOSTER_Maxxlys_Les_cl_nes.jpg', 'a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:26:"Tout a été à merveille!";}}', 18, '0000-00-00 00:00:00'),
+(65, 194, 'uploads/5AV/p1/', 'FOSTER_Maxxlys_Ateliers.jpg', 'a:2:{i:0;a:2:{s:2:"id";s:1:"1";s:6:"answer";s:53:"Sélectionner la bonne photo, choisir le bon cadrage.";}i:1;a:2:{s:2:"id";s:1:"2";s:6:"answer";s:75:"À faire plus attention aux détails, à chercher un point de vue original.";}}', 17, '0000-00-00 00:00:00'),
+(66, 198, 'uploads/3AV/p2/', 'JORDAN_Gaxxlle_Diaphragme.jpg', 's:0:"";', 15, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Structure de la table `users`
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -382,42 +403,28 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=203 ;
 
 --
--- Dumping data for table `users`
+-- Contenu de la table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `hash`, `name`, `last_name`, `class`, `is_staff`) VALUES
-(198, '1', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Gaëlle', 'Jordan', '3AV', 0),
 (196, '2', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Céline', 'Knight', '3AV', 0),
 (191, '3', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Béatrice', 'Edwards', '3AV', 0),
 (182, '4', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Andréa', 'Gonzales', '3AV', 0),
 (117, 'Ahmed', '', 'password', 'Amela', 'Pena', '5AV', 0),
-(192, 'apereza', '', 'PMr06bieznXN', 'Françoise', 'Perez', '4AV', 0),
-(115, 'Bryar', '', 'password', 'Illiana', 'Roberson', '4AV', 0),
 (118, 'Cedric', '', 'password', 'Jasper', 'Hendricks', '5AV', 0),
-(202, 'charlesvosters', '', '$1$sKRiPhzC$POQ7/kvXdFKnXGWEALjvv0', 'Charles', 'Vosters', '6AV', 0),
 (187, 'cjordan5', '', 'PK4rmajdcRH', 'Gaétane', 'Jordan', '5AV', 0),
-(185, 'cmartin3', '', 'aICxkaeELn', 'Lén', 'Martin', '6AV', 0),
 (183, 'cmorales1', '', 'pEpQBBxe7tii', 'Táng', 'Morales', '5AV', 0),
-(199, 'cperezh', '', 'I9LOZQXns', 'Laurène', 'Perez', '6AV', 0),
-(186, 'dboyd4', '', 'ApP6vfxggXAU', 'Marie-thérèse', 'Boyd', '6AV', 0),
 (195, 'dcunninghamd', '', 'igR2CJTY', 'Kuí', 'Cunningham', '5AV', 0),
-(197, 'dtaylorf', '', 'NiXkr2q', 'Océane', 'Taylor', '6AV', 0),
 (194, 'fosterm', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Maïlys', 'Foster', '5AV', 0),
 (189, 'hlopez7', '', '3D94vy', 'Intéressant', 'Lopez', '5AV', 0),
 (116, 'Hollee', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Holly', 'Turner', '5AV', 0),
-(190, 'irussell8', '', '6Ddu3SorBDHC', 'Anaïs', 'Russell', '4AV', 0),
-(193, 'jlaneb', '', 'khotjzfZ7R', 'Méryl', 'Lane', '6AV', 0),
 (200, 'kbaileyi', '', '2CpAYiJ', 'Pénélope', 'Bailey', '5AV', 0),
-(112, 'Laith', '', 'password', 'Elaine', 'Nieves', '4AV', 0),
 (120, 'Leonard', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Audrey', 'Rosario', '5AV', 0),
 (188, 'lriley6', '', 'LKYRBBJU', 'Maëlys', 'Riley', '5AV', 0),
-(121, 'Orla', '', 'password', 'Aquila', 'Craig', '6AV', 0),
-(1, 'pierreh', 'pierre.helin@gmail.com', '$1$gKHbfuGv$l1aOhC1JTa3pKP2pv.bdf.', 'Pierre', 'Hélin', '', 1),
 (119, 'Riley', '', 'password', 'Emmanuel', 'House', '5AV', 0),
 (201, 'rrileyj', '', 'sdHbBDRp7r', 'Stévina', 'Riley', '5AV', 0),
-(114, 'Stella', '', 'password', 'Alexis', 'Valencia', '4AV', 0),
-(10, 'VelasquezDexter V', '', '', 'Paul', 'Bauer', '6AV', 0),
-(184, 'wmartinez2', '', 'yxyBemZ18i', 'Aurélie', 'Martinez', '6AV', 0);
+(198, 'student', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Gaëlle', 'Jordan', '3AV', 0),
+(1, 'teacher', 'teacher@yopmail.com', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Mark', 'Jefferson', '', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
