@@ -123,6 +123,7 @@
                         <label class="control-label"><?=  LABEL_UPLOAD_INSTRUCTIONS ?></label>            
                         <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                         <input id="inputfile" name="submitted_file" data-error="<?=  LABEL_NO_FILE ?>"  type="file">
+			<p class="help-block"><a href="<?= $curr_project['instructions'] ?>" target="_blank"><?= $curr_project['instructions'] ?></a></p>
                         <p class="help-block with-errors"><?=  LABEL_ONLY_PDF_ALLOWED ?></p>
                     </div>
                  </div>

@@ -42,16 +42,17 @@
     // is demo version?
     define("DEMO_VERSION", false);
 
-   // max size of uploaded files in octet TODO: see php.ini
-   if (DEMO_VERSION)
-   {
-       define("MAX_UPLOAD_FILE_SIZE", "715200");
-   }
-   else
-   {
-       define("MAX_UPLOAD_FILE_SIZE", "209715200");
-   }
-   // allowed html tags
-   define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
+    // max size of uploaded files in octet TODO: see php.ini
+    if (DEMO_VERSION)
+    {
+        define("MAX_UPLOAD_FILE_SIZE", "715200");
+    }
+    else
+    {
+        define("MAX_UPLOAD_FILE_SIZE", "209715200");
+    }
+    // allowed html tags
+    define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
+  
    
 ?>

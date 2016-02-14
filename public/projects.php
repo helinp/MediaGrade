@@ -98,10 +98,10 @@
             
          }
          
-         // if no file uploaded by user
+         // if no file uploaded by user, keep current
          else
          {
-            $upload_file = "";
+            $upload_file =  query("SELECT instructions FROM projects WHERE project_id = ?", $_POST['project_id'])[0]['instructions'];
          }
         
         /*

@@ -1,5 +1,5 @@
 # MediaGrade BETA
-CS50x Final Project
+CS50x 2015 Final Project
 
 This is an education web application.
 
@@ -18,12 +18,20 @@ https://www.youtube.com/watch?v=-Toms9O7ZUM
 http://mg.pierrehelin.eu
 
 
+Requirements
+-------------
+- PHP5 & SQL
+- Disk space, likely a lot, depending on the number of students and the projects size
+- Access to php.ini to change "upload_max_filesize" and "post_max_size" to 200M
+
+
 Current functionalities
 -----------------------
 - Register and update students,
 - Add generic skills (belgian system)
 - Create projects, disactivate them, give an assessment grid (objective, criterion, cursor) and compose self assessment questions
 - Evaluate students work
+
 
 TODO
 ----

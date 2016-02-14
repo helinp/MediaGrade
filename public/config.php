@@ -54,7 +54,7 @@
             query("INSERT INTO users (username, name, last_name, class, hash) VALUES (?, ?, ?, ?, ?)",
                     $_POST["username"], $_POST["name"], $_POST["last_name"], $_POST["class"], crypt($_POST["password"]));
             
-            redirect("adm_config.php?users"); 
+            redirect("config.php?users"); 
         }
         else
         {
@@ -86,7 +86,7 @@
                     $_POST["class"][$user_id], $_POST["name"][$user_id], $_POST["last_name"][$user_id], $_POST["username"][$user_id], crypt($_POST["password"][$user_id]), $user_id);
             }
         }
-        redirect("adm_config.php?users");
+        redirect("config.php?users");
                 
         //if password value then change pass
     }
@@ -133,17 +133,28 @@
     {    
         // get users
         $users = array();
-        $classes = query("SELECT class FROM users ORDER BY class");
+        $classes = query("SELECT class 
+			  FROM users 
+			  ORDER BY class");
         
         foreach($classes as $class )
         {
             $users[$class["class"]] = 
-            query("SELECT * FROM users WHERE class = ? ORDER BY class, username ", $class["class"]);
+            query("SELECT * 
+		   FROM users 
+		   WHERE class = ? 
+  		   AND is_staff = 0 
+		   ORDER BY class, last_name ",
+ 		   $class["class"]);
             
         }
 
         // checks if user is admin
-        if (!query("SELECT is_staff FROM users WHERE id = ? AND is_staff = 1", $_SESSION["id"]))
+        if (!query("SELECT is_staff 
+		    FROM users 
+		    WHERE id = ? 
+		    AND is_staff = 1",
+		    $_SESSION["id"]))
         {
             redirect("login.php");
         }
