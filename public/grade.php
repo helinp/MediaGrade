@@ -1,12 +1,12 @@
 <?php
 
     // configuration
-    require("../includes/config.php"); 
+    require('../includes/config.php'); 
 
     // checks if user is admin
-    if (!query("SELECT is_staff FROM users WHERE id = ? AND is_staff = 1", $_SESSION["id"]))
+    if (!$_SESSION['admin'])
     {
-        redirect("login.php");
+        redirect('login.php');
     }
 
     // get competences from database
@@ -20,10 +20,10 @@
      *
      */
     // gets results
-    if (!empty($_POST["eval"]))
+    if (!empty($_POST['eval']))
     {
        // puts results in database
-       foreach($_POST["eval"] as $key => $eval)
+       foreach($_POST['eval'] as $key => $eval)
        {
             
             if(empty(query("SELECT id 
@@ -154,7 +154,7 @@
         $project = query("SELECT project_name, project_id, deadline, assessment_type
                              FROM `projects` WHERE  `project_id` = ?", $_GET["rate"])[0];
                              
-        $submitted = query("SELECT file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
+        $submitted = query("SELECT time, file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
         
         $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
         

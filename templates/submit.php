@@ -25,13 +25,15 @@
                 <h5><span class="glyphicon glyphicon-pencil"></span><?= LABEL_SELF_ASSESSMENT ?></h5>
 
                 <div class="well">       
+                   <?php $i = 0; ?>
                    <?php foreach($questions as $question): ?> 
                    <div class="form-group">            
                        <label><?= $question["question"] ?></label>
-                       <textarea name="auto_assessment_<?= $question["id"] ?>" class="form-control" rows="3"  data-error="<?= LABEL_REQUIRED_ANSWER ?>"  required></textarea>
+                       <textarea name="auto_assessment_<?= $question["id"] ?>" class="form-control" rows="3"  data-error="<?= LABEL_REQUIRED_ANSWER ?>"  required><?= $answers[$i]['answer'] ?></textarea>
                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                        <span class="help-block with-errors"></span>
                    </div>
+                   <?php $i++; ?>
                    <?php endforeach ?>
                 </div>
            <?php endif ?>

@@ -19,8 +19,13 @@
         
         <div class="row">
                   
-            <?php if(count($submitted) < 7) { $max_files = 6 ; $cols = 4;} else { $max_files = 12 ; $cols = 2;} ?>
-                <?php foreach(range(0, $max_files) as $count): ?>
+            <?php  if(count($submitted) == 1) {$max_files = 1 ; $cols = 10;} 
+                   elseif(count($submitted) < 7 && count($submitted)) { $max_files = 6 ; $cols = 4;} 
+                   else { $max_files = 12 ; $cols = 2;} 
+            ?>
+            
+            
+                <?php foreach(range(0, $max_files - 1) as $count): ?>
                 <div class="col-md-<?= $cols ?>"> 
             
                     <?php if (isset($submitted[$count]["file_path"])): ?>
@@ -107,6 +112,7 @@
                 <hr />
                 
                 <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save"></span><?= LABEL_SAVE_RATING ?></button>        
+                <input type="hidden" name="submitted_project_date" value="<?= $submitted[0]["time"] ?>">
                 <input type="hidden" name="user_id" value="<?= $user["id"] ?>">
                 <input type="hidden" name="project" value="<?= $project["project_id"] ?>">    
             </form>

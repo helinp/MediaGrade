@@ -11,7 +11,7 @@
 
     require_once("constants.php");
     
-    require_once("libphp-phpmailer/class.phpmailer.php");
+    require_once("libphp-phpmailer/PHPMailerAutoload.php");
    
     /**
      * Checks password strenght.

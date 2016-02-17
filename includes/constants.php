@@ -27,9 +27,6 @@
     // No reply mail 
     define("NO_REPLY_MAIL", "mg@yopmail.com");
     
-    // admin mail
-    define("ADMIN_MAIL", "mg@yopmail.com");
-    
     // SMTP server: Use your ISP's SMTP server (e.g., smtp.fas.harvard.edu if on campus or smtp.comcast.net if off campus and your ISP is Comcast)
     define("SMTP_SERVER", "smtp.scarlet.be");
     

@@ -11,7 +11,8 @@
                         AND submitted.user_id = ?
                         WHERE class = ?
                         AND is_activated = 1
-                        GROUP BY project_id", 
+                        GROUP BY project_id
+                        ORDER BY projects.periode DESC, submitted.time ASC", 
                         $_SESSION["id"], 
                         $_SESSION["class"]
                         );
@@ -128,15 +129,24 @@
             }
         }
         
-        if (!DEMO_VERSION) sendamail(ADMIN_MAIL, "Project submitted!", "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);        
-            inform(LABEL_PROJECT_SAVED);
+        if (!DEMO_VERSION) 
+	{
+        $subject = 'Project submitted!';
+	    $body_message = "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"];
+	    
+	    $teacher_mail = query("SELECT email FROM users WHERE is_staff = 1")[0]['email'];
+	    
+	    sendamail($teacher_mail, $subject, $body_message);        
+	}
+	
+	inform(LABEL_PROJECT_SAVED);
     }
             
    
     /**
      *   GET METHOD
      *
-    */
+     */
     if (!empty($_GET["project"]))
     {
         $project = query("  SELECT instructions
@@ -212,12 +222,13 @@
     {
         // reads from project table
         $project = query("  SELECT projects.project_id, `periode`, `instructions`, `deadline`, `project_name`, `class`, 
-                                `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, extension, file_name, file_path, number_of_files 
+                                `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, extension, file_name, file_path, number_of_files, answers 
                             FROM projects 
                             LEFT JOIN submitted
                             ON projects.project_id = submitted.project_id
                             AND submitted.user_id = ?
-                            WHERE projects.project_id = ?", 
+                            WHERE projects.project_id = ?
+                            ", 
                             $_SESSION["id"],
                             $_GET["submit"]);
         
@@ -245,10 +256,15 @@
                 }
 
             }  
+            
+            $answers = unserialize($project[0]['answers']);
+            
+            
             render("submit.php", ["title" => LABEL_SUBMIT, 
                         "projects" => $projects,
                         "project_data" => $project, 
-                        "questions" => $questions, 
+                        "questions" => $questions,
+                        "answers" => $answers,
                         "project_id" => $_GET["submit"],
                         "extension" => $project[0]["extension"],
                         "number_of_files" => $project[0]["number_of_files"]

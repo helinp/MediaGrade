@@ -1,5 +1,5 @@
 # MediaGrade BETA
-CS50x 2015 Final Project
+** CS50x 2015 Final Project **
 
 This is an education web application.
 
@@ -13,28 +13,24 @@ Further features will show up as it still a Work in Progress...
 
 Previews:
 
-https://www.youtube.com/watch?v=-Toms9O7ZUM
+[Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
+[Demo version](http://mg.pierrehelin.eu)
 
-http://mg.pierrehelin.eu
 
-
-Requirements
--------------
+## Requirements
 - PHP5 & SQL
 - Disk space, likely a lot, depending on the number of students and the projects size
 - Access to php.ini to change "upload_max_filesize" and "post_max_size" to 200M
 
 
-Current functionalities
------------------------
+## Current functionalities
 - Register and update students,
 - Add generic skills (belgian system)
 - Create projects, disactivate them, give an assessment grid (objective, criterion, cursor) and compose self assessment questions
 - Evaluate students work
 
 
-TODO
-----
+## TODO
 
 - PATCH / Severe code optimisation required (as: too many queries, redudancy).
 - PATCH / Format new submission mail alert
@@ -45,8 +41,7 @@ TODO
 - PATCH / Remove hardcoded data
 - PATCH / Format displayed deadline date
 
-FUTURE IMPLEMENTATIONS
-----------------------
+## FUTURE IMPLEMENTATIONS
 
 - Historic of submitted works
 - Results PDF export (by student, project and class)
@@ -56,3 +51,11 @@ FUTURE IMPLEMENTATIONS
 - Multi teachers support
 - Clean database and files
 - Function to sort tables
+
+
+## CHANGE LOG
+
+**2016-02-17**
+- Shows self-assessment answers on submit page
+- Sorted projects menu (projects.periode DESC, submitted.time ASC)
+- Notification mail goes to the teacher email
