@@ -35,6 +35,9 @@
     
     // pdf files directory TODO: fix manual URL
     define("ROOT_DIR", "/home/jharvard/vhosts/$_SERVER[HTTP_HOST]/public");
+    
+    // Release version
+    define('VERSION', 'v0.8.0 BETA 160219');
    
     // is demo version?
     define("DEMO_VERSION", false);
@@ -51,5 +54,6 @@
     // allowed html tags
     define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
   
-   
+   // End of year on (ddmm)
+   define('END_OF_YEAR', '3006');
 ?>

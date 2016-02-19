@@ -1,4 +1,3 @@
-
         <div class="row" style="padding-top:2em;">
  
         <?php foreach ($medias as $media): ?>
@@ -10,7 +9,7 @@
                     <div class="thumbnail">
                        <div class="embed-responsive embed-responsive-16by9">
                             <video class="embed-responsive-item" preload="metadata">
-                                <source src="http://final_project/<?= $media['file']?>" type="video/mp4">
+                                <source src="<?= $media['file']?>" type="video/mp4">
                                 <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $media['file'] ?>"><?= LABEL_HERE ?></a></p>
                             </video>  
                           

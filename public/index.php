@@ -4,7 +4,15 @@
     require("../includes/config.php"); 
 
     // opens table for content
-    $projects = query(" SELECT projects.project_id, project_name, periode, instructions, deadline, class, assessment_id, auto_assessment_id, user_id, file_path
+    $projects = query(" SELECT projects.project_id, 									
+    						project_name, 
+    						periode, 
+                       	 	instructions, 
+                        	deadline, 
+                       		class, 
+                        	assessment_id, 
+                        	auto_assessment_id, 
+                        	user_id, file_path
                         FROM projects 
                         LEFT JOIN submitted
                         ON projects.project_id = submitted.project_id
@@ -25,13 +33,18 @@
     if (!empty($_POST))
     {
         
-        $project = query("SELECT auto_assessment_id, project_name, extension FROM projects WHERE project_id = ?", $_POST["project_id"]);
+        $project = query("	SELECT auto_assessment_id, 
+        						project_name, 
+                            	extension 
+                            FROM projects 
+                            WHERE project_id = ?", 
+                         	$_POST["project_id"]);
+      
         $project_name = $project[0]["project_name"];
         
-        $sanitized_user_name = preg_replace("/[^a-zA-Z0-9_]/", "x", strtoupper($_SESSION["last_name"]) . "_" .  $_SESSION["name"]);
-        $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "_", $project_name);
-        $sanitized_project_name = preg_replace("/_+/", "_", $sanitized_project_name ); 
-        
+        $sanitized_user_name = sanitize_name(strtoupper($_SESSION["last_name"]) . "_" .  $_SESSION["name"]);
+        $sanitized_project_name = sanitize_name($project_name);
+      
         // how many files submitted?
         $n_files = count($_FILES['submitted_file']['name']);
 
@@ -43,17 +56,26 @@
             
                 // rename file LASTNAME_Name_Project.ext
                 $extension = strtolower(pathinfo($_FILES['submitted_file']['name'][$n_file], PATHINFO_EXTENSION));
-                $rename =  $sanitized_user_name . "_" . $sanitized_project_name . '_' . sprintf("%02d", $n_file + 1) . "." . $extension;
+                $rename =  $sanitized_user_name . '_' . $sanitized_project_name . '_' . sprintf("%02d", $n_file + 1) . '.' . $extension;
                 
                 // puts the file in ./upload/class/periode_#   TODO: add class_year     
-                $upload_dir = "uploads/" . $projects[0]["class"] . "/p" . $projects[0]["periode"] . "/";
+                $upload_dir = 'uploads/' . get_school_year() . '/' . $projects[0]["class"] . '/p' . $projects[0]["periode"] . '/';
                 $upload_file = $upload_dir . $rename; // basename($_FILES['submitted_file']['name']);
-                $upload_file_thumb =  $upload_dir . "thumb_" . $rename;
+                $upload_file_thumb =  $upload_dir . 'thumb_' . $rename;
                 
                 // checks RFI check
                 if (!empty(stristr(basename($_FILES['submitted_file']['name'][$n_file]), "php")))
                 {
-                    if (!DEMO_VERSION) sendamail(ADMIN_MAIL, "Tentative de RFI", "USER_INCLUSION_EXPLOIT \nFrom user: " . $_SESSION["id"] . "\nip: " . $_SERVER["REMOTE_ADDR"]);
+                    if (!DEMO_VERSION) 
+                    {
+                      $body_message = "USER_INCLUSION_EXPLOIT \nFrom user: " . 
+                        					$_SESSION["id"] . "\nip: " . 
+                        					$_SERVER["REMOTE_ADDR"];
+                      $subject = "Tentative de RFI";
+                      
+                      // WARNING admin def invalid?
+                      sendamail(ADMIN_MAIL, $subject, $body_message);
+                    }
                     apologize(LABEL_USER_INCLUSION_EXPLOIT);
                 }
                 
@@ -119,12 +141,25 @@
                 }
                 
                 // saves serialized answers and path to database
-                query("BEGIN");
-                query("DELETE FROM submitted WHERE project_id = ? AND user_id = ? AND file_name = ?", $_POST["project_id"], $_SESSION["id"], $rename);
-                query("INSERT INTO submitted (project_id, user_id, answers, file_path, file_name) 
+                query("	BEGIN");
+                query("	DELETE FROM submitted 
+                		WHERE project_id = ? 
+                        	AND user_id = ? 
+                            AND file_name = ?", 
+                      	$_POST["project_id"], 
+                      	$_SESSION["id"], 
+                      	$rename);
+              
+                query("	INSERT INTO submitted 
+                			(project_id, user_id, answers, file_path, file_name) 
                         VALUES (?, ?, ?, ?, ?)",
-                        $_POST["project_id"], $_SESSION["id"], serialize($answers), $upload_dir, $rename);
-                query("COMMIT");
+                        $_POST["project_id"], 
+                      	$_SESSION["id"], 
+                      	serialize($answers), 
+                      	$upload_dir, 
+                      	$rename);
+              
+                query("	COMMIT");
                 
             }
         }
@@ -132,9 +167,15 @@
         if (!DEMO_VERSION) 
 	{
         $subject = 'Project submitted!';
-	    $body_message = "SUBMITTED PROJECT\nProject: ". $project_name ."\nFrom user: " . $_SESSION["last_name"] . " " . $_SESSION["name"] . "\nip: " . $_SERVER["REMOTE_ADDR"];
+	    $body_message = "SUBMITTED PROJECT\nProject: ". $project_name 
+          					."\nFrom user: " . 
+          					$_SESSION["last_name"] . " " . 
+          					$_SESSION["name"] . "\nip: " . 
+          					$_SERVER["REMOTE_ADDR"];
 	    
-	    $teacher_mail = query("SELECT email FROM users WHERE is_staff = 1")[0]['email'];
+	    $teacher_mail = query("	SELECT email 
+        						FROM users 
+                                WHERE is_staff = 1")[0]['email'];
 	    
 	    sendamail($teacher_mail, $subject, $body_message);        
 	}
@@ -164,21 +205,24 @@
         {
             if (is_file($project[0]["instructions"]))
             {
-                $content = "<object data='". $project[0]["instructions"] ."#view=FitBH&navpanes=0&pagemode=thumbs' 
-                            type='application/pdf' 
-                            width='80%' 
-                            height='100%'>
-
-                            ". LABEL_NO_PDF_READER . $project[0]["instructions"] . "
-
-                            </object>";
+                $content = "<object data='". $project[0]["instructions"] .
+                  				"#view=FitBH&navpanes=0&pagemode=thumbs' 
+                       		     type='application/pdf' 
+                          		 width='80%' 
+                            	height='100%'>". 
+                  				LABEL_NO_PDF_READER . 
+                  				$project[0]["instructions"] . 
+                  				"</object>";
             }
             else
             {
                 $content = "<p>" . LABEL_NO_INSTRUCTIONS . "</p>";
             }
                                 
-            render("content.php", ["title" => LABEL_SUBMIT, "projects" => $projects, "content" => $content]);
+            render("content.php", ["title" => LABEL_SUBMIT, 
+                                   "projects" => $projects, 
+                                   "content" => $content
+                                  ]);
         }
     }
     elseif (!empty($_GET["results"]))
@@ -189,12 +233,17 @@
                             AND assessment.id = results.skill_id 
                             AND results.project_id = ? 
                             AND results.user_id = ?
-                        ORDER BY assessment.objective", $_GET["results"], $_SESSION["id"]);
+                        ORDER BY assessment.objective", 
+                       $_GET["results"], 
+                       $_SESSION["id"]);
         
         // check query
         if ($query == false)
         {
-            render("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => "<p>". LABEL_NO_AVAILABLE_RESULTS ."</p>"]);
+            render("results.php", ["title" => LABEL_RESULTS, 
+                                   "projects" => $projects, 
+                                   "content" => "<p>". LABEL_NO_AVAILABLE_RESULTS ."</p>"
+                                  ]);
         }
         else
         {
@@ -221,14 +270,26 @@
     elseif (!empty($_GET["submit"]))
     {
         // reads from project table
-        $project = query("  SELECT projects.project_id, `periode`, `instructions`, `deadline`, `project_name`, `class`, 
-                                `assessment_id`, `auto_assessment_id`, `assessment_type`, `skill_id`, extension, file_name, file_path, number_of_files, answers 
+        $project = query("  SELECT projects.project_id, 
+        						`periode`, 
+                                `instructions`, 
+                                `deadline`, 
+                                `project_name`, 
+                                `class`, 
+                                `assessment_id`, 
+                                `auto_assessment_id`, 
+                                `assessment_type`, 
+                                `skill_id`, 
+                                extension, 
+                                file_name, 
+                                file_path, 
+                                number_of_files, 
+                                answers 
                             FROM projects 
                             LEFT JOIN submitted
                             ON projects.project_id = submitted.project_id
                             AND submitted.user_id = ?
-                            WHERE projects.project_id = ?
-                            ", 
+                            WHERE projects.project_id = ?", 
                             $_SESSION["id"],
                             $_GET["submit"]);
         
@@ -248,7 +309,8 @@
                 
                 if (isset($row[0]))
                 {
-                    $questions[] = ["question" => $row[0]["question"], "id" => $row[0]["id"]];   
+                    $questions[] = ["question" => $row[0]["question"], 
+                                    "id" => $row[0]["id"]];   
                 }
                 else
                 {
@@ -258,7 +320,6 @@
             }  
             
             $answers = unserialize($project[0]['answers']);
-            
             
             render("submit.php", ["title" => LABEL_SUBMIT, 
                         "projects" => $projects,
@@ -289,7 +350,10 @@
         $message = str_replace("%user_name%", $_SESSION["name"], $message);
         $message = str_replace("%user_lastname%", $_SESSION["last_name"], $message);
             
-        render("content.php", ["title" => "Projets", "projects" => $projects, "content" => $message]);    
+        render("content.php", ["title" => "Projets", 
+                               "projects" => $projects, 
+                               "content" => $message
+                              ]);    
 
     }
 

@@ -53,7 +53,9 @@
             <div class="col-md-12">         
                 <?php if (!isset($submitted[0]["file_path"])): ?>
                 <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= LABEL_NOT_SUBMITTED ?></div>
-                <?php endif ?>
+              <?php else: ?>
+              	 <div class="alert alert-info"><?= LABEL_SUBMITTED_ON . $last_submitted_date ?></div>
+              <?php endif ?>
             </div>
            
 

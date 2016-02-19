@@ -1,5 +1,5 @@
 # MediaGrade BETA
-** CS50x 2015 Final Project **
+**CS50x 2015 Final Project**
 
 This is an education web application.
 
@@ -58,4 +58,10 @@ Previews:
 **2016-02-17**
 - Shows self-assessment answers on submit page
 - Sorted projects menu (projects.periode DESC, submitted.time ASC)
-- Notification mail goes to the teacher email
+- Notification mail goes to the teacher's mail
+
+**2016-02-18**
+- Fixed bug: add user button is now submit in adduser template
+- Added sanitize function that converts accentued letters too
+- Fixed bug: removed hardcoded url on gallery.php
+- upload directories are now ordered by schoolyear 

@@ -36,7 +36,7 @@
                             <td><input name="name" class="form-control input-sm"></td>
                             <td><input name="username" class="form-control input-sm"></td>
                             <td><input name="password" class="form-control input-sm"></td>
-                            <td><button type="button" name="add_user" class="btn btn-primary btn-xs" value="add_user"><span class="glyphicon glyphicon-plus"></span></button></td>
+                            <td><button type="submit***" name="add_user" class="btn btn-primary btn-xs" value="add_user"><span class="glyphicon glyphicon-plus"></span></button></td>
                             <td></td>
                         </tr>
                     </tbody>
