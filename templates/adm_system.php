@@ -22,7 +22,7 @@
                   <p><?= LABEL_FREE ?>: <em><?= $disk_space['free'] ?></em>. <?= LABEL_USED ?>: <em><?= $disk_space['total'] ?></em>.</p>
                   
                   <div class="progress">
-                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<?= $disk_space['per_used'] ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $disk_space['per_used'] ?>%">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="<?= $disk_space['per_used'] ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?= $disk_space['per_used'] ?>%">
                         <?= $disk_space['per_used'] ?> %
                       </div>
                   </div>
