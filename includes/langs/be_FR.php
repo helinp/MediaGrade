@@ -178,5 +178,6 @@
     define('LABEL_SEND_ME_A_MAIL', 'Envoyez-moi un mail');
     define('LABEL_USED', 'Utilisé');
     define('LABEL_FREE', 'Libre');
+    define('LABEL_SENT_MAIL', 'Nous vous avons envoyé un courriel!');
     
 ?>

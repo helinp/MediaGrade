@@ -173,4 +173,5 @@
     define('LABEL_SEND_ME_A_MAIL', 'Send me a mail');
     define('LABEL_USED', 'Used');
     define('LABEL_FREE', 'Free');
+    define('LABEL_SENT_MAIL', 'We have just sent you a mail!');
 ?>

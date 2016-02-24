@@ -108,7 +108,7 @@
         
         sendamail($user_mail, $_POST['subject'], $_POST['body']);
         
-        goto system;
+        inform(LABEL_SENT_MAIL);
     }
        
     /**
