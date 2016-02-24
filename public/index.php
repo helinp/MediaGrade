@@ -343,18 +343,19 @@
         
         welcome_page:
                 
-        $query = query("SELECT content FROM config WHERE type = 'welcome_page_message'");
-           
+        $query = query("SELECT content FROM config WHERE type = 'welcome_message'");
         $message = "";
         
         if($query)
         {
             $message = $query[0]["content"];
+            
+            // replace user's variables
+            $message = str_replace("%user_name%", $_SESSION["name"], $message);
+            $message = str_replace("%user_lastname%", $_SESSION["last_name"], $message);
         }
             
-        // replace user's variables
-        $message = str_replace("%user_name%", $_SESSION["name"], $message);
-        $message = str_replace("%user_lastname%", $_SESSION["last_name"], $message);
+        
             
         render("content.php", ["title" => "Projets", 
                                "projects" => $projects, 
