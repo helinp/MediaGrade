@@ -115,7 +115,7 @@
     define('LABEL_CRITERION', 'Critère');
     define('LABEL_SKILLS_GROUP', 'Objectifs');
     define('LABEL_SKILL', 'Objectif');
-    define('LABEL_COEFFICIENT', 'Coéfficient');
+    define('LABEL_COEFFICIENT', 'Maximum');
     define('LABEL_ASSESSMENT_GRID', 'Grille d\'évaluation');
     define('LABEL_CURSORS', 'Indicateurs (l\'élève a:)');
     define('LABEL_CURSOR', 'Indicateurs (l\'élève a:)');
@@ -141,15 +141,17 @@
     define('LABEL_UNVALID_DATE', 'Date non valide');
     define('LABEL_FORM_NOT_COMPLETE', 'Le formulaire n\'est pas complet');
 
-    // rating
+    // grade
     define('LABEL_NO_HTML5_VIDEO', 'Il semble que votre navigateur ne supporte pas la vidéo en HTML5.');
     define('LABEL_HERE', 'ici');
     define('LABEL_RATING', 'Pondération');
     define('LABEL_SAVE_RATING', ' Sauver l\'évaluation');  // mind the first space!
     define('LABEL_NOT_SUBMITTED', 'Travail non remis');
     define('LABEL_EVERY_CLASSES', 'Toutes les classes');
-    define('LABEL_NO_AVAILABLE_RESULTS', 'No available results.');
-
+    define('LABEL_NO_AVAILABLE_RESULTS', 'Aucun résultat disponible.');
+    define('LABEL_SUBMITTED_ON', 'Remis le: ');
+    
+    
     define('LABEL_VOTE_00', 'Travail non remis');
     define('LABEL_VOTE_01', 'Travail non satisfaisant ');
     define('LABEL_VOTE_02', 'Travail non satisfaisant ');
@@ -167,5 +169,14 @@
 
     // settings
     define('LABEL_CONFIG_WELCOME', 'Message d\'accueil');
-
+    define('LABEL_MAIL_TEST', 'Tester l\'envoi de courriels');
+    define('LABEL_SYSTEM', 'Système');
+    define('LABEL_SUBJECT', 'Sujet');
+    define('LABEL_MESSAGE', 'Message');
+    define('LABEL_ITS_A_TEST', 'Ceci est un test');
+    define('LABEL_FREE_DISK_SPACE', 'Espace disque libre');
+    define('LABEL_SEND_ME_A_MAIL', 'Envoyez-moi un mail');
+    define('LABEL_USED', 'Utilisé');
+    define('LABEL_FREE', 'Libre');
+    
 ?>

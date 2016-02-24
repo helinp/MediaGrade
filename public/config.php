@@ -92,11 +92,23 @@
     }
     elseif(!empty($_POST["message_board"]))
     { 
+        
         $input = html_purify($_POST["message_board"]);
         
         query("UPDATE config SET content = ? WHERE type='welcome_message'", $input);
         
         goto adm_welcome;
+    }
+    elseif(isset($_POST['send_mail_test']))
+    {
+        
+        if (empty($_POST['subject']) || empty($_POST['body'])) apologize('Subject or Body cannot be empty');
+        
+        $user_mail = query("SELECT email FROM users WHERE id = ?", $_SESSION['id'])[0]['email'];
+        
+        sendamail($user_mail, $_POST['subject'], $_POST['body']);
+        
+        goto system;
     }
        
     /**
@@ -127,7 +139,21 @@
         
         
         // renders
-        render("adm_message_board.php", ["title" =>  LABEL_ADMIN_SKILLS, "message" => $message], true, true);
+        render("adm_message_board.php", ["title" =>  'Welcome message', "message" => $message], true, true);
+    }
+    elseif(isset($_GET['system']))
+    {    
+        system:
+        
+        $disk_space['b_free'] = disk_free_space('/');
+        $disk_space['b_total'] = disk_total_space('/');
+        $disk_space['free'] = format_bytes($disk_space['b_free']);
+        $disk_space['total'] = format_bytes($disk_space['b_total']);
+        
+        $disk_space['per_used'] =  (int) ($disk_space['b_free'] / $disk_space['b_total'] * 100);
+        
+        // renders
+        render("adm_system.php", ["title" =>  'System', 'disk_space' => $disk_space], true, true);
     }
     else //if(isset($_GET["users"]))
     {    

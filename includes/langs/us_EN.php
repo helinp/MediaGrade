@@ -111,7 +111,7 @@
     define('LABEL_CRITERION', 'Criterion');
     define('LABEL_SKILLS_GROUP', 'Objectives');
     define('LABEL_SKILL', 'Objective');
-    define('LABEL_COEFFICIENT', 'Factor');
+    define('LABEL_COEFFICIENT', 'Maximum');
     define('LABEL_ASSESSMENT_GRID', 'Assessment Grid');
     define('LABEL_CURSORS', 'Evidences (the student is able to:)');
     define('LABEL_CURSOR', 'Evidence (the student  is able to:)');
@@ -138,14 +138,15 @@
     define('LABEL_UNVALID_DATE', 'Invalid Date');
     define('LABEL_FORM_NOT_COMPLETE', 'Form not complete');
     
-    // Rating
+    // Grading
     define('LABEL_NO_HTML5_VIDEO', 'It appears that your browser does not support HTML5 video but video can be downloaded.');
     define('LABEL_HERE', 'here');
     define('LABEL_RATING', 'Grade');
     define('LABEL_SAVE_RATING', 'Save assessment'); // Mind the first space!
     define('LABEL_NOT_SUBMITTED', 'Work not submitted');
     define('LABEL_EVERY_CLASSES', 'Every grades');
-    define('LABEL_NO_AVAILABLE_RESULTS', 'No result available.');
+    define('LABEL_NO_AVAILABLE_RESULTS', 'Result no available.');
+    define('LABEL_SUBMITTED_ON', 'Submitted on: ');
     
     define('LABEL_VOTE_00', 'FX');
     define('LABEL_VOTE_01', 'F');
@@ -163,4 +164,13 @@
   
     // settings
     define('LABEL_CONFIG_WELCOME', 'Welcome message');
+    define('LABEL_MAIL_TEST', 'Test mail sending');
+    define('LABEL_SYSTEM', 'System');
+    define('LABEL_SUBJECT', 'Subject');
+    define('LABEL_MESSAGE', 'Body message');
+    define('LABEL_ITS_A_TEST', 'This is a test');
+    define('LABEL_FREE_DISK_SPACE', 'Free disk space');
+    define('LABEL_SEND_ME_A_MAIL', 'Send me a mail');
+    define('LABEL_USED', 'Used');
+    define('LABEL_FREE', 'Free');
 ?>

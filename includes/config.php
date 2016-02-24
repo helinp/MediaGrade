@@ -26,9 +26,9 @@
      */
     if (!defined("LANG"))
     {
-        $lang["browser"] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $_SESSION['lang'] = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 
-        switch ($lang["browser"])
+        switch ($_SESSION['lang'])
         {
             case "fr":
             $lang["file"] = "langs/be_FR.php";
@@ -46,7 +46,7 @@
     query("SET NAMES utf8");   
     
     // require authentication for all pages except /login.php, /logout.php, and /register.php
-    if (!in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php"]))
+    if (!in_array($_SERVER["PHP_SELF"], ["/login.php", "/register.php", "/logout.php", "/forgot.php", "/gallery.php"]))
     {
         if (empty($_SESSION["id"]))
         {

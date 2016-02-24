@@ -133,7 +133,7 @@
                     <div class="form-group">  
                         <label class="control-label"><?=  LABEL_EXPECTED_FILE ?></label>            
                         <select class="form-control" name="extension">
-                            <option  <?= ($curr_project["extension"] == "" ? " selected" : "")?>><?=  LABEL_NO_EXPECTED_FILE ?></option>
+                            <option <?= ($curr_project["extension"] == "" ? " selected" : "")?>><?=  LABEL_NO_EXPECTED_FILE ?></option>
                             <option disabled>---</option>
                             <option<?= ($curr_project["extension"] == "gif" ? " selected" : "")?>>gif</option>
                             <option<?= ($curr_project["extension"] == "jpg" ? " selected" : "")?>>jpg</option>
@@ -187,7 +187,8 @@
 		                        <textarea class="typeahead_cursors form-control input-sm" cols="50" rows="3"  
                                     placeholder="<?=  LABEL_NEW_CRITERION ?>" name="cursor[]"><?= $row["cursor"] ?></textarea>
                             </td>
-		                    <td> <input class="form-control input-sm" value="5" name="coefficient[]" required size="2" /></td>
+		                    <td> <input class="form-control input-sm" value="<?= $row['max_vote'] ?>" name="max_vote[]" required size="2" /></td>
+		                    <input type="hidden" name="cursor_id[]" value="<?= $row["id"] ?>" />
 		                    <td> <button type="button" class="btn btn-info btn-xs btn-danger pull-right" onClick="deleteRow('rows', this)"><span class="glyphicon glyphicon-remove"></span> <?= LABEL_DELETE ?></button></td>
 	                    </tr>
 	                <?php endforeach ?>

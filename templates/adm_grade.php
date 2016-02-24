@@ -80,8 +80,8 @@
                  <table id="rows" class="table table-striped">         
          	            <col width="10%">
                         <col width="15%">
-                        <col width="55%">
-                        <col width="10%">
+                        <col width="40%">
+                        <col width="25%">
          	            <thead>
 	                        <tr>
 		                        <th><?= LABEL_SKILLS_GROUP ?></th>
@@ -91,19 +91,26 @@
 	                        </tr>
 	                    </thead>
 	                    <tbody>
+	                    <?php $i = 0;?>
                          <?php foreach ($criteria as $key_obj => $objective): ?> 
                             <?php foreach ($objective as $key_cri => $criterion): ?>
                                 <?php foreach ($criterion as $cursor => $val): ?>   
+                                    
                             <tr>
                                 <td><?= $key_obj ?></td>
                                 <td><?= $key_cri ?></td>
                                 <td><?= $val ?></td>
-                                <td><input type="text" class="slider" data-slider-value="<?php if($is_rated) echo($rated[$cursor]["user_grade"]); 
-                                else echo("5") ?>" value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : "5") ?>
-                                " data-slider-min="0" data-slider-max="10" name="eval[]" >
-                                    <input type="hidden" name="eval_cursor[]" value="<?= $id_criterion[$cursor]?>">
+                                <td><!-- <input type="text" class="slider" data-slider-value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : $max_vote[$i] / 2) ?>"
+                                     value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : $max_vote[$i] / 2 ) ?>"
+                                     data-slider-min="0" data-slider-max="<?= $max_vote[$i] ?>" name="eval[]" > -->
+                                    
+                                    <input name="eval[]" class="range-assessment" type="range" value="<?= ($is_rated ? $rated[$cursor]["user_grade"] : $max_vote[$i] / 2) ?>" max="<?= $max_vote[$i] ?>" min="0" step="1">
+                                    <span class="small" data-onload="genAssessment()"></span><input row="<?= $i ?>" type="hidden" name="max_vote[]" value="<?= $max_vote[$i] ?>">
+                                    <input type="hidden" name="eval_id[]" value="<?= $id_criterion[$cursor]?>">
+                                    
                                 </td>
                             </tr>
+                                    <?php $i++; ?>
                                 <?php endforeach ?> 
                             <?php endforeach ?> 
                          <?php endforeach ?> 
@@ -122,15 +129,79 @@
       </div>      
     </main>
     
+    <script>
+    function getAssessment(currVal, maxVal) {
+                
+                
+                    var append = " (" + currVal + " / " + maxVal + ")";
+                    switch(Math.round(currVal / maxVal * 10)){
+                
+                    case 10:
+                        return("<?= LABEL_VOTE_10 ?>" + append);
+                        break;
+                    case 9:
+                        return("<?= LABEL_VOTE_09 ?>" + append);
+                        break;
+                    case 8:
+                        return("<?= LABEL_VOTE_08 ?>" + append);
+                        break;
+                    case 7:
+                        return("<?= LABEL_VOTE_07 ?>" + append);
+                        break;
+                    case 6:
+                        return("<?= LABEL_VOTE_06 ?>" + append);
+                        break;
+                    case 5:
+                        return("<?= LABEL_VOTE_05 ?>" + append);
+                        break;
+                    case 1: case 2: case 3: case 4:
+                        return("<?= LABEL_VOTE_04 ?>" + append);
+                        break;
+                    case 0:
+                        currVal--;
+                        return("<?= LABEL_VOTE_00 ?>" + append);
+                        break;
+                }
+    }
+    
+    $('input.range-assessment').on( "input", genAssessment );
+    
+    
+    function genAssessment() {
+            
+            var currValue =  $( this  ).val();
+            var maxValue = $( this  ).attr('max');
+            
+            var text = getAssessment(currValue, maxValue);
+            
+            $( this  ).next().text(text);
+            
+            }
+    
+    // text-assessment
+    </script>
+    
+    <!--
     <script src="js/bootstrap-slider.js"></script>
     <script>
+    var max;
+    $('.slider').slider(function(){
+                // get max value
+                max = $(this).attr("data-slider-max");
 
-
+                console.log(value + '-' + max + '-' + Math.round(value / max * 10));
+        });        
+                
+     //max = $('.slider').attr('data-slider-max');
     $('.slider').slider({
+                
+                
                 
                 formater: function(value) {
                 
-                switch(value){
+                
+                
+                switch(Math.round(value / max * 10)){
                 
                     case 10:
                         return("<?= LABEL_VOTE_10 ?> (" + value + ")" );
@@ -162,5 +233,5 @@
             });
             
 
-    </script>
+    </script> -->
         

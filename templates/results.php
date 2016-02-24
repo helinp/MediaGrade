@@ -37,7 +37,7 @@
                                     . "<td>" . $result["objective"] . "</td>\n"
                                     . "<td>" . $result["criteria"] . "</td>\n"
                                     . "<td>" . $result["cursor"] . "</td>\n"
-                                    . "<td>" . $result["user_grade"] . " / " . $result["max_grade"] . "</td>\n"
+                                    . "<td>" . $result["user_grade"] . " / " . $result["max_vote"] . "</td>\n"
                             . "</tr>"
                             );
                         }       

@@ -254,7 +254,7 @@
             if ($menu)
             {
                 // render admin side menu
-                if($_SESSION["admin"]) 
+                if(@$_SESSION["admin"]) 
                 {
                     // gets classes for <select> in templace adm_add_project  
                     $classes = query("SELECT DISTINCT class FROM users WHERE is_staff = 0 ORDER BY class");
@@ -279,11 +279,88 @@
     }
 
     /**
+     *  Converts and format bytes into readable value
+     *  Credits: wiede at gmx dot net on php.net
+     */
+    function format_bytes($bytes)
+    {
+        $fr_prefix = array( 'o', 'Ko', 'Mo', 'Go', 'To', 'Eo', 'Zo', 'Yo' );
+        $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
+        
+        if ($_SESSION['lang'] == 'fr') $si_prefix =  $fr_prefix;
+        
+        $base = 1024;
+        $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
+        return sprintf('%1.2f' , $bytes / pow($base,$class)) . ' ' . $si_prefix[$class];
+    }
+    
+    /**
+     *  Returns a jpg poster from a video
+     *
+     */
+     
+    function make_video_poster($movie_file, $dest)
+    {
+        
+        $extension = "ffmpeg";
+        $extension_soname = $extension . "." . PHP_SHLIB_SUFFIX;
+        $extension_fullname = PHP_EXTENSION_DIR . "/" . $extension_soname;
+
+        // load extension
+        if(!extension_loaded($extension)) {
+            dl($extension_soname) or die("Can't load extension $extension_fullname\n");
+        }
+        
+        if (!$movie_file) return 0;
+        
+        extension_loaded('ffmpeg');
+        
+        // Instantiates the class ffmpeg_movie so we can get the information you want the video  
+        $movie = new ffmpeg_movie($movie_file);  
+
+        // Get The duration of the video in seconds  
+        echo $Duration = round($movie->getDuration(), 0);  
+
+        // Get the number of frames of the video  
+        $TotalFrames = $movie->getFrameCount();  
+
+        // Get the height in pixels Video  
+        $height = $movie->getFrameHeight();  
+
+        // Get the width of the video in pixels  
+        $width = $movie->getFrameWidth();  
+
+        //Receiving the frame from the video and saving 
+        // Need to create a GD image ffmpeg-php to work on it  
+        $image = imagecreatetruecolor($width, $height);  
+
+        // Create an instance of the frame with the class ffmpeg_frame  
+        $Frame = new ffmpeg_frame($image);  
+
+        // Choose the frame you want to save as jpeg  
+        $thumbnailOf = (int) round($movie->getFrameCount() / 2.5);  
+
+        // Receives the frame  
+        $frame = $movie->GetFrame($thumbnailOf);  
+
+        // Convert to a GD image  
+        $image = $frame->toGDImage();  
+
+        // Save to disk.  
+        //echo $movie_file.'.jpg';
+        imagejpeg($image, $dest . '.jpg', 100);
+
+        //return $movie_file.'.jpg';
+    }
+    
+    
+    
+    /**
      *  From davidwalsh.name
      *
      */    
 
-    function make_thumbnail($src,$dest,$desired_width = false, $desired_height = false)
+    function make_thumbnail($src, $dest, $desired_width = false, $desired_height = false)
     {
         /*If no dimenstion for thumbnail given, return false */
         if (!$desired_height&&!$desired_width) return false;

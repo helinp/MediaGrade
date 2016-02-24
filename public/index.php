@@ -120,7 +120,11 @@
                     make_thumbnail($upload_file, $upload_file_thumb, 500);
                     chmod($upload_file_thumb, 0755); 
                 }
-                
+                //elseif($extension == "mp4" || $extension == "avi" || $extension == "mov")
+                //{
+                //    make_video_poster($upload_file, $upload_file_thumb);
+                //    chmod($upload_file_thumb, 0755);
+                //}
                 
                 
                 // fills variable whith entries
@@ -165,20 +169,20 @@
         }
         
         if (!DEMO_VERSION) 
-	{
-        $subject = 'Project submitted!';
-	    $body_message = "SUBMITTED PROJECT\nProject: ". $project_name 
-          					."\nFrom user: " . 
-          					$_SESSION["last_name"] . " " . 
-          					$_SESSION["name"] . "\nip: " . 
-          					$_SERVER["REMOTE_ADDR"];
-	    
-	    $teacher_mail = query("	SELECT email 
-        						FROM users 
-                                WHERE is_staff = 1")[0]['email'];
-	    
-	    sendamail($teacher_mail, $subject, $body_message);        
-	}
+	    {
+            $subject = 'Project submitted!';
+	        $body_message = "SUBMITTED PROJECT\nProject: ". $project_name 
+              					."\nFrom user: " . 
+              					$_SESSION["last_name"] . " " . 
+              					$_SESSION["name"] . "\nip: " . 
+              					$_SERVER["REMOTE_ADDR"];
+	        
+	        $teacher_mail = query("	SELECT email 
+            						FROM users 
+                                    WHERE is_staff = 1")[0]['email'];
+	        
+	        sendamail($teacher_mail, $subject, $body_message);        
+	    }
 	
 	inform(LABEL_PROJECT_SAVED);
     }
@@ -188,18 +192,18 @@
      *   GET METHOD
      *
      */
-    if (!empty($_GET["project"]))
+    if (isset($_GET["project"]))
     {
         $project = query("  SELECT instructions
                             FROM projects 
                             WHERE project_id = ?",
-                            $_GET["project"]
+                            $_GET["id"]
                             );
         //dump($project);
         
         if ($project == false)
         {
-            apologize(LABEL_USER_EXPLOIT);
+            goto welcome_page;
         }
         else
         {
@@ -225,7 +229,7 @@
                                   ]);
         }
     }
-    elseif (!empty($_GET["results"]))
+    elseif (isset($_GET["results"]))
     {
         // TODO Delete * AND 
         $query = query("SELECT * FROM results, projects, assessment
@@ -234,7 +238,7 @@
                             AND results.project_id = ? 
                             AND results.user_id = ?
                         ORDER BY assessment.objective", 
-                       $_GET["results"], 
+                       $_GET["id"], 
                        $_SESSION["id"]);
         
         // check query
@@ -267,7 +271,7 @@
         
         
     }
-    elseif (!empty($_GET["submit"]))
+    elseif (isset($_GET["submit"]))
     {
         // reads from project table
         $project = query("  SELECT projects.project_id, 
@@ -291,11 +295,11 @@
                             AND submitted.user_id = ?
                             WHERE projects.project_id = ?", 
                             $_SESSION["id"],
-                            $_GET["submit"]);
+                            $_GET["id"]);
         
         if ($project == false)
         {
-            apologize(LABEL_USER_EXPLOIT);
+            goto welcome_page;
         }
         else
         {         
@@ -337,7 +341,9 @@
 
         if($_SESSION["admin"]) redirect("grade.php");
         
-        $query = query("SELECT content FROM config WHERE type = 'welcome_message'");
+        welcome_page:
+                
+        $query = query("SELECT content FROM config WHERE type = 'welcome_page_message'");
            
         $message = "";
         

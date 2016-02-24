@@ -13,8 +13,8 @@ Further features will show up as it still a Work in Progress...
 
 Previews:
 
-[Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
-[Demo version](http://mg.pierrehelin.eu)
+- [Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
+- [Demo version](http://mg.pierrehelin.eu)
 
 
 ## Requirements
@@ -32,7 +32,7 @@ Previews:
 
 ## TODO
 
-- PATCH / Severe code optimisation required (as: too many queries, redudancy).
+- PATCH / Severe code optimisation required (as: too many queries, redudancy) on public/project.php.
 - PATCH / Format new submission mail alert
 - NEW   / User cannot review self-assessment answers
 - PATCH / Prevent from duplicate project name
@@ -55,13 +55,25 @@ Previews:
 
 ## CHANGE LOG
 
-**2016-02-17**
-- Shows self-assessment answers on submit page
-- Sorted projects menu (projects.periode DESC, submitted.time ASC)
-- Notification mail goes to the teacher's mail
+**2016-02-24**
+- Updated project submenu disposition for clearer view
+- Added mail sending test page
+- Added disk space monitor page
+- Added format_byte function on functions.php
 
-**2016-02-18**
+**2016-02-20**
+- Maximum vote now saved in database (projects.php)
+- Number of entries in assessment table reduced 
+
+**2016-02-19**
 - Fixed bug: add user button is now submit in adduser template
 - Added sanitize function that converts accentued letters too
 - Fixed bug: removed hardcoded url on gallery.php
 - upload directories are now ordered by schoolyear 
+- Hall of fame is now public
+- normalized thumbnails height on gallery.php
+
+**2016-02-12**
+- Shows self-assessment answers on submit page
+- Sorted projects menu (projects.periode DESC, submitted.time ASC)
+- Notification mail goes to the teacher's mail

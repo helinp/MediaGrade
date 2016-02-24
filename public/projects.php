@@ -13,6 +13,7 @@
      **/  
     if (!empty($_POST))
     {
+    
         // check if disactivate action is requested
         if(isset($_POST["disactivate_project"]))
         {
@@ -47,6 +48,8 @@
         
         if(is_uploaded_file($_FILES['submitted_file']['tmp_name']))
         {
+            
+            // TODO Use function sanitize().
             $sanitized_project_name = preg_replace("/[^a-zA-Z0-9]/", "_", $_POST["project_name"]);
             $sanitized_project_name = preg_replace("/_+/", "_", $sanitized_project_name ); 
             
@@ -101,7 +104,14 @@
          // if no file uploaded by user, keep current
          else
          {
-            $upload_file =  query("SELECT instructions FROM projects WHERE project_id = ?", $_POST['project_id'])[0]['instructions'];
+            $upload_file = "";
+            $query = query("SELECT instructions FROM projects WHERE project_id = ?", $_POST['project_id']);
+            
+            if($query)
+            {
+                $upload_file =  $query[0]['instructions'];
+            }
+         
          }
         
         /*
@@ -115,21 +125,33 @@
         {
             
             // insert or update criteria in assessment table
-            query(" INSERT INTO assessment
-                    VALUES(DEFAULT, ?, ?, ?)", 
-                    $_POST["objective"][$i], 
-                    $_POST["criterion"][$i], 
-                    $_POST["cursor"][$i]);
-
-            // concatenate ids in variable 
-            $assessments .= query(" SELECT id 
-                                    FROM assessment 
-                                    WHERE objective = ? 
-                                    AND criteria = ? 
-                                    AND `cursor` = ?", 
-                                    $_POST["objective"][$i],
-                                    $_POST["criterion"][$i], 
-                                    $_POST["cursor"][$i])[0]["id"] . ",";
+            if(!empty($_POST['cursor_id'][$i]))
+            {
+                query(" UPDATE assessment
+                        SET objective = ?, criteria = ?, `cursor` = ?, max_vote = ?
+                        WHERE id = ?", 
+                        $_POST["objective"][$i], 
+                        $_POST["criterion"][$i], 
+                        $_POST["cursor"][$i],
+                        $_POST['max_vote'][$i],
+                        $_POST['cursor_id'][$i]
+                        );            
+            
+                $assessments .= $_POST['cursor_id'][$i] . ',';
+            
+            }
+            else
+            {
+                query(" INSERT INTO assessment
+                        VALUES(DEFAULT, ?, ?, ?, ?)", 
+                        $_POST["objective"][$i], 
+                        $_POST["criterion"][$i], 
+                        $_POST["cursor"][$i],
+                        $_POST['max_vote'][$i]);
+            
+                // concatenate ids in variable 
+                $assessments .= query("SELECT id FROM assessment ORDER BY id DESC LIMIT 1")[0]['id'] . ',';
+            }
             
             // increment key
             $i++;
@@ -188,7 +210,7 @@
 
         // get $_POST array skills and put prefix in array $skills
         $skills = array();
-        
+
         foreach ($_POST["skills"] as $id)
         {
             array_push($skills, $id);
@@ -200,6 +222,8 @@
          **/
         if ($_POST["project_id"] === "-1")
         {
+           
+           
            // add new project in table projects
            query("INSERT INTO projects VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)", 
                      $_POST["periode"], 
@@ -214,15 +238,32 @@
                      $_POST["extension"],
                      $_POST["number_of_files"]
                 );
+                
         }
         else
         {
             // updates project
             query("UPDATE projects 
-                      SET periode = ?, instructions = ?, deadline = ?, project_name = ?, class = ?, assessment_id = ?, auto_assessment_id = ?, skill_id = ?, extension = ?, number_of_files = ?
+                      SET periode = ?, 
+                        instructions = ?, 
+                        deadline = ?, 
+                        project_name = ?, 
+                        class = ?, 
+                        assessment_id = ?, 
+                        auto_assessment_id = ?, 
+                        skill_id = ?, 
+                        extension = ?, 
+                        number_of_files = ?
                       WHERE project_id = ?", 
-                       $_POST["periode"], $upload_file, $_POST["deadline"], 
-                       $_POST["project_name"], $_POST["class"], $assessments, $auto_assessments, implode(",", $skills), 
+                      
+                       $_POST["periode"], 
+                       $upload_file, 
+                       $_POST["deadline"], 
+                       $_POST["project_name"], 
+                       $_POST["class"], 
+                       $assessments, 
+                       $auto_assessments, 
+                       implode(",", $skills), 
                        $_POST["extension"],
                        $_POST["number_of_files"],
                        $_POST["project_id"]);
@@ -267,7 +308,7 @@
         // gets current project
         $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["project"]);
         
-        if(!$curr_project){apologize(LABEL_USER_EXPLOIT);}
+        if(!$curr_project) apologize(LABEL_USER_EXPLOIT);
         
         
         // gets selected criteria and cursors from database
@@ -290,10 +331,11 @@
         foreach($results as $result)
         {        
             $rows[$i] = [
+                "id" => $result["id"],
                 "objective" => $result["objective"],
                 "criterion" => $result["criteria"],
                 "cursor" => $result["cursor"],
-                "coefficient" => ""
+                "max_vote" => $result["max_vote"]
                 ]; 
             $i++;
         }
@@ -377,15 +419,18 @@
             "assessment_type" => "",
             "skill_id" => "",
             "extension" => "",
-            "number_of_files" => ""
+            "number_of_files" => "",
+            "instructions" => ""
             ];
             
         // creates dummy empty array
         $rows[0] = [
+            "id" => "",
             "objective" => "",
             "criterion" => "",
             "cursor" => "",
-            "coefficient" => ""
+            "coefficient" => "",
+            "max_vote" => "10"
             ];    
           
         

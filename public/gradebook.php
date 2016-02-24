@@ -12,7 +12,7 @@
    // opens table for content
    $projects = query("SELECT * FROM projects");
     
-   $query = query("SELECT AVG(user_grade), max_grade, date, objective
+   $query = query("SELECT AVG(user_grade), assessment.max_vote, date, objective
                      FROM  assessment
                      LEFT JOIN results 
                      ON assessment.id = skill_id

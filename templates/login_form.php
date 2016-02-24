@@ -14,6 +14,10 @@
         </fieldset>
         
     </form>
-        <h5 onclick="return confirm('Are you sure you want to do that?');"><?= LABEL_DEMO_ACCOUNTS ?></h5>
+        <h5><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?= LABEL_GALLERY ?> <span class="glyphicon glyphicon-sunglasses"></span></a></h5>
+        
+        <?php if(DEMO_VERSION): ?>
+        <h5><?= LABEL_DEMO_ACCOUNTS ?></h5>
         <code>student 123456</code><br /> <code>teacher 123456</code>
+        <?php endif ?>
 </main>

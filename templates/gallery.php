@@ -8,7 +8,7 @@
                     <?php if ($media['extension'] == "mp4" || $media['extension'] == "mov" || $media['extension'] == "avi"):?>    
                     <div class="thumbnail">
                        <div class="embed-responsive embed-responsive-16by9">
-                            <video class="embed-responsive-item" preload="metadata">
+                            <video class="embed-responsive-item" preload="metadata" controls>
                                 <source src="<?= $media['file']?>" type="video/mp4">
                                 <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $media['file'] ?>"><?= LABEL_HERE ?></a></p>
                             </video>  
@@ -18,7 +18,7 @@
                     </div>
                     <?php elseif($media['extension'] == "jpeg" || $media['extension'] == "jpg" || $media['extension'] == "png" || $media['extension'] == "gif"): ?>
                     <div class="thumbnail">    
-                        <img class="img-responsive" src="<?= $media['thumbnail'] ?>" alt="<?= $media['name'] ?> /">
+                        <img class="img-responsive thumbnail-180" src="<?= $media['thumbnail'] ?>" alt="<?= $media['name'] ?>" />
                         <a  href="<?= $media['file'] ?>"><?= $media['name'] . " " . $media['last_name'] . " @ " . $media['project_name']?></a>
                     </div>
                     <?php endif ?>

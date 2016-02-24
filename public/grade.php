@@ -20,12 +20,14 @@
      *
      */
     // gets results
+    
     if (!empty($_POST['eval']))
     {
        // puts results in database
        foreach($_POST['eval'] as $key => $eval)
        {
-            
+           
+            // if first grading
             if(empty(query("SELECT id 
                             FROM results 
                             WHERE user_id = ? 
@@ -33,16 +35,17 @@
                             AND skill_id = ?", 
                             $_POST["user_id"], 
                             $_POST["project"], 
-                            $_POST["eval_cursor"][$key])))
+                            $_POST["eval_id"][$key])))
             {
                 query(" INSERT 
-                        INTO results (user_id, project_id, skill_id, user_grade, date) 
+                        INTO results (user_id, project_id, skill_id, max_vote, user_grade) 
                         VALUES (?, ?, ?, ?, ?)", 
-                        $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval, date("Y-m-d"));
+                        $_POST["user_id"], $_POST["project"], $_POST["eval_id"][$key], $_POST["max_vote"][$key], $_POST["eval"][$key]);
             }
+            // if already exist, update
             else
             {
-                query("START TRANSACTION");
+                query("     START TRANSACTION");
                    
                     query(" DELETE 
                             FROM results 
@@ -51,14 +54,14 @@
                             AND skill_id = ?", 
                             $_POST["user_id"], 
                             $_POST["project"], 
-                            $_POST["eval_cursor"][$key]);
+                            $_POST["eval_id"][$key]);
                             
                     query(" INSERT 
-                            INTO results (user_id, project_id, skill_id, user_grade, date) 
+                            INTO results (user_id, project_id, skill_id, max_vote, user_grade) 
                             VALUES (?, ?, ?, ?, ?)", 
-                            $_POST["user_id"], $_POST["project"], $_POST["eval_cursor"][$key], $eval, date("Y-m-d"));
+                            $_POST["user_id"], $_POST["project"], $_POST["eval_id"][$key], $_POST["max_vote"][$key], $_POST["eval"][$key]);
                 
-                query("COMMIT");
+                query("     COMMIT");
             }
             
             
@@ -154,7 +157,9 @@
         $project = query("SELECT project_name, project_id, deadline, assessment_type
                              FROM `projects` WHERE  `project_id` = ?", $_GET["rate"])[0];
                              
-        $submitted = query("SELECT time, file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ?", $_GET["user"], $_GET["rate"]);
+        $submitted = query("SELECT time, file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ? ORDER BY time DESC", $_GET["user"], $_GET["rate"]);
+        
+        $last_submitted_date = $submitted[0]['time'];
         
         $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
         
@@ -206,16 +211,19 @@
         foreach($results as $result)
         {
             $criteria[ $result["objective"] ] [ $result["criteria"] ][ $i ] = $result["cursor"];
+            
             $id_criterion[$i] = $result["id"];
+            
+            $max_vote[$i] =  $result['max_vote'];
             
             $i++;
         }  
         // END CRITERIA STUFF
-        
+
         // renders
         render("adm_grade.php", ["title" =>  LABEL_RATE,  
             "skills" => $skills, "user" => $user[0], "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
-            "criteria" => $criteria, "submitted" => $submitted, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"]]);
+            "criteria" => $criteria, "submitted" => $submitted, "last_submitted_date" => $last_submitted_date, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"], "max_vote" => $max_vote]);
     }
     else
     {

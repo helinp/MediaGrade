@@ -1,12 +1,4 @@
-    <aside id="projects" class="col-md-2 bs-docs-sidebar">
-        <nav itemscope itemtype="http://schema.org/SiteNavigationElement">
-            <ul class="list-group small" itemprop="project">
-                    <li><a class="list-group-item active" href="config.php?skills"><?= LABEL_SKILLS ?><span class="glyphicon glyphicon-pencil pull-right"></a></li>
-                    <li><a class="list-group-item" href="config.php?users"><?= LABEL_CLASS_ROLL ?><span class="glyphicon glyphicon-pencil pull-right"></a></li>
-                    <li><a class="list-group-item" href="config.php?welcome"><?= LABEL_CONFIG_WELCOME ?><span class="glyphicon glyphicon-pencil pull-right"></a></li>
-            </ul>
-        </nav>
-    </aside>
+<?php include_once('adm_config_menu.php'); ?>
 
     <main class="col-md-10" id="content">
                

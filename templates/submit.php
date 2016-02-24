@@ -12,7 +12,7 @@
                     <input id="inputfile" name="submitted_file[]" data-error="<?= LABEL_NO_FILE ?>"  type="file" <?= (!empty($project_data[$number_of_files - 1]["file_name"]) ? '' : 'required') ?>
                     
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
-                    <p class="help-block with-errors">Max. <?= number_format(MAX_UPLOAD_FILE_SIZE / 1000000, 2) ?> Mo.</p>
+                    <p class="help-block with-errors">Max. <?= format_bytes(MAX_UPLOAD_FILE_SIZE) ?>.</p>
                     <?= (empty($project_data[$number_of_files - 1]["file_name"]) ?  '' : '<p>' . LABEL_SUBMITTED_FILE . ' <a href="' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '">' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '</a></p>') ?>
          <?php endif ?> 
                     <hr />

@@ -1,3 +1,4 @@
+   <?php if(isset($_SESSION['id'])): ?>
    <nav class="navbar navbar-default navbar-fixed-top" id="menu">
        <div class="container" <?= (@$_SESSION["admin"] ? 'style="background-color:#482084;"' : '') ?>>     
              <!-- <img class="navbar-brand" alt="MediaGrade" src="/img/logo.png" />-->
@@ -42,6 +43,8 @@
                             <li><a href="config.php?skills"><?= LABEL_SKILLS ?></a></li>
                             <li><a href="config.php?users"><?= LABEL_CLASS_ROLL ?></a></li>
                             <li><a href="config.php?welcome"><?= LABEL_CONFIG_WELCOME ?></a></li>
+                            <li class="divider"></li>
+                            <li><a href="config.php?system"><?= LABEL_SYSTEM ?></a></li>
 
                         </ul>
                     </li>
@@ -59,3 +62,31 @@
             </div>    
         </div>
    </nav> 
+   
+   <?php //TODO: reduce code lenght ?>
+   
+   <?php else: ?>
+   <nav class="navbar navbar-default navbar-fixed-top" id="menu">
+       <div class="container">     
+             <!-- <img class="navbar-brand" alt="MediaGrade" src="/img/logo.png" />-->
+             <div class="navbar-header">
+             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+             </button>
+            <a class="navbar-brand visible-xs" href="#">MediaGrade</a> 
+            </div>
+               
+            <div id="navbar" class="navbar-collapse collapse">
+               <ul class="nav navbar-nav">
+                    <li><a href="gallery.php"><span class="glyphicon glyphicon-sunglasses"></span> <?=LABEL_GALLERY ?></a></li>
+               </ul>
+               <ul class="nav navbar-nav navbar-right">
+                    <li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> <?= LABEL_LOGIN ?></a></li>
+               </ul>
+            </div>    
+        </div>
+   </nav>
+   <?php endif ?> 
