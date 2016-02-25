@@ -66,6 +66,29 @@
             
             
        }
+       
+       // saves comment
+       $curr_comment = query("SELECT comment from comments WHERE user_id = ? AND project_ID = ?", $_POST['user_id'], $_POST['project']);
+       
+       if(empty($curr_comment))
+       {
+            query(" INSERT INTO comments 
+                        (user_id, project_id, comment)
+                    VALUES(?, ?, ?)"
+                    , $_POST['user_id'], $_POST['project'], $_POST['comment']);
+       }
+       else
+       {
+            query(" UPDATE comments
+                    SET user_id = ?, project_id = ?, comment = ?
+                    WHERE user_id = ? 
+                    AND project_ID = ?", 
+                    $_POST['user_id'], $_POST['project'], $_POST['comment'],
+                    $_POST['user_id'],
+                    $_POST['project']);
+       }
+       
+       
        goto render_default;   
     }    
    
@@ -220,10 +243,16 @@
         }  
         // END CRITERIA STUFF
 
+        // Get comments, if any
+        $curr_comment = query("SELECT comment from comments WHERE user_id = ? AND project_ID = ?", $_GET['user'], $_GET['rate']);
+        
+        if(!empty($curr_comment)) $curr_comment = $curr_comment[0]['comment'];
+        
         // renders
         render("adm_grade.php", ["title" =>  LABEL_RATE,  
             "skills" => $skills, "user" => $user[0], "users" => $users, "project" => $project, "is_rated" => $is_rated, "rated" => $rated, "self_assessments" =>  $self_assessments,
-            "criteria" => $criteria, "submitted" => $submitted, "last_submitted_date" => $last_submitted_date, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"], "max_vote" => $max_vote]);
+            "criteria" => $criteria, "submitted" => $submitted, "last_submitted_date" => $last_submitted_date, "id_criterion" => $id_criterion, "extension" => $curr_project[0]["extension"], 
+            "max_vote" => $max_vote, "comment" => $curr_comment]);
     }
     else
     {

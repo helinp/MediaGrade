@@ -251,7 +251,11 @@
         }
         else
         {
-            //dump($query);
+            // Get comments, if any
+            $curr_comment = query("SELECT comment from comments WHERE user_id = ? AND project_ID = ?", $_SESSION["id"], $_GET['id']);
+        
+            if(!empty($curr_comment)) $curr_comment = $curr_comment[0]['comment'];
+
                 
             // check if project graded
             if (isset($query[0]["project_name"]) && isset($query[0]["user_grade"]))
@@ -265,7 +269,11 @@
             }
             
             // dump($content);
-            render("results.php", ["title" => LABEL_RESULTS, "projects" => $projects, "content" => $content[0]]);
+            render("results.php", [ "title" => LABEL_RESULTS, 
+                                    "projects" => $projects, 
+                                    "content" => $content[0],
+                                    "comment" => $curr_comment
+                                    ]);
         }
         
         

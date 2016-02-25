@@ -147,7 +147,9 @@
     define('LABEL_EVERY_CLASSES', 'Every grades');
     define('LABEL_NO_AVAILABLE_RESULTS', 'Result no available.');
     define('LABEL_SUBMITTED_ON', 'Submitted on: ');
-    
+    define('ASSESSMENT', 'Assessment');
+    define('LABEL_COMMENT', 'Comment');
+            
     define('LABEL_VOTE_00', 'FX');
     define('LABEL_VOTE_01', 'F');
     define('LABEL_VOTE_02', 'F');

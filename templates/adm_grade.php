@@ -68,14 +68,14 @@
             <div class="col-md-12">  
                 
                 <?php if(!empty($self_assessments)): ?>
-                <h4>Auto-évaluation</h4>
+                <h4><?=  LABEL_SELF_ASSESSMENT ?></h4>
                 <?php foreach($self_assessments as $self_assessment):?>
                     <?= "<b>" . $self_assessment["question"] . "</b><p>&quot;". $self_assessment["answer"] ."&quot;</p>"?>
                 <?php endforeach ?>
                 
                 <hr />
                 <?php endif ?>
-                <h4>Évaluation</h4>
+                <h4><?=  LABEL_ASSESSMENT ?></h4>
                 <form action="grade.php" method="post" id="form">
                  <table id="rows" class="table table-striped">         
          	            <col width="10%">
@@ -119,7 +119,10 @@
                     
                 <!-- END CRITERIA -->
                 <hr />
+                <h4><?=  LABEL_COMMENT ?></h4>
+                <textarea rows="5" cols="10" name="comment"><?= $comment ?></textarea>
                 
+                <hr />                
                 <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-save"></span><?= LABEL_SAVE_RATING ?></button>        
                 <input type="hidden" name="submitted_project_date" value="<?= $submitted[0]["time"] ?>">
                 <input type="hidden" name="user_id" value="<?= $user["id"] ?>">

@@ -4,7 +4,7 @@
            <div class="row"> 
                <div class="col-md-12">
            <?php if (is_array($content)):?>
-               
+               <h4><?= LABEL_RESULTS ?></h4>
                <table class="table table-hover ">
                     <thead>
                       <tr>
@@ -45,6 +45,7 @@
                 
                     </tbody>
               </table>
+              <?= (empty($comment) ? '' : '<hr /><h4>' . LABEL_COMMENT . "</h4><p>$comment</p>"); ?>
               </div>
           </div>
             <?php else: ?>

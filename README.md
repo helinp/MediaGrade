@@ -55,6 +55,9 @@ Previews:
 
 ## CHANGE LOG
 
+**2016-02-25**
+- Added feedback on graded projects
+
 **2016-02-24**
 - Updated project submenu disposition for clearer view
 - Added mail sending test page

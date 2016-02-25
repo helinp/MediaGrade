@@ -150,7 +150,8 @@
     define('LABEL_EVERY_CLASSES', 'Toutes les classes');
     define('LABEL_NO_AVAILABLE_RESULTS', 'Aucun résultat disponible.');
     define('LABEL_SUBMITTED_ON', 'Remis le: ');
-    
+    define('LABEL_ASSESSMENT', 'Évaluation');    
+    define('LABEL_COMMENT', 'Commentaire');
     
     define('LABEL_VOTE_00', 'Travail non remis');
     define('LABEL_VOTE_01', 'Travail non satisfaisant ');
