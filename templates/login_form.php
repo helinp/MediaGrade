@@ -5,7 +5,7 @@
                 <input autofocus class="form-control" name="username" placeholder="<?= LABEL_USERNAME ?>" type="text"/>
             </div>
             <div class="form-group">
-                <input class="form-control" name="password" placeholder="<?= LABEL_PASSWORD ?>" type="password"/>
+                <input class="form-control" name="password" autocomplete="off" placeholder="<?= LABEL_PASSWORD ?>" type="password"/>
                 <br /><small><a href="forgot.php"><?= LABEL_FORGOT_PASS ?></a></small>
             </div>
             <div class="form-group">

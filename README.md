@@ -55,6 +55,12 @@ Previews:
 
 ## CHANGE LOG
 
+**2016-02-26**
+- Added project view on student results page
+- Corrected enlargement bug on project grade page
+- Added autocomplete="off" on login form
+- Corrected html style bug (projects_nav.php)
+
 **2016-02-25**
 - Added feedback on graded projects
 

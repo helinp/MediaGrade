@@ -39,7 +39,7 @@
                             <a href="<?= $submitted[$count]["file_path"] . $submitted[$count]["file_name"] ?>">
                                 <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" 
                             
-                                width="100%" src="<?= $submitted[$count]["file_path"] . "thumb_" . $submitted[$count]["file_name"]?>" />
+                                src="<?= $submitted[$count]["file_path"] . "thumb_" . $submitted[$count]["file_name"]?>" />
                                 </a>
                         
                         <?php endif ?>

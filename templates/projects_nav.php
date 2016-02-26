@@ -22,7 +22,7 @@
         <?php foreach ($projects as $project):?>
             <nav>
                             <div class="list-group"  >
-                                <a href="?id=<?= $project["project_id"] ?>&project" class="list-group-item <?= (@$_GET['id'] == $project['project_id'] ? 'class="active"' : '') ?>">
+                                <a href="?id=<?= $project["project_id"] ?>&project" class="list-group-item <?= (@$_GET['id'] == $project['project_id'] ? 'active' : '') ?>">
                                     <h5 class="list-group-item-heading"><?= "P" . $project["periode"] . " / " . $project["project_name"]?></h5>
                                     <p class="list-group-item-text"><?= (!empty($project["user_id"]) ? '<span class="glyphicon glyphicon-ok" style="color:#5cb85c;"></span> <em>' . LABEL_SUBMITTED_PROJECT . '</em>' : '<em>' . 'Deadline: ' . $project["deadline"] . '</em>') ?></p>
                                 </a>

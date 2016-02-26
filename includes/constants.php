@@ -37,7 +37,7 @@
     define("ROOT_DIR", "/home/jharvard/vhosts/$_SERVER[HTTP_HOST]/public");
     
     // Release version
-    define('VERSION', 'v0.8 BETA 160225');
+    define('VERSION', 'v0.8 BETA 160226');
    
     // is demo version?
     define("DEMO_VERSION", false);
