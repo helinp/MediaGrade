@@ -5,15 +5,14 @@
                 <h5><span class="glyphicon glyphicon-download-alt"></span> <?= ($number_of_files > 1 ? LABEL_SUBMIT_FILES : LABEL_SUBMIT_FILE) ?></h5>  
          <?php while($number_of_files--): ?>
          <?php if (!empty($extension)):?>
-                               
                     <input type="hidden" name="project_id" value="<?= $project_id ?>" />
                     <label for="inputfile"><?= LABEL_SELECT_FILE ?></label>
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
-                    <input id="inputfile" name="submitted_file[]" data-error="<?= LABEL_NO_FILE ?>"  type="file" <?= (!empty($project_data[$number_of_files - 1]["file_name"]) ? '' : 'required') ?>
+                    <input id="inputfile" name="submitted_file[]" data-error="<?= LABEL_NO_FILE ?>"  type="file" <?= (!empty($project_data[$number_of_files]["file_name"]) ? '' : 'required') ?>
                     
                     <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
                     <p class="help-block with-errors">Max. <?= format_bytes(MAX_UPLOAD_FILE_SIZE) ?>.</p>
-                    <?= (empty($project_data[$number_of_files - 1]["file_name"]) ?  '' : '<p>' . LABEL_SUBMITTED_FILE . ' <a href="' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '">' . $project_data[$number_of_files - 1]["file_path"] . $project_data[$number_of_files - 1]["file_name"] . '</a></p>') ?>
+                    <?= (empty($project_data[$number_of_files]["file_name"]) ?  '' : '<p>' . LABEL_SUBMITTED_FILE . ' <a href="' . $project_data[$number_of_files]["file_path"] . $project_data[$number_of_files]["file_name"] . '">' . $project_data[$number_of_files]["file_path"] . $project_data[$number_of_files]["file_name"] . '</a></p>') ?>
          <?php endif ?> 
                     <hr />
          <?php endwhile ?>             
