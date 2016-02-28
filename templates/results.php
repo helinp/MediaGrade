@@ -8,12 +8,9 @@
                    elseif($n < 7) { $max_files = 6 ; $cols = 4;} 
                    else { $max_files = 12 ; $cols = 2;} 
             ?>
-                    
+				
         <?php foreach ($projects_url as $project_url): ?>
-            
-            <div class="col-md-<?= $cols ?>">
-                
-                    
+               <div class="col-md-<?= $cols ?>"> 
                     <?php if ($project_url['extension'] == "mp4" || $project_url['extension'] == "mov" || $project_url['extension'] == "avi"):?>    
                     <div class="thumbnail">
                        <div class="embed-responsive embed-responsive-16by9">
@@ -27,16 +24,20 @@
                     <?php elseif($project_url['extension'] == "jpeg" || $project_url['extension'] == "jpg" || $project_url['extension'] == "png" || $project_url['extension'] == "gif"): ?>
                     <div class="thumbnail">    
                         <a  href="<?= $project_url['file'] ?>">
-                            <img class="img-responsive thumbnail-180" src="<?= $project_url['thumbnail'] ?>" alt="<?= $project_url['name'] ?>" />
+                            <img class="img-responsive thumbnail-180" src="<?= $project_url['thumbnail'] ?>" alt="<?= $project_url['file'] ?>" />
                         </a>
                     </div>
                     <?php endif ?>
-               
-                
-            </div>
-            <div class="col-md-12">
-        <?php endforeach ?>          
+               </div>
+         <?php endforeach ?>        
+				
+			</div>
+			<div class = "row">
+				<div class="col-md-12">
+                 
            <?php if (is_array($content)):?>
+               <?= (empty($comment) ? '' : '<hr /><h4>' . LABEL_COMMENT . "</h4><p>$comment</p><hr />"); ?>
+               
                <h4><?= LABEL_RESULTS ?></h4>
                <table class="table table-hover ">
                     <thead>
@@ -77,7 +78,7 @@
                 
                     </tbody>
               </table>
-              <?= (empty($comment) ? '' : '<hr /><h4>' . LABEL_COMMENT . "</h4><p>$comment</p>"); ?>
+              
               </div>
           </div>
             <?php else: ?>

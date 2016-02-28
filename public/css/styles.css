@@ -225,7 +225,8 @@ margin: 0 auto;
     text-overflow: ellipsis;
 }
 
-img.thumbnail-180
+
+img.thumbnail-180, a > img.thumbnail-180
 {
     height: 142px;
 }

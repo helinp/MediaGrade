@@ -13,14 +13,13 @@
    $projects = query("SELECT * FROM projects");
     
    $query = query("SELECT AVG(user_grade), assessment.max_vote, date, objective
-                     FROM  assessment
-                     LEFT JOIN results 
+                     FROM  results
+                     RIGHT JOIN  assessment
                      ON assessment.id = skill_id
                      WHERE results.user_id = ?
                      GROUP BY date, objective
                      ORDER BY date ASC", 
                      $_SESSION["id"]);
-   
     
     foreach ($query as $key => $node)
     {

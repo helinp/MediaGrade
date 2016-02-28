@@ -169,7 +169,11 @@
         {
             (empty($row["answer"]) && empty($row["file_path"]) ? $users[$i]["is_submitted"] = false : $users[$i]["is_submitted"] = true);
             
-            $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $row["id"]);
+            $rated = query("SELECT user_grade 
+							FROM  `results` 
+							WHERE project_id = ? 
+								AND user_id = ?",
+							$_GET["rate"], $row["id"]);
             
             (empty($rated) ? $users[$i]["is_rated"] = false : $users[$i]["is_rated"] = true);
             
@@ -177,14 +181,27 @@
         }
         
         
-        $project = query("SELECT project_name, project_id, deadline, assessment_type
-                             FROM `projects` WHERE  `project_id` = ?", $_GET["rate"])[0];
+        $project = query("	SELECT project_name, project_id, deadline, assessment_type
+                             FROM `projects` 
+                             WHERE  `project_id` = ?",
+                             $_GET["rate"])[0];
                              
-        $submitted = query("SELECT time, file_path, file_name, answers FROM submitted WHERE user_id = ? AND project_id = ? ORDER BY time DESC", $_GET["user"], $_GET["rate"]);
+        $submitted = query("SELECT time, file_path, file_name, answers 
+							FROM submitted
+							WHERE user_id = ? 
+								AND project_id = ? 
+							ORDER BY time DESC",
+							$_GET["user"], $_GET["rate"]);
         
-        $last_submitted_date = $submitted[0]['time'];
+        if($submitted) 	$last_submitted_date = $submitted[0]['time'];
+        else $last_submitted_date = '';
         
-        $rated = query("SELECT user_grade FROM  `results` WHERE project_id = ? AND user_id = ?", $_GET["rate"], $_GET["user"]);
+		
+        $rated = query("SELECT user_grade 
+						FROM  `results` 
+						WHERE project_id = ? 
+							AND user_id = ?", 
+						$_GET["rate"], $_GET["user"]);
         
         if($submitted)
         {
@@ -195,7 +212,11 @@
                 // get self_assessment questions
                 foreach ($self_assessments as $key => $self_assessment)
                 {
-                    $query = query("SELECT question FROM auto_assesment WHERE id = ?", $self_assessment["id"]);
+                    $query = query("SELECT question 
+									FROM auto_assesment 
+									WHERE id = ?",
+									 $self_assessment["id"]);
+                    
                     $self_assessments[$key]["question"] = $query[0]["question"];
                 }
             }
@@ -213,7 +234,10 @@
         
         // CRITERIA STUFF
         // gets current project
-        $curr_project = query("SELECT * FROM projects WHERE project_id = ?", $_GET["rate"]);
+        $curr_project = query(" SELECT * 
+								FROM projects 
+								WHERE project_id = ?", 
+								$_GET["rate"]);
         
         // gets selected criteria and cursors from database
         $assessments_id = explode(",", $curr_project[0]["assessment_id"]);
@@ -244,7 +268,11 @@
         // END CRITERIA STUFF
 
         // Get comments, if any
-        $curr_comment = query("SELECT comment from comments WHERE user_id = ? AND project_ID = ?", $_GET['user'], $_GET['rate']);
+        $curr_comment = query(" SELECT comment 
+								FROM comments 
+								WHERE user_id = ? 
+									AND project_ID = ?",
+								$_GET['user'], $_GET['rate']);
         
         if(!empty($curr_comment)) $curr_comment = $curr_comment[0]['comment'];
         
@@ -259,8 +287,10 @@
         // renders default page
         render_default:
         
-        $users = query("SELECT id, username, name, last_name, class
-                         FROM users WHERE `is_staff` = 0 ORDER BY class ");  
+        $users = query(" SELECT id, username, name, last_name, class
+                         FROM users 
+                         WHERE `is_staff` = 0 
+                         ORDER BY class ");  
         $i = 0;
         foreach ($users as $user)
         {
@@ -286,8 +316,10 @@
              }
              $i++;
         }
-        render("adm_grade_list.php", ["title" =>  LABEL_ADMIN,  
-                        "users" => $users ]);   
+        render("adm_grade_list.php", [  
+										"title" =>  LABEL_ADMIN,  
+										"users" => $users 
+									 ]);   
     }
     
 ?>

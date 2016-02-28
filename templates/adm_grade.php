@@ -26,7 +26,7 @@
             
             
                 <?php foreach(range(0, $max_files - 1) as $count): ?>
-                <div class="col-md-<?= $cols ?>"> 
+                <div class="col-md-<?= $cols ?>"  style="padding-bottom: 1em;"> 
             
                     <?php if (isset($submitted[$count]["file_path"])): ?>
                         <?php if ($extension == "mp4" || $extension == "mov" || $extension == "avi"): ?>
@@ -38,7 +38,7 @@
                         
                             <a href="<?= $submitted[$count]["file_path"] . $submitted[$count]["file_name"] ?>">
                                 <img alt="<?= $user["name"] . " " . $user["last_name"] . " / " . $project["project_name"]?>" 
-                            
+								style="width:100%"
                                 src="<?= $submitted[$count]["file_path"] . "thumb_" . $submitted[$count]["file_name"]?>" />
                                 </a>
                         
@@ -51,7 +51,7 @@
        </div>
        <div class="row">
             <div class="col-md-12">         
-                <?php if (!isset($submitted[0]["file_path"])): ?>
+                <?php if (empty($last_submitted_date)): ?>
                 <div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= LABEL_NOT_SUBMITTED ?></div>
               <?php else: ?>
               	 <div class="alert alert-info"><?= LABEL_SUBMITTED_ON . $last_submitted_date ?></div>
@@ -183,58 +183,4 @@
     
     // text-assessment
     </script>
-    
-    <!--
-    <script src="js/bootstrap-slider.js"></script>
-    <script>
-    var max;
-    $('.slider').slider(function(){
-                // get max value
-                max = $(this).attr("data-slider-max");
-
-                console.log(value + '-' + max + '-' + Math.round(value / max * 10));
-        });        
-                
-     //max = $('.slider').attr('data-slider-max');
-    $('.slider').slider({
-                
-                
-                
-                formater: function(value) {
-                
-                
-                
-                switch(Math.round(value / max * 10)){
-                
-                    case 10:
-                        return("<?= LABEL_VOTE_10 ?> (" + value + ")" );
-                        break;
-                    case 9:
-                        return("<?= LABEL_VOTE_09 ?> (" + value + ")" );
-                        break;
-                    case 8:
-                        return("<?= LABEL_VOTE_08 ?> (" + value + ")" );
-                        break;
-                    case 7:
-                        return("<?= LABEL_VOTE_07 ?> (" + value + ")" );
-                        break;
-                    case 6:
-                        return("<?= LABEL_VOTE_06 ?> (" + value + ")" );
-                        break;
-                    case 5:
-                        return("<?= LABEL_VOTE_05 ?> (" + value + ")" );
-                        break;
-                    case 1: case 2: case 3: case 4:
-                        return("<?= LABEL_VOTE_04 ?> (" + value + ")" );
-                        break;
-                    case 0:
-                        value--;
-                        return("<?= LABEL_VOTE_00 ?>");
-                        break;
-                }
-              }
-            });
-            
-
-    </script> -->
-        
+   

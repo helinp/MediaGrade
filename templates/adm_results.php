@@ -21,18 +21,21 @@
                 <thead>
                   <tr>
                     <th><?= LABEL_STUDENTS_FROM ?> <?= $users_class ?></th>
-                    <?php foreach($projects as $project): ?>
-                   
-                        <?php foreach ($objectives as $key => $objective): ?>
+                    <?php 
+                        reset($results);
+                        $project = current($results);
                         
-                        <th class="rotate" >
-                            <div><span><small style="margin-left:-2.4em;"><?= (strlen($project["project_name"]) > 13 ? substr($project["project_name"], 0, 13) . '...' : $project["project_name"])?></small></span></div>
+                        foreach ($project as $project_name => $objectives): ?>
                         
-                            <div><span class="text-muted"><small><span class="glyphicon glyphicon-arrow-right"></span> <?= $objective["objective"]?></small></span></div>
-                        </th>
+                            <?php foreach($objectives as $objective_name => $objective): ?>
+                            <th class="rotate" >
+                                <div><span><small style="margin-left:-2.4em;"><?= (strlen($project_name) > 13 ? substr($project["project_name"], 0, 13) . '...' : $project_name)?></small></span></div>
+                            
+                                <div><span class="text-muted"><small><span class="glyphicon glyphicon-arrow-right"></span> <?= $objective_name ?></small></span></div>
+                            </th>
+                            <?php endforeach ?>
                         <?php endforeach ?>
                    
-                    <?php endforeach ?>
                     <th class="rotate"><div><span><?= LABEL_AVERAGE ?></span></div></th>
                   </tr>
                 </thead>

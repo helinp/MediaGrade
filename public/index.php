@@ -269,9 +269,9 @@
             }
             
             // get project url
-            $projects_url = query("	SELECT CONCAT(file_path, file_name) as file, extension 
+            $projects_url = query("	SELECT CONCAT(file_path, file_name) as file, CONCAT(file_path, 'thumb_', file_name) as thumbnail, extension 
             											FROM submitted 
-            											INNER JOIN projects
+            											LEFT JOIN projects
             											ON submitted.project_id = projects.project_id
             											WHERE user_id = ? 
             												AND submitted.project_id = ?",
@@ -279,7 +279,7 @@
             											$_GET['id']);
             
             
-            // dump($content);
+
             render("results.php", [ "title" => LABEL_RESULTS, 
                                     "projects" => $projects, 
                                     "content" => $content[0],

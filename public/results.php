@@ -62,16 +62,13 @@
         if (!isset($_GET["period"]) || empty($_GET["period"]) || empty($projects) )
         {
             $projects = query(" SELECT project_name, project_id 
-                                FROM projects 
+                                FROM projects
                                 WHERE class = ?",
                                 $users[0]['class']
                                 );
         }
         
-        $objectives = query("   SELECT DISTINCT objective 
-                                FROM assessment 
-                                ORDER BY objective");
-       
+        
         $average = "";
 
         foreach($users as $user)
@@ -79,13 +76,21 @@
 
             foreach($projects as $project)
             {
+            
+                $objectives = query("   SELECT DISTINCT objective 
+                                        FROM results 
+                                        LEFT JOIN assessment
+                                            ON results.skill_id = assessment.id
+                                        WHERE results.project_id = ?
+                                        ORDER BY objective",
+                                        $project['project_id']);
                 
                 foreach($objectives as $objective)
                 {
                     $query = query("SELECT assessment.id, SUM(user_grade) / SUM(assessment.max_vote) * 100 AS 'AVG(user_grade)'
                                     FROM results 
                                     LEFT JOIN assessment
-                                    ON results.skill_id = assessment.id 
+                                        ON results.skill_id = assessment.id 
                                     WHERE results.project_id = ?
                                     AND user_id = ? 
                                     AND objective = ?
@@ -94,6 +99,7 @@
                                     $user["id"],
                                     $objective["objective"]
                                     );
+                    
                     
                     if(empty($query[0]["AVG(user_grade)"])) $query[0]["AVG(user_grade)"] = "--";
 
@@ -108,7 +114,7 @@
             {
                 $average = query("  SELECT SUM(user_grade) / SUM(max_vote) * 100 AS 'AVG(user_grade)' 
                                     FROM results
-                                    INNER JOIN projects
+                                    LEFT JOIN projects
                                     ON results.project_id = projects.project_id
                                     WHERE results.user_id = ? 
                                     AND projects.periode = ?", 
@@ -133,7 +139,7 @@
         }
                 
         render("adm_results.php", ["title" =>  LABEL_ADMIN, "results" => $results, "projects" => $projects, 
-                   "objectives" => $objectives, "averages" => $averages, "users_class" => $users[0]["class"], "periods" => $periods]); 
+                   "averages" => $averages, "users_class" => $users[0]["class"], "periods" => $periods]); 
     }
     
 ?>
