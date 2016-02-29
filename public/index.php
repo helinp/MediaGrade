@@ -350,7 +350,7 @@
                         "project_data" => $project, 
                         "questions" => $questions,
                         "answers" => $answers,
-                        "project_id" => $_GET["submit"],
+                        "project_id" => $_GET["id"],
                         "extension" => $project[0]["extension"],
                         "number_of_files" => $project[0]["number_of_files"]
                         ]);                                       
