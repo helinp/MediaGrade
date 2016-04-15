@@ -13,7 +13,7 @@ Further features will show up as it still a Work in Progress...
 Previews:
 
 - [Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
-- [Demo version 0.8](http://mg.pierrehelin.eu)
+- [Demo version](http://mg.pierrehelin.eu)
 
 
 ## Current functionalities
