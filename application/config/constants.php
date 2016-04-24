@@ -92,7 +92,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
  */
 
     // Release version
-    define('VERSION', 'v1.0 BETA 20160410');
+    define('VERSION', '1.0-20160424-BETA');
 
     // is demo version?
     define("DEMO_VERSION", false);

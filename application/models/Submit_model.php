@@ -126,7 +126,7 @@ Class Submit_model extends CI_Model
         $sanitized_project_name = sanitize_name($project_data->project_name);
 
         // puts the file in ./upload/2015-2016/class/p_#
-        $upload_dir = 'uploads/' . get_school_year() . '/' . $project_data->class . '/p' . strtolower($project_data->periode) . '/' . $sanitized_project_name . '/';
+        $upload_dir = 'uploads/' . get_school_year() . '/' . $project_data->class . '/' . strtolower($project_data->periode) . '/' . $sanitized_project_name . '/';
 
         // create dir if doesn't exist
         if (!is_dir('assets/' . $upload_dir)) mkdir('assets/' . $upload_dir, 0777, TRUE);

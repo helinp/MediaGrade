@@ -34,7 +34,7 @@ Previews:
 - CodeIgniter 3.0.6
 - Bootstrap 3
 - TCPDF Class
-- MyAPIFilms 
+- MyAPIFilms
 
 ## TODO
 - TODO / User mail preference not yet implemented
@@ -49,10 +49,14 @@ Previews:
 - Add users from CSV file
 - Statistics!
 - Multi teachers support
-- Audio and Doc files submission 
+- Audio and Doc files submission
 
 
 ## CHANGE LOG
+
+**2016-04-24**
+- Project with no file requested but only self-assessment is now implemented
+- Minor debugging 
 
 **2016-04-15**
 *Major Update*
@@ -62,6 +66,5 @@ Previews:
 - Group of skills admin
 - Movie Advisor addon
 - Database updated
-- Filters on Hall of fame page 
+- Filters on Hall of fame page
 - Users can have an avatar
-

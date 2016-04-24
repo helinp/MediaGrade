@@ -99,12 +99,13 @@ class Projects extends CI_Controller {
 		}
 
 		$number_of_files = count($_FILES);
-
+		$number_of_files_requested = $this->Submit_model->getSubmitInformations($project_id)->number_of_files;
+		$ext = $this->Submit_model->generateAllowedFileType($project_id);
 		$answers = '';
 
-	   	if ($number_of_files == 0)
+	   	if ($number_of_files !== $number_of_files_requested && !empty($ext))
 	   	{
-		   	echo('Select at least one file.');
+		   	show_error(_("Vous devez remettre $number_of_files_requested fichier(s)"));
 	   	}
 	   	else
 	   	{
@@ -122,38 +123,35 @@ class Projects extends CI_Controller {
 				}
 			}
 
-			// saves files
-			$i = $number_of_files;
+			// Save POST
+			$i = $number_of_files_requested;
 		   	while ($i--)
 		   	{
-				// load config
-				$config = $this->Submit_model->getSubmitConfig($project_id, $i + 1);
-
-				// upload file
-				$error = $this->Submit_model->do_upload($config, 'submitted_file_' . $i);
-
-				if (isset($error['error']))
-		       	{
-				   		show_error($error['error']);
-		       	}
-				else
+				// upload file if requested
+				if(!empty($ext))
 				{
-					// update database
-					$file_name = $this->upload->data('file_name');
-					$this->Submit_model->submitProject($project_id, $file_name, $answers);
+					// load config
+					$config = $this->Submit_model->getSubmitConfig($project_id, $i + 1);
+					$error = $this->Submit_model->do_upload($config, 'submitted_file_' . $i);
 
-					$ext = $this->Submit_model->generateAllowedFileType($project_id);
+					if (isset($error['error']))
+					{
+							show_error($error['error']);
+					}
 
+					// make image thumbnail
 					if($ext === 'jpg' || $ext === 'png' || $ext === 'gif')
 					{
-						// make thumbnail
+
 						$file_path = $config['upload_path'] . $file_name;
 						$real_path = $this->upload->data('file_path');
 						$this->Submit_model->makeThumbnail($file_path, $real_path);
 					}
 				}
 
-
+				// update database
+				$file_name = $this->upload->data('file_name');
+				$this->Submit_model->submitProject($project_id, $file_name, $answers);
 
 		   	}
 	   }

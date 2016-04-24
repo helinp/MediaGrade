@@ -4,10 +4,10 @@
 <hr style="margin-top:0;" />
 <form action="/projects/upload/<?= $project_id ?>" role="form" enctype="multipart/form-data" method="post" data-toggle="validator">
     <div class="form-group">
-        <h4><span class="glyphicon glyphicon-download-alt"></span> <?= ($submit->number_of_files > 1 ? LABEL_SUBMIT_FILES : LABEL_SUBMIT_FILE) ?></h4>
-        <?php $number_of_files = $submit->number_of_files;
-              while($number_of_files--): ?>
+        <?php $number_of_files = $submit->number_of_files;?>
         <?php if (!empty($submit->extension)):?>
+        <h4><span class="glyphicon glyphicon-download-alt"></span> <?= ($number_of_files > 1 ? LABEL_SUBMIT_FILES : LABEL_SUBMIT_FILE) ?></h4>
+        <?php while($number_of_files--): ?>
       <label for="inputfile">
             <?=LABEL_SELECT_FILE ?>
         </label>
@@ -22,10 +22,10 @@
         <?=( empty($submitted[$number_of_files]->file) ? '' : '<p>' . LABEL_SUBMITTED_FILE . '
           <a href="' . $submitted[$number_of_files]->file . '">'
           . $submitted[$number_of_files]->file . '</a></p>') ?>
-            <?php endif ?>
+
             <hr />
             <?php endwhile ?>
-
+            <?php endif ?>
     </div>
 
     <?php if( ! empty($self_assessment)): ?>

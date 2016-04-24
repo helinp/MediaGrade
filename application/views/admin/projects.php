@@ -89,14 +89,14 @@
                 <div class="form-group">
                     <label class="control-label"><?=  LABEL_EXPECTED_FILE ?></label>
                     <select class="form-control" name="extension">
-                        <option <?= (@$curr_project->extension == "" ? " selected" : "")?>><?=  LABEL_NO_EXPECTED_FILE ?></option>
+                        <option value="" <?= (empty($curr_project->extension) ? " selected" : "")?>><?= _('Pas de remise fichier')?></option>
                         <option disabled>---</option>
-                        <option<?= (@$curr_project->extension == "gif" ? " selected" : "")?>>gif</option>
-                        <option<?= (@$curr_project->extension == "jpg" ? " selected" : "")?>>jpg</option>
-                        <option<?= (@$curr_project->extension == "mov" ? " selected" : "")?>>mov</option>
-                        <option<?= (@$curr_project->extension == "avi" ? " selected" : "")?>>avi</option>
-                        <option<?= (@$curr_project->extension == "mp4" ? " selected" : "")?>>mp4</option>
-                        <option<?= (@$curr_project->extension == "wav" ? " selected" : "")?>>wav</option>
+                        <option<?= (@$curr_project->extension == 'gif' ? ' selected' : '')?>>gif</option>
+                        <option<?= (@$curr_project->extension == 'jpg' ? ' selected' : '')?>>jpg</option>
+                        <option<?= (@$curr_project->extension == 'mov' ? ' selected' : '')?>>mov</option>
+                        <option<?= (@$curr_project->extension == 'avi' ? ' selected' : '')?>>avi</option>
+                        <option<?= (@$curr_project->extension == 'mp4' ? ' selected' : '')?>>mp4</option>
+                        <option<?= (@$curr_project->extension == 'wav' ? ' selected ': '')?>>wav</option>
                     </select>
                 </div>
             </div>
