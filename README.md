@@ -13,7 +13,7 @@ Further features will show up as it still a Work in Progress...
 Previews:
 
 - [Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
-- [Demo version 0.8](http://mg.pierrehelin.eu)
+- [Demo version 1.0 BETA](http://mg.pierrehelin.eu)
 
 
 ## Current functionalities
@@ -37,6 +37,7 @@ Previews:
 - MyAPIFilms
 
 ## TODO
+- Code documentation
 - TODO / User mail preference not yet implemented
 - TODO / User password modification not yet implemented
 - PATCH / Prevent from duplicate project name
@@ -54,9 +55,13 @@ Previews:
 
 ## CHANGE LOG
 
+**2016-05-04**
+- Is it now possible not to grade one or few criteria
+- Projects with no requested file doesn't show on gallery anymore 
+
 **2016-04-24**
 - Project with no file requested but only self-assessment is now implemented
-- Minor debugging 
+- Minor debugging
 
 **2016-04-15**
 *Major Update*

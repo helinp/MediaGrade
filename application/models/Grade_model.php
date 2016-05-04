@@ -4,6 +4,9 @@ Class Grade_model extends CI_Model
 	public function grade($project_id, $user_id, $assessment_id, $user_vote)
 	{
 
+		// if not assessed
+		if($user_vote == -1) return TRUE;
+
 		// get max_vote from assessments DB
 		$this->db->where('assessments.id', $assessment_id);
 		$q = $this->db->get('assessments', 1);

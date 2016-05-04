@@ -9,8 +9,8 @@
                     <table class="table table-striped small">
                         <?php foreach($not_graded_projects as $row): ?>
                         <tr>
-                            <td><?= 'P' . $row->periode ?></td>
-                            <td><?= $row->last_name . ' ' . $row->name ?></td>
+                            <td><?= $row->periode ?></td>
+                            <td><a href="/admin/grade/<?= $row->class?>/<?= $row->project_id?>/<?= $row->user_id?>"><?= $row->last_name . ' ' . $row->name ?></a></td>
                             <td><?= $row->project_name ?></td>
 
                         </tr>
@@ -26,7 +26,7 @@
                     <table class="table table-striped small">
                         <?php foreach($active_projects as $row): ?>
                         <tr>
-                            <td><?= 'P' . $row->periode ?></td>
+                            <td><?= $row->periode ?></td>
                             <td><?= $row->project_name ?></td>
                             <td><?= $row->deadline ?></td>
                         </tr>

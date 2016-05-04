@@ -4,27 +4,29 @@ Class Gallery_model extends CI_Model
 
 	public function getProjectsGallery($user_id = false, $offset = 0)
 	{
-		$sql = "SELECT CONCAT('/assets/', file_path, file_name) as file,
-									CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail,
-									RIGHT(file_name, 3) as extension,
-									name, CONCAT(LEFT(last_name, 1), '.') as last_name, project_name
-									FROM submitted
-									LEFT JOIN users
-										ON users.id = user_id
-									LEFT JOIN projects
-										ON projects.id = submitted.project_id";
+		$sql = "SELECT  CONCAT('/assets/', file_path, file_name) as file,
+					 	CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail,
+						RIGHT(file_name, 3) as extension,
+						name,
+						CONCAT(LEFT(last_name, 1), '.') as last_name,
+						project_name
+				FROM submitted
+				LEFT JOIN users
+					ON users.id = user_id
+				LEFT JOIN projects
+					ON projects.id = submitted.project_id
+				WHERE file_name IS NOT NULL";
 
 		// user injection protection
 		if($offset !== 0) $offset = intval($offset);
 
 		if ($user_id)
 		{
-				$sql .= "	WHERE user_id = ? ORDER BY submitted.id DESC LIMIT 12 OFFSET $offset";
+				$sql .= " AND user_id = ? ORDER BY submitted.id DESC LIMIT 12 OFFSET $offset";
 				$query = $this->db->query($sql, array($user_id));
 		}
 		else
 		{
-
 				$sql .= " ORDER BY submitted.id DESC LIMIT 12 OFFSET $offset";
 				$query = $this->db->query($sql);
 		}
@@ -63,7 +65,7 @@ Class Gallery_model extends CI_Model
 
 
 
-/*****************/
+/******* WORK IN PROGRESS **********/
 
 	public function sqlFilter($conditions = array())
   {

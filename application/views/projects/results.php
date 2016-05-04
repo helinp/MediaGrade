@@ -21,7 +21,7 @@
                           </div>
 
 
-                <?php elseif($project_url->extension == "jpeg" ||$project_url->extension == "jpg" || $project_url->extension == "png" || $project_url['extension'] == "gif"): ?>
+                <?php elseif($project_url->extension == "jpeg" ||$project_url->extension == "jpg" || $project_url->extension == "png" || $project_url->extension == "gif"): ?>
                       <div class="thumbnail">
                           <a  href="<?= $project_url->file ?>">
                           <img class="img-responsive thumbnail-180" src="<?= $project_url->thumbnail ?>" alt="<?= $project_url->file ?>" />

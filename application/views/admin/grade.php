@@ -18,16 +18,16 @@
                <div class="col-md-<?= $cols ?>"  style="padding-bottom: 1em;">
 
                    <?php if (isset($submitted[$count]->file_path)): ?>
-                       <?php if ($submitted[$count]->extension == "mp4" || $submitted[$count]->extension == "mov" || $submitted[$count]->extension == "avi"): ?>
+                       <?php if ($submitted[$count]->extension == 'mp4' || $submitted[$count]->extension == 'mov' || $submitted[$count]->extension == 'avi'): ?>
                            <video width="50%" controls preload = "auto">
                                <source src="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" type="video/mp4">
                                <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $submitted[$count]->file_path?>"><?= LABEL_HERE ?></a></p>
                            </video>
-                       <?php elseif($submitted[$count]->extension == "jpg" || $submitted[$count]->extension == "jpeg" || $submitted[$count]->extension == "png" || $submitted[$count]->extension == "gif"): ?>
+                       <?php elseif($submitted[$count]->extension == 'jpg' || $submitted[$count]->extension == 'jpeg' || $submitted[$count]->extension == 'png' || $submitted[$count]->extension == 'gif'): ?>
 
                            <a href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
                                <img alt="<?= $user->name . " " . $user->last_name . " / " . $project->project_name?>"
-                               style="max-height:500px;"
+                               style="max-height:200px;"
                                src="/assets/<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
                                </a>
 
@@ -89,11 +89,11 @@
                                <td><?= $row->criterion ?></td>
                                <td><?= $row->cursor ?></td>
                                <td>
-                                   <input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote ? ($row->user_vote / $row->max_vote * 10) : '5') ?>" max="10" min="0" step="1">
+                                   <input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
                                    <span class="small" data-onload="genAssessment()"></span>
                                    <input type="hidden" name="assessments_id[]" value="<?= $row->id?>">
                                </td>
-                               <td><!--<span class="balancedVote"><?= ($row->user_vote ? $row->user_vote : '5') ?></span> / --><?= $row->max_vote ?></td>
+                               <td><!--<span class="balancedVote"><?= ($row->user_vote ? $row->user_vote : 'NE') ?></span> / --><?= $row->max_vote ?></td>
                            </tr>
                            <?php $i++ ?>
                         <?php endforeach ?>
@@ -146,6 +146,10 @@
                    case 0:
                        currVal--;
                        return("<?= LABEL_VOTE_00 ?>" + append);
+                       break;
+                   case -1:
+                       currVal--;
+                       return("<?= _('Non évalué') ?>");
                        break;
                }
    }

@@ -67,7 +67,7 @@ Class Results_model extends CI_Model
                 if ($periode) $sql .= "AND periode = ? ";
 
                 $sql .= "GROUP by users.id, projects.id, skills_group
-                        ORDER BY users.class, users.last_name, projects.periode, projects.deadline";
+                        ORDER BY users.class, users.last_name, projects.periode, projects.deadline, skills_group";
 
                 if ($periode)
                     $query = $this->db->query($sql, array($class, $periode));
@@ -75,8 +75,6 @@ Class Results_model extends CI_Model
                     $query = $this->db->query($sql, array($class));
 
                 $results = $query->result();
-
-                // transform to tri dimensional array_push
 
                 $table = array();
 
@@ -223,8 +221,6 @@ Class Results_model extends CI_Model
 
         public function getClassResults($class, $period = FALSE)
         {
-
-
     			// declare empty variable if no result
     			$results = '';
 

@@ -91,26 +91,26 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
  |
  */
 
-    // Release version
-    define('VERSION', '1.0-20160424-BETA');
+// Release version
+define('VERSION', '1.0-20160504-BETA');
 
-    // is demo version?
-    define("DEMO_VERSION", false);
+// is demo version?
+define('DEMO_VERSION', TRUE);
 
-    // max size of uploaded files in octet TODO: see php.ini
-    if (DEMO_VERSION)
-    {
-        define("MAX_UPLOAD_FILE_SIZE", "715200");
-    }
-    else
-    {
-        define("MAX_UPLOAD_FILE_SIZE", "209715200");
-    }
-    // allowed html tags
-    define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
+// max size of uploaded files in octet TODO: see php.ini
+if (DEMO_VERSION)
+{
+    define('MAX_UPLOAD_FILE_SIZE', '715200');
+}
+else
+{
+    define('MAX_UPLOAD_FILE_SIZE', '209715200');
+}
+// allowed html tags
+define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
 
-    // End of year on (ddmm)
-    define('END_OF_YEAR', '3006');
+// End of year on (ddmm)
+define('END_OF_YEAR', '3006');
 
-    // MY API FILE TOKEN
-    define('MY_API_FILM_TOKEN', '44bc7caf-f550-403b-94dd-03f84899fa5b');
+// MY API FILE TOKEN
+define('MY_API_FILM_TOKEN', '44bc7caf-f550-403b-94dd-03f84899fa5b');

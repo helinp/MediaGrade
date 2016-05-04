@@ -27,8 +27,9 @@
             </div>
         </fieldset>
 
+
     </form>
-    
+
         <?php if(DEMO_VERSION): ?>
         <h5><?= LABEL_DEMO_ACCOUNTS ?></h5>
         <code>student 123456</code><br /> <code>teacher 123456</code>

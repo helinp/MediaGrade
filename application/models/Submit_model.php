@@ -216,7 +216,7 @@ Class Submit_model extends CI_Model
 
     public function listNotGradedProjects()
 	{
-        $sql = "SELECT users.class, projects.periode, users.name, users.last_name, projects.project_name
+        $sql = "SELECT users.class, projects.periode, users.name, users.last_name, projects.project_name, users.id as user_id, projects.id as project_id
                 FROM submitted, users, projects
                 WHERE NOT EXISTS(SELECT NULL
                          FROM results

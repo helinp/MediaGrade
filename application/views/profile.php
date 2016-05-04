@@ -44,23 +44,23 @@
          </tr>
          <tr>
             <td><b><?= LABEL_ACTUAL_PASS ?>:</b> </td>
-            <td><input type="password" name="actual_password" placeholder=" <?= LABEL_PASSWORD ?>"  /></td>
+            <td><input type="password" name="actual_password" placeholder=" <?= LABEL_PASSWORD ?>"  disabled /></td>
             <td></td>
          </tr>
          <tr>
             <td><b><?= LABEL_NEW_PASS ?>:</b> </td>
-            <td><input type="password" name="new_password" placeholder=" <?= LABEL_PASSWORD ?>"  /></td>
+            <td><input type="password" name="new_password" placeholder=" <?= LABEL_PASSWORD ?>" disabled  /></td>
             <td></td>
          </tr>
          <tr>
             <td><b><?= LABEL_CONFIRM_PASS ?>:</b> </td>
-            <td><input type="password" name="confirm_new_password" placeholder=" Confirmation" /></td>
+            <td><input type="password" name="confirm_new_password" placeholder=" Confirmation" disabled /></td>
             <td></td>
          </tr>
          <tr class="top-line">
            <td> </td>
            <td></td>
-           <td><button type="submit" name="change_password" value="1" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span> <?= LABEL_MODIFY ?></button> </td>
+           <td><button type="submit" name="change_password" value="1" class="btn btn-primary btn-xs" disabled><span class="glyphicon glyphicon-pencil"></span> <?= LABEL_MODIFY ?></button> </td>
        </form>
        <form action="/profile/upload" method="post" role="form" enctype="multipart/form-data">
          </tr>

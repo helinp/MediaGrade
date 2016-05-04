@@ -103,7 +103,7 @@ class Projects extends CI_Controller {
 		$ext = $this->Submit_model->generateAllowedFileType($project_id);
 		$answers = '';
 
-	   	if ($number_of_files !== $number_of_files_requested && !empty($ext))
+	   	if ($number_of_files != $number_of_files_requested && !empty($ext))
 	   	{
 		   	show_error(_("Vous devez remettre $number_of_files_requested fichier(s)"));
 	   	}
@@ -133,16 +133,17 @@ class Projects extends CI_Controller {
 					// load config
 					$config = $this->Submit_model->getSubmitConfig($project_id, $i + 1);
 					$error = $this->Submit_model->do_upload($config, 'submitted_file_' . $i);
+					$file_name = $this->upload->data('file_name');
 
 					if (isset($error['error']))
 					{
 							show_error($error['error']);
+
 					}
 
 					// make image thumbnail
 					if($ext === 'jpg' || $ext === 'png' || $ext === 'gif')
 					{
-
 						$file_path = $config['upload_path'] . $file_name;
 						$real_path = $this->upload->data('file_path');
 						$this->Submit_model->makeThumbnail($file_path, $real_path);
@@ -150,7 +151,6 @@ class Projects extends CI_Controller {
 				}
 
 				// update database
-				$file_name = $this->upload->data('file_name');
 				$this->Submit_model->submitProject($project_id, $file_name, $answers);
 
 		   	}

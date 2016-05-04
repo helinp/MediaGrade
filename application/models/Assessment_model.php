@@ -77,7 +77,7 @@ Class Assessment_model extends CI_Model
 		}
 		$sql_where = substr($sql_where, 0, -3);
 
-		$sql = 'SELECT skills_group, SUM(max_vote) as max_vote FROM assessments' . $sql_where . ' GROUP BY skills_group';
+		$sql = 'SELECT skills_group, SUM(max_vote) as max_vote FROM assessments' . $sql_where . ' GROUP BY skills_group ORDER BY skills_group';
 
 		$query = $this->db->query($sql);
 
