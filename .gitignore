@@ -29,8 +29,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 # Application Files
 #-------------------------
-/assets/uploads/*
-application/assets/uploads/
+#/assets/uploads/*
 
 # Temp Files
 #-------------------------
