@@ -1,29 +1,44 @@
 # MediaGrade BETA
 
-This is an education web application.
+This is an educational web application.
 
-Created to facilitate assessment of media projects as photo, video or audio files
-this application is optimized for the Belgian high-school assessment system.
+Specifically created to facilitate the assessment of multimedia students' projects (as photo, video and audio files), this application is designed to suit the belgian high-school system.
 
-As a Belgian teacher of video and photo production, I wanted to set up a platform to enhance teacher - students and to ease rating of submitted work, add some statistics, facilitate self assessment and exhibit students work.
+I am a Belgian teacher of video and photo production and I wanted to create a platform to ease both teacher and student experience.
 
-Students can upload requested projects, access instructions, get assessment and view others projects submissions.
-Further features will show up as it still a Work in Progress...
+Teachers can assess, comment student's work, manage projects, download vote grids and generate assessment sheets.
+
+Students can upload requested projects, access instructions, get assessment details and view others' subbmitted projects.
+
+Further features will show up in the future.
 
 Previews:
 
-- [Youtube features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
-- [Demo version 1.0 BETA](http://mg.pierrehelin.eu)
+- [Last version Demonstration (uploading and email functions are disactivated](http://mg.pierrehelin.eu)
+- [Version 0.1 features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
 
 
 ## Current functionalities
-- Register and update students,
-- Add generic skills (Belgian system)
-- Manage projects
+### Teacher
+- Register and update students' informations
+- Add generic skills and group them (Belgian system)
+- Manage projects (create, modify, delete)
 - Make assessment grids (objective, criterion, cursor)
 - Compose self assessment questions
-- Grade students work
+- Grade students work and add comment
 
+### Student
+- Get projects' status
+- See own submitted projects gallery
+- See others students submitted multimedia projects
+- Upload finished projects
+- Get informed when your project is graded
+- Get votes and teacher comments
+
+### Both
+- Choose email notification preferences
+- Get an avatar (useless but fun!)
+ 
 
 ## Requirements
 - PHP5 & SQL
@@ -36,12 +51,10 @@ Previews:
 - TCPDF Class
 - TinyMCE
 - Twitter Typeahead
-- Lightbox
 
 ## TODO
 - [ ] Code documentation
-- [x] TODO / User mail preference not yet implemented
-- [x] TODO / User password modification not yet implemented
+- [ ] Automated installation
 - [ ] PATCH / Prevent from duplicate project name
 - [ ] Typeahead
 - [ ] Form confirmation (CodeIgniter)
@@ -68,6 +81,7 @@ Previews:
 - Code structure improvement (work in progress)
 - Removed Movie Advisor (will become an independent project)
 - Manages school years
+- New logo!
 
 **2016-06-01**
 - Not submitted or projects without file are not anymore showed in gallery
@@ -93,8 +107,7 @@ Previews:
 - Filters on Hall of fame page
 - Users can have an avatar
 
-## INSTALLATION
-
+## INSTALLATION INSTRUCTIONS
 - Import mediagrade_min.sql to your database
 - Set permission of /assets/upload on 777
 - Edit /application/config/constants.php
@@ -103,5 +116,4 @@ Previews:
 
 
 ## LICENCE
-
 AGPL v3
