@@ -2,6 +2,12 @@
 Class ProjectsManager_model extends CI_Model
 {
 
+	function __construct ()
+	{
+		$this->load->helper('school');
+		$this->current_school_year = get_school_year();
+	}
+
 	public function updateProject($data, $project_id)
 	{
 		$this->addProject($data, $project_id);
@@ -15,7 +21,6 @@ Class ProjectsManager_model extends CI_Model
 
 		if ( ! empty($data['new_self_assessment'][0]))
 		{
-
 			foreach($data['new_self_assessment'] as $row)
 			{
 				array_push($self_assessment_ids, $this->addSelfAssessment($row));
@@ -34,17 +39,21 @@ Class ProjectsManager_model extends CI_Model
 		$project = array(
 			'project_name' 			=> $this->input->post('project_name'),
 			'assessment_type' 		=> $this->input->post('assessment_type'),
-			'periode' 				=> $this->input->post('periode'),
+			'term' 				=> $this->input->post('term'),
 			'class' 				=> $this->input->post('class'),
 			'deadline' 				=> $this->input->post('deadline'),
-			'skill_ids' 			=> implode(',', $this->input->post('skill_ids')),	 //ok
+			'school_year'			=> $this->current_school_year,
+			'skill_ids' 			=> implode(',', $this->input->post('skill_ids')),
 			'extension' 			=> $this->input->post('extension'),
-            // 'instructions_txt' 		=> $this->input->post('instructions_txt'),
+			'instructions_txt' 		=> serialize(array(
+										'instructions'  => $this->input->post('instructions_txt'),
+										'context'		=>  $this->input->post('context_txt')
+										)),
 			'number_of_files'		=> $this->input->post('number_of_files'),
-            // 'assessment_ids' 		=> implode(',', $assessment_ids),
-            'self_assessment_ids' 	=> implode(',', $self_assessment_ids),
-            'is_activated' 			=> '1'
-		);
+			'self_assessment_ids' 	=> implode(',', $self_assessment_ids),
+			'is_activated' 			=> '1',
+			'admin_id'				=> $this->session->id
+			);
 
 
 		// add instructions to array
@@ -66,8 +75,6 @@ Class ProjectsManager_model extends CI_Model
 			$project_id = $this->db->insert_id();
 		}
 
-
-
 		// saves assessments
 		$assessment_ids = array();
 
@@ -75,7 +82,7 @@ Class ProjectsManager_model extends CI_Model
 		{
 			if( ! empty($data['assessment_id'][$key]))
 			{
-				 $data_assessment_id = $data['assessment_id'][$key];
+				$data_assessment_id = $data['assessment_id'][$key];
 			}
 			else
 			{
@@ -83,62 +90,61 @@ Class ProjectsManager_model extends CI_Model
 			}
 
 			$assessment = array(
-					'id' =>  $data_assessment_id,
-					'skills_group' => $data['skills_group'][$key],
-					'criterion' => $data['criterion'][$key],
-					'cursor' => $data['cursor'][$key],
-					'max_vote' => $data['max_vote'][$key],
-			);
+				'id' =>  $data_assessment_id,
+				'skills_group' => $data['skills_group'][$key],
+				'criterion' => $data['criterion'][$key],
+				'cursor' => $data['cursor'][$key],
+				'max_vote' => $data['max_vote'][$key],
+				);
 
 			// saves in DBs
 			$assessment_id = $this->addAssessment($assessment);
 			$this->addProjects_Assessments($project_id, $assessment_id);
 		}
-
 	}
 
 
 	public function uploadPDF($config, $field_name)
-    {
+	{
 
             // $this->load->library('upload', $config);
-            $this->upload->initialize($config);
+		$this->upload->initialize($config);
 
-            if ( ! $this->upload->do_upload($field_name))
-            {
-                    $error = array('error' => $this->upload->display_errors());
-                    show_error($error);
-            }
-            else
-            {
-                    $data = array('upload_data' => $this->upload->data());
-                    return true;
-            }
-    }
+		if ( ! $this->upload->do_upload($field_name))
+		{
+			$error = array('error' => $this->upload->display_errors());
+			show_error($error);
+		}
+		else
+		{
+			$data = array('upload_data' => $this->upload->data());
+			return true;
+		}
+	}
 
-    public function getUploadPDFConfig($class, $periode, $project_name)
-    {
+	public function getUploadPDFConfig($class, $term, $project_name)
+	{
 
 		$this->load->helper('school');
 		$this->load->helper('format');
 
 		// PATH 2015-2016/4AV/instructions/
         // rename file LASTNAME_Name_avatar
-        $file_name = $class . '_' . $periode . '_' . $project_name;
+		$file_name = $class . '_' . $term . '_' . $project_name;
 		$file_path = 'uploads/' . get_school_year() . '/' . strtoupper($class) . '/instructions/';
 
 		// create dir if no exists
 		if (!is_dir('assets/' . $file_path)) mkdir('assets/' . $file_path, 0777, TRUE);
 
-        $config['file_name']            = sanitize_name($file_name);
-        $config['overwrite']            = TRUE;
-        $config['file_ext_tolower']      = TRUE;
-        $config['upload_path']          = './assets/' . $file_path;
-		$config['file_db_path']          = $file_path;
-        $config['allowed_types']        = 'pdf';
+		$config['file_name']            = sanitize_name($file_name);
+		$config['overwrite']            = TRUE;
+		$config['file_ext_tolower']     = TRUE;
+		$config['upload_path']          = './assets/' . $file_path;
+		$config['file_db_path']         = $file_path;
+		$config['allowed_types']        = 'pdf';
 
-        return($config);
-    }
+		return($config);
+	}
 
 	public function addAssessment($assessment = array())
 	{
@@ -146,7 +152,6 @@ Class ProjectsManager_model extends CI_Model
 
 		if( ! is_null($data['id']))
 		{
-
 			$this->db->where('id', $data['id']);
 			$this->db->update('assessments', $data);
 			return $data['id'];
@@ -189,8 +194,8 @@ Class ProjectsManager_model extends CI_Model
 	public function disactivateProject($project_id)
 	{
 		$this->db->query(" UPDATE projects
-                    		SET is_activated = NOT is_activated
-                    		WHERE id = ?", $project_id);
+			SET is_activated = NOT is_activated
+			WHERE id = ?", $project_id);
 	}
 
 	public function deleteProject($project_id)
@@ -200,29 +205,29 @@ Class ProjectsManager_model extends CI_Model
 
 	public function addSelfAssessment($self_assessment)
 	{
-			$data = array(
-					'question' => $self_assessment
+		$data = array(
+			'question' => $self_assessment
 			);
 
-			$where = array(
-					'question' => $self_assessment
+		$where = array(
+			'question' => $self_assessment
 			);
 
 			// checks if record exists
-	        $q = $this->db->get_where('self_assessments', $where, 1);
+		$q = $this->db->get_where('self_assessments', $where, 1);
 
 	        // if true, return id
-	        if ($q->num_rows() > 0)
-	        {
-	            return $q->row('id');
-	        }
+		if ($q->num_rows() > 0)
+		{
+			return $q->row('id');
+		}
 	        // else insert
-	        else
-	        {
-	            $this->db->insert('self_assessments', $data);
-	        }
+		else
+		{
+			$this->db->insert('self_assessments', $data);
+		}
 
-			return $this->db->insert_id();
+		return $this->db->insert_id();
 	}
 
 }

@@ -1,8 +1,8 @@
 
   <main class="col-md-10">
 
-     <script src="http://code.highcharts.com/highcharts.js"></script>
-     <script src="http://code.highcharts.com/modules/exporting.js"></script>
+     <script src="/assets/js/highcharts.js"></script>
+     <script src="/assets/js/exporting.js"></script>
 
      <script>
      $(function () {
@@ -31,6 +31,11 @@
                      width: 1,
                      color: '#808080'
                  }]
+             },
+             plotOptions: {
+                series: {
+                    connectNulls: false
+                 }
              },
              tooltip: {
                  valueSuffix: '%'

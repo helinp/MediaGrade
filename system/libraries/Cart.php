@@ -51,7 +51,7 @@ class CI_Cart {
 
 	/**
 	 * These are the regular expression rules that we use to validate the product ID and product name
-	 * alpha-numeric, dashes, underscores, or periods
+	 * alpha-numeric, dashes, underscores, or terms
 	 *
 	 * @var string
 	 */
@@ -59,7 +59,7 @@ class CI_Cart {
 
 	/**
 	 * These are the regular expression rules that we use to validate the product ID and product name
-	 * alpha-numeric, dashes, underscores, colons or periods
+	 * alpha-numeric, dashes, underscores, colons or terms
 	 *
 	 * @var string
 	 */
@@ -211,7 +211,7 @@ class CI_Cart {
 
 		// --------------------------------------------------------------------
 
-		// Validate the product ID. It can only be alpha-numeric, dashes, underscores or periods
+		// Validate the product ID. It can only be alpha-numeric, dashes, underscores or terms
 		// Not totally sure we should impose this rule, but it seems prudent to standardize IDs.
 		// Note: These can be user-specified by setting the $this->product_id_rules variable.
 		if ( ! preg_match('/^['.$this->product_id_rules.']+$/i', $items['id']))
@@ -222,7 +222,7 @@ class CI_Cart {
 
 		// --------------------------------------------------------------------
 
-		// Validate the product name. It can only be alpha-numeric, dashes, underscores, colons or periods.
+		// Validate the product name. It can only be alpha-numeric, dashes, underscores, colons or terms.
 		// Note: These can be user-specified by setting the $this->product_name_rules variable.
 		if ($this->product_name_safe && ! preg_match('/^['.$this->product_name_rules.']+$/i'.(UTF8_ENABLED ? 'u' : ''), $items['name']))
 		{

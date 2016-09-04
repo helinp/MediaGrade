@@ -1,7 +1,9 @@
 <?php
     function apologize($message)
     {
-        require('application/views/apologize.php');
+        $this->view('templates/header');
+        $this->view('apologize', $message);
+        $this->view('templates/footer');
         exit;
     }
 

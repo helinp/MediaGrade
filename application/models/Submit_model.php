@@ -8,10 +8,85 @@ Class Submit_model extends CI_Model
         $this->load->model('Users_model','',TRUE);
     }
 
+    public function boolIfSubmittedByUserAndProjectId($user_id = false, $project_id )
+    {
+        if( ! $project_id) return FALSE;
+			  if( ! $user_id) $user_id = $this->session->id;
+
+        $query = $this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id), 1);
+        return $query->result();
+    }
+
+    public function getAnswersByProjectIdAndUser($project_id, $user_id = false)
+  	{
+	  	if( ! $project_id) return FALSE;
+			if (!$user_id) $user_id = $this->session->id;
+
+			// get self assessment ids
+			$sql = "SELECT answers FROM submitted WHERE project_id = ? AND user_id = ? LIMIT 1";
+			$query = $this->db->query($sql, array($project_id, $user_id));
+			$serialized = $query->row();
+
+			if(!$serialized) return null;
+			$serialized = $serialized->answers;
+			$answers = unserialize($serialized);
+
+			return $answers;
+	}
+
+    public function getSelfAssessmentByProjectId($project_id, $get_answers = false, $user_id = false)
+	{
+
+		if( ! $project_id) return FALSE;
+			// get self assessment ids
+			$sql = "SELECT self_assessment_ids FROM projects
+										WHERE id = ? LIMIT 1";
+			$query = $this->db->query($sql, array($project_id));
+			$serialized = $query->row();
+			$questions = $serialized->self_assessment_ids;
+
+			if(!$questions && !$get_answers) return null;
+
+			// get questions
+			$questions = explode(',', $questions);
+			$self_assessments = '';
+			$i = 0;
+
+			if( ! empty($questions[0]))
+			{
+				foreach($questions as $question)
+			  	{
+						$query =  $this->db->query("SELECT question, id FROM self_assessments WHERE id = $question LIMIT 1");
+						$self_assessments[$i]['question'] = $query->row()->question;
+						$self_assessments[$i]['id'] = $query->row()->id;
+						$i++;
+				}
+			}
+
+			// get answers if setted in
+			if ($get_answers && ! empty($questions[0]))
+			{
+					$i = 0;
+					foreach($questions as $question)
+				   {
+							$answers = $this->getAnswersByProjectIdAndUser($project_id, $user_id);
+ 							if ( ! empty($answers))
+							{
+								$self_assessments[$i]['answer'] = $answers[$i]['answer'];
+								$i++;
+							}
+					}
+			}
+
+
+			return $self_assessments;
+	}
+
+
     public function getSubmitInformations($project_id)
     {
         if( ! $project_id) return FALSE;
-            $sql = "SELECT project_name, class, number_of_files, extension, periode FROM projects WHERE id = ? LIMIT 1";
+            $sql = "SELECT project_name, class, number_of_files, extension, term FROM projects WHERE id = ? LIMIT 1";
             $query = $this->db->query($sql, array($project_id));
             $row = $query->row();
 
@@ -37,13 +112,13 @@ Class Submit_model extends CI_Model
             return $submitted;
     }
 
-    public function getSubmittedProject($user_id, $project_id)
+    public function getSubmittedByUserIdAndProjectId($user_id, $project_id)
     {
         // format data language in french TODO set a config file
 		$sql = "SET lc_time_names = 'fr_FR'";
 		$this->db->query($sql);
 
-        $sql = "SELECT file_name, file_path, answers, DATE_FORMAT(`time`, '%d %M %Y à %H:%m') as `time`,  RIGHT(file_name, 3) as extension,
+        $sql = "SELECT file_name, file_path, answers, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
                     CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail
                 FROM submitted
                 WHERE user_id = ?
@@ -126,7 +201,7 @@ Class Submit_model extends CI_Model
         $sanitized_project_name = sanitize_name($project_data->project_name);
 
         // puts the file in ./upload/2015-2016/class/p_#
-        $upload_dir = 'uploads/' . get_school_year() . '/' . $project_data->class . '/' . strtolower($project_data->periode) . '/' . $sanitized_project_name . '/';
+        $upload_dir = 'uploads/' . get_school_year() . '/' . $project_data->class . '/' . strtolower($project_data->term) . '/' . $sanitized_project_name . '/';
 
         // create dir if doesn't exist
         if (!is_dir('assets/' . $upload_dir)) mkdir('assets/' . $upload_dir, 0777, TRUE);
@@ -214,41 +289,24 @@ Class Submit_model extends CI_Model
         return TRUE;
     }
 
-    public function listNotGradedProjects()
-	{
-        $sql = "SELECT users.class, projects.periode, users.name, users.last_name, projects.project_name, users.id as user_id, projects.id as project_id
-                FROM submitted, users, projects
-                WHERE NOT EXISTS(SELECT NULL
-                         FROM results
-                         WHERE submitted.user_id = results.user_id
-                             AND submitted.project_id = results.project_id)
-                AND projects.id = submitted.project_id
-                AND users.id = submitted.user_id
-                ";
-
-        $query = $this->db->query($sql);
-        $results = $query->result();
-
-        return $results;
-    }
-
-    public function getNLastSubmitted($n = 10)
+    public function getNLastSubmitted($class = FALSE, $limit = 10, $school_year = FALSE)
     {
-        $sql = "SELECT name, last_name, project_name, DATE_FORMAT(`time`, '%d-%m-%Y à %k:%i') as `time`
-                FROM submitted
-                LEFT JOIN users
-                    ON user_id = users.id
-                LEFT JOIN projects
-                    ON project_id = projects.id
-                GROUP BY name
-                ORDER BY submitted.id DESC
-                LIMIT $n";
+        if($class)
+            $this->db->where('projects.class', $class);
 
-            $query = $this->db->query($sql);
-            $results = $query->result();
+        $query = $this->db   ->select('name, last_name, project_name, projects.class')
+                             ->select("DATE_FORMAT(`time`, '%d-%m-%Y à %k:%i') AS 'time'", false)
+                             ->where('admin_id', $this->session->id)
+                             ->from('submitted')
+                             ->join('users', 'user_id = users.id', 'left')
+                             ->join('projects', 'project_id = projects.id', 'left')
+                             ->group_by('name')
+                             ->order_by('submitted.id', 'DESC')
+                             ->limit($limit);
 
-            return $results;
+        if($school_year) $this->db->where('school_year', $school_year);
 
+        return $query->get()->result();
     }
 
 }

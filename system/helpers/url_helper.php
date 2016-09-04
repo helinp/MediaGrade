@@ -382,7 +382,7 @@ if ( ! function_exists('auto_link'))
 	 *
 	 * Automatically links URL and Email addresses.
 	 * Note: There's a bit of extra code here to deal with
-	 * URLs or emails that end in a period. We'll strip these
+	 * URLs or emails that end in a term. We'll strip these
 	 * off and add them after the link.
 	 *
 	 * @param	string	the string

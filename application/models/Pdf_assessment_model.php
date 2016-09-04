@@ -67,13 +67,13 @@ Class Pdf_assessment_model extends CI_Model
 
     	        <tr>
     	            <td>Classe: <b>'. $student['class'] . '</b></td>
-    	            <td>Année scolaire: ' . get_school_year() . '</td>
+    	            <td>Année scolaire: ' . $student['school_year'] . '</td>
 
     	        </tr>
 
     	        <tr>
     		        <td>Date de remise:</td>
-    		        <td>'. ($student['submitted'] ? $student['submitted'] . ' ' : '') . '(' . $student['periode'] . ')</td>
+    		        <td>'. ($student['submitted'] ? $student['submitted'] . ' ' : '') . '(' . $student['term'] . ')</td>
     	        </tr>
     	        </tbody>
             </table>
@@ -137,7 +137,7 @@ Class Pdf_assessment_model extends CI_Model
           {
                $tbl .=  '<h3>Commentaires du professeur</h3>
 
-                    <p><pre>' . $student['comment'] . '</pre></p>';
+                    <p><pre>' . $student['comment']->comment . '</pre></p>';
           }
             $pdf->writeHTML($tbl, false, false, false, false, '');
         }
@@ -145,7 +145,7 @@ Class Pdf_assessment_model extends CI_Model
         // ---------------------------------------------------------
 
         //Close and output PDF document
-        $filename = sanitize_name(get_school_year() . '_' .  $data[0]['periode'] . '_' . $data[0]['class'] . '_' . $data[0]['project_name']);
+        $filename = sanitize_name(get_school_year() . '_' .  $data[0]['term'] . '_' . $data[0]['class'] . '_' . $data[0]['project_name']);
         $pdf->Output($filename . '.pdf', 'I');
 
     }

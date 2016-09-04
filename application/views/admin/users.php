@@ -1,9 +1,11 @@
+<div id="content" class="col-xs-12 col-md-10 ">
 
-
-    <main class="col-md-10" id="content">
-
-        <h2 class=" text-left"> <?= _('Gestion des utilisateurs')?></h2>
-        <hr style="margin-top:0;" />
+    <div class="row chapeau">
+        <div class="col-xs-12  col-md-12">
+            <h1><?= _('Gestion des utilisateurs')?></h1>
+        </div>
+    </div>
+    <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
         <h3><?= _('Ajouter un utilisateur')?></h3>
            <form action="/admin/users/add_user" method="post">
                <table id="rows" class="table">
@@ -131,4 +133,4 @@
             <?php endforeach?>
 
 
-    </main>
+    </div>

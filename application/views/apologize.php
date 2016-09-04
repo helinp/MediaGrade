@@ -1,4 +1,4 @@
-        <main class="col-md-12" style="margin:10% 0">
+        <div id="content" class="col-xs-12 col-md-10 ">
             <div class="row">
                 <p class="lead text-danger">
                     <?= _('Désolé...')?>
@@ -9,4 +9,4 @@
 
                 <a href="javascript:history.go(-1);"><?= LABEL_BACK ?></a>
             </div>
-        </main>
+        </div>

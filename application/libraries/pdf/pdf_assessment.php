@@ -64,7 +64,7 @@ function get_assessment_pdf($data)
 
 	        <tr>
 		        <td>Date de remise:</td>
-		        <td>'. ($student['time'] ? $student['time'] . ' ' : '') . '(Période ' . $student['periode'] . ')</td>
+		        <td>'. ($student['time'] ? $student['time'] . ' ' : '') . '(Période ' . $student['term'] . ')</td>
 	        </tr>
 	        </tbody>
         </table>
@@ -157,7 +157,7 @@ function get_assessment_pdf($data)
     // ---------------------------------------------------------
 
     //Close and output PDF document
-    $filename = sanitize_name(get_school_year() . '_' .  $data[0]['periode'] . '_' . $data[0]['class'] . '_' . $data[0]['project_name']);
+    $filename = sanitize_name(get_school_year() . '_' .  $data[0]['term'] . '_' . $data[0]['class'] . '_' . $data[0]['project_name']);
     $pdf->Output($filename . '.pdf', 'I');
 
 }

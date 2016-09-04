@@ -1,18 +1,21 @@
+<div id="content" class="col-xs-12 col-md-10 ">
 
-
-<main class="col-md-10" id="content">
-    <h2 class=" text-left"> <?= _('Système')?></h2>
-    <hr style="margin-top:0;" />
+    <div class="row chapeau">
+        <div class="col-xs-12  col-md-12">
+            <h1><?= _('Système')?>
+            </h1>
+        </div>
+    </div>
 
         <form action="/admin/settings/mail_test" method="post">
             <h3><?= LABEL_MAIL_TEST ?></h3>
             <label class="control-label"><?= LABEL_SUBJECT ?></label>
             <div class="form-group">
-                <input name="subject" value="<?= LABEL_ITS_A_TEST ?>">
+                <input name="subject" value="<?= LABEL_ITS_A_TEST ?>" required>
             </div>
             <label class="control-label"><?= LABEL_MESSAGE ?></label>
             <div class="form-group">
-                <textarea rows="5" type="text" name="body"><?= LABEL_ITS_A_TEST ?></textarea><br />
+                <textarea rows="5" type="text" name="body" required><?= LABEL_ITS_A_TEST ?></textarea><br />
                 <span class="helper"><small><?= _('Le mail sera envoyé à: ') . $_SESSION['email']?></small></span>
             </div>
 
@@ -26,7 +29,7 @@
             <?= _('Valider') ?></button>
         </form>
 
-</main>
+</div>
 
     <script src="/assets/js/tinymce/tinymce.min.js"></script>
     <script>

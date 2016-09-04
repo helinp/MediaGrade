@@ -1,6 +1,11 @@
-<main class="col-md-8 text-left" id="content">
-    <h2 class=" text-left"> <?= _('Groupes de compétences')?></h2>
-    <hr style="margin-top:0;" />
+<div id="content" class="col-xs-12 col-md-10 ">
+
+    <div class="row chapeau">
+        <div class="col-xs-12  col-md-12">
+            <h1> <?= _('Groupes de compétences')?></h1>
+        </div>
+    </div>
+    <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
     <form action="/admin/skills_groups/add_skills_group" method="post">
         <h3><?=_('Ajouter un groupe de compétences')?></h3>
         <div class="form-group ">
@@ -59,4 +64,4 @@
              <span class="help-block"><small><?=_('À titre indicatif')?></small></span>
         </div>
     </div>-->
-</main>
+</div>

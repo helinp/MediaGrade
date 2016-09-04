@@ -83,9 +83,9 @@
     // Results
     define('LABEL_NOT_GRADED_YET', '<p> Your work has not been graded yet </ p>.');
     define('LABEL_PERCENT', 'Percentage');
-    define('LABEL_ALL_PERIODS', 'All periods');
+    define('LABEL_ALL_PERIODS', 'All terms');
     define('LABEL_STUDENTS_FROM', 'Grade:');
-    define('LABEL_PERIOD', 'Period');  
+    define('LABEL_PERIOD', 'Term');  
     define('LABEL_AVERAGE', 'Average'); 
   
     // Admin

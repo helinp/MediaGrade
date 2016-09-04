@@ -10193,9 +10193,9 @@
 	  FreeMonoBold.sfd,
 	  FreeMonoOblique.sfd,
 	  FreeMonoBoldOblique.sfd: Revisited Latin-1 and
-	  Latin-A accents. Glyph B7 was called "periodcentered", but
+	  Latin-A accents. Glyph B7 was called "termcentered", but
 	  Unicode callse it Mid Dot, and the description doesn't refer to
-	  the period. I made it like the dot accent. throughout, and
+	  the term. I made it like the dot accent. throughout, and
 	  referred L-dot to it. Also double-checked "commaaccent"
 	  characters (some in Unicode called cedilla, but the Unicode
 	  example shows a comma...mystery) also the funny IPA upside-down f
@@ -11546,7 +11546,7 @@
 	  2040 tie is low...didn't I fix this? Sans Rfraktur and Ifraktur
 	  are not sans-serif. Overall, many Sans math symbols are much
 	  thinner than seems to fit. Sans surprises me not all the
-	  "equals"-like characters are made from "minus" Sans "period" is a
+	  "equals"-like characters are made from "minus" Sans "term" is a
 	  square. (Don't like the dot operator being a square, but that
 	  would be consistent.) Serif ceil and floor glyphs are not high
 	  enough

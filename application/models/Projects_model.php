@@ -2,84 +2,110 @@
 Class Projects_model extends CI_Model
 {
 
+	var $id;
+	var $term;
+	var $instructions_pdf;
+	var $instructions_txt;
+	var $deadline;
+	var $project_name;
+	var $class;
+	var $self_assessment_ids;
+	var $assessment_type;
+	var $skill_ids;
+	var $extension;
+	var $number_of_files;
+	var $is_activated;
+	var $school_year;
 
-	public function listAllActiveProjectsByClassAndUser($class = false, $user_id = false)
+	function __construct()
 	{
+		$this->load->helper('school');
+		$this->school_year = get_school_year();
 
-		if (!$class) $class = $this->session->class;
-		if (!$user_id) $user_id = $this->session->id;
-
-		// format data language in french TODO set a config file
-		$sql = "SET lc_time_names = 'fr_FR'";
-		$this->db->query($sql);
-
-						// query gets projects by class and bool is_submitted by user
-		$sql = 					"SELECT DISTINCT projects.id as project_id,
-											project_name,
-											periode,
-											DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
-											(CASE
-												WHEN ISNULL(file_path)
-													THEN 0
-												ELSE 1
-											END) as is_submitted,
-											file_path
-										FROM projects
-										LEFT JOIN submitted
-											ON projects.id = submitted.project_id";
-
-		if($user_id !== 'all') $sql .=	" AND submitted.user_id = ?";
-
-		if($class !== 'all') $sql .=	" WHERE class = ?";
-
-		$sql .=							" AND is_activated = 1
-										ORDER BY class, projects.periode DESC, deadline ASC";
-
-
-
-		if($class === 'all' && $user_id !== 'all') $query = $this->db->query($sql, array($user_id));
-		if($class !== 'all' && $user_id === 'all') $query = $this->db->query($sql, array($class));
-		if($class === 'all' && $user_id === 'all') $query = $this->db->query($sql);
-		if($class !== 'all' && $user_id !== 'all') $query = $this->db->query($sql, array($user_id, $class));
-
-		if($query)
-		{
-			return $query->result();
-		}
-		else
-		{
-			return false;
-		}
+		if($this->input->get('school_year'))
+			$this->school_year = $this->input->get('school_year');
 	}
 
-	public function listAllActiveProjectsByClass($class = FALSE, $periode = FALSE)
+
+	/* WORK IN PROGRESS  */
+	public function __call($method, $args)
 	{
 
+		if(strpos($method, 'getAllActiveProjects') === FALSE) exit;
+
+		// if only one WHERE in function name
+		if( ! strpos($method, 'And'))
+		{
+			$wheres = explode('By', $method);
+
+			// removes first key
+			array_shift($wheres);
+		}
+		else
+		{
+			$wheres = explode('And', ltrim($method, 'getAllActiveProjectsBy'));
+		}
+
+		// Sanity check
+		if(count($args) !== count($wheres))
+			throw new Exception("Error: Missing argument in function $method", 1);
+
+		// Format data language in french
+		// TODO: set a config file
+		$this->db->query("SET lc_time_names = 'fr_FR'");
+
+		$this->db->distinct();
+		$this->db->select("projects.id as project_id,
+			project_name,
+			school_year,
+			term,
+			instructions_txt,
+			deadline as raw_deadline,
+			DATE_FORMAT(deadline, '%W %d %M %Y') as deadline");
+
+		$this->db->where('is_activated', TRUE);
+
+		if($this->session->role === 'admin')
+			$this->db->where('admin_id', $this->session->id);
+
+		for($i = 0, $count = count($wheres) - 1 ; $i <= $count ; $i++)
+		{
+			// arguments translation
+			if($wheres[$i] === 'User') $wheres[$i] = 'user_id';
+			elseif($wheres[$i] === 'SchoolYear') $wheres[$i] = 'school_year';
+
+			// Do not consider WHERE if no ARG
+			if($args[$i]) $this->db->where(strtolower($wheres[$i]), $args[$i]);
+		}
+
+		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
+		$this->db->order_by('term', 'DESC');
+
+		return $this->db->get('projects')->result();
+	}
+
+
+
+
+	public function getAllActiveProjectsByClassAndTermAndSchoolYear($class = FALSE, $term = FALSE, $school_year)
+	{
 		if (!$class) $class = $this->session->class;
 
-		// query gets projects by class and bool is_submitted by user
-		$sql = 					"SELECT DISTINCT projects.id as project_id,
-											project_name,
-											periode,
-											deadline
-										FROM projects
-										WHERE class = ? AND is_activated = 1 ";
-		if($periode) $sql .=				"AND periode = ? ";
-		$sql .=							"ORDER BY class, projects.periode, projects.deadline";
+		$this->db->distinct();
+		$this->db->select('projects.id as project_id, project_name, term, deadline, instructions_txt', FALSE);
 
-		if($periode)
-			$query = $this->db->query($sql, array($class, $periode));
-		else
-			$query = $this->db->query($sql, array($class));
+		$this->db->where('is_activated', TRUE);
+		$this->db->where('class', $class);
+		$this->db->where('school_year', $school_year);
 
-		if($query)
-		{
-			return $query->result();
-		}
-		else
-		{
-			return false;
-		}
+		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
+		$this->db->order_by('term', 'DESC');
+
+		if($term) $this->db->where('term', $term);
+
+		return $this->db->get('projects')->result();
 	}
 
 
@@ -88,15 +114,17 @@ Class Projects_model extends CI_Model
 	*	return array
 	*
 	*/
-	public function getProjectInstructions($project_id)
-  {
-	  if( ! $project_id) return FALSE;
-		$sql = "SELECT instructions_pdf as pdf, instructions_txt as txt FROM projects WHERE id = ? LIMIT 1";
-			$query = $this->db->query($sql, array($project_id));
-			$row = $query->row();
-			$row->pdf = $this->pdfToHtml($row->pdf);
+	public function getInstructionsByProjectId($project_id)
+	{
+		if( ! $project_id) return FALSE;
 
-			return $row;
+		$this->db->where('id', $project_id);
+		$this->db->select('instructions_pdf as pdf, instructions_txt as txt, project_name');
+		$row = $this->db->get('projects', 1)->row();
+
+		$row->txt = unserialize($row->txt);
+
+		return $row;
 	}
 
 	/**
@@ -105,205 +133,165 @@ Class Projects_model extends CI_Model
 	*
 	*/
 	public function checkProjectId($project_id, $class = false)
-  {
-	  	if( ! $project_id) return FALSE;
-			if(!$class) $class = $this->session->class;
-
-			$sql = "SELECT id FROM projects WHERE id = ? AND class = ? LIMIT 1";
-			$query = $this->db->query($sql, array($project_id, $class));
-			$row = $query->row();
-
-			return ($row) ? true : false;
-	}
-
-	public function getSelfAssessmentAnswers($project_id, $user_id = false)
 	{
 		if( ! $project_id) return FALSE;
-			if (!$user_id) $user_id = $this->session->id;
+		if(!$class) $class = $this->session->class;
 
-			// get self assessment ids
-			$sql = "SELECT answers FROM submitted WHERE project_id = ? AND user_id = ? LIMIT 1";
-			$query = $this->db->query($sql, array($project_id, $user_id));
-			$serialized = $query->row();
+		$sql = "SELECT id FROM projects WHERE id = ? AND class = ? LIMIT 1";
+		$query = $this->db->query($sql, array($project_id, $class));
+		$row = $query->row();
 
-			if(!$serialized) return null;
-			$serialized = $serialized->answers;
-			$answers = unserialize($serialized);
-
-			return $answers;
+		return ($row) ? true : false;
 	}
 
-	public function listAllActiveProjects($active = TRUE)
+
+	/**
+	 *  Gets ADMIN's projects
+	 *
+	 */
+	public function getAllActiveProjectsByAdmin($activated = TRUE, $school_year = FALSE)
 	{
 
+		$this->db->select("projects.id as project_id,
+			project_name,
+			term,
+			deadline,
+			is_activated,
+			class", TRUE);
+		$this->db->distinct();
+		$this->db->where('admin_id', $this->session->id);
 
-		// query gets projects by class and bool is_submitted by user
-		$sql = 					"SELECT DISTINCT projects.id as project_id,
-											project_name,
-											periode,
-											deadline,
-											is_activated,
-											class
-										FROM projects";
-		if ($active) $sql .=					"		WHERE is_activated = 1";
-		$sql .=					"		ORDER BY projects.periode DESC, class,  deadline DESC";
+		if( ! $school_year) $school_year = $this->school_year;
+		$this->db->where("school_year", $school_year);
+
+		if($activated) $this->db->where('is_activated', TRUE);
+
+		$this->db->order_by('projects.term', 'DESC');
+		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
+
+		return $this->db->get('projects')->result();
+	}
+
+	public function getAllActiveProjectsByTerm($term = FALSE)
+	{
+
+		if(!$term) return $this->getAllActiveProjectsByAdmin();
+
+		$this->db->select("projects.id as project_id,
+			project_name,
+			term,
+			deadline,
+			is_activated,
+			class", TRUE);
+
+		$this->db->distinct();
+
+		$this->db->where('admin_id', $this->session->id);
+		$this->db->where('term', $term);
+		$this->db->where("school_year", $school_year);
+
+		if($activated) $this->db->where('is_activated', TRUE);
+
+		$this->db->order_by('projects.term', 'DESC');
+		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
+
+		return $this->db->get('projects')->result();
+	}
+
+	public function getAllActiveAndCurrentProjects($class = FALSE)
+	{
+
+		$this->db->select('projects.id as project_id,
+			project_name,
+			term,
+			deadline,
+			is_activated,
+			class');
+
+		$this->db->distinct();
+		$this->db->from('projects');
+		$this->db->where('is_activated', TRUE);
+		$this->db->where('deadline > CURDATE()');
+		$this->db->where("school_year", $this->school_year);
+
+		if($class) $this->db->where('projects.class', $class);
+		if($this->session->role === 'admin') $this->db->where('admin_id', $this->session->id);
+
+		$this->db->order_by('projects.term', 'DESC');
+		$this->db->order_by('class', 'ASC');
+		$this->db->order_by('deadline', 'DESC');
+
+		return $this->db->get()->result();
+	}
+
+	public function getProjectDataByProjectId($project_id)
+	{
+		if( ! $project_id) return FALSE;
+
+		$sql = "SELECT * FROM projects WHERE id = ? LIMIT 1";
+
+		$query = $this->db->query($sql, array($project_id));
+		$results = $query->row(0, 'Projects_model');
+
+		if(@$results->instructions_txt) $results->instructions_txt = unserialize($results->instructions_txt);
+
+		if(! $results) return new Projects_model;
+		return $results;
+	}
+
+	public function random_media()
+	{
+		$sql = "SELECT CONCAT(file_path, file_name) as url,
+		RIGHT(file_name, 3) as extension
+		FROM submitted
+		ORDER BY RAND()
+		LIMIT 1";
 
 		$query = $this->db->query($sql);
 
-		if($query)
-		{
-			return $query->result();
-		}
+		$url = $query->row()->url;
+
+		$url = '/assets/' . $url;
+
+		return $url;
 	}
 
-	public function listAllActiveProjectsByPeriod($periode = FALSE)
+	public function getAdminIdFromProjectId($project_id)
+	{
+		$this->db->select('admin_id');
+		$this->db->from('projects');
+		$this->db->where('id', $project_id);
+		$result = $this->db->get();
+
+		if($result)
+			return $result->row()->admin_id;
+		else
+			return FALSE;
+	}
+
+	public function getSchoolYears()
 	{
 
-		if( ! $periode) return $this->listAllActiveProjects();
+		$this->db->distinct();
+		$this->db->select('school_year');
+		$this->db->from('projects');
+		$this->db->order_by('school_year', 'DESC');
+		$result = $this->db->get();
 
-		// query gets projects by class and bool is_submitted by user
-		$sql = 					"SELECT DISTINCT projects.id as project_id,
-											project_name,
-											periode,
-											deadline,
-											is_activated,
-											class
-										FROM projects
-										WHERE is_activated = 1
-										AND periode = ?
-										ORDER BY projects.periode DESC, class,  deadline DESC";
-
-		$query = $this->db->query($sql, array($periode));
-
-		if($query)
-		{
-			return $query->result();
-		}
+		if($result)
+			return $result->result();
+		else
+			return FALSE;
 	}
 
-	public function pdfToHtml($url)
+	public function boolMatchProjectSchoolYear($project_id)
 	{
-			if(empty($url)) return null;
+		$this->load->helper('school');
+		$project_sy = $this->getProjectDataByProjectId($project_id)->school_year;
 
-			return "<object data='/assets/". $url .
-											"#view=FitBH&navpanes=0&pagemode=thumbs'
-											 type='application/pdf'
-											 width='60%'
-											height='100%'>".
-											_("Il semble qu'il y ait un problème avec la lecture du PDF, essayez de le télécharger ") .
-											'<a href="' . $url .'"> '. _('ici') . '</a></object>';
+		return (get_school_year() === $project_sy);
 	}
-
-
-
-
-	public function getSelfAssessment($project_id, $get_answers = false, $user_id = false)
-	{
-
-		if( ! $project_id) return FALSE;
-			// get self assessment ids
-			$sql = "SELECT self_assessment_ids FROM projects
-										WHERE id = ? LIMIT 1";
-			$query = $this->db->query($sql, array($project_id));
-			$serialized = $query->row();
-			$questions = $serialized->self_assessment_ids;
-
-			if(!$questions && !$get_answers) return null;
-
-			// get questions
-			$questions = explode(',', $questions);
-			$self_assessments = '';
-			$i = 0;
-
-			if( ! empty($questions[0]))
-			{
-				foreach($questions as $question)
-			  	{
-						$query =  $this->db->query("SELECT question, id FROM self_assessments WHERE id = $question LIMIT 1");
-						$self_assessments[$i]['question'] = $query->row()->question;
-						$self_assessments[$i]['id'] = $query->row()->id;
-						$i++;
-				}
-			}
-
-			// get answers if setted in
-			if ($get_answers && ! empty($questions[0]))
-			{
-					$i = 0;
-					foreach($questions as $question)
-				   {
-							$answers = $this->getSelfAssessmentAnswers($project_id, $user_id);
- 							if ( ! empty($answers))
-							{
-								$self_assessments[$i]['answer'] = $answers[$i]['answer'];
-								$i++;
-							}
-					}
-			}
-
-
-			return $self_assessments;
-	}
-
-
-
-	public function getResultsComments($project_id, $user_id = false)
-	{
-		if( ! $project_id) return FALSE;
-			if (!$user_id) $user_id = $this->session->id;
-
-			$sql = "SELECT comment FROM comments WHERE project_id = ? AND user_id = ? LIMIT 1";
-			$query = $this->db->query($sql, array($project_id, $user_id));
-
-			if(!$query->row()) return null;
-
-			$comments = $query->row()->comment;
-
-			return $comments;
-	}
-
-	public function getProjectName($project_id)
-	{
-		if( ! $project_id) return FALSE;
-
-		  $sql = "SELECT project_name FROM projects WHERE id = ? LIMIT 1";
-
-			$query = $this->db->query($sql, array($project_id));
-			$results = $query->row();
-
-			if($results) return $results->project_name;
-			return null;
-	}
-
-	public function getProjectData($project_id)
-	{
-		if( ! $project_id) return FALSE;
-
-		  $sql = "SELECT * FROM projects WHERE id = ? LIMIT 1";
-
-			$query = $this->db->query($sql, array($project_id));
-			$results = $query->row();
-
-			if($results) return $results;
-			return null;
-	}
-	public function random_media()
-	{
-	    $sql = "SELECT CONCAT(file_path, file_name) as url,
-							RIGHT(file_name, 3) as extension
-	            FROM submitted
-	            ORDER BY RAND()
-	            LIMIT 1";
-
-	    $query = $this->db->query($sql);
-
-	    $url = $query->row()->url;
-
-	    $url = '/assets/' . $url;
-
-	    return $url;
-	}
-
-
 }
 ?>

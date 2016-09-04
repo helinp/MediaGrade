@@ -3,18 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
 <?php require('application/views/templates/header.php'); ?>
-	<div id="container">
-		<main class="col-md-12">
+	<div id="content" class="col-xs-12 col-md-12 ">
 		    <div class="row">
-		        <p class="lead text-danger">
-		            <?= LABEL_SORRY ?>
-		        </p>
-		        <p class="text-danger">
-		            <?= $message ?>
-		        </p>
+				<div class="col-md-4 col-md-offset-3 text-center">
+			        <p class="lead text-danger">
+			            <?= _('Désolé!') ?>
+			        </p>
+			        <p class="text-danger">
+			            <?= $message ?>
+			        </p>
 
-		        <a href="javascript:history.go(-1);"><?= LABEL_BACK ?></a>
+			        <a href="javascript:history.go(-1);"><?= LABEL_BACK ?></a>
+				</div>
 		    </div>
-		</main>
+
 	</div>
 <?php require('application/views/templates/footer.php'); ?>

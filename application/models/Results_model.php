@@ -2,125 +2,139 @@
 Class Results_model extends CI_Model
 {
 
+    public $max_vote;
+    public $user_vote = 'NE';
+    public $skills_group;
+    public $criterion;
+    public $cursor;
 
-    public function getUserVoteAverage($user_id, $periode = FALSE)
+    function __construct()
+    {
+        $this->load->helper('school');
+        $this->current_school_year = get_school_year();
+    }
+
+    public function getGaussDataByClassAndSchoolYearAndAdmin($class = FALSE, $school_year = FALSE, $admin_id = FALSE)
+    {
+        $this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 10, 0) AS percentage');
+        $this->db->join('projects', 'projects.id = results.project_id', 'left');
+        $this->db->where('projects.is_activated', TRUE);
+
+        if($class) $this->db->where('class', $class);
+        if($school_year) $this->db->where('school_year', $school_year);
+        if($admin_id) $this->db->where('admin_id', $admin_id);
+
+        $this->db->group_by('user_id');
+        $this->db->order_by('percentage', 'ASC');
+        $result = $this->db->get('results')->result();
+
+        $this->load->helper('graph');
+        return gauss($result, 'percentage');
+    }
+
+    public function getUserVoteAverageByTermAndSchoolYear($user_id, $term = FALSE, $school_year = FALSE)
+    {
+        if ( ! $user_id) $user_id = $this->session->id;
+        if ( ! $school_year) $school_year = $this->current_school_year;
+
+        $this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote');
+        $this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('projects.is_activated', TRUE);
+        $this->db->where('school_year', $school_year);
+
+        return $this->db->get('results')->row('average');
+    }
+
+
+    /**
+    *
+    * Body of table on admin/results
+    *
+    */
+    public function tableBodyClassResultsBySkillsGroup($class = FALSE, $term = FALSE, $school_year = FALSE)
+    {
+        if($class === FALSE) throw new Exception("Error: Argument $class missing", 1);
+
+        $this->db->select("users.id as user_id, name, last_name, project_name, skills_group, projects.id as project_id,
+        (CASE WHEN ISNULL(results.id) THEN '" . _('NE') . "' ELSE SUM(user_vote) END ) AS user_vote,
+        SUM(assessments.max_vote) as max_vote", FALSE);
+
+        $this->db->from('users');
+        $this->db->join('projects', 'projects.class = users.class');
+        $this->db->join('projects_assessments', 'projects_assessments.project_id = projects.id');
+        $this->db->join('assessments', 'projects_assessments.assessment_id = assessments.id');
+        $this->db->join('results', 'results.project_id = projects.id AND results.user_id = users.id AND results.assessment_id = assessments.id', 'left');
+
+        $this->db->where('role', 'student');
+        $this->db->where('users.class', $class);
+        $this->db->where('is_activated', TRUE);
+        $this->db->where('admin_id', $this->session->id);
+
+        if($school_year) $this->db->where("school_year", $school_year);
+        else $this->db->where("school_year", $this->current_school_year);
+
+        if($term) $this->db->where('term', $term);
+
+        $this->db->group_by('users.id,  skills_group, projects.id', 'ASC');
+        $this->db->order_by('users.last_name, projects.term, projects.id, skills_group');
+
+        $results = $this->db->get()->result();
+
+        $table = array();
+
+        foreach($results as $result)
+        {
+            $table[$result->user_id]['name'] = $result->name;
+            $table[$result->user_id]['last_name'] =$result->last_name;
+            $table[$result->user_id]['average'] = $this->getUserVoteAverageByTermAndSchoolYear($result->user_id, $term);
+
+            unset($result->name, $result->last_name);
+            $table[$result->user_id]['results'][] = $result;
+        }
+        return $table;
+    }
+
+
+    public function boolIfGradedProject($user_id, $project_id)
+    {
+        $this->db->where('user_id', $user_id);
+        $this->db->where('project_id', $project_id);
+        $check = $this->db->get('results', 1);
+        if($check->row()) return TRUE;
+        return FALSE;
+    }
+
+    public function getResultsByProjectAndUser($project_id, $user_id = FALSE)
     {
         if (!$user_id) $user_id = $this->session->id;
 
+        $sql = "SELECT assessments.max_vote, user_vote, skills_group, criterion, `cursor`
+        FROM results, projects, assessments
+        WHERE results.project_id = projects.id
+        AND assessments.id = results.assessment_id
+        AND results.project_id = ?
+        AND results.user_id = ?
+        ORDER BY assessments.skills_group, assessments.id";
 
-        $sql = "SELECT ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote
-                FROM results
-                LEFT JOIN projects
-                    ON projects.id = results.project_id
-                WHERE user_id = ?
-                AND projects.is_activated = TRUE
-                ";
+        $query = $this->db->query($sql, array($project_id, $user_id));
+        $results = $query->result();
 
-        if($periode)
-        {
-            $sql .= " AND periode = ?";
-            $query = $this->db->query($sql, array($user_id, $periode));
-        }
-        else
-        {
-            $query = $this->db->query($sql, array($user_id));
-        }
-        return $query->row('average');
+        if(!$results) $results = $this->getAssessmentsUngraded($project_id);
+
+        return $results;
     }
 
-    public function tableBodyClassResultsBySkillsGroup($class = FALSE, $periode = FALSE)
+    private function getAssessmentsUngraded($project_id)
     {
-        if($class === FALSE) return FALSE;
+        $this->db->distinct();
+        $this->db->select('skills_group, criterion, cursor');
+        $this->db->join('assessments', 'projects_assessments.project_id = assessments.id', 'left');
+        $this->db->where('project_id', $project_id);
 
-        /*$sql = "SELECT users.id as user_id, name, last_name, project_name, skills_group,
-                    (CASE WHEN ISNULL(user_vote) THEN '--' ELSE SUM(user_vote) END ) AS user_vote,
-                    SUM(assessments.max_vote) as max_vote
-                FROM users
-                LEFT JOIN projects
-                	ON projects.class = users.class
-                LEFT JOIN results
-                	ON results.project_id = projects.id
-                    AND results.user_id = users.id
-                LEFT JOIN assessments
-                	ON results.assessment_id = assessments.id
-                WHERE role='student' AND projects.is_activated = 1 AND users.class = ?
-                GROUP by users.id, projects.id, skills_group
-                ORDER BY users.class, users.last_name, projects.periode, projects.deadline";*/
-
-                $sql ="SELECT users.id as user_id, name, last_name, project_name, skills_group, projects.id as project_id,
-                            (CASE WHEN ISNULL(user_vote) THEN '--' ELSE SUM(user_vote) END ) AS user_vote,
-                            SUM(assessments.max_vote) as max_vote
-                        FROM users
-                        LEFT JOIN projects
-                        	ON projects.class = users.class
-                       	LEFT JOIN projects_assessments
-                        	ON projects_assessments.project_id = projects.id
-                         LEFT JOIN assessments
-                        	ON projects_assessments.assessment_id = assessments.id
-                        LEFT JOIN results
-                        	ON results.project_id = projects.id
-                            AND results.user_id = users.id
-                            AND results.assessment_id = assessments.id
-                        WHERE role='student'
-                            AND users.class = ?
-                            AND is_activated = TRUE ";
-                if ($periode) $sql .= "AND periode = ? ";
-
-                $sql .= "GROUP by users.id, projects.id, skills_group
-                        ORDER BY users.class, users.last_name, projects.periode, projects.deadline, skills_group";
-
-                if ($periode)
-                    $query = $this->db->query($sql, array($class, $periode));
-                else
-                    $query = $this->db->query($sql, array($class));
-
-                $results = $query->result();
-
-                $table = array();
-
-                foreach($results as $result)
-                {
-
-                    $table[$result->user_id]['name'] = $result->name;
-                    $table[$result->user_id]['last_name'] =$result->last_name;
-
-                    $table[$result->user_id]['average'] = $this->getUserVoteAverage($result->user_id, $periode);
-
-                    unset($result->name, $result->last_name);
-                    $table[$result->user_id]['results'][] = $result;
-                }
-
-                return $table;
-
+        return $this->db->get('projects_assessments')->result('Results_model');
     }
 
-
-    public function isProjectGraded($user_id, $project_id)
-	{
-		$this->db->where('user_id', $user_id);
-		$this->db->where('project_id', $project_id);
-		$check = $this->db->get('results', 1);
-		if($check->row()) return TRUE;
-		return FALSE;
-	}
-
-    public function getResults($project_id, $user_id = false)
-	{
-			if (!$user_id) $user_id = $this->session->id;
-
-			$sql = "SELECT assessments.max_vote, user_vote, skills_group, criterion, `cursor`
-                    FROM results, projects, assessments
-                    WHERE results.project_id = projects.id
-              		    AND assessments.id = results.assessment_id
-                        AND results.project_id = ?
-                        AND results.user_id = ?
-                    ORDER BY assessments.skills_group";
-
-			$query = $this->db->query($sql, array($project_id, $user_id));
-			$results = $query->result();
-
-			return $results;
-	}
 
     public function getResultsTable($user_id, $project_id)
     {
@@ -145,191 +159,81 @@ Class Results_model extends CI_Model
 
             array_push($filled_table, $row);
         }
-
-
         return $filled_table;
-
     }
 
     private function getResultsByAssessmentId($user_id, $project_id, $assessment_id)
-	{
-
-			$sql = "SELECT assessments.max_vote, user_vote, (CASE WHEN (user_vote > assessments.max_vote / 2) THEN TRUE ELSE FALSE END) as acquis,
-                        SUM(user_vote) as total_max, (CASE WHEN ISNULL(SUM(results.max_vote)) THEN '--' ELSE SUM(results.max_vote) END) as total_user
-                    FROM results, projects, assessments
-                    WHERE results.project_id = projects.id
-              		    AND assessments.id = results.assessment_id
-                        AND results.project_id = ?
-                        AND results.user_id = ?
-                        AND assessments.id = ?
-                    ORDER BY assessments.skills_group";
-
-			$query = $this->db->query($sql, array($project_id, $user_id, $assessment_id));
-			$results = $query->row();
-
-			return $results;
-	}
-
-    public function getUserOverallResults($user_id = FALSE, $raw = FALSE)
     {
+        $sql = "SELECT assessments.max_vote, user_vote,
+        (CASE WHEN (user_vote >= assessments.max_vote / 2) THEN TRUE ELSE FALSE END) as acquis,
+        SUM(user_vote) as total_max, (CASE WHEN ISNULL(SUM(results.max_vote)) THEN '--' ELSE SUM(results.max_vote) END) as total_user
+        FROM results, projects, assessments
+        WHERE results.project_id = projects.id
+            AND assessments.id = results.assessment_id
+            AND results.project_id = ?
+            AND results.user_id = ?
+            AND assessments.id = ?
+        ORDER BY assessments.skills_group";
 
-			if (!$user_id) $user_id = $this->session->id;
+        $query = $this->db->query($sql, array($project_id, $user_id, $assessment_id));
+        $results = $query->row();
 
-			// declare empty variable if no result
-			$results = '';
-
-			$sql = "SELECT user_vote, project_name, assessments.max_vote, skills_group, project_id,
-							ROUND(SUM(user_vote) / SUM(results.max_vote)  * 100, 0) as user_percentage,
-                            name, last_name
-					FROM results
-					LEFT JOIN  assessments
-                        ON assessments.id = assessment_id
-					LEFT JOIN projects
-						ON projects.id = project_id
-                    LEFT JOIN users
-                        ON users.id = user_id
-					WHERE results.user_id = ?
-                    GROUP BY project_id, skills_group
-					ORDER BY project_id ASC, skills_group ASC";
-
-			$query = $this->db->query($sql, array($user_id));
-
-			$query = $query->result();
-
-            if($raw) return $query;
-			return $this->graphResults($query);
-		}
-
-        public function getUserProjectOverallResult($user_id = FALSE, $project_id)
-        {
-
-    			if (!$user_id) $user_id = $this->session->id;
-
-    			$sql = "SELECT SUM(user_vote) as total_user, SUM(results.max_vote) as total_max
-    					FROM results
-    					WHERE results.user_id = ?
-                            AND project_id = ?
-                        GROUP BY project_id";
-
-    			$query = $this->db->query($sql, array($user_id, $project_id));
-
-    			$query = $query->row();
-
-                if($query) return $query;
-
-    		}
-
-        public function getClassResults($class, $period = FALSE)
-        {
-    			// declare empty variable if no result
-    			$results = '';
-
-    			$sql = "SELECT user_vote, project_name, assessments.max_vote, skills_group, project_id,
-    							ROUND(user_vote / results.max_vote * 100, 0) as user_percentage
-    					FROM results
-    					LEFT JOIN  assessments
-                            ON assessments.id = assessment_id
-    					LEFT JOIN projects
-    						ON projects.id = project_id
-    					WHERE results.user_id = ?
-                        GROUP BY project_id, skills_group
-    					ORDER BY project_id ASC, skills_group ASC";
-
-    			$query = $this->db->query($sql, array($user_id));
-
-    			$query = $query->result();
-
-
-    			return $this->graphResults($query);
-    		}
-
-    /**
-     *  Generate formatted data for highcharts
-     *
-     */
-    private function graphResults($results)
-    {
-
-			// TODO:  Add date
-
-			$string = '';
-			$tmp_objective = '';
-
-			foreach ($results as $row)
-        {
-					if ($tmp_objective !== $row->skills_group)
-					{
-						if (!empty($tmp_objective))
-						{
-								$string = substr("$string", 0, -2);
-								$string .= "]}, {";
-						}
-
-						$tmp_objective = $row->skills_group;
-
-
-						$string .= "name:'$row->skills_group',\ndata:[";
-					}
-
-					$string .= $row->user_percentage;
-
-					$string .= ', ';
-        }
-
-				$string = substr("$string", 0, -2);
-				$string .= "]";
-
-				return($string);
+        return $results;
     }
 
-// TODO: replace by function on projects model
-        public function getUserProjects($user_id = false)
-		{
+    public function getUserOverallResults($skills_groups, $projects, $user_id = FALSE)
+    {
+        if ( ! $user_id) $user_id = $this->session->id;
 
-			if (!$user_id) $user_id = $this->session->id;
+        // declare array for empty results
+        $results = array();
 
-			// declare empty variable if no result
-			$results = '';
+        // get results for each skill group project, returns 'null' if no results
+        foreach ($skills_groups as $skills_group)
+        {
+            foreach ($projects as $project)
+            {
+                $sql = "SELECT school_year, project_name, SUM(assessments.max_vote), skills_group, project_id,
+                ROUND(SUM(user_vote) / SUM(results.max_vote) * 100) as user_percentage
+                FROM results
+                LEFT JOIN  assessments
+                    ON assessments.id = assessment_id
+                LEFT JOIN projects
+                    ON projects.id = project_id
+                WHERE results.user_id = ?
+                    AND project_id = ?
+                    AND skills_group = ?
+                GROUP BY project_id, skills_group
+                ORDER BY school_year, term, project_id";
 
-			$sql = "SELECT project_name
-								FROM results
-								LEFT JOIN  assessments
-									ON assessments.id = assessment_id
-								LEFT JOIN projects
-									ON projects.id = project_id
-								WHERE results.user_id = ?
-								GROUP BY project_id, skills_group
-								ORDER BY project_id ASC, skills_group ASC";
+                $query = $this->db->query($sql, array($user_id, $project->project_id, $skills_group->name));
+                $query = $query->result();
 
-			$query = $this->db->query($sql, array($user_id));
+                if( ! $query)
+                {
+                    $query[0] = new Results_model;
+                    $query[0]->max_vote = 'null';
+                    $query[0]->user_percentage = 'null';
+                    $query[0]->project_name = $project->project_name;
+                    $query[0]->skills_group = $skills_group->name;
+                }
 
-			$query = $query->result();
+                array_push($results, $query[0]);
+            }
+        }
+        return $results;
+    }
 
+    public function getUserProjectOverallResult($user_id = FALSE, $project_id)
+    {
+        if (!$user_id) $user_id = $this->session->id;
 
-			return $this->graphProjects($query);
-		}
+        $this->db->select('SUM(user_vote) as total_user, SUM(results.max_vote) as total_max', FALSE);
+        $this->db->where('results.user_id', $user_id);
+        $this->db->where('project_id', $project_id);
 
-        /**
-         *  Generate x axis names for highcharts
-         *
-         */
-		private function graphProjects($projects)
-		{
+        return $this->db->get('results')->row();
+    }
 
-			// TODO:  Add date
-
-			$string = '';
-
-			foreach ($projects as $project)
-				{
-
-						$string .= "'" . $project->project_name . "'";
-						$string .= ', ';
-				}
-
-				$string = substr("$string", 0, -2);
-
-				return($string);
-		}
 }
-?>
+    ?>

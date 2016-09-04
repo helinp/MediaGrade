@@ -3,7 +3,7 @@
 class Projects
 {
     public id;
-    public periode;
+    public term;
     public instructions_pdf;
     public instructions_txt;
     public deadline;

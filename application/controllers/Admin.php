@@ -11,81 +11,155 @@ class Admin extends CI_Controller {
 		$this->Users_model->loginCheck();
 		$this->Users_model->adminCheck();
 
+		$this->load->model('Email_model','',TRUE);
 		$this->load->model('Submit_model','',TRUE);
-		$this->load->model('Movies_model','',TRUE);
 		$this->load->model('Projects_model','',TRUE);
 		$this->load->model('System_model','',TRUE);
-
+		$this->load->model('Skills_model','',TRUE);
+		$this->load->model('Terms_model','',TRUE);
 		$this->load->model('Classes_model','',TRUE);
-		$this->data['classes'] = $this->Classes_model->listAllClasses();
+
+		$this->load->helper('school');
+
+		$this->data['classes'] = $this->Classes_model->getAllClasses();
+		$this->data['terms'] = $this->Terms_model->getAllTerms();
+
+		if($this->input->get('school_year'))
+			$this->school_year = $this->input->get('school_year');
+		else
+			$this->school_year = get_school_year();
+
+		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
 	}
 
-	// Dashboard
 	public function index()
 	{
-
-			$this->data['last_submitted'] = $this->Submit_model->getNLastSubmitted();
-			$this->data['last_movies'] = $this->Movies_model->getNLastSubmitted();
-			$this->data['active_projects'] = $this->Projects_model->listAllActiveProjects();
-			$this->data['not_graded_projects'] = $this->Submit_model->listNotGradedProjects();
-			$this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
-
-		 	$this->load->template('admin/dashboard', $this->data, true);
+		redirect('admin/dashboard?school_year=' . get_school_year());
 	}
 
-	public function export($periode = FALSE)
-	{
-			$this->load->model('Periods_model','',TRUE);
-			$this->data['periodes'] = $this->Periods_model->listAllPeriods();
-			$this->data['projects'] = $this->Projects_model->listAllActiveProjectsByPeriod($periode);
 
-			$this->load->template('admin/export', $this->data, true);
+	// Dashboard
+	public function dashboard()
+	{
+		$school_year = $class = FALSE;
+		if($this->input->get('classe')) $class = $this->input->get('classe');
+		if($this->input->get('school_year')) $school_year = $this->input->get('school_year');
+
+		$this->load->model('Results_model','',TRUE);
+		$this->load->model('Grade_model','',TRUE);
+
+		$this->data['gauss'] =  $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $school_year, $this->session->id);
+		$this->data['skills_usage'] = $this->Skills_model->getSkillsUsageByClass($class, FALSE, $school_year);
+		$this->data['last_submitted'] = $this->Submit_model->getNLastSubmitted($class, 5, $school_year);
+		$this->data['active_projects'] = $this->Projects_model->getAllActiveAndCurrentProjects($class);
+		$this->data['not_graded_projects'] = $this->Grade_model->listNotGradedProjects($class, $school_year);
+		$this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
+
+		$this->load->helper('form');
+		$this->load->template('admin/dashboard', $this->data);
 	}
 
-	public function results($class, $period = FALSE)
+
+	public function export()
 	{
+		if(!empty($this->input->get('term')))
+			$term = $this->input->get('term');
+		else
+			$term = FALSE;
+
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTerm($term);
+		$this->load->template('admin/export', $this->data);
+	}
+
+
+	public function result_details($project_id, $user_id = FALSE)
+	{
+		$this->load->model('Results_model','',TRUE);
+		$this->load->model('Assessment_model','',TRUE);
+
+		// get project info
+		$project = $this->Projects_model->getProjectDataByProjectId($project_id);
+		$class = $project->class;
+		$first_col = $this->Assessment_model->getAssessmentTable($project_id);
+
+		// if one student only, create dummy array
+		if ($user_id)
+		{
+			$users[$class][0] = $this->Users_model->getUserInformations($user_id);
+			//$users[$class][0]->id = $user_id;
+		}
+		else
+		{
+			// get all students
 			$users = $this->Users_model->getAllUsersByClass('student', $class);
+		}
 
-			$this->load->helper('text');
-			$this->load->helper('round');
-
-			$this->load->model('Results_model','',TRUE);
-			$this->load->model('Assessment_model','',TRUE);
-
-			// make table header
-			$header = array();
-			$projects = $this->Projects_model->listAllActiveProjectsByClass($class, $period);
-
-			// prepare data for body table
-			foreach ($projects as $project)
+		foreach($first_col as $key => $row)
+		{
+			foreach($users[$class] as $user)
 			{
-				$skills_group = $this->Assessment_model->getSkillsGroupByProject($project->project_id);
-
-				$header[$project->project_id] = array(
-						'project_name' => $project->project_name,
-						 'skills_groups' => $skills_group,
-					);
+				$first_col[$key]->results[$user->id] = @$this->Results_model->getResultsByProjectAndUser($project_id, $user->id)[$key]->user_vote;
 			}
-//dump($header);
-			$this->data['class'] = $class;
-			$this->data['table_header'] = $header;
-			$this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $period);
+		}
 
-			$this->load->model('Periods_model','',TRUE);
-			$this->data['periods'] = $this->Periods_model->listAllPeriods();
+		$this->data['project_name'] = $project->project_name;
+		$this->data['results'] = $first_col;
+		$this->data['students'] = $users;
 
-			$this->load->template('admin/results', $this->data, true);
+		$this->load->helper('round');
+		$this->load->template('admin/result_details', $this->data, TRUE);
 	}
+
+
+	public function results($class)
+	{
+		if($this->input->get('term'))
+			$term = $this->input->get('term');
+		else
+			$term = FALSE;
+
+		$users = $this->Users_model->getAllUsersByClass('student', $class);
+
+		$this->load->helper('text');
+		$this->load->helper('round');
+
+		$this->load->model('Results_model','',TRUE);
+		$this->load->model('Assessment_model','',TRUE);
+
+		// make table header
+		$header = array();
+		$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, $this->school_year);
+
+		// prepare data for body table
+		foreach ($projects as $project)
+		{
+			$skills_group = $this->Assessment_model->getSkillsGroupByProject($project->project_id);
+
+			$header[$project->project_id] = array(
+				'project_name' => $project->project_name,
+				'skills_groups' => $skills_group,
+				'project_id' => $project->project_id
+				);
+		}
+
+		$this->data['class'] = $class;
+		$this->data['table_header'] = $header;
+		$this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $term, $this->school_year);
+
+		$this->load->template('admin/results', $this->data);
+	}
+
 
 	public function grade($class = FALSE, $project_id = FALSE, $user_id = FALSE)
 	{
+		$this->load->model('Comments_model','',TRUE);
 
-		// POST
-		if($this->input->post())
+		// POST ACTION
+		if($this->input->post() && $this->Projects_model->boolMatchProjectSchoolYear($this->input->post('project_id')))
 		{
 			$this->load->model('Grade_model','',TRUE);
 
-			// save grades
+			// save grades to DB
 			$i = 0;
 			foreach ($this->input->post('assessments_id') as $assessment_id)
 			{
@@ -93,27 +167,33 @@ class Admin extends CI_Controller {
 											$this->input->post('user_id'),
 											$assessment_id,
 											$this->input->post("user_vote[$i]")
-										);
+										 );
+
 				$i++;
 			}
 
-			// saves comment
-			$this->Grade_model->comment($this->input->post('project_id'),
-										$this->input->post('user_id'),
-										$this->input->post('comment')
-									);
+			// saves comment to DB
+			$this->Comments_model->comment($this->input->post('project_id'),
+				$this->input->post('user_id'),
+				$this->input->post('comment')
+				);
 
 			redirect("/admin/grade/$class/$project_id/$user_id");
 		}
 
+
 		// Load Models
 		$this->load->model('Users_model','',TRUE);
-		$this->load->model('Comments_model','',TRUE);
 		$this->load->model('Results_model','',TRUE);
+		$this->load->model('Submit_model','',TRUE);
+
+		// catch gets for grading_list table
+		if(!$class = $this->input->get('classe')) $class = NULL;
+		if(!$term = $this->input->get('term')) $term = NULL;
 
 		$this->data['class_users'] = $this->Users_model->getAllUsersByClass('student', $class);
 
-		// mhash_keygen_s2k table CLASS -> USER_ID -> PROJECTS & USER
+		// TODO mhash_keygen_s2k table CLASS -> USER_ID -> PROJECTS & USER
 		$table = '';
 		foreach($this->data['class_users'] as $class => $users)
 		{
@@ -121,19 +201,18 @@ class Admin extends CI_Controller {
 			{
 				$table[$class][$user->id]['user'] = $user;
 
-				$projects = $this->Projects_model->listAllActiveProjectsByClassAndUser($class, $user->id);
-
+				$projects = $this->Projects_model->getAllActiveProjectsByTermAndClassAndSchoolYear($term, $class, get_school_year());
 
 				foreach($projects as $key => $project)
 				{
-					$projects[$key]->is_graded = $this->Results_model->isProjectGraded($user->id, $project->project_id);
+					$projects[$key]->is_graded = $this->Results_model->boolIfGradedProject($user->id, $project->project_id);
+					$projects[$key]->is_submitted = $this->Submit_model->boolIfSubmittedByUserAndProjectId($user->id, $project->project_id);
 				}
 				$table[$class][$user->id]['projects'] = $projects;
-
 			}
 		}
-
 		$this->data['grade_table'] = $table;
+
 
 		/**
 		 *  Routing
@@ -144,22 +223,61 @@ class Admin extends CI_Controller {
 		{
 			// gather informations
 			$this->data['user'] = $this->Users_model->getUserInformations($user_id);
-			$this->data['submitted'] = $this->Submit_model->getSubmittedProject($user_id, $project_id);
-			$this->data['self_assessments'] = $this->Projects_model->getSelfAssessment($project_id, TRUE, $user_id);
-			$this->data['comment'] = $this->Comments_model->getAssessmentComment($user_id, $project_id);
+			$this->data['submitted'] = $this->Submit_model->getSubmittedByUserIdAndProjectId($user_id, $project_id);
+			$this->data['self_assessments'] = $this->Submit_model->getSelfAssessmentByProjectId($project_id, TRUE, $user_id);
+			$this->data['comment'] = $this->Comments_model->getCommentsByProjectIdAndUserId($project_id, $user_id);
 			$this->data['assessment_table'] = $this->Results_model->getResultsTable($user_id, $project_id);
-			$this->data['project'] = $this->Projects_model->getProjectData($project_id);
+			$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
 
 			// GET
-			$this->load->template('admin/grade', $this->data, true);
+			$this->load->template('admin/grade', $this->data, TRUE);
 		}
 		// To grade_list
 		else
 		{
-			$this->load->template('admin/grade_list', $this->data, true);
+			$this->load->template('admin/grade_list', $this->data);
 		}
 	}
 
+	/**
+	 *
+	 *		PROJECTS LIST PAGE
+	 *
+	 */
+	public function projects($project_id = FALSE)
+	{
+		// Models
+		$this->load->model('Assessment_model','',TRUE);
+		$this->load->model('ProjectsManager_model','',TRUE);
+		$this->load->model('Terms_model','',TRUE);
+
+		// TODO : control for empty fields
+
+		// Get data
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByAdmin(FALSE, $this->school_year);
+		$this->data['terms'] = $this->Terms_model->getAllTerms();
+
+		// helpers
+		$this->load->helper('text');
+		$this->load->helper('deadline');
+
+		// template
+		$this->load->template('admin/projects', $this->data);
+	}
+
+
+	public function instructions($project_id)
+	{
+		$project = $this->Projects_model->getInstructionsByProjectId($project_id);
+
+		$this->data['instructions_pdf'] = $project->pdf;
+		$this->data['instructions_txt'] = $project->txt;
+
+		$this->load->helper('pdf');
+		$this->load->helper('url');
+
+		$this->load->template('admin/instructions', $this->data, TRUE);
+	}
 
 
 	/**
@@ -167,85 +285,75 @@ class Admin extends CI_Controller {
 	 *		PROJECTS MANAGEMENT PAGE
 	 *
 	 */
-	public function projects($project_id = FALSE)
+	public function project_management($project_id = FALSE)
 	{
-			// Models
-			$this->load->model('Assessment_model','',TRUE);
-			$this->load->model('Skills_model','',TRUE);
-			$this->load->model('ProjectsManager_model','',TRUE);
-			$this->load->model('Periods_model','',TRUE);
+		// Models
+		$this->load->model('Assessment_model','',TRUE);
+		$this->load->model('ProjectsManager_model','',TRUE);
+		$this->load->model('Terms_model','',TRUE);
+		$this->load->model('Comments_model','',TRUE);
 
-			// POST
-			if($this->input->post('disactivate_project'))
+		// TODO : control for empty fields
+
+		// POST
+		if($this->input->post('disactivate_project'))
+		{
+			$this->ProjectsManager_model->disactivateProject($this->input->post('disactivate_project'));
+		}
+		elseif($this->input->post('delete_project'))
+		{
+			$this->ProjectsManager_model->deleteProject($this->input->post('delete_project'));
+			redirect('/admin/projects');
+		}
+
+		// ADD or UPDATE PROJECT
+		elseif($this->input->post())
+		{
+			$post = $this->input->post();
+
+			// Save & upload (or not) PDF instructions
+			if(@$_FILES['instructions_pdf']['size'] > 0)
+				$post['instructions_pdf'] = $this->uploadPDF($post);
+			else
+				$post['instructions_pdf'] = FALSE;
+
+			// Create new project or Update project
+			if( $post['project_id'] == '-1')
 			{
-
-				$this->ProjectsManager_model->disactivateProject($this->input->post('disactivate_project'));
-			}
-			elseif($this->input->post('delete_project'))
-			{
-				$this->ProjectsManager_model->deleteProject($this->input->post('delete_project'));
-				redirect('/admin/projects');
-			}
-			// ADD or UPDATE PROJECT
-			elseif($this->input->post())
-			{
-
-				$post = $this->input->post();
-
-				// Create new project
-				if( $post['project_id'] == '-1')
-				{
-					if(@$_FILES['instructions_pdf']['size'] > 0)
-						$post['instructions_pdf'] = $this->uploadPDF($post);
-					else
-						$post['instructions_pdf'] = FALSE;
-
-					$this->ProjectsManager_model->addProject($post);
-
-				}
-				// update project
-				else
-				{
-					// if no new instructions
-					if(@$_FILES['instructions_pdf']['size'] > 0)
-						$post['instructions_pdf'] = $this->uploadPDF($post);
-					else
-						$post['instructions_pdf'] = FALSE;
-
-					$this->ProjectsManager_model->updateProject($post, $project_id);
-
-				}
-
-			}
-
-			// GET data from argument (to get project info)
-			if($project_id)
-			{
-				$this->data['curr_project'] = $this->Projects_model->getProjectData($project_id);
-
-				$this->data['active_skills'] = $this->Assessment_model->listAllSkillsByProjects($project_id, TRUE);
-				$this->data['assessment_table'] = $this->Assessment_model->getAssessmentTable($project_id, TRUE);
-				$this->data['active_self_assessments'] = $this->Assessment_model->getSelfAssessmentByProject($project_id, TRUE);
+				$this->ProjectsManager_model->addProject($post);
 			}
 			else
 			{
-				// user wants to create a new empty project
-				include_once('./application/classes/AssessmentTable.class.php');
-				$this->data['assessment_table'] = array(new AssessmentTable);
+				$this->ProjectsManager_model->updateProject($post, $project_id);
 			}
 
-			// Get data
-			$this->data['projects'] = $this->Projects_model->listAllActiveProjects(FALSE);
-			$this->data['skills'] = $this->Assessment_model->listAllSkills();
-			$this->data['self_assessments'] = $this->Assessment_model->listAllSelfAssessments();
-			$this->data['skills_groups'] = $this->Skills_model->listAllSkillsGroups();
-			$this->data['periodes'] = $this->Periods_model->listAllPeriods();
+			redirect('/admin/projects?school_year=' . get_school_year());
+		}
 
-			// helpers
-			$this->load->helper('text');
+		// GET data from argument (to get project info)
+		if($project_id)
+		{
+			$this->data['curr_project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
+			$this->data['active_skills'] = $this->Skills_model->getAllSkillsByProjects($project_id, TRUE);
+			$this->data['assessment_table'] = $this->Assessment_model->getAssessmentTable($project_id, TRUE);
+			$this->data['active_self_assessments'] = $this->Assessment_model->getSelfAssessmentIdsByProject($project_id);
+		}
+		else
+		{
+			// user wants to create a new empty project
+			$this->data['assessment_table'] = array(new Assessment_model);
+		}
 
-			// template
-		 	$this->load->template('admin/projects', $this->data, true);
+		// Get data
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByAdmin(FALSE);
+		$this->data['skills'] = $this->Skills_model->getAllSkills();
+		$this->data['self_assessments'] = $this->Assessment_model->getAllSelfAssessments();
+		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
+		$this->data['terms'] = $this->Terms_model->getAllTerms();
+
+		$this->load->helper('text');
+		$this->load->helper('deadline');
+		$this->load->template('admin/project_management', $this->data, TRUE);
 	}
 
 
@@ -253,31 +361,21 @@ class Admin extends CI_Controller {
 	{
 
 		$class = $data['class'];
-		$periode = $data['periode'];
+		$term = $data['term'];
 		$project_name = $data['project_name'];
 
-		$config = $this->ProjectsManager_model->getUploadPDFConfig($class, $periode, $project_name);
-
-		//var_dump($_POST);die;
-
+		$config = $this->ProjectsManager_model->getUploadPDFConfig($class, $term, $project_name);
 		$error = $this->ProjectsManager_model->uploadPDF($config, 'instructions_pdf');
 
 		if (isset($error['error']))
-		{
 			show_error($error['error']);
-		}
 		else
-		{
-				return $config['file_db_path'] . $config['file_name'] . '.pdf';
-		}
-
+			return $config['file_db_path'] . $config['file_name'] . '.pdf';
 	}
 
 
 	public function skills($action = FALSE)
 	{
-		$this->load->model('Skills_model','',TRUE);
-
 		// POST
 		if($action === 'add_skill')  $this->Skills_model->addSkill($this->input->post('skill_id'), $this->input->post('skill'));
 		elseif ($action === 'del_skill') $this->Skills_model->deleteSkill($this->input->post('skill_id'));
@@ -286,36 +384,33 @@ class Admin extends CI_Controller {
 
 		// GET
 		$this->load->model('Assessment_model','',TRUE);
-		$this->data['skills'] = $this->Assessment_model->listAllSkills();
-		$this->load->template('admin/skills', $this->data, true);
+		$this->data['skills'] = $this->Skills_model->getAllSkills();
+		$this->load->template('admin/skills', $this->data);
 	}
 
 	public function skills_groups($action = FALSE)
 	{
-		$this->load->model('Skills_model','',TRUE);
-
 		// POST
 		if($action === 'add_skills_group')  $this->Skills_model->addSkillsGroup($this->input->post('skills_group'));
 		elseif ($action === 'del_skills_group') $this->Skills_model->deleteSkillsGroup($this->input->post('skills_group'));
 		if($action) redirect('/admin/skills_groups');
 
 		// GET
-		$this->data['skills_groups'] = $this->Skills_model->listAllSkillsGroups();
-		$this->load->template('admin/skills_groups', $this->data, true);
+		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
+		$this->load->template('admin/skills_groups', $this->data);
 	}
 
-	public function periodes($action = FALSE)
+	public function terms($action = FALSE)
 	{
-		$this->load->model('Periods_model','',TRUE);
+		$this->load->model('Terms_model','',TRUE);
 
 		// POST
-		if($action === 'add_periode')  $this->Periods_model->addPeriode($this->input->post('periode'));
-		elseif ($action === 'del_periode') $this->Periods_model->deletePeriode($this->input->post('periode'));
-		if($action) redirect('/admin/periodes');
+		if($action === 'add_term')  $this->Terms_model->addTerm($this->input->post('term'));
+		elseif ($action === 'del_term') $this->Terms_model->deleteTerm($this->input->post('term'));
+		if($action) redirect('/admin/terms');
 
 		// GET
-		$this->data['periodes'] = $this->Periods_model->listAllPeriods();
-		$this->load->template('admin/periodes', $this->data, true);
+		$this->load->template('admin/terms', $this->data);
 	}
 
 	public function users($action = FALSE)
@@ -323,49 +418,40 @@ class Admin extends CI_Controller {
 
 		$this->load->model('UsersManager_model','',TRUE);
 
-		// POST
-		if ($action === 'add_user')
+		if($action)
 		{
 			$data = array(
-					'username' 	=> $this->input->post('username'),
-					'name' 		=> $this->input->post('name'),
-					'last_name' => $this->input->post('last_name'),
-					'class' 	=> $this->input->post('class'),
-					'email' 	=> $this->input->post('email'),
-					'role' 	=> $this->input->post('role'),
-					'password' 	=> $this->input->post('password')
-			);
-			$this->UsersManager_model->addUser($data);
+				'id' 		=> $this->input->post('id'),
+				'username' 	=> $this->input->post('username'),
+				'name' 		=> $this->input->post('name'),
+				'last_name' => $this->input->post('last_name'),
+				'class' 	=> $this->input->post('class'),
+				'email' 	=> $this->input->post('email'),
+				'role' 		=> $this->input->post('role'),
+				'password' 	=> $this->input->post('password')
+				);
+
+			switch($action)
+			{
+				case 'add_user':
+					$this->UsersManager_model->addUser($data);
+					break;
+
+				case 'update_user':
+					$this->UsersManager_model->updateUser($data);
+					break;
+
+				case 'delete_user':
+					$this->UsersManager_model->delUser($this->input->post('id'));
+					break;
+			}
 		}
-
-		elseif ($action === 'delete_user')
-		{
-			$this->UsersManager_model->delUser($this->input->post('id'));
-		}
-
-		elseif ($action === 'update_user')
-		{
-			$data = array(
-					'id' 	=> $this->input->post('id'),
-					'username' 	=> $this->input->post('username'),
-					'name' 		=> $this->input->post('name'),
-					'last_name' => $this->input->post('last_name'),
-					'class' 	=> $this->input->post('class'),
-					'email' 	=> $this->input->post('email'),
-					'role' 	=> $this->input->post('role'),
-					'password' 	=> $this->input->post('password')
-			);
-			$this->UsersManager_model->updateUser($data);
-		}
-
-		if($action) redirect('/admin/users');
-
 
 		// GET
 		$this->data['admins'] = $this->Users_model->getAllUsersByClass('admin');
 		$this->data['users'] = $this->Users_model->getAllUsersByClass();
 
-		$this->load->template('admin/users', $this->data, true);
+		$this->load->template('admin/users', $this->data);
 	}
 
 	public function settings($action = FALSE)
@@ -376,16 +462,10 @@ class Admin extends CI_Controller {
 		// POST
 		if ($action === 'mail_test')
 		{
-			$this->load->library('email');
+			$this->Email_model->sendObjectMessageToEmail($this->input->post('subject'),
+																$this->input->post('body'),
+																$this->session->email);
 
-			$this->email->from($this->session->email, 'MediaGrade');
-			$this->email->to($this->session->email);
-
-			$this->email->subject($this->input->post('subject'));
-			$this->email->message($this->input->post('body'));
-
-			$this->email->send(FALSE);
-			$this->email->print_debugger(array('headers'));
 			redirect('/admin/settings');
 		}
 		elseif ($action === 'welcome_message')
@@ -393,11 +473,10 @@ class Admin extends CI_Controller {
 			$this->Welcome_model->saveWelcomeMessage($this->input->post('welcome_message'));
 		}
 
-
-		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage();
+		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
 
 		// GET
-		$this->load->template('admin/settings', $this->data, true);
+		$this->load->template('admin/settings', $this->data);
 	}
 
 

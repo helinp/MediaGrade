@@ -1724,7 +1724,7 @@ class CI_Image_lib {
 	 *
 	 * This is a helper function that extracts the extension
 	 * from the source_image.  This function lets us deal with
-	 * source_images with multiple periods, like: my.cool.jpg
+	 * source_images with multiple terms, like: my.cool.jpg
 	 * It returns an associative array with two elements:
 	 * $array['ext']  = '.jpg';
 	 * $array['name'] = 'my.cool';

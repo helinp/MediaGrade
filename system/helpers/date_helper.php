@@ -671,10 +671,10 @@ if ( ! function_exists('date_range'))
 	/**
 	 * Date range
 	 *
-	 * Returns a list of dates within a specified period.
+	 * Returns a list of dates within a specified term.
 	 *
-	 * @param	int	unix_start	UNIX timestamp of period start date
-	 * @param	int	unix_end|days	UNIX timestamp of period end date
+	 * @param	int	unix_start	UNIX timestamp of term start date
+	 * @param	int	unix_end|days	UNIX timestamp of term end date
 	 *					or interval in days.
 	 * @param	mixed	is_unix		Specifies whether the second parameter
 	 *					is a UNIX timestamp or a day interval
@@ -738,13 +738,13 @@ if ( ! function_exists('date_range'))
 				$arg = (int) $mixed;
 			}
 
-			$period = new DatePeriod($from, new DateInterval('P1D'), $arg);
-			foreach ($period as $date)
+			$term = new DateTerm($from, new DateInterval('P1D'), $arg);
+			foreach ($term as $date)
 			{
 				$range[] = $date->format($format);
 			}
 
-			/* If a period end date was passed to the DatePeriod constructor, it might not
+			/* If a term end date was passed to the DateTerm constructor, it might not
 			 * be in our results. Not sure if this is a bug or it's just possible because
 			 * the end date might actually be less than 24 hours away from the previously
 			 * generated DateTime object, but either way - we have to append it manually.

@@ -18,7 +18,7 @@ U+002a asterisk             original
 U+002b plus                 original
 U+002c comma                original
 U+002d hyphen               original
-U+002e period               original
+U+002e term               original
 U+002f slash                original
 U+0030 zero                 original
 U+0031 one                  original
@@ -122,7 +122,7 @@ U+00b3 threesuperior        original
 U+00b4 acute                original
 U+00b5 mu                   original
 U+00b6 paragraph            original
-U+00b7 periodcentered       original
+U+00b7 termcentered       original
 U+00b8 cedilla              original
 U+00b9 onesuperior          original
 U+00ba ordmasculine         original

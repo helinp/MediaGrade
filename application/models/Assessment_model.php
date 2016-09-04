@@ -1,51 +1,13 @@
 <?php
 Class Assessment_model extends CI_Model
 {
-	public function listAllSkills()
-	{
-		$sql ="SELECT skill, skill_group, skill_id FROM skills ORDER BY skill_id ASC";
 
-		$query = $this->db->query($sql);
+	public $id;
+    public $skills_group;
+    public $criterion;
+    public $cursor;
+    public $max_vote;
 
-		if($query)
-		{
-			return $query->result();
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-
-
-	public function listAllSkillsByProjects($project_id = FALSE, $only_id = FALSE)
-	{
-		if( ! $project_id) return array();
-
-		$sql ="SELECT skill_ids FROM projects where id = ? LIMIT 1";
-		$query = $this->db->query($sql, array($project_id));
-		$result = $query->row()->skill_ids;
-
-		// return array and only ID
-		$skills = explode(',', $result);
-		if ($only_id) return $skills;
-
-		// return array WITH names
-		$project_skills = array();
-
-		if( ! $skills) return FALSE;
-
-		foreach ($skills as $skill)
-		{
-			$sql ="SELECT skill, skill_group, skill_id FROM skills WHERE skill_id = ?";
-			$query = $this->db->query($sql, array($skill));
-			$result = $query->row();
-			if ( ! empty($result)) array_push($project_skills, $result);
-		}
-
-		return $project_skills;
-	}
 
 	public function getAssessmentTable($project_id)
 	{
@@ -55,10 +17,13 @@ Class Assessment_model extends CI_Model
 				FROM projects_assessments
 					LEFT JOIN assessments
 					ON projects_assessments.assessment_id = assessments.id
-				WHERE project_id = ?";
+				WHERE project_id = ?
+				ORDER BY skills_group, assessments.id ";
 
 		$query = $this->db->query($sql, array($project_id));
 		$assessments = $query->result();
+
+		if( ! $assessments) return array(new Assessment_model);
 
 		return $assessments;
 	}
@@ -67,80 +32,59 @@ Class Assessment_model extends CI_Model
 	{
 		if( ! $project_id) return array();
 
-		$assessment_ids = $this->getAssessmentsIdByProject($project_id);
+		$this->db->select("skills_group, SUM(max_vote) as max_vote", FALSE);
+		$this->db->from('assessments');
 
-		$sql_where = ' WHERE';
+		$assessment_ids = $this->_getAssessmentsIdByProject($project_id);
 
 		foreach ($assessment_ids as $assessment_id)
 		{
-			$sql_where .= " id = $assessment_id OR";
+			$this->db->or_where('id', $assessment_id);
 		}
-		$sql_where = substr($sql_where, 0, -3);
 
-		$sql = 'SELECT skills_group, SUM(max_vote) as max_vote FROM assessments' . $sql_where . ' GROUP BY skills_group ORDER BY skills_group';
+		$this->db->group_by('skills_group');
+		$this->db->order_by('skills_group');
 
-		$query = $this->db->query($sql);
-
-		return $query->result_array();
+		return $this->db->get()->result_array();
 	}
 
-	private function getAssessmentsIdByProject($project_id)
+	private function _getAssessmentsIdByProject($project_id)
 	{
-
-		/*$sql ="SELECT assessment_ids FROM projects WHERE id = ? LIMIT 1";
-
-		$query = $this->db->query($sql, array($project_id));
-
-		$assessment_ids = explode(',', $query->row()->assessment_ids);*/
 
 		$sql ="SELECT assessment_id FROM projects_assessments WHERE project_id = ?";
 
 		$query = $this->db->query($sql, array($project_id));
 		$results = $query->result();
 
-		// transforms result into unidimensionnal array
+		// get unidimensional array from result
 		$assessment_ids = array();
 		foreach ($results as $row)
 		{
 			$assessment_ids[] = $row->assessment_id;
 		}
+
 		return $assessment_ids;
 
 	}
 
-	public function getSelfAssessmentByProject($project_id, $only_id = FALSE)
+	public function getSelfAssessmentIdsByProject($project_id, $only_id = FALSE)
 	{
-		if( ! $project_id) return array();
+		if( ! $project_id)
+			return array();
 
-		$sql ="SELECT self_assessment_ids FROM projects WHERE id = ? LIMIT 1";
+		$this->db->select('self_assessment_ids');
+		$result = $this->db->get_where('projects', array('id' => $project_id), 1)->row();
 
-		$query = $this->db->query($sql, array($project_id));
+		if( ! $result)
+			return new Assessment_model;
 
-		$self_assessment_ids = explode(',', $query->row()->self_assessment_ids);
-
-		if($only_id) return $self_assessment_ids;
-
-		$self_assessment_ids = array();
-
-		foreach ($self_assessment_ids as $self_assessment_id)
-		{
-			$sql ="SELECT id, question FROM self_assessments WHERE id = ? LIMIT 1";
-
-			$query = $this->db->query($sql, array($self_assessment_id));
-
-			array_push($self_assessment_ids, $query->row());
-		}
-
-		return $self_assessment_ids;
+		return explode(',', $result->self_assessment_ids);
 	}
 
-	public function listAllSelfAssessments()
+	public function getAllSelfAssessments()
 	{
-		$sql ="SELECT id, question FROM self_assessments";
-
-		$query = $this->db->query($sql);
-
-		return $query->result();;
+		$this->db->select('id, question');
+		return $this->db->get('self_assessments')->result();
 	}
 }
 ?>

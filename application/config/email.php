@@ -7,4 +7,6 @@
    $config['newline']    = "\r\n";
    $config['mailtype'] = 'html'; // or html - text
    $config['validation'] = TRUE;
+   $config['wordwrap'] = TRUE;
+   $config['validate'] = TRUE;
 ?>

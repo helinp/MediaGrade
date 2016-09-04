@@ -2,75 +2,94 @@
 
 class Gallery extends CI_Controller {
 
- function __construct()
- {
-   parent::__construct();
-   $this->load->model('Users_model','',TRUE);
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Users_model','',TRUE);
+        $this->load->model('Projects_model','',TRUE);
+        $this->load->model('Gallery_model','',TRUE);
+        $this->load->helper('form');
+        $this->load->model('Classes_model','',TRUE);
 
-   $this->load->model('Projects_model','',TRUE);
-   $this->load->model('Gallery_model','',TRUE);
-   $this->load->helper('form');
+        $this->data['classes'] = $this->Classes_model->getAllClasses();
 
-   $this->load->model('Classes_model','',TRUE);
-   $this->data['classes'] = $this->Classes_model->listAllClasses();
+    }
 
-   $this->data['op_projects'] = $this->Gallery_model->makeOptionArray('projects', 'project_name');
-   $this->data['op_users'] = $this->Gallery_model->makeOptionArray('users', 'last_name');
- }
 
- function index()
- {
-   redirect('/gallery/all');
- }
+    function view($offset = 0)
+    {
+        $limit = 12;
+        $arg[0] = $this->input->get('classe');
+        $arg[1] = $this->input->get('project');
 
- function all()
- {
-   $offset = $this->uri->segment(3, 0);
-   $this->data['medias'] =  $this->Gallery_model->getProjectsGallery(false, $offset);
-   $this->data['selected_proj_op'] = 'All';
-   $this->data['selected_user_op'] = 'All';
+        $args = array( 'projects.class' => $arg[0],
+        'project_id' => $arg[1]
+    );
 
-   $this->load->template('gallery/gallery', $this->data, 'sort');
- }
+    $this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClass($arg[0]);
+    $this->data['medias'] =  $this->Gallery_model->getProjectsGalleryBy($args, $offset * $limit, $limit);
 
- function my()
- {
-   $this->Users_model->loginCheck();
-   $offset = $this->uri->segment(3, 0);
-   $this->data['medias'] =  $this->Gallery_model->getProjectsGallery($this->session->id, $offset);
-   $this->load->template('gallery/gallery', $this->data);
- }
+    // PAGINATION
+    $this->load->library('pagination');
 
- function project()
- {
-   if($this->input->post('project') === 'all') redirect('/gallery/all');
+    $config['base_url'] = '../../gallery/view/';
+    $config['num_links'] =  $config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($args));
+    $config['per_page'] = $limit;
+    $config['reuse_query_string'] = TRUE;
+    $config['use_page_numbers'] = TRUE;
+    $config['last_tag_open'] = $config['first_tag_open'] = $config['next_tag_open'] = $config['prev_tag_open'] = $config['num_tag_open'] = '<li>';
+    $config['last_tag_close'] = $config['first_tag_close'] = $config['next_tag_close'] = $config['prev_tag_close'] = $config['num_tag_close'] = '</li>';
+    $config['cur_tag_open'] = '<li class="active"><a href="#">';
+    $config['cur_tag_close'] = '</a></li>';
 
-   $arg = $this->input->post('project');
-   $op_selected = $arg;
+    $this->pagination->initialize($config);
+    // . PAGINATION
 
-   $offset = $this->uri->segment(3, 0);
-   $this->data['medias'] =  $this->Gallery_model->filterByProject_id($arg);
-   $this->data['selected_proj_op'] = $op_selected;
-   $this->data['selected_user_op'] = 'All';
+    $this->load->template('gallery/gallery', $this->data);
+}
 
-   $this->load->template('gallery/gallery', $this->data, 'sort');
- }
 
- function user()
- {
-   if($this->input->post('user') === 'all') redirect('/gallery/all');
+function index()
+{
+    redirect('./gallery/view/');
 
-   $arg = $this->input->post('user');
-   $op_selected = $arg;
+}
 
-   $offset = $this->uri->segment(3, 0);
+function my($offset = 0)
+{
+    $limit = 12;
+    $arg[0] = $this->input->get('classe');
+    $arg[1] = $this->input->get('project');
+    $arg[2] = $this->session->id;
 
-   $this->data['medias'] =  $this->Gallery_model->filterByUser_id($arg);
-   $this->data['selected_proj_op'] = 'All';
-   $this->data['selected_user_op'] = $op_selected;
-   $this->load->template('gallery/gallery', $this->data, 'sort');
- }
+    $args = array( 'projects.class' => $arg[0],
+    'project_id' => $arg[1],
+    'user_id' => $arg[2]
+    );
 
+    $this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClass($arg[0]);
+    $this->data['medias'] =  $this->Gallery_model->getProjectsGalleryBy($args, $offset * $limit, $limit);
+
+    // PAGINATION
+    $this->load->library('pagination');
+
+    $config['base_url'] = '../../gallery/view/';
+    $config['num_links'] =  $config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($args));
+    $config['per_page'] = $limit;
+
+    $config['reuse_query_string'] = TRUE;
+    $config['use_page_numbers'] = TRUE;
+    $config['last_tag_open'] = $config['first_tag_open'] = $config['next_tag_open'] = $config['prev_tag_open'] = $config['num_tag_open'] = '<li>';
+    $config['last_tag_close'] = $config['first_tag_close'] = $config['next_tag_close'] = $config['prev_tag_close'] = $config['num_tag_close'] = '</li>';
+    $config['cur_tag_open'] = '<li class="active"><a href="#">';
+    $config['cur_tag_close'] = '</a></li>';
+
+
+    $this->pagination->initialize($config);
+    // . PAGINATION
+
+    $this->load->template('gallery/gallery', $this->data);
+    }
 }
 
 ?>

@@ -1,7 +1,12 @@
-<main class="col-md-8 text-left" id="content">
-    <h2 class=" text-left"> <?= _('Liste des compétences')?></h2>
-    <hr style="margin-top:0;" />
-          <form action="/admin/skills/add_skill" method="post" role="form">
+<div id="content" class="col-xs-12 col-md-10 ">
+
+    <div class="row chapeau">
+        <div class="col-xs-12  col-md-12">
+            <h1> <?= _('Liste des compétences')?></h1>
+        </div>
+    </div>
+<div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
+            <form action="/admin/skills/add_skill" method="post" role="form">
               <table id="rows" class="table">
                    <col width="5%">
                    <col width="90%">
@@ -43,4 +48,4 @@
           </form>
 
 
-   </main>
+   </div>

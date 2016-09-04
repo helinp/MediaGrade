@@ -1,17 +1,18 @@
 <?php
 Class Welcome_model extends CI_Model
 {
-	public function getWelcomeMessage($class = false)
+	public function getWelcomeMessage($interpret = TRUE)
 	{
 		$this->load->helper('message_var');
 
-		$sql = "SELECT content FROM config WHERE type = 'welcome_message' LIMIT 1";
+		$this->db->where('type', 'welcome_message');
+		$result = $this->db->get('config', 1);
 
-		$query = $this->db->query($sql);
-
-		if($query)
+		if($result->row('content'))
 		{
-			return convert_user_var($query->row('content'));
+			if($interpret) return convert_user_var($result->row('content'));
+			else return $result->row('content');
+			
 		}
 		else
 		{

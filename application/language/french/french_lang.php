@@ -7,9 +7,12 @@
      **/
 
     define('LANG', 'fr');
-    
+
+    define('LABEL_ADMIN_DANGER', '<strong>Attention</strong>, toute modification faite en cours d\'année peut engendrer des erreurs dans la base de données. <br />Ne modifiez rien sans en comprendre les répercussions.' );
+
+
     define('LABEL_DEMO_ACCOUNTS', 'Comptes de démonstration');
-    
+
     define('LABEL_FORGOT_PASS', 'J\'ai oublié mon mot de passe');
     define('LABEL_LOGIN', 'S\'identifier');
     define('LABEL_USERNAME', 'Nom d\'utilisateur');
@@ -71,35 +74,35 @@
     define('LABEL_SUBMITTED_PROJECT', 'Projet remis');
 
     // java
-    define('LABEL_NO_PDF_READER', '<p>It appears your Web browser is not configured to display PDF files. 
+    define('LABEL_NO_PDF_READER', '<p>It appears your Web browser is not configured to display PDF files.
                                 No worries, just <a href="123.pdf">click here to download the PDF file.</a></p>');
-                                
+
     // submit
     define('LABEL_SUBMIT_FILE', 'Remise du fichier');
-    define('LABEL_SUBMIT_FILES', 'Remise des fichiers'); 
+    define('LABEL_SUBMIT_FILES', 'Remise des fichiers');
     define('LABEL_SELF_ASSESSMENT', 'Auto-évaluation');
     define('LABEL_SUBMIT_WORK', 'Je remets mon travail');
     define('LABEL_DISACTIVATE_PROJECT', 'Désactiver le projet');
     define('LABEL_ACTIVATE_PROJECT', 'Activer le projet');
-    define('LABEL_SUBMITTED_FILE', 'Fichier remis:'); 
+    define('LABEL_SUBMITTED_FILE', 'Fichier remis:');
     define('LABEL_ALL_PERIODS', 'Toutes les périodes');
     define('LABEL_STUDENTS_FROM', 'Élèves de');
-    
+
     // results
-    define('LABEL_NOT_GRADED_YET', '<p>Votre travail n\'a pas encore été évalué.</p>');   
-    define('LABEL_PERCENT', 'Pourcentage'); 
+    define('LABEL_NOT_GRADED_YET', '<p>Votre travail n\'a pas encore été évalué.</p>');
+    define('LABEL_PERCENT', 'Pourcentage');
     define('LABEL_CLASS_ROLL', 'Liste des élèves');
-    define('LABEL_PERIOD', 'Période'); 
-    define('LABEL_AVERAGE', 'Moyenne');    
+    define('LABEL_PERIOD', 'Période');
+    define('LABEL_AVERAGE', 'Moyenne');
 
     // admin
     define('LABEL_PROJECT_LEN', 'Durée du projet');
-    define('LABEL_ADMIN', 'Administration'); 
-    define('LABEL_PROJECT_NOT_FOUND', 'Le projet n\'a pas été trouvé'); 
+    define('LABEL_ADMIN', 'Administration');
+    define('LABEL_PROJECT_NOT_FOUND', 'Le projet n\'a pas été trouvé');
 
 
     // add project
-    define('LABEL_PROJECT_TITLE', 'Titre du projet'); 
+    define('LABEL_PROJECT_TITLE', 'Titre du projet');
     define('LABEL_PROJECT_INFO', 'Informations générales');
     define('LABEL_PROJECT_FILE_INFO', 'Consignes');
     define('LABEL_ASSESSMENT_TYPE', 'Type d\'évaluation');
@@ -107,8 +110,8 @@
     define('LABEL_ASSESSMENT_TYPE_2', 'Certificative');
     define('LABEL_ASSESSMENT_TYPE_3', 'Diagnostique');
     define('LABEL_ASSESSMENT_TYPE_4', 'Sommative');
-    define('LABEL_PRESS_CTRL_SELECT', 'Appuyez sur <kbd>CTRL</kbd> pour une sélection multiple');   
-    define('LABEL_SKILLS_SEEN', 'Compétences travaillées'); 
+    define('LABEL_PRESS_CTRL_SELECT', 'Appuyez sur <kbd>CTRL</kbd> pour une sélection multiple');
+    define('LABEL_SKILLS_SEEN', 'Compétences travaillées');
     define('LABEL_UPLOAD_INSTRUCTIONS', 'Téléverser les consignes');
     define('LABEL_ONLY_PDF_ALLOWED', 'Format PDF uniquement');
     define('LABEL_CRITERIA', 'Critères');
@@ -134,7 +137,7 @@
     define('LABEL_HOW_MANY_FILES', 'Nombre de fichiers à remettre');
     define('LABEL_DELETE', 'Supprimer');
     define('LABEL_PROJECT_UPDATED', 'Projet mis à jour!');
-    
+
     //  form control
     define('LABEL_REQUIRED_NAME', 'Nom requis');
     define('LABEL_REQUIRED_DATE', 'Date de remise requise');
@@ -150,9 +153,9 @@
     define('LABEL_EVERY_CLASSES', 'Toutes les classes');
     define('LABEL_NO_AVAILABLE_RESULTS', 'Aucun résultat disponible.');
     define('LABEL_SUBMITTED_ON', 'Remis le: ');
-    define('LABEL_ASSESSMENT', 'Évaluation');    
+    define('LABEL_ASSESSMENT', 'Évaluation');
     define('LABEL_COMMENT', 'Commentaire');
-    
+
     define('LABEL_VOTE_00', 'Travail non remis');
     define('LABEL_VOTE_01', 'Travail non satisfaisant ');
     define('LABEL_VOTE_02', 'Travail non satisfaisant ');
@@ -180,5 +183,5 @@
     define('LABEL_USED', 'Utilisé');
     define('LABEL_FREE', 'Libre');
     define('LABEL_SENT_MAIL', 'Nous vous avons envoyé un courriel!');
-    
+
 ?>

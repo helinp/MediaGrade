@@ -16,7 +16,7 @@ Class System_model extends CI_Model
         $disk_space['total'] = format_bytes($disk_space['b_total']);
         $disk_space['used'] = format_bytes($disk_space['b_total'] - $disk_space['b_free']);
 
-        $disk_space['per_used'] =  (int) ($disk_space['b_free'] / $disk_space['b_total'] * 100);
+        $disk_space['per_used'] =   100 - (int) ($disk_space['b_free'] / $disk_space['b_total'] * 100);
 
         return $disk_space;
     }

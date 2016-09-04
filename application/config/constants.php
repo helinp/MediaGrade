@@ -3,6 +3,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
+|	User Constants
+|--------------------------------------------------------------------------
+*/
+define('END_OF_YEAR', '0630'); // School year ends on (mmdd)
+define('NO_REPLY_MAIL', 'NO-REPLY@yopmail.com'); // NO-REPLY email
+define('TIMEZONE', 'Europe/Brussels'); // Mail timezone (see https://secure.php.net/manual/fr/timezones.php)
+
+
+ /* YOU SHOULDN'T HAVE TO EDIT ANYTHING BELOW THIS LINE */
+
+ /*
+ |--------------------------------------------------------------------------
+ |	MediaGrade Constants
+ |--------------------------------------------------------------------------
+ */
+define('RELEASE_VERSION', '2.1-20160830');
+define('DEMO_VERSION', TRUE);
+define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
+
+// max size of uploaded files in octet TODO: see php.ini
+if (DEMO_VERSION) define('MAX_UPLOAD_FILE_SIZE', '715200');
+else define('MAX_UPLOAD_FILE_SIZE', '209715200');
+
+
+/*
+|--------------------------------------------------------------------------
 | Display Debug backtrace
 |--------------------------------------------------------------------------
 |
@@ -83,34 +109,3 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
-
-
-/*
- |
- |	MediaGrade Constants
- |
- */
-
-// Release version
-define('VERSION', '1.0-20160504-BETA');
-
-// is demo version?
-define('DEMO_VERSION', TRUE);
-
-// max size of uploaded files in octet TODO: see php.ini
-if (DEMO_VERSION)
-{
-    define('MAX_UPLOAD_FILE_SIZE', '715200');
-}
-else
-{
-    define('MAX_UPLOAD_FILE_SIZE', '209715200');
-}
-// allowed html tags
-define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
-
-// End of year on (ddmm)
-define('END_OF_YEAR', '3006');
-
-// MY API FILE TOKEN
-define('MY_API_FILM_TOKEN', '44bc7caf-f550-403b-94dd-03f84899fa5b');
