@@ -292,7 +292,8 @@ class Admin extends CI_Controller {
 		$this->load->model('ProjectsManager_model','',TRUE);
 		$this->load->model('Terms_model','',TRUE);
 		$this->load->model('Comments_model','',TRUE);
-
+                $this->load->model('FilesFormat_model','',TRUE);
+                
 		// TODO : control for empty fields
 
 		// POST
@@ -311,12 +312,6 @@ class Admin extends CI_Controller {
 		{
 			$post = $this->input->post();
 
-			// Save & upload (or not) PDF instructions
-			if(@$_FILES['instructions_pdf']['size'] > 0)
-				$post['instructions_pdf'] = $this->uploadPDF($post);
-			else
-				$post['instructions_pdf'] = FALSE;
-
 			// Create new project or Update project
 			if( $post['project_id'] == '-1')
 			{
@@ -327,6 +322,13 @@ class Admin extends CI_Controller {
 				$this->ProjectsManager_model->updateProject($post, $project_id);
 			}
 
+                        // Save & upload (or not) PDF instructions
+			if(@$_FILES['instructions_pdf']['size'] > 0)
+				$post['instructions_pdf'] = $this->uploadPDF($post);
+			else
+				$post['instructions_pdf'] = FALSE;
+
+                        
 			redirect('/admin/projects?school_year=' . get_school_year());
 		}
 
@@ -345,6 +347,7 @@ class Admin extends CI_Controller {
 		}
 
 		// Get data
+                $this->data['file_formats'] = $this->FilesFormat_model->getAllDistinctFormats();
 		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByAdmin(FALSE);
 		$this->data['skills'] = $this->Skills_model->getAllSkills();
 		$this->data['self_assessments'] = $this->Assessment_model->getAllSelfAssessments();
@@ -456,19 +459,34 @@ class Admin extends CI_Controller {
 
 	public function settings($action = FALSE)
 	{
+                $this->load->model('System_model','',TRUE);
+                $this->data['folder_perms'] = array('/assets/uploads' => $this->System_model->getFolderPerms('/assets/uploads/'));
+                
 		$this->load->model('Skills_model','',TRUE);
 		$this->load->model('Welcome_model','',TRUE);
 
 		// POST
 		if ($action === 'mail_test')
 		{
-			$this->Email_model->sendObjectMessageToEmail($this->input->post('subject'),
-																$this->input->post('body'),
-																$this->session->email);
+			$this->Email_model->sendObjectMessageToEmail(   $this->input->post('subject'),
+									$this->input->post('body'),
+									$this->session->email);
 
 			redirect('/admin/settings');
 		}
-		elseif ($action === 'welcome_message')
+
+		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
+                $this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
+
+		// GET
+		$this->load->template('admin/settings', $this->data);
+	}
+
+        public function welcome_message($action = FALSE)
+	{
+		$this->load->model('Welcome_model','',TRUE);
+
+		if ($action === 'update')
 		{
 			$this->Welcome_model->saveWelcomeMessage($this->input->post('welcome_message'));
 		}
@@ -476,8 +494,7 @@ class Admin extends CI_Controller {
 		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
 
 		// GET
-		$this->load->template('admin/settings', $this->data);
+		$this->load->template('admin/welcome_message', $this->data);
 	}
-
 
 }

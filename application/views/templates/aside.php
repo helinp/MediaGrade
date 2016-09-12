@@ -27,6 +27,7 @@
                   <li><a href="/admin/skills_groups"><?= _('GROUPES DE CPT') ?></a></li>
                   <li><a href="/admin/users"><?= _('ÉLÈVES') ?></a></li>
                   <li><a href="/admin/terms"><?= _('PÉRIODES') ?></a></li>
+                  <li><a href="/admin/welcome_message"><?= _('ACCUEIL') ?></a></li>
             </ul>
         </li>
         <li<?= ( $this->uri->segment(2) === 'settings'  ? ' class="active"' : '') ?>><a href="/admin/settings"><span  class="glyphicon glyphicon-wrench"></span> <?= _('SYSTÉME') ?></a></li>

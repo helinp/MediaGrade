@@ -20,4 +20,10 @@ Class System_model extends CI_Model
 
         return $disk_space;
     }
+    
+    public function getFolderPerms($path)
+    {
+        $perms = substr(sprintf('%o', fileperms($_SERVER["DOCUMENT_ROOT"] . $path)), -4);
+        return $perms;
+    }
 }

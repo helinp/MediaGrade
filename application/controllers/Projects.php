@@ -218,6 +218,7 @@ class Projects extends CI_Controller {
 
 					if (isset($error['error']))
 					{
+                                                dump($this->upload->data());
 						show_error($error['error']);
 					}
 

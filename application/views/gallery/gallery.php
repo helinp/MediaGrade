@@ -47,7 +47,7 @@
             <?php endif ?>
 
             <div class="col-lg-3 col-md-4 col-xs-12 text-center" style = "margin-bottom:1em">
-                <?php if ($media->extension === 'mp4' || $media->extension ===  'mov' || $media->extension === 'avi'):?>
+                <?php if ($media->extension === 'mp4' || $media->extension ===  'mov' || $media->extension === 'avi' || $media->extension === 'mp3' || $media->extension === 'wav'):?>
                     <div class="thumbnail" style="margin-bottom:0px">
                         <div class="embed-responsive embed-responsive-16by9 " >
                             <video class="embed-responsive-item thumbnail-180" preload="metadata" controls>

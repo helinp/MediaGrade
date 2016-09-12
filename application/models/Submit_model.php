@@ -115,8 +115,8 @@ Class Submit_model extends CI_Model
     public function getSubmittedByUserIdAndProjectId($user_id, $project_id)
     {
         // format data language in french TODO set a config file
-		$sql = "SET lc_time_names = 'fr_FR'";
-		$this->db->query($sql);
+        $sql = "SET lc_time_names = 'fr_FR'";
+	$this->db->query($sql);
 
         $sql = "SELECT file_name, file_path, answers, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
                     CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail
@@ -133,6 +133,7 @@ Class Submit_model extends CI_Model
 
             // $this->load->library('upload', $config);
             $this->upload->initialize($config);
+            
             if ( ! $this->upload->do_upload($field_name))
             {
                     $error = array('error' => $this->upload->display_errors());
@@ -185,7 +186,7 @@ Class Submit_model extends CI_Model
         $config['overwrite']            = TRUE;
         $config['file_ext_tolower']      = TRUE;
         $config['upload_path']          = './assets/' . $this->generateProjectFilePath($project_id);
-        $config['allowed_types']        = $this->generateAllowedFileType($project_id);;
+        $config['allowed_types']        = $this->generateAllowedFileType($project_id);
 
         return($config);
     }
@@ -204,7 +205,7 @@ Class Submit_model extends CI_Model
         $upload_dir = 'uploads/' . get_school_year() . '/' . $project_data->class . '/' . strtolower($project_data->term) . '/' . $sanitized_project_name . '/';
 
         // create dir if doesn't exist
-        if (!is_dir('assets/' . $upload_dir)) mkdir('assets/' . $upload_dir, 0777, TRUE);
+        if ( ! is_dir('assets/' . $upload_dir)) mkdir('assets/' . $upload_dir, 0777, TRUE);
 
         return $upload_dir;
     }

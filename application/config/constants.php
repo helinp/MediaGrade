@@ -18,7 +18,7 @@ define('TIMEZONE', 'Europe/Brussels'); // Mail timezone (see https://secure.php.
  |	MediaGrade Constants
  |--------------------------------------------------------------------------
  */
-define('RELEASE_VERSION', '2.1-20160830');
+define('RELEASE_VERSION', '2.1-20160912');
 define('DEMO_VERSION', TRUE);
 define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
 

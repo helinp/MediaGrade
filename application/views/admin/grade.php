@@ -20,7 +20,7 @@
         <div class="col-md-<?= $cols ?>"  style="padding-bottom: 1em;">
 
             <?php if (isset($submitted[$count]->file_path)): ?>
-                <?php if ($submitted[$count]->extension == 'mp4' || $submitted[$count]->extension == 'mov' || $submitted[$count]->extension == 'avi'): ?>
+                <?php if ($submitted[$count]->extension == 'mp4' || $submitted[$count]->extension == 'mov' || $submitted[$count]->extension == 'avi'  || $submitted[$count]->extension == 'wav' || $submitted[$count]->extension == 'mp3'): ?>
                     <video width="50%" controls preload = "auto">
                         <source src="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" type="video/mp4">
                             <p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $submitted[$count]->file_path .  $submitted[$count]->file_name?>"><?= LABEL_HERE ?></a></p>

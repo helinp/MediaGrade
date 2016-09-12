@@ -21,14 +21,42 @@
 
             <input type="submit" class="btn btn-primary" name="send_mail_test" value="<?= _("Tester l'envoi de mail") ?>" />
         </form>
-        <h3><?= _("Message d'accueil") ?></h3>
-        <form action="/admin/settings/welcome_message" method="post" id="form">
-            <textarea name="welcome_message" class="form-control" rows="12"><?= $welcome_message ?></textarea>
-            <p class="help-block">HTML tags: <code style="color:gray;"><?= htmlspecialchars(ALLOWED_HTML_TAGS) ?></code> <br />Custom: <code style="color:gray;">%user_name% %user_lastname%</code></p>
-            <button type="submit" class="btn btn-primary">
-            <?= _('Valider') ?></button>
-        </form>
 
+        <h3><?= _('Écriture des dossiers') ?></h3>
+        <div class="col-xs-6">
+            
+            <table class="table">
+                <?php $not_writable = FALSE; ?>
+                <?php foreach ($folder_perms as $folder => $perm): ?>
+                <?php if($perm != '0777') {$not_writable = TRUE;} ?>
+                <tr>
+                    <td><?= $folder ?></td>
+                    <td><?= $perm ?></td>
+                    <td><span class="glyphicon <?= ($not_writable === FALSE ? 'glyphicon-ok text-success' : 'glyphicon-remove text-danger') ?> "<?= $perm ?></td>
+                </tr>
+                <?php endforeach ?>
+            </table>
+        </div>
+        <?php if($not_writable === TRUE): ?>
+            <div class="alert alert-danger" role="alert"><?= _('Remise des projets impossible, veuillez régler les permissions des dossiers sur 0777.') ?></div>
+        <?php endif ?>
+            
+        <h3><?= _('Espace disque') ?></h3>   
+        <div class="col-xs-6">
+            
+            <table class="table">
+                <tr>
+                    <td><?= _('Libre')?>:</td>
+                    <td><?= $disk_space['free'] ?></td>
+                </tr>
+                <tr>
+                    <td><?= _('Utilisé')?>:</td>
+                    <td><?= $disk_space['used'] ?></td>
+                </tr>
+                    <td><?= _('Total')?>:</td>
+                    <td><?= $disk_space['total'] ?></td>
+                </tr>
+            </table>
 </div>
 
     <script src="/assets/js/tinymce/tinymce.min.js"></script>
