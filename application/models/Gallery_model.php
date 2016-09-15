@@ -15,6 +15,11 @@ Class Gallery_model extends CI_Model
 		$this->db->join('users', 'users.id = user_id', 'left');
 		$this->db->join('projects', 'projects.id = submitted.project_id', 'left');
 
+                foreach ($wheres as $where => $criteria)
+		{
+			if($criteria) $this->db->where($where, $criteria);
+		}
+                
 		$this->db->where("file_name <> ''", NULL, FALSE);
                 
                 $this->db->where("extension", "jpg");
@@ -25,11 +30,6 @@ Class Gallery_model extends CI_Model
                 
 		$this->db->limit($limit);
 		$this->db->offset($offset);
-
-		foreach ($wheres as $where => $criteria)
-		{
-			if($criteria) $this->db->where($where, $criteria);
-		}
 
 		$this->db->order_by('project_id', 'DESC');
 		$this->db->order_by('name', 'ASC');
