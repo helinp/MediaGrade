@@ -2,13 +2,8 @@
 Class FilesFormat_model extends CI_Model
 {
 
-	public function __construct()
-	{
-	}
-        
-        /**
+ 	/**
 	 * Returns all distincts authorized file formats
-	 *
 	 *
 	 * @return	object
 	 */
@@ -16,9 +11,10 @@ Class FilesFormat_model extends CI_Model
         {
             $this->db->distinct();
             $this->db->select('extension');
-	    $this->db->order_by('extension', 'ASC');
+	    	$this->db->order_by('extension', 'ASC');
+			
             return $this->db->get('files_format')->result();
         }
- 
-        
+
+
 }

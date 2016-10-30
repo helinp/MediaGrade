@@ -32,16 +32,21 @@ class Login extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
 
         if($this->form_validation->run() == FALSE)
-        redirect('login', 'refresh');
-
+		{
+        	redirect('login', 'refresh');
+		}
         elseif($this->Users_model->login($this->input->post('username'), $this->input->post('password')))
         {
             // user routing
             if($this->session->role === 'admin')
-            redirect('admin', 'refresh');
-            else
-            redirect('projects', 'refresh');
-        }
+			{
+            	redirect('admin', 'refresh');
+			}
+			else
+			{
+				redirect('projects', 'refresh');
+			}
+		}
     }
 
 }

@@ -1,9 +1,15 @@
 <?php
 Class Users_model extends CI_Model
 {
+
+	/**
+	 * Set session with user data
+	 *
+	 * @todo checkUserPassword and setSession should be in controller flow
+	 * @return	boolean
+	 */
     public function login($username, $password)
     {
-
         if($this->checkUserPassword($username, $password))
         {
             $this->db->select('id, name, last_name, username, email, class, role');
@@ -13,14 +19,19 @@ Class Users_model extends CI_Model
             $result = $this->db->get('users')->row();
             $this->setSession($result);
 
-            return true;
+            return TRUE;
         }
         else
         {
-            return false;
+            return FALSE;
         }
     }
 
+	/**
+	 * Update session data
+	 *
+	 * @return	void
+	 */
     public function updateSession()
     {
         $this->db->select('name, last_name, username, email, class, role');
@@ -29,10 +40,16 @@ Class Users_model extends CI_Model
 
         $result = $this->db->get('users')->row();
         $this->setSession($result);
-
-
     }
 
+	/**
+	 * Compare a given password hash with user's hash in database
+	 *
+	 * @param	string	$username
+	 * @param 	string	$password
+	 * @param 	string	$col = 'username'
+	 * @return	boolean
+	 */
     protected function checkUserPassword($username, $password, $col = 'username')
     {
         $this->db->select('password, username');
@@ -44,6 +61,12 @@ Class Users_model extends CI_Model
         return(password_verify($password, $result->password));
     }
 
+	/**
+	 * Returns user email from id
+	 *
+	 * @param	integer	$user_id
+	 * @return	mixed
+	 */
     public function getEmailFromUserId($user_id)
     {
         $this->db->select('email');
@@ -55,50 +78,64 @@ Class Users_model extends CI_Model
         return FALSE;
     }
 
+	/**
+	 * Set session from given data
+	 *
+	 * @param	array	$data
+	 * @return	void
+	 */
     private function setSession($data)
     {
-        $user_data = array();
-
         foreach($data as $key => $row)
         {
             $this->session->set_userdata($key, $row);
         }
-        $this->session->set_userdata('logged_in', true);
+        $this->session->set_userdata('logged_in', TRUE);
         $avatar = $this->getUserAvatar();
         $this->session->set_userdata('avatar', $avatar);
 
         $this->session->unset_userdata('password');
     }
 
-    public function getUserInformations($user_id = false)
+	/**
+	 * Returns user data from DB
+	 *
+	 * @param	integer 	$user_id = $this->session->id;
+	 * @return	object
+	 */
+    public function getUserInformations($user_id = FALSE)
     {
+        if ( ! $user_id) $user_id = $this->session->id;
 
-        if (!$user_id) $user_id = $this->session->id;
+		$query = $this->db->get_where('users', array('id' => $user_id), 1);
 
-        $sql = "SELECT * FROM users WHERE id = ? LIMIT 1";
-
-        $query = $this->db->query($sql, array($user_id));
-
-        $result = $query->row();
-
-        return $result;
+        return $query->row();;
     }
 
-    public function getUserAvatar($user_id = false)
+	/**
+	 * Returns user avatar path from DB
+	 *
+	 * @param	integer 	$user_id = $this->session->id;
+	 * @return	object
+	 */
+    public function getUserAvatar($user_id = FALSE)
     {
-
         if (!$user_id) $user_id = $this->session->id;
 
-        $sql = "SELECT data FROM users_config WHERE type = 'avatar' AND user_id = ? LIMIT 1";
-
-        $query = $this->db->query($sql, array($user_id));
-
+		$this->db->select('data');
+		$query = $this->db->get_where('users_config', array('type' => 'avatar', 'id' => $user_id), 1);
         $result = $query->row('data');
 
         return $result;
     }
 
-    // TODO; Move to own model
+	/**
+	 * Returns user peferences from DB
+	 *
+	 * @param	string 		$type
+	 * @param	integer 	$user_id = $this->session->id;
+	 * @return	array
+	 */
     public function getUserPreferences($type, $user_id = FALSE)
     {
         if ( ! $user_id) $user_id = $this->session->id;
@@ -113,19 +150,35 @@ Class Users_model extends CI_Model
         return unserialize($result->data);
     }
 
+	/**
+	 * Redirects user to login page if not logged in
+	 *
+	 * @return	void
+	 */
     public function loginCheck()
     {
         if ( ! $this->session->logged_in) redirect('login');
     }
 
+	/**
+	 * Redirects user to main page if not admin
+	 *
+	 * @return	void
+	 */
     public function adminCheck()
     {
         if ($this->session->role != 'admin') redirect('/');
     }
 
+	/**
+	 * Returns all user
+	 *
+	 * @param 	string	$role = 'student',
+	 * @param	string	$class = FALSE
+	 * @return	object
+	 */
     public function getAllUsersByClass($role = 'student', $class = FALSE)
     {
-
         // Query
         $this->db->select('id, username, role, name, last_name, class, email');
         $this->db->where('role', $role);

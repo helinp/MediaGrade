@@ -1,12 +1,14 @@
 <?php
 Class Terms_model extends CI_Model
 {
+
+	/**
+	 * Returns all terms from table terms
+	 *
+	 * @return	array
+	 */
 	public function getAllTerms()
 	{
-		/*$this->db->where('type', 'terms');
-		$row = $this->db->get('config', 1);
-
-		return explode(',', $row->row('content'));*/
 		$this->db->select('name');
 		$this->db->order_by('id');
 		$q = $this->db->get('terms');
@@ -18,25 +20,40 @@ Class Terms_model extends CI_Model
 		}
 
 		return $array;
-
 	}
 
+	/**
+	 * Add term, if not already exists, in database
+	 *
+	 * @param 	string		$term
+	 * @return	boolean
+	 */
 	public function addTerm($term)
 	{
 		// checks if record exists
 		$this->db->where('name', $term);
 		$this->db->limit(1);
-
 		$q = $this->db->get('terms');
 
-		if ($q->num_rows()) return FALSE;
-
-		//insert data
-		$this->db->insert('terms', array('name' => $term));
-
-		return TRUE;
+		// if so do nothing
+		if ($q->num_rows())
+		{
+			return FALSE;
+		}
+		// else insert data
+		else
+		{
+			$this->db->insert('terms', array('name' => $term));
+			return TRUE;
+		}
 	}
 
+	/**
+	 * Removes term from database
+	 *
+	 * @param 	string		$term
+	 * @return	void
+	 */
 	public function deleteTerm($term)
 	{
 		$this->db->where('name', $term);

@@ -73,6 +73,12 @@ Previews:
 
 ## CHANGE LOG
 
+**2016-10-30**
+- Added models doc
+- PDF library is now correctly integrated
+- Upload folders are now created with 755 permissions
+- Some style correction
+
 **2016-08-26**
 - Improved UX
 - Multi-Admin

@@ -18,13 +18,38 @@ class Pdf_project extends CI_Controller {
 
 	/*
 	 *  Generates PDF from project's results
+	 *  @todo Use model method to avoid repetition
 	 *
 	 */
-    function index()
-    {
-		$projects_id = $this->input->post('project_id');
-		$term = $this->input->post('term');
+	public function index()
+	{
+		// creates new PDF object
+        $pdf = new Pdf();
+		$this->Pdf_assessment_model->setDefaultConfig($pdf);
+        $pdf->SetAuthor($this->session->name . ' ' . $this->session->last_name);
+        $pdf->SetTitle(_('Fiche d\'évaluation'));
 
+		// adds a page for each student
+		$data = $this->prepareAssessmentRecords($this->input->post('project_id'), $this->input->post('term'));
+		foreach ($data as $student)
+		{
+			$pdf->AddPage();
+			$html = $this->Pdf_assessment_model->processAssessmentsRecordHtml($student);
+			$pdf->writeHTML($html, false, false, false, false, '');
+		}
+
+		//Closes and opens a PDF file in new tab (arg 'I' in Output method)
+		$this->load->helper('school');
+		$filename = sanitize_name(get_school_year() . '_' .  $data[0]['term'] . '_' . $data[0]['class'] . '_' . $data[0]['project_name']);
+		$pdf->Output($filename . '.pdf', 'I');
+    }
+
+	/*
+	 *  Returns assessment data from project and term for PDF generation
+	 *
+	 */
+	private function prepareAssessmentRecords($projects_id, $term)
+	{
 		foreach ($projects_id as $project_id)
 		{
 			$project = $this->Projects_model->getProjectDataByProjectId($project_id);
@@ -34,14 +59,14 @@ class Pdf_project extends CI_Controller {
 
 			foreach ($students as $student)
 			{
-				$submitted = $this->Submit_model->getSubmittedByUserIdAndProjectId($student->id, $project_id);
+				$submitted = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($student->id, $project_id);
 
 				$submitted_time = (isset($submitted[0]->time) ? $submitted[0]->time : '');
 				$submitted_thumbnail = (isset($submitted[0]->thumbnail) ? $submitted[0]->thumbnail : '');
 
 				$totals = $this->Results_model->getUserProjectOverallResult($student->id, $project_id);
 
-				if ( ! empty($totals))
+				if ( ! empty($totals->total_user))
 				{
 					$total_user = $totals->total_user;
 					$total_max = $totals->total_max;
@@ -70,8 +95,6 @@ class Pdf_project extends CI_Controller {
 				);
 			}
 		}
-
-		require_once(APPPATH.'libraries/pdf/pdf_assessment.php');
-		$this->Pdf_assessment_model->get_assessment_pdf($data);
-    }
+		return $data;
+	}
 }

@@ -21,9 +21,13 @@ class Projects extends CI_Controller {
 		$this->load->helper('graph');
 
 		if( ! empty($this->input->get('school_year')))
+		{
 			$this->school_year = $this->input->get('school_year');
+		}
 		else
+		{
 			$this->school_year = get_school_year();
+		}
 
 		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($this->session->class, $this->school_year);
 		$this->data['projects'] = $this->projects;
@@ -41,7 +45,7 @@ class Projects extends CI_Controller {
 		foreach ($this->data['projects'] as $project)
 		{
 			if ( ! $this->Submit_model->boolIfSubmittedByUserAndProjectId(FALSE, $project->project_id))
-			$not_submitted_projects[] = $project;
+				$not_submitted_projects[] = $project;
 		}
 
 		$this->data['not_submitted'] = $not_submitted_projects;
@@ -70,14 +74,12 @@ class Projects extends CI_Controller {
 		$this->data['title'] = ucfirst('projets'); // Capitalize the first letter
 		$this->data['content'] = $this->Welcome_model->getWelcomeMessage();
 
-
 		$this->load->template('student/dashboard', $this->data);
 	}
 
 
 	public function overview()
 	{
-
 		foreach($this->projects as $key => $project)
 		{
 			$this->projects[$key]->result = $this->Results_model->getUserProjectOverallResult(FALSE, $project->project_id);
@@ -87,7 +89,6 @@ class Projects extends CI_Controller {
 
 		$this->load->helper('deadline');
 		$this->load->template('student/overview', $this->data);
-
 	}
 
 	public function instructions($project_id)
@@ -117,7 +118,7 @@ class Projects extends CI_Controller {
 		}
 		$this->load->helper('format_bytes');
 		$this->data['submit'] = $this->Submit_model->getSubmitInformations($project_id);
-		$this->data['submitted'] = $this->Submit_model->getSubmittedInformations($project_id);
+		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id);
 		$this->data['self_assessment'] = $this->Submit_model->getSelfAssessmentByProjectId($project_id, true);
 		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
 
@@ -134,7 +135,7 @@ class Projects extends CI_Controller {
 		$this->load->model('Comments_model','',TRUE);
 
 		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
-		$this->data['submitted'] = $this->Submit_model->getSubmittedInformations($project_id);
+		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id);
 		$this->data['comments'] = $this->Comments_model->getCommentsByProjectIdAndUserId($project_id);
 		$this->data['results'] = $this->Results_model->getResultsByProjectAndUser($project_id);
 
@@ -142,7 +143,6 @@ class Projects extends CI_Controller {
 
 	}
 
-	/** TODO: REMOVE FUNCTION AND VIEW BECAUSE OBSOLETE**/
 
 	public function result_details($project_id)
 	{
@@ -179,7 +179,7 @@ class Projects extends CI_Controller {
 
 		$number_of_files = count($_FILES);
 		$number_of_files_requested = $this->Submit_model->getSubmitInformations($project_id)->number_of_files;
-		$ext = $this->Submit_model->generateAllowedFileType($project_id);
+		$ext = $this->Submit_model->getAllowedSubmittedFileType($project_id);
 		$answers = '';
 
 		if ($number_of_files != $number_of_files_requested && !empty($ext))
@@ -212,13 +212,12 @@ class Projects extends CI_Controller {
 				if( ! empty($ext))
 				{
 					// load config
-					$config = $this->Submit_model->getSubmitConfig($project_id, $i + 1);
+					$config = $this->Submit_model->getProjectSubmitConfig($project_id, $i + 1);
 					$error = $this->Submit_model->do_upload($config, 'submitted_file_' . $i);
 					$file_name = $this->upload->data('file_name');
 
 					if (isset($error['error']))
 					{
-                                                dump($this->upload->data());
 						show_error($error['error']);
 					}
 
@@ -233,7 +232,6 @@ class Projects extends CI_Controller {
 
 				// update database
 				$this->Submit_model->submitProject($project_id, $file_name, $answers);
-
 			}
 		}
 		// Send email second preferences

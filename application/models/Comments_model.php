@@ -2,16 +2,38 @@
 Class Comments_model extends CI_Model
 {
 
+	/**
+	 * @var int
+	 */
 	public $user_id;
+
+	/**
+	 * @var int
+	 */
 	public $project_id;
+
+	/**
+	 * @var string
+	 */
 	public $comment = '';
 
+	/**
+	 * Returns teacher comment of an user's submitted project
+	 *
+	 * @param integer $project_id
+	 * @param integer $user_id
+	 * @return object
+	 */
 	public function getCommentsByProjectIdAndUserId($project_id, $user_id = false)
 	{
 		if ( ! $project_id)
+		{
 			return FALSE;
+		}
 		elseif ( ! $user_id)
+		{
 			$user_id = $this->session->id;
+		}
 
 		$this->db->select('comment');
 		$this->db->from('comments');
@@ -21,13 +43,19 @@ Class Comments_model extends CI_Model
 
 		$result = $this->db->get()->row();
 
-		if(empty($result))
-			return new Comments_model;
-		else
-			return $result;
+		if(empty($result)) return new Comments_model;
+
+		return $result;
 	}
 
-
+	/**
+	 * Saves comment in DB for a determined user submitted project
+	 *
+	 * @param integer $project_id
+	 * @param integer $user_id
+	 * @param string $comment
+	 * @return boolean
+	 */
 	public function comment($project_id, $user_id, $comment = NULL)
 	{
 		// Do not record empty comment
@@ -54,16 +82,13 @@ Class Comments_model extends CI_Model
 			$this->db->where($where);
 			$this->db->update('comments', $data);
 		}
-		// else insert
 		else
 		{
 			$this->db->insert('comments', $data);
 		}
 
-		// todo RETURN COMMENT ID
 		return TRUE;
 	}
-
 }
 
 

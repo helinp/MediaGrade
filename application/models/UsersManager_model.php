@@ -3,20 +3,23 @@ Class UsersManager_model extends Users_model
 {
 
     /**
-     *
+     * Changes user password
+	 *
      * @param $user_id = $this->session->id
      * @param $current_password
      * @param $new_password
      * @param $new_password_confirmation
-     *
+	 *
+	 * @return boolean
      */
-    public function changePassword($user_id = false, $current_password, $new_password, $new_password_confirmation)
+    public function changePassword($user_id = FALSE, $current_password, $new_password, $new_password_confirmation)
     {
         if ( ! $user_id) $user_id = $this->session->id;
 
         // check new password
         if($new_password !== $new_password_confirmation)
             show_error(_('Les mots de passe ne correspondent pas'));
+
         if( ! empty($errors = $this->checkPasswordStrenght($new_password)))
             show_error($errors);
 
@@ -25,7 +28,6 @@ Class UsersManager_model extends Users_model
         if( ! $check) show_error(_('Le mot de passe n\'est pas valide'));
 
         $hash = password_hash($new_password, PASSWORD_DEFAULT);
-        //crypt($new_password, $user_id);
 
         $data = array(
                 'password' => $hash
@@ -33,12 +35,17 @@ Class UsersManager_model extends Users_model
         $this->db->where('id', $user_id);
         $this->db->update('users', $data);
 
-        return true;
+        return TRUE;
     }
 
+	/**
+	 * Returns strenght of a given password
+	 *
+	 * @param 	string	$pwd
+	 * @return	string
+	 */
     public function checkPasswordStrenght($pwd)
     {
-
         $errors = NULL;
 
         if (strlen($pwd) < 8)
@@ -62,13 +69,22 @@ Class UsersManager_model extends Users_model
         }
 
         if( ! $errors) return NULL;
-        return _('Le mot de passe doit comporter') . ' ' . $this->str_replace_last(rtrim($errors, ', '), ', ', ' ' . _('et') . ' ') . ' .';
+        return _('Le mot de passe doit comporter') . ' ' . $this->_strReplaceLast(rtrim($errors, ', '), ', ', ' ' . _('et') . ' ') . ' .';
     }
 
 
+	/**
+	 * Replace last found needle by a given string
+	 *
+	 * @param 	string	$str
+	 * @param 	string	$search
+	 * @param 	string	$replace
+	 *
+	 * @return	string
+	 */
     private function str_replace_last($str, $search, $replace)
     {
-        if(($pos = strrpos($str, $search)) !== false)
+        if(($pos = strrpos($str, $search)) !== FALSE)
         {
             $search_length = strlen($search);
             $str = substr_replace($str, $replace, $pos, $search_length);
@@ -77,7 +93,13 @@ Class UsersManager_model extends Users_model
     }
 
 
-
+	/**
+	 * Add user in DB
+	 *
+	 * @param 	array	$data
+	 *
+	 * @return	boolean
+	 */
     public function addUser($data = array())
     {
         // checks if record already exists in DB
@@ -89,7 +111,7 @@ Class UsersManager_model extends Users_model
         $this->db->limit(1);
         $q = $this->db->get('users');
 
-        // if true, returns error
+        // if TRUE, returns error
         if ($q->num_rows() > 0)
         {
             return FALSE;
@@ -103,10 +125,16 @@ Class UsersManager_model extends Users_model
             // insert in DB
             $this->db->insert('users', $data);
         }
-
         return TRUE;
     }
 
+	/**
+	 * Update user data in DB
+	 *
+	 * @param 	array	$data
+	 *
+	 * @return	boolean
+	 */
     public function updateUser($data = array())
     {
         // checks if record already exists in DB
@@ -118,7 +146,7 @@ Class UsersManager_model extends Users_model
         $this->db->limit(1);
         $q = $this->db->get('users');
 
-        // if true, returns error
+        // if TRUE, returns error
         if ($q->num_rows() == 0)
         {
             return FALSE;
@@ -126,7 +154,6 @@ Class UsersManager_model extends Users_model
         // else update
         else
         {
-
             // unset empty fields
             $data = array_filter($data);
 
@@ -137,7 +164,6 @@ Class UsersManager_model extends Users_model
             $this->db->where($where);
             $this->db->update('users', $data);
         }
-
         return TRUE;
     }
 
@@ -150,10 +176,17 @@ Class UsersManager_model extends Users_model
         return TRUE;
     }
 
-
-    public function changeEmail($user_id = false, $email)
+	/**
+	 * Update user email in DB
+	 *
+	 * @param 	integer		$user_id = $this->session->id
+	 * @param 	string		$email
+	 *
+	 * @return	void
+	 */
+    public function changeEmail($user_id = FALSE, $email)
     {
-        if (!$user_id) $user_id = $this->session->id;
+        if ( ! $user_id) $user_id = $this->session->id;
 
         $data = array(
                 'id' => $user_id,
@@ -163,13 +196,21 @@ Class UsersManager_model extends Users_model
         $this->db->update('users', $data);
     }
 
-    public function changeEmailPreferences($user_id = false, $preferences = array())
+	/**
+	 * Update/add user email preferences in DB
+	 *
+	 * @param 	integer		$user_id = $this->session->id
+	 * @param 	array		$preferences
+	 *
+	 * @return	void
+	 */
+    public function changeEmailPreferences($user_id = FALSE, $preferences = array())
     {
-        if (!$user_id) $user_id = $this->session->id;
+        if ( ! $user_id) $user_id = $this->session->id;
 
         // process non checked inputs
-        if(!isset($preferences['submit_confirmation'])) $preferences['submit_confirmation'] = false;
-        if(!isset($preferences['assessment_confirmation'])) $preferences['assessment_confirmation'] = false;
+        if(!isset($preferences['submit_confirmation'])) $preferences['submit_confirmation'] = FALSE;
+        if(!isset($preferences['assessment_confirmation'])) $preferences['assessment_confirmation'] = FALSE;
 
         unset($preferences['change_mail_preferences']);
 
@@ -189,7 +230,7 @@ Class UsersManager_model extends Users_model
         // checks if reocrd exists
         $q = $this->db->get_where('users_config', $where, 1);
 
-        // if true, update
+        // if TRUE, update
         if ($q->num_rows() > 0)
         {
             $this->db->where($where);
@@ -203,10 +244,19 @@ Class UsersManager_model extends Users_model
 
     }
 
-    // TODO replace by generic function saveUserConfig($user_id, $data, $data_type) + change table name
+	/**
+	 * Update/add user's avatar path in DB
+	 *
+	 * @param 	integer		$user_id = $this->session->id
+	 * @param 	string		$file_path
+	 *
+	 * @todo replace by generic function saveUserConfig($user_id, $data, $data_type) + change table name
+	 *
+	 * @return	void
+	 */
     public function saveAvatar($user_id, $file_path)
     {
-        if (!$user_id) $user_id = $this->session->id;
+        if ( ! $user_id) $user_id = $this->session->id;
 
         // prepare array
         $data = array(
@@ -223,7 +273,7 @@ Class UsersManager_model extends Users_model
         $this->db->where($where);
         $q = $this->db->get_where('users_config', array('user_id' => $user_id), 1);
 
-        // if true, update
+        // if TRUE, update
         if ($q->num_rows() > 0)
         {
             $this->db->where($where);
@@ -234,7 +284,6 @@ Class UsersManager_model extends Users_model
         {
             $this->db->insert('users_config', $data);
         }
-
     }
 }
 ?>

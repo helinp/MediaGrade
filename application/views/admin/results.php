@@ -49,7 +49,7 @@
                         <th><small><?= _('Groupe de cpt')?></small></th>
                         <?php foreach ($table_header as $row): ?>
                             <?php foreach ($row['skills_groups'] as $skill_group): ?>
-                                <th><?= substr($skill_group['skills_group'], 0, 1)?></th>
+                                <th><?= substr($skill_group->skills_group, 0, 1)?></th>
                             <?php endforeach ?>
                         <?php endforeach ?>
                         <th></th>
@@ -59,7 +59,7 @@
 
                         <?php foreach ($table_header as $row): ?>
                             <?php foreach ($row['skills_groups'] as $skill_group): ?>
-                                <th><small><?= $skill_group['max_vote']?></small></th>
+                                <th><small><?= $skill_group->max_vote?></small></th>
                             <?php endforeach ?>
                         <?php endforeach ?>
 

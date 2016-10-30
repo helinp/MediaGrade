@@ -6,10 +6,9 @@ class Typeahead extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('Users_model','',TRUE);
-        //$this->Users_model->loginCheck();
-        //$this->Users_model->adminCheck();
+        $this->Users_model->loginCheck();
+        $this->Users_model->adminCheck();
     }
-
 
     /*
      * TypeaHead JSON Data provider

@@ -2,35 +2,101 @@
 Class Projects_model extends CI_Model
 {
 
+	/**
+	 * @var int
+	 */
 	var $id;
+
+	/**
+	 * @var string
+	 */
 	var $term;
+
+	/**
+	 * @var string
+	 */
 	var $instructions_pdf;
+
+	/**
+	 * @var string
+	 */
 	var $instructions_txt;
+
+	/**
+	 * @var date
+	 */
 	var $deadline;
+
+	/**
+	 * @var string
+	 */
 	var $project_name;
+
+	/**
+	 * @var string
+	 */
 	var $class;
+
+	/**
+	 * @var string (concatened integers)
+	 */
 	var $self_assessment_ids;
+
+	/**
+	 * @var string
+	 */
 	var $assessment_type;
+
+	/**
+	 * @var string (concatened integers)
+	 */
 	var $skill_ids;
+
+	/**
+	 * @var string
+	 */
 	var $extension;
+
+	/**
+	 * @var integer
+	 */
 	var $number_of_files;
+
+	/**
+	 * @var boolean
+	 */
 	var $is_activated;
+
+	/**
+	 * @var string
+	 */
 	var $school_year;
 
+	/**
+	 *  Construct method
+	 *
+	 */
 	function __construct()
 	{
 		$this->load->helper('school');
 		$this->school_year = get_school_year();
 
 		if($this->input->get('school_year'))
+		{
 			$this->school_year = $this->input->get('school_year');
+		}
 	}
 
 
-	/* WORK IN PROGRESS  */
+	/**
+	 *  Magic call function getAllActiveProjects..By..And()
+	 *
+	 * @param 	string	$method
+	 * @param 	mixed[]	$args
+	 * @return	object
+	 */
 	public function __call($method, $args)
 	{
-
 		if(strpos($method, 'getAllActiveProjects') === FALSE) exit;
 
 		// if only one WHERE in function name
@@ -38,7 +104,7 @@ Class Projects_model extends CI_Model
 		{
 			$wheres = explode('By', $method);
 
-			// removes first key
+			// removes first key (getAllActiveProjects)
 			array_shift($wheres);
 		}
 		else
@@ -58,6 +124,7 @@ Class Projects_model extends CI_Model
 		$this->db->select("projects.id as project_id,
 			project_name,
 			school_year,
+			class,
 			term,
 			instructions_txt,
 			deadline as raw_deadline,
@@ -66,7 +133,9 @@ Class Projects_model extends CI_Model
 		$this->db->where('is_activated', TRUE);
 
 		if($this->session->role === 'admin')
+		{
 			$this->db->where('admin_id', $this->session->id);
+		}
 
 		for($i = 0, $count = count($wheres) - 1 ; $i <= $count ; $i++)
 		{
@@ -79,18 +148,24 @@ Class Projects_model extends CI_Model
 		}
 
 		$this->db->order_by('class', 'DESC');
-		$this->db->order_by('deadline', 'ASC');
 		$this->db->order_by('term', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
 
 		return $this->db->get('projects')->result();
 	}
 
 
-
-
+	/**
+	 *  Gets active projects from given class, term and school year
+	 *
+	 * @param 	string	$class = FALSE
+	 * @param 	string	$term = FALSE
+	 * @param 	string	$school_year
+	 * @return	object
+	 */
 	public function getAllActiveProjectsByClassAndTermAndSchoolYear($class = FALSE, $term = FALSE, $school_year)
 	{
-		if (!$class) $class = $this->session->class;
+		if ( ! $class) $class = $this->session->class;
 
 		$this->db->distinct();
 		$this->db->select('projects.id as project_id, project_name, term, deadline, instructions_txt', FALSE);
@@ -110,10 +185,11 @@ Class Projects_model extends CI_Model
 
 
 	/**
-	*
-	*	return array
-	*
-	*/
+	 *  Gets instructions of a given projects
+	 *
+	 * @param 	integer	$project_id
+	 * @return	object
+	 */
 	public function getInstructionsByProjectId($project_id)
 	{
 		if( ! $project_id) return FALSE;
@@ -128,14 +204,15 @@ Class Projects_model extends CI_Model
 	}
 
 	/**
-	*
-	*	return bool
-	*
-	*/
-	public function checkProjectId($project_id, $class = false)
+	 *  Gets teacher's projects
+	 *
+	 * @param 	boolean	$project_id
+	 * @param 	boolean	$class = FALSE
+	 * @return	boolean
+	 */
+	public function checkProjectId($project_id, $class = FALSE)
 	{
-		if( ! $project_id) return FALSE;
-		if(!$class) $class = $this->session->class;
+		if( ! $class) $class = $this->session->class;
 
 		$sql = "SELECT id FROM projects WHERE id = ? AND class = ? LIMIT 1";
 		$query = $this->db->query($sql, array($project_id, $class));
@@ -146,12 +223,14 @@ Class Projects_model extends CI_Model
 
 
 	/**
-	 *  Gets ADMIN's projects
+	 *  Gets teacher's projects
 	 *
+	 * @param 	boolean	$activated = TRUE
+	 * @param 	boolean	$school_year = FALSE
+	 * @return	object
 	 */
 	public function getAllActiveProjectsByAdmin($activated = TRUE, $school_year = FALSE)
 	{
-
 		$this->db->select("projects.id as project_id,
 			project_name,
 			term,
@@ -173,33 +252,12 @@ Class Projects_model extends CI_Model
 		return $this->db->get('projects')->result();
 	}
 
-	public function getAllActiveProjectsByTerm($term = FALSE)
-	{
-
-		if(!$term) return $this->getAllActiveProjectsByAdmin();
-
-		$this->db->select("projects.id as project_id,
-			project_name,
-			term,
-			deadline,
-			is_activated,
-			class", TRUE);
-
-		$this->db->distinct();
-
-		$this->db->where('admin_id', $this->session->id);
-		$this->db->where('term', $term);
-		$this->db->where("school_year", $school_year);
-
-		if($activated) $this->db->where('is_activated', TRUE);
-
-		$this->db->order_by('projects.term', 'DESC');
-		$this->db->order_by('class', 'DESC');
-		$this->db->order_by('deadline', 'ASC');
-
-		return $this->db->get('projects')->result();
-	}
-
+	/**
+	 * Returns current and activated projects data
+	 *
+	 * @param 	string		$class = FALSE
+	 * @return	object
+	 */
 	public function getAllActiveAndCurrentProjects($class = FALSE)
 	{
 
@@ -226,6 +284,12 @@ Class Projects_model extends CI_Model
 		return $this->db->get()->result();
 	}
 
+	/**
+	 * Returns projects data
+	 *
+	 * @param 	integer		$project_id
+	 * @return	object
+	 */
 	public function getProjectDataByProjectId($project_id)
 	{
 		if( ! $project_id) return FALSE;
@@ -241,6 +305,11 @@ Class Projects_model extends CI_Model
 		return $results;
 	}
 
+	/**
+	 * Gets the url of a random submitted project
+	 *
+	 * @return	string
+	 */
 	public function random_media()
 	{
 		$sql = "SELECT CONCAT(file_path, file_name) as url,
@@ -252,12 +321,16 @@ Class Projects_model extends CI_Model
 		$query = $this->db->query($sql);
 
 		$url = $query->row()->url;
-
 		$url = '/assets/' . $url;
-
 		return $url;
 	}
 
+	/**
+	 * Returns teacher ID from a project
+	 *
+	 * @param 	integer		$project_id
+	 * @return	integer|boolean
+	 */
 	public function getAdminIdFromProjectId($project_id)
 	{
 		$this->db->select('admin_id');
@@ -265,27 +338,34 @@ Class Projects_model extends CI_Model
 		$this->db->where('id', $project_id);
 		$result = $this->db->get();
 
-		if($result)
-			return $result->row()->admin_id;
-		else
-			return FALSE;
+		if($result) return $result->row()->admin_id;
+		return FALSE;
 	}
 
+	/**
+	 * Returns all school years in projects
+	 *
+	 * @return	object|boolean
+	 */
 	public function getSchoolYears()
 	{
-
 		$this->db->distinct();
 		$this->db->select('school_year');
 		$this->db->from('projects');
 		$this->db->order_by('school_year', 'DESC');
 		$result = $this->db->get();
 
-		if($result)
-			return $result->result();
-		else
-			return FALSE;
+		if($result) return $result->result();
+
+		return FALSE;
 	}
 
+	/**
+	 * Returns if a project is in current school year
+	 *
+	 * @param 	integer		$project_id
+	 * @return	boolean
+	 */
 	public function boolMatchProjectSchoolYear($project_id)
 	{
 		$this->load->helper('school');

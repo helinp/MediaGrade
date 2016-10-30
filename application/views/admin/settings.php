@@ -24,11 +24,11 @@
 
         <h3><?= _('Écriture des dossiers') ?></h3>
         <div class="col-xs-6">
-            
+
             <table class="table">
                 <?php $not_writable = FALSE; ?>
                 <?php foreach ($folder_perms as $folder => $perm): ?>
-                <?php if($perm != '0777') {$not_writable = TRUE;} ?>
+                <?php if($perm != '0777' AND $perm != '0755') {$not_writable = TRUE;} ?>
                 <tr>
                     <td><?= $folder ?></td>
                     <td><?= $perm ?></td>
@@ -38,12 +38,12 @@
             </table>
         </div>
         <?php if($not_writable === TRUE): ?>
-            <div class="alert alert-danger" role="alert"><?= _('Remise des projets impossible, veuillez régler les permissions des dossiers sur 0777.') ?></div>
+            <div class="alert alert-danger" role="alert"><?= _('Remise des projets impossible, veuillez régler les permissions des dossiers sur 0755.') ?></div>
         <?php endif ?>
-            
-        <h3><?= _('Espace disque') ?></h3>   
+
+        <h3><?= _('Espace disque') ?></h3>
         <div class="col-xs-6">
-            
+
             <table class="table">
                 <tr>
                     <td><?= _('Libre')?>:</td>

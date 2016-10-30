@@ -1,6 +1,5 @@
 <div class="row chapeau chapeau-modal">
 		<div class="col-xs-12  col-md-12">
-
 				<h2 class=" text-left"> <?= _('Résultats')?><small> / <?=$project->project_name?></small><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></h2>
 		</div>
 </div>
@@ -23,7 +22,6 @@
                               </div>
                           </div>
 
-
                 <?php elseif($project_url->extension == "jpeg" ||$project_url->extension == "jpg" || $project_url->extension == "png" || $project_url->extension == "gif"): ?>
                       <div class="thumbnail">
                           <a  href="<?= $project_url->file ?>">
@@ -35,7 +33,6 @@
             <?php endforeach ?>
         <?php endif ?>
     </div>
-
 
     <h3><?= _('Évaluation') ?></h3>
     <?php if ($results{0}->user_vote != 0):?>
@@ -51,7 +48,6 @@
         <tbody>
             <?php foreach($results as $result)
                 {
-                    //dump($result);
                     $percentage = 0;
                     if ($result->user_vote != 0) $percentage = ($result->user_vote / $result->max_vote) * 100;
 
@@ -60,7 +56,6 @@
                     if ($percentage > 79) $class = "success";
                     if ($percentage < 49) $class = "warning";
                     if ($percentage < 30) $class = "danger";
-
 
                     echo
                     (
@@ -71,13 +66,12 @@
                             . '<td>' . $result->user_vote . " / " . $result->max_vote . "</td>\n"
                     . "</tr>"
                     );
-                }
-                ?>
+                }?>
         </tbody>
     </table>
-    <?php if (!empty($comments->comment)):?>
-    <?= '<h3>' . _('Commentaire du professeur') . '</h3><pre class="comment">' . $comments->comment . '</pre>'?>
-    <?php endif ?>
+	    <?php if (!empty($comments->comment)):?>
+	    <?= '<h3>' . _('Commentaire du professeur') . '</h3><pre class="comment">' . $comments->comment . '</pre>'?>
+	    <?php endif ?>
     <?php else: ?>
-    <?= LABEL_NOT_GRADED_YET ?>
+    <?= _('Ton travail n\'a pas encore été évalué.') ?>
     <?php endif ?>

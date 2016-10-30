@@ -8,14 +8,28 @@ Class ProjectsManager_model extends CI_Model
 		$this->current_school_year = get_school_year();
 	}
 
+	/**
+	 * Dummy function for future code improvement
+	 *
+	 * @param 	mixed[]		$data
+	 * @param 	integer		$project_id
+	 * @return	void
+	 */
 	public function updateProject($data, $project_id)
 	{
 		$this->addProject($data, $project_id);
 	}
 
+	/**
+	 * Saves project data in DB
+	 * If second param FALSE, creates new entry in DB
+	 *
+	 * @param 	mixed[]		$data
+	 * @param 	integer		$project_id = FALSE
+	 * @return	void
+	 */
 	public function addProject($data = array(), $project_id = FALSE)
 	{
-
 		// saves NEWS self-assessments
 		$self_assessment_ids = array();
 
@@ -27,7 +41,7 @@ Class ProjectsManager_model extends CI_Model
 			}
 		}
 
-		// add SELECTED self-assessements
+		// adds SELECTED self-assessements
 		if (isset($data['self_assessment_id']))
 		{
 			foreach($data['self_assessment_id'] as $row)
@@ -39,7 +53,7 @@ Class ProjectsManager_model extends CI_Model
 		$project = array(
 			'project_name' 			=> $this->input->post('project_name'),
 			'assessment_type' 		=> $this->input->post('assessment_type'),
-			'term' 				=> $this->input->post('term'),
+			'term' 					=> $this->input->post('term'),
 			'class' 				=> $this->input->post('class'),
 			'deadline' 				=> $this->input->post('deadline'),
 			'school_year'			=> $this->current_school_year,
@@ -54,7 +68,6 @@ Class ProjectsManager_model extends CI_Model
 			'is_activated' 			=> '1',
 			'admin_id'				=> $this->session->id
 			);
-
 
 		// add instructions to array
 		if ($data['instructions_pdf'])
@@ -103,11 +116,15 @@ Class ProjectsManager_model extends CI_Model
 		}
 	}
 
-
+	/**
+	 * Upload PDF instruction file
+	 *
+	 * @param 	array		$config 	do_upload CI config
+	 * @param 	string		$field_name form field name
+	 * @return	boolean|show_error()
+	 */
 	public function uploadPDF($config, $field_name)
 	{
-
-            // $this->load->library('upload', $config);
 		$this->upload->initialize($config);
 
 		if ( ! $this->upload->do_upload($field_name))
@@ -118,23 +135,28 @@ Class ProjectsManager_model extends CI_Model
 		else
 		{
 			$data = array('upload_data' => $this->upload->data());
-			return true;
+			return TRUE;
 		}
 	}
 
+	/**
+	 * Creates do_upload CI config for PDF instructions file
+	 *
+	 * @param 	string		$class
+	 * @param 	string		$term
+	 * @param 	string		$project_name
+	 * @return	array
+	 */
 	public function getUploadPDFConfig($class, $term, $project_name)
 	{
-
 		$this->load->helper('school');
 		$this->load->helper('format');
 
-		// PATH 2015-2016/4AV/instructions/
-        // rename file LASTNAME_Name_avatar
 		$file_name = $class . '_' . $term . '_' . $project_name;
 		$file_path = 'uploads/' . get_school_year() . '/' . strtoupper($class) . '/instructions/';
 
-		// create dir if no exists
-		if (!is_dir('assets/' . $file_path)) mkdir('assets/' . $file_path, 0777, TRUE);
+		// create dir if not exists
+		if (!is_dir('assets/' . $file_path)) mkdir('assets/' . $file_path, 0755, TRUE);
 
 		$config['file_name']            = sanitize_name($file_name);
 		$config['overwrite']            = TRUE;
@@ -146,6 +168,14 @@ Class ProjectsManager_model extends CI_Model
 		return($config);
 	}
 
+	/**
+	 * Add a row in table assessment
+	 * array keys must be [skills_group, criterion, cursor, max_vote]
+	 *
+	 * @param 	array		$assessment
+	 * @TODO	move in Assessment model
+	 * @return	integer
+	 */
 	public function addAssessment($assessment = array())
 	{
 		$data = $assessment;
@@ -162,9 +192,15 @@ Class ProjectsManager_model extends CI_Model
 			$this->db->insert('assessments', $data);
 			return $this->db->insert_id();
 		}
-
 	}
 
+	/**
+	 * Add a row into projects_assessments table
+	 *
+	 * @param 	integer		$project_id
+	 * @param 	integer		$assessment_id
+	 * @return	integer
+	 */
 	private function addProjects_Assessments($project_id, $assessment_id)
 	{
 		$data = array('project_id' => $project_id, 'assessment_id' => $assessment_id);
@@ -181,28 +217,43 @@ Class ProjectsManager_model extends CI_Model
 		{
 			return $q->row('id');
 		}
-
 	}
 
-
+	/**
+	 * Will check projects_assessments table for orphans
+	 * and delete them
+	 * @todo implement method
+	 * @return boolean
+	 */
 	public function cleanProjects_assessmentsTable()
 	{
 		// TODO
-
 	}
 
-	public function disactivateProject($project_id)
+	/**
+	 * Switch project state (activated / disactivates)
+	 * @return void
+	 */
+	public function switchProjectState($project_id)
 	{
-		$this->db->query(" UPDATE projects
-			SET is_activated = NOT is_activated
-			WHERE id = ?", $project_id);
+		$this->db->where('id', $project_id);
+		$this->db->set('is_activated', 'NOT is_activated', FALSE);
+		$this->db->update('projects');
 	}
 
+	/**
+	 * Deletes a project
+	 * @return void
+	 */
 	public function deleteProject($project_id)
 	{
 		$this->db->delete('projects', array('id' => $project_id));
 	}
 
+	/**
+	 * Add or updates self_assessment row in DB
+	 * @return integer
+	 */
 	public function addSelfAssessment($self_assessment)
 	{
 		$data = array(
@@ -213,22 +264,19 @@ Class ProjectsManager_model extends CI_Model
 			'question' => $self_assessment
 			);
 
-			// checks if record exists
+		// checks if record exists
 		$q = $this->db->get_where('self_assessments', $where, 1);
 
-	        // if true, return id
+	    // if true, return id
 		if ($q->num_rows() > 0)
 		{
 			return $q->row('id');
 		}
-	        // else insert
 		else
 		{
 			$this->db->insert('self_assessments', $data);
 		}
-
 		return $this->db->insert_id();
 	}
-
 }
 ?>

@@ -26,11 +26,7 @@ class Profile extends CI_Controller {
 
     public function upload()
     {
-
         $config = $this->Submit_model->getAvatarConfig();
-
-        //var_dump($_POST);die;
-
         $error = $this->Submit_model->do_upload($config, 'avatar_file');
 
         if (isset($error['error']))
@@ -40,13 +36,12 @@ class Profile extends CI_Controller {
         else
         {
             $file_path = '/assets/uploads/users/avatars/' . $this->upload->data()['file_name'];
-            $this->UsersManager_model->saveAvatar(false, $file_path);
+            $this->UsersManager_model->saveAvatar(FALSE, $file_path);
         }
         // update session
         $this->session->set_userdata('avatar', $file_path);
 
         redirect('/profile');
-
     }
 
     public function update()
@@ -64,14 +59,21 @@ class Profile extends CI_Controller {
 
         // update DB
         if(isset($post['change_password']))
-            $this->UsersManager_model->changePassword(false, $post['current_password'], $post['new_password'], $post['new_password_confirmation']);
+		{
+            $this->UsersManager_model->changePassword(FALSE, $post['current_password'], $post['new_password'], $post['new_password_confirmation']);
+		}
         elseif(isset($post['change_email']))
-            $this->UsersManager_model->changeEmail(false, $post['email']);
+		{
+            $this->UsersManager_model->changeEmail(FALSE, $post['email']);
+		}
         elseif(isset($post['change_mail_preferences']))
-            $this->UsersManager_model->changeEmailPreferences(false, $post);
+		{
+            $this->UsersManager_model->changeEmailPreferences(FALSE, $post);
+		}
         else
-            return false;
-
+		{
+            return FALSE;
+		}
         // update session
         $this->Users_model->updateSession();
 

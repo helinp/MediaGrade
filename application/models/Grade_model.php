@@ -2,6 +2,14 @@
 Class Grade_model extends CI_Model
 {
 
+	/**
+	 * Returns if a student project is already graded
+	 *
+	 * @param 	integer		$project_id
+	 * @param 	integer		$user_id = Current user_id
+	 * @param 	string		$term = All terms
+	 * @return	boolean
+	 */
 	public function boolGradedProjectByProjectAndUser($project_id, $user_id = FALSE, $term = FALSE)
 	{
 		if( ! $user_id) $user_id = $this->session->id;
@@ -9,23 +17,33 @@ Class Grade_model extends CI_Model
 		$this->db->from('results');
 		$this->db->where('project_id', $project_id);
 		$this->db->where('user_id', $user_id);
+
 		if ($term) $this->db->where('term', $term);
 
 		return ( ! empty($this->db->get()->result()));
 	}
 
-
+	/**
+	 * Returns NOT graded projects
+	 *
+	 * @param 	integer		$class = all classes
+	 * @param 	integer		$school_year = all school years
+	 * @return	object
+	 */
 	public function listNotGradedProjects($class = FALSE, $school_year = FALSE)
 	{
 
 		$this->db->select('projects.class, projects.term, users.name, users.last_name,
-		projects.project_name, users.id as user_id, projects.id as project_id');
+							projects.project_name, users.id as user_id, projects.id as project_id');
+
 		$this->db->from('submitted, users, projects');
 
-		$this->db->where(' 	NOT EXISTS(SELECT NULL
-							FROM results
-							WHERE submitted.user_id = results.user_id
-							AND submitted.project_id = results.project_id)
+		$this->db->where(' 	NOT EXISTS(
+								SELECT NULL
+								FROM results
+								WHERE submitted.user_id = results.user_id
+								AND submitted.project_id = results.project_id
+								)
 						');
 
 		if($class) $this->db->where('projects.class', $class);
@@ -39,11 +57,18 @@ Class Grade_model extends CI_Model
 		return $this->db->get()->result();
 	}
 
-
+	/**
+	 * Saves or update votes on DB
+	 *
+	 * @param 	integer		$project_id
+	 * @param 	integer		$user_id
+	 * @param 	integer		$assessment_id
+	 * @param 	integer		$user_vote
+	 * @return	boolean
+	 */
 	public function grade($project_id, $user_id, $assessment_id, $user_vote)
 	{
-
-		// if not assessed
+		// if not vote from form, exit function.
 		if($user_vote == -1) return TRUE;
 
 		// get max_vote from assessments DB
@@ -86,8 +111,5 @@ Class Grade_model extends CI_Model
 
 		return TRUE;
 	}
-
-
-
 }
 ?>
