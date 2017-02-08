@@ -28,11 +28,11 @@
             <table class="table">
                 <?php $not_writable = FALSE; ?>
                 <?php foreach ($folder_perms as $folder => $perm): ?>
-                <?php if($perm != '0777' AND $perm != '0755') {$not_writable = TRUE;} ?>
+                <?php if($perm != '0777' AND $perm != '0775') {$not_writable = TRUE;} ?>
                 <tr>
                     <td><?= $folder ?></td>
                     <td><?= $perm ?></td>
-                    <td><span class="glyphicon <?= ($not_writable === FALSE ? 'glyphicon-ok text-success' : 'glyphicon-remove text-danger') ?> "<?= $perm ?></td>
+                    <td><span class="glyphicon <?= ($not_writable === FALSE ? ($perm === '0775' ? 'glyphicon-ok text-success' : 'glyphicon-warning-sign text-warning') : 'glyphicon-remove text-danger') ?> "<?= $perm ?></td>
                 </tr>
                 <?php endforeach ?>
             </table>

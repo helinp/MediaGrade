@@ -7,7 +7,7 @@
 
         $left = round( (strtotime($deadline) - strtotime($curr_date) ) / 60 / 60 / 24);
 
-        return $left;
+        return $left + 1;
     }
 
 ?>

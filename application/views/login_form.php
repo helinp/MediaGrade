@@ -3,16 +3,21 @@
 
 <div class="vertical-center">
 
-    <main class="col-md-2 col-sm-8 text-center login" >
+    <main class="col-md-3 text-center login" >
       <h1 style="margin-bottom:0"><img alt="MediaGrade" src="/assets/img/logo_white.svg" style="width:150px"/></h1>
         <?php echo form_open('login'); ?>
             <fieldset >
                 <div class="form-group">
-                    <input autofocus class="form-control" name="username" placeholder="<?= LABEL_USERNAME ?>" type="text"/>
+                    <input autofocus class="form-control" name="username" autocomplete="off" placeholder="<?= LABEL_USERNAME ?>" type="text"/>
                 </div>
                 <div class="form-group">
                     <input class="form-control" name="password" autocomplete="off" placeholder="<?= LABEL_PASSWORD ?>" type="password"/>
                 </div>
+				<?php if(CAPTCHA): ?>
+				<div class="form-group captcha">
+					<?= $captcha ?>
+				</div>
+				<?php endif ?>
                 <?php if(!empty(validation_errors())): ?>
                 <div class="alert alert-danger" role="alert">
     			  <span class="sr-only">Error:</span> <?= validation_errors(); ?>
@@ -29,6 +34,12 @@
             <h5 style="margin-top:0"><b><?= _('Comptes de démonstration') ?></b></h5>
             <code>student 123456</code><br /> <code>teacher 123456</code>
         </div>
-        <?php endif ?>
+		<?php elseif(CONSULTATION_VERSION): ?>
+		<div class="consultation-version background-danger">
+			<h5 style="margin-top:0"><b><?= _('Version de consultation') ?></b></h5>
+			<p>La remise des travaux est désactivée.</p>
+		</div>
+		<?php endif ?>
+
     </main>
 </div>

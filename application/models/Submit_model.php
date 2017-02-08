@@ -178,6 +178,7 @@ Class Submit_model extends CI_Model
 	 */
     public function do_upload($config, $field_name)
     {
+
             // $this->load->library('upload', $config);
             $this->upload->initialize($config);
 
@@ -209,7 +210,7 @@ Class Submit_model extends CI_Model
 
         $config['file_name']            = $file_name;
         $config['overwrite']            = TRUE;
-        $config['file_ext_tolower']     = TRUE;
+        $config['file_ext_tolower']      = TRUE;
         $config['upload_path']          = './assets/uploads/users/avatars/';
         $config['allowed_types']        = 'gif|jpg|png';
         $config['max_size']             = 100;
@@ -366,7 +367,7 @@ Class Submit_model extends CI_Model
 	 *
 	 * @param 	string 	$image_full_path
 	 * @param 	string		$full_path
-	 * @return	boolean
+	 * @return	string filepath
 	 */
     public function makeThumbnail($image_full_path, $full_path)
     {
@@ -387,7 +388,7 @@ Class Submit_model extends CI_Model
         $this->image_lib->initialize($config);
         $this->image_lib->resize();
         //echo $this->image_lib->display_errors();
-        return TRUE;
+        return $config['new_image'];
     }
 
 	/**
@@ -408,7 +409,7 @@ Class Submit_model extends CI_Model
                              ->from('submitted')
                              ->join('users', 'user_id = users.id', 'left')
                              ->join('projects', 'project_id = projects.id', 'left')
-                             ->group_by('name')
+                             ->group_by('users.name')
                              ->order_by('submitted.id', 'DESC')
                              ->limit($limit);
 

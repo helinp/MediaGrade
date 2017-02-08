@@ -1,34 +1,41 @@
 <div id="content" class="col-xs-12 col-md-10 ">
     <div class="row chapeau">
-        <div class="col-xs-7  col-md-7">
+        <div class="col-xs-2  col-md-2">
             <h1> <?= _('Gallerie') ?></h1>
         </div>
-        <div class="col-xs-2  col-md-2">
-            <form id="filter" action="../../gallery/view/" method="get" class="form-inline" style="margin-top:1.5em">
-                <label><?= _('Classe: ') ?></label>
-                <div class="input-group">
-                    <select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
-                        <option value=""><?= _('Toutes')?></option>
-                        <?php foreach($classes as $classe): ?>
-                            <?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
-                        <?php endforeach?>
-                    </select>
-                </div>
-            </div>
-            <div class="col-xs-3  col-md-3">
-                <div class="form-inline" style="margin-top:1.5em">
-                    <label><?= _('Projet: ') ?></label>
-                    <div class="input-group">
-                        <select class="form-control input-sm" name="project" onchange="this.form.submit()">
-                            <option value=""><?= _('Tous')?></option>
-                            <?php foreach($projects as $project): ?>
-                                <?= '<option value="' . $project->project_id . '"' . (@$_GET['project'] === $project->project_id ? 'selected' : '') . '>' . $project->project_name . '</option>' . "\n" ?>
-                            <?php endforeach?>
-                        </select>
-                    </div>
-                </div>
-            </form>
-        </div>
+
+
+		<?php if($this->session->role === 'admin'): ?>
+		<div class="col-xs-4  col-md-4">
+			<form id="filter" action="../../gallery/student/" method="get" class="form-inline" style="margin-top:1.5em">
+				<label><?= _('Élève: ') ?></label>
+	                <select class="form-control input-sm" name="id" onchange="this.form.submit()">
+	                    <option value=""><?= _('Tous')?></option>
+	                    <?php foreach($students as $student): ?>
+	                        <?= '<option value="' . $student->id . '"' . (@$_GET['id'] === $student->id ? 'selected' : '') . '>' . $student->last_name . ' ' .  $student->name . '</option>' . "\n" ?>
+	                    <?php endforeach?>
+	                </select>
+			</form>
+		</div>
+		<?php endif ?>
+		<div class="col-xs-<?= ($this->session->role === 'admin' ? '6': '10') ?>  col-md-6<?= ($this->session->role === 'admin' ? '6': '10') ?>">
+			<form id="filter" action="../../gallery/view/" method="get" class="form-inline" style="margin-top:1.5em">
+	            <label><?= _('Classe: ') ?></label>
+	                <select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
+	                    <option value=""><?= _('Toutes')?></option>
+	                    <?php foreach($classes as $classe): ?>
+	                        <?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
+	                    <?php endforeach?>
+	                </select>
+	            <label><?= _('Projet: ') ?></label>
+	                <select class="form-control input-sm" name="project" onchange="this.form.submit()">
+	                    <option value=""><?= _('Tous')?></option>
+	                    <?php foreach($projects as $project): ?>
+	                        <?= '<option value="' . $project->project_id . '"' . (@$_GET['project'] === $project->project_id ? 'selected' : '') . '>' . $project->project_name . '</option>' . "\n" ?>
+	                    <?php endforeach?>
+	                </select>
+			</form>
+	    </div>
     </div> <!-- /. ROW -->
     <div class="text-center">
         <ul class="pagination pagination-sm">

@@ -30,12 +30,7 @@ Class Gallery_model extends CI_Model
 		}
 
 		$this->db->where("file_name <> ''", NULL, FALSE);
-
-        $this->db->where("extension", "jpg");
-        $this->db->or_where("extension", "gif");
-        $this->db->or_where("extension", "mov");
-        $this->db->or_where("extension", "mp3");
-        $this->db->or_where("extension", "wav");
+        $this->db->where("extension !=", "pdf");
 
 		$this->db->limit($limit);
 		$this->db->offset($offset);

@@ -73,6 +73,16 @@ Class Projects_model extends CI_Model
 	var $school_year;
 
 	/**
+	 * @var int
+	 */
+	var $admin_id;
+
+	/**
+	 * @var string
+	 */
+	var $material;
+
+	/**
 	 *  Construct method
 	 *
 	 */
@@ -86,7 +96,6 @@ Class Projects_model extends CI_Model
 			$this->school_year = $this->input->get('school_year');
 		}
 	}
-
 
 	/**
 	 *  Magic call function getAllActiveProjects..By..And()
@@ -128,7 +137,8 @@ Class Projects_model extends CI_Model
 			term,
 			instructions_txt,
 			deadline as raw_deadline,
-			DATE_FORMAT(deadline, '%W %d %M %Y') as deadline");
+			DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
+			material");
 
 		$this->db->where('is_activated', TRUE);
 
@@ -148,8 +158,8 @@ Class Projects_model extends CI_Model
 		}
 
 		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('raw_deadline', 'ASC');
 		$this->db->order_by('term', 'DESC');
-		$this->db->order_by('deadline', 'ASC');
 
 		return $this->db->get('projects')->result();
 	}
@@ -163,6 +173,7 @@ Class Projects_model extends CI_Model
 	 * @param 	string	$school_year
 	 * @return	object
 	 */
+
 	public function getAllActiveProjectsByClassAndTermAndSchoolYear($class = FALSE, $term = FALSE, $school_year)
 	{
 		if ( ! $class) $class = $this->session->class;
@@ -173,12 +184,12 @@ Class Projects_model extends CI_Model
 		$this->db->where('is_activated', TRUE);
 		$this->db->where('class', $class);
 		$this->db->where('school_year', $school_year);
-
-		$this->db->order_by('class', 'DESC');
-		$this->db->order_by('deadline', 'ASC');
-		$this->db->order_by('term', 'DESC');
-
 		if($term) $this->db->where('term', $term);
+
+		$this->db->order_by('class', 'ASC');
+		$this->db->order_by('deadline', 'ASC');
+		$this->db->order_by('projects.term', 'ASC');
+
 
 		return $this->db->get('projects')->result();
 	}
@@ -246,8 +257,8 @@ Class Projects_model extends CI_Model
 		if($activated) $this->db->where('is_activated', TRUE);
 
 		$this->db->order_by('projects.term', 'DESC');
-		$this->db->order_by('class', 'DESC');
-		$this->db->order_by('deadline', 'ASC');
+		$this->db->order_by('class', 'ASC');
+		$this->db->order_by('deadline', 'DESC');
 
 		return $this->db->get('projects')->result();
 	}
@@ -277,9 +288,9 @@ Class Projects_model extends CI_Model
 		if($class) $this->db->where('projects.class', $class);
 		if($this->session->role === 'admin') $this->db->where('admin_id', $this->session->id);
 
+		$this->db->order_by('class', 'DESC');
 		$this->db->order_by('projects.term', 'DESC');
-		$this->db->order_by('class', 'ASC');
-		$this->db->order_by('deadline', 'DESC');
+		$this->db->order_by('deadline', 'ASC');
 
 		return $this->db->get()->result();
 	}
@@ -372,6 +383,37 @@ Class Projects_model extends CI_Model
 		$project_sy = $this->getProjectDataByProjectId($project_id)->school_year;
 
 		return (get_school_year() === $project_sy);
+	}
+
+	public function getMaterialStatisticsByAdminAndClassAndShoolYear($admin_id = FALSE, $class = FALSE, $school_year = FALSE)
+	{
+		$this->db->select('material');
+
+		$this->db->from('projects');
+		$this->db->where('is_activated', TRUE);
+
+		if($class) $this->db->where("class", $class);
+		if($school_year) $this->db->where("school_year", $school_year);
+		if($admin_id) $this->db->where("admin_id", $admin_id);
+
+		$result = $this->db->get()->result();
+
+		$material = array();
+
+		foreach ($result as $row)
+		{
+			 if($row->material !== '')
+			 {
+				 $temp = explode(',', $row->material);
+
+				 foreach ($temp as $value)
+				 {
+				 	$material[] = $value;
+				 }
+			 }
+		}
+		$counts = array_count_values($material);
+		return($counts);
 	}
 }
 ?>

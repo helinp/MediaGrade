@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Dim 04 Septembre 2016 à 18:41
+-- Généré le: Mer 15 Février 2017 à 17:40
 -- Version du serveur: 5.5.49
 -- Version de PHP: 5.5.37-1~dotdeb+7.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de données: `mediagrade_min`
+-- Base de données: `mediagrade`
 --
 
 -- --------------------------------------------------------
@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `assessments`
 --
 
+DROP TABLE IF EXISTS `assessments`;
 CREATE TABLE IF NOT EXISTS `assessments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `skills_group` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -34,7 +35,9 @@ CREATE TABLE IF NOT EXISTS `assessments` (
   `max_vote` smallint(6) NOT NULL DEFAULT '10',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=345 ;
+
+
 
 -- --------------------------------------------------------
 
@@ -42,12 +45,46 @@ CREATE TABLE IF NOT EXISTS `assessments` (
 -- Structure de la table `auto_assesment`
 --
 
+DROP TABLE IF EXISTS `auto_assesment`;
 CREATE TABLE IF NOT EXISTS `auto_assesment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+
+
+--
+-- Structure de la table `auto_check`
+--
+
+DROP TABLE IF EXISTS `auto_check`;
+CREATE TABLE IF NOT EXISTS `auto_check` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `format` text COLLATE utf8_unicode_ci NOT NULL,
+  `codec` text COLLATE utf8_unicode_ci NOT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `lenght` time NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `captcha`
+--
+
+DROP TABLE IF EXISTS `captcha`;
+CREATE TABLE IF NOT EXISTS `captcha` (
+  `captcha_id` bigint(13) unsigned NOT NULL AUTO_INCREMENT,
+  `captcha_time` int(10) unsigned NOT NULL,
+  `ip_address` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `word` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`captcha_id`),
+  KEY `word` (`word`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -55,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `auto_assesment` (
 -- Structure de la table `comments`
 --
 
+DROP TABLE IF EXISTS `comments`;
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -62,7 +100,9 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `comment` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=126 ;
+
+
 
 -- --------------------------------------------------------
 
@@ -70,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
 -- Structure de la table `config`
 --
 
+DROP TABLE IF EXISTS `config`;
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinytext COLLATE utf8_unicode_ci NOT NULL,
@@ -91,6 +132,7 @@ INSERT INTO `config` (`id`, `type`, `content`) VALUES
 -- Structure de la table `files_format`
 --
 
+DROP TABLE IF EXISTS `files_format`;
 CREATE TABLE IF NOT EXISTS `files_format` (
   `mime` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `extension` tinytext COLLATE utf8_unicode_ci NOT NULL
@@ -119,6 +161,7 @@ INSERT INTO `files_format` (`mime`, `extension`) VALUES
 -- Structure de la table `lost_password`
 --
 
+DROP TABLE IF EXISTS `lost_password`;
 CREATE TABLE IF NOT EXISTS `lost_password` (
   `id` int(11) NOT NULL,
   `hash` text COLLATE utf8_unicode_ci NOT NULL,
@@ -132,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `lost_password` (
 -- Structure de la table `projects`
 --
 
+DROP TABLE IF EXISTS `projects`;
 CREATE TABLE IF NOT EXISTS `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `term` varchar(4) NOT NULL,
@@ -148,9 +192,11 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `number_of_files` tinyint(4) NOT NULL DEFAULT '1',
   `is_activated` tinyint(1) NOT NULL DEFAULT '1',
   `admin_id` int(11) NOT NULL,
+  `material` text,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
+
 
 -- --------------------------------------------------------
 
@@ -158,13 +204,15 @@ CREATE TABLE IF NOT EXISTS `projects` (
 -- Structure de la table `projects_assessments`
 --
 
+DROP TABLE IF EXISTS `projects_assessments`;
 CREATE TABLE IF NOT EXISTS `projects_assessments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` smallint(6) NOT NULL,
   `assessment_id` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=91 ;
+
 
 -- --------------------------------------------------------
 
@@ -172,6 +220,7 @@ CREATE TABLE IF NOT EXISTS `projects_assessments` (
 -- Structure de la table `results`
 --
 
+DROP TABLE IF EXISTS `results`;
 CREATE TABLE IF NOT EXISTS `results` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` mediumint(9) DEFAULT NULL,
@@ -181,7 +230,8 @@ CREATE TABLE IF NOT EXISTS `results` (
   `max_vote` smallint(6) DEFAULT '10',
   `user_vote` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=424 ;
+
 
 -- --------------------------------------------------------
 
@@ -189,12 +239,14 @@ CREATE TABLE IF NOT EXISTS `results` (
 -- Structure de la table `self_assessments`
 --
 
+DROP TABLE IF EXISTS `self_assessments`;
 CREATE TABLE IF NOT EXISTS `self_assessments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question` varchar(8000) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
+
 
 -- --------------------------------------------------------
 
@@ -202,6 +254,7 @@ CREATE TABLE IF NOT EXISTS `self_assessments` (
 -- Structure de la table `skills`
 --
 
+DROP TABLE IF EXISTS `skills`;
 CREATE TABLE IF NOT EXISTS `skills` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `skill_id` char(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -210,20 +263,21 @@ CREATE TABLE IF NOT EXISTS `skills` (
   PRIMARY KEY (`skill_id`),
   UNIQUE KEY `skill_id` (`skill_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
--- --------------------------------------------------------
 
 --
 -- Structure de la table `skills_groups`
 --
 
+DROP TABLE IF EXISTS `skills_groups`;
 CREATE TABLE IF NOT EXISTS `skills_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+
 
 -- --------------------------------------------------------
 
@@ -231,6 +285,7 @@ CREATE TABLE IF NOT EXISTS `skills_groups` (
 -- Structure de la table `submitted`
 --
 
+DROP TABLE IF EXISTS `submitted`;
 CREATE TABLE IF NOT EXISTS `submitted` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -240,7 +295,8 @@ CREATE TABLE IF NOT EXISTS `submitted` (
   `project_id` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=147 ;
+
 
 -- --------------------------------------------------------
 
@@ -248,6 +304,7 @@ CREATE TABLE IF NOT EXISTS `submitted` (
 -- Structure de la table `terms`
 --
 
+DROP TABLE IF EXISTS `terms`;
 CREATE TABLE IF NOT EXISTS `terms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
@@ -273,6 +330,7 @@ INSERT INTO `terms` (`id`, `name`) VALUES
 -- Structure de la table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -291,6 +349,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `name`, `last_name`, `class`, `role`) VALUES
+(215, 'student', '', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Gaëlle', 'Jordan', '4AV', 'student'),
 (1, 'teacher', 'teacher@yopmail.com', '$1$iN5SYow1$0gx7zsRqRDIV9sUgBlKZt1', 'Mark', 'Jefferson', '', 'admin');
 
 -- --------------------------------------------------------
@@ -299,6 +358,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `name`, `last_name`,
 -- Structure de la table `users_config`
 --
 
+DROP TABLE IF EXISTS `users_config`;
 CREATE TABLE IF NOT EXISTS `users_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -307,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `users_config` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -34,11 +34,14 @@ box-shadow: none;
 }
 
 .nav > li > a > span {
-  margin-right: 1em;
+  margin-right: 0.5em;
   font-size: 1.2em;
   line-height: 2px;
 }
 
+.modal-lg {
+    width: 1000px;
+}
 
 aside.sidebar {
   padding-right: 0px;
@@ -72,7 +75,7 @@ header div {
 }
 
 .panel-body {
-  padding-bottom: 0em;
+  min-height: 10em;
 }
 
 .panel-body + .panel-body {
@@ -85,6 +88,10 @@ header div {
 
 .current {
   border-left: 4px solid #5cb85c;
+}
+
+div.captcha img {
+	margin-bottom: 1em;
 }
 
 .desactivated {
@@ -124,7 +131,42 @@ h3 {
     padding:.5em;
 }
 
+.consultation-version {
+	background-color: #396c9880;
+	color: white;
+    border-radius: 5px;
+	padding-top: 1em;
+	padding-bottom: 0.3em;
+}
 
+.tooltip-arrow, .tooltip-inner {
+    background: white;
+    color: black;
+}
+
+.tooltip-inner {
+    border: 1px lightgray solid;
+}
+
+label
+{
+font-weight: 500;
+margin-left:1em;
+}
+
+.form-inline
+{
+text-align: right;
+}
+
+/***** OVERVIEW ****/
+.btn-group .btn{
+border-top-right-radius: 0 !important;
+border-top-left-radius: 0 !important;
+}
+
+.badge {font-size: 14px;
+}
 /***** PROFILE ***/
 
 
@@ -135,12 +177,14 @@ table.profile tr td   {
 /****** AFFIX **********/
 
 
-		   .affix {
-			  top: 20px;
- min-width:100%;
+.affix {
+  top: 20px;
+  min-width:100%;
+ }
 
-		  }
-
+.nav > li > a {
+    padding-right: 0;
+}
 /***** LOGIN ******/
 main.login {
 	/*background-color: rgba(225, 225, 225, 0.9);*/
@@ -150,7 +194,10 @@ main.login {
 
 
 .login input {
-   text-align:center;
+   text-align:center;  
+   background-color: #0003;
+   border: 0px solid #fff;
+   color: #FFF;
 }
 
 .vertical-center {
@@ -190,11 +237,11 @@ main.login {
      hence the bootstrap's container won't be aligned to the center anymore.
 
      Therefore, we should use the following declarations to get it centered again */
-         -webkit-box-pack : center;
-            -moz-box-pack : center;
-            -ms-flex-pack : center;
-  -webkit-justify-content : center;
-          justify-content : center;
+         -webkit-box-pack: center;
+            -moz-box-pack: center;
+            -ms-flex-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
 }
 
 video#bgvid {

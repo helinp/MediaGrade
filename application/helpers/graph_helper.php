@@ -43,7 +43,7 @@
 
         foreach ($projects as $project)
         {
-            $string .= "'" . $project->term . ' / ' . $project->project_name . "'";
+            $string .= "'" . js_special_chars($project->term) . ' / ' . js_special_chars($project->project_name ). "'";
             $string .= ', ';
         }
 

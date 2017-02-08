@@ -12,7 +12,7 @@ class Gallery extends CI_Controller {
         $this->load->model('Classes_model','',TRUE);
 
         $this->data['classes'] = $this->Classes_model->getAllClasses();
-
+		$this->data['students'] = $this->Users_model->getAllUsers();
     }
 
 
@@ -55,12 +55,24 @@ class Gallery extends CI_Controller {
 
 	}
 
-	function my($offset = 0)
+	function student($offset = 0)
 	{
 	    $limit = 12;
 	    $arg[0] = $this->input->get('classe');
 	    $arg[1] = $this->input->get('project');
-	    $arg[2] = $this->session->id;
+
+		if($this->input->get('id'))
+		{
+			$arg[2] = $this->input->get('id');
+		}
+		elseif ($this->session->role === 'admin' && ! $this->input->get('id'))
+		{
+			redirect('gallery');
+		}
+		else
+		{
+			$arg[2] = $this->session->id;
+		}
 
 	    $args = array( 'projects.class' => $arg[0],
 	    'project_id' => $arg[1],

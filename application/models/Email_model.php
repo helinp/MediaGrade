@@ -33,7 +33,7 @@ Class Email_model extends CI_Model
 
 		if ($this->email->send()) return TRUE;
         // TODO add: elseif ( *debugmode* === TRUE) show_error($this->email->print_debugger());
-
+		elseif($this->session->role ==='admin') show_error($this->email->print_debugger());
 		return FALSE;
 	}
 
@@ -52,6 +52,20 @@ Class Email_model extends CI_Model
 		return $this->sendObjectMessageToEmail($subject, $message, $email);
 	}
 
+	public function sendHtmlSubmitConfirmationToUser($project_name, $email, $thumb_url = FALSE)
+	{
+		$subject = _('Projet remis!');
+		$message = _('<p>Bonjour ' . $this->session->name . ",</p> <p>Ton travail ($project_name) a bien été remis.</p><p>Félicitations!</p>");
+		if($thumbs_url ==! FALSE )
+		{
+			foreach ($thumbs_url as $thumb_url)
+			{
+				$this->email->attach($thumb_url, 'inline');
+			}
+		}
+		return $this->sendObjectMessageToEmail($subject, $message, $email);
+	}
+
 	/**
 	 * Sends an assessment email notification to the student
 	 *
@@ -61,8 +75,8 @@ Class Email_model extends CI_Model
 	 */
 	public function sendAssessmentNotificationToUser($project_name, $email)
 	{
-		$subject = _('Projet remis!');
-		$message = _("Ton travail ($project_name) vient d'être évalué. Tu peux désormais consulter tes résultats sur MediaGrade.");
+		$subject = _('Projet corrigé!');
+		$message = _('<p>Bonjour ' . $this->session->name . ",</p><p>Ton travail ($project_name) vient d'être évalué. Tu peux désormais consulter tes résultats sur MediaGrade.</p>");
 
 		return $this->sendObjectMessageToEmail($subject, $message, $email);
 	}
@@ -74,15 +88,25 @@ Class Email_model extends CI_Model
 	 * @param string $email
 	 * @return boolean
 	 */
-	public function sendSubmitConfirmationToAdmin($project_name, $email)
+	public function sendSubmitConfirmationToAdmin($project_name, $email, $thumbs_url = FALSE)
 	{
 		$subject = _('Projet remis!');
-		$date = date('d/m/Y \à h:i:s', time());
+		$date = date('l d/m/Y \à H:i:s', time());
 
 		// loads get_user_ip() helper
 		$this->load->helper('system');
 
-		$message = $_SESSION['name'] . ' ' . $_SESSION['last_name'] . ' a remis le projet "' . $project_name . '" ce ' . $date . ' depuis l\'adresse ' . get_user_ip() . '.';
+		$message = '<p>Bonjour Maître,</p><p>Le Padawan ' . $_SESSION['name'] . ' ' . $_SESSION['last_name'] . ' a remis le projet "'
+					. $project_name . '" ce ' . $date . ' depuis l\'adresse ' . get_user_ip() . '.</p>';
+
+		if($thumbs_url ==! FALSE )
+		{
+			foreach ($thumbs_url as $thumb_url)
+			{
+				$this->email->attach($thumb_url, 'inline');
+			}
+		}
+
 
 		return $this->sendObjectMessageToEmail($subject, $message, $email);
 	}

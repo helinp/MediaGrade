@@ -58,6 +58,7 @@ Class ProjectsManager_model extends CI_Model
 			'deadline' 				=> $this->input->post('deadline'),
 			'school_year'			=> $this->current_school_year,
 			'skill_ids' 			=> implode(',', $this->input->post('skill_ids')),
+			'material'				=> $this->input->post('material'),
 			'extension' 			=> $this->input->post('extension'),
 			'instructions_txt' 		=> serialize(array(
 										'instructions'  => $this->input->post('instructions_txt'),
@@ -135,7 +136,7 @@ Class ProjectsManager_model extends CI_Model
 		else
 		{
 			$data = array('upload_data' => $this->upload->data());
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -155,7 +156,7 @@ Class ProjectsManager_model extends CI_Model
 		$file_name = $class . '_' . $term . '_' . $project_name;
 		$file_path = 'uploads/' . get_school_year() . '/' . strtoupper($class) . '/instructions/';
 
-		// create dir if not exists
+		// create dir if no exists
 		if (!is_dir('assets/' . $file_path)) mkdir('assets/' . $file_path, 0755, TRUE);
 
 		$config['file_name']            = sanitize_name($file_name);
@@ -222,7 +223,7 @@ Class ProjectsManager_model extends CI_Model
 	/**
 	 * Will check projects_assessments table for orphans
 	 * and delete them
-	 * @todo implement method
+	 * @todo write method
 	 * @return boolean
 	 */
 	public function cleanProjects_assessmentsTable()

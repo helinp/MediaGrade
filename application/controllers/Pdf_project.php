@@ -30,12 +30,21 @@ class Pdf_project extends CI_Controller {
         $pdf->SetTitle(_('Fiche d\'évaluation'));
 
 		// adds a page for each student
-		$data = $this->prepareAssessmentRecords($this->input->post('project_id'), $this->input->post('term'));
+		$data = $this->_prepareAssessmentRecords($this->input->post('project_id'), $this->input->post('term'));
 		foreach ($data as $student)
 		{
 			$pdf->AddPage();
 			$html = $this->Pdf_assessment_model->processAssessmentsRecordHtml($student);
 			$pdf->writeHTML($html, false, false, false, false, '');
+
+			// insert PDF submitted project, if EXISTS
+			if( ! empty($student->submitted) && substr($student->submitted, -3) === 'pdf')
+			{
+				$pdf->AddPage();
+			    $pdf_doc = $pdf->setSourceFile($student->submitted);
+			    $pdf->SetAutoPageBreak(FALSE, 0);
+			    $pdf->ImportPage($pdf_doc);
+			}
 		}
 
 		//Closes and opens a PDF file in new tab (arg 'I' in Output method)
@@ -48,7 +57,7 @@ class Pdf_project extends CI_Controller {
 	 *  Returns assessment data from project and term for PDF generation
 	 *
 	 */
-	private function prepareAssessmentRecords($projects_id, $term)
+	private function _prepareAssessmentRecords($projects_id, $term)
 	{
 		foreach ($projects_id as $project_id)
 		{

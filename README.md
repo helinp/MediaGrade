@@ -8,11 +8,11 @@ I am a Belgian teacher of video and photo production and I wanted to create a pl
 
 Teachers can assess, comment student's work, manage projects, download vote grids and generate assessment sheets.
 
-Students can upload requested projects, access instructions, get assessment details and view others' subbmitted projects.
+Students can upload requested projects, access instructions, get assessment details and view others' submitted projects.
 
 Further features will show up in the future.
 
-Previews:
+Links:
 
 - [Last version Demonstration (uploading and email functions are disactivated](http://mg.pierrehelin.eu)
 - [Version 0.1 features presentation](https://www.youtube.com/watch?v=-Toms9O7ZUM)
@@ -38,7 +38,7 @@ Previews:
 ### Both
 - Choose email notification preferences
 - Get an avatar (useless but fun!)
- 
+
 
 ## Requirements
 - PHP5 & SQL
@@ -53,7 +53,6 @@ Previews:
 - Twitter Typeahead
 
 ## TODO
-- [ ] Code documentation
 - [ ] Automated installation
 - [ ] PATCH / Prevent from duplicate project name
 - [ ] Typeahead
@@ -73,11 +72,18 @@ Previews:
 
 ## CHANGE LOG
 
-**2016-10-30**
-- Added models doc
-- PDF library is now correctly integrated
-- Upload folders are now created with 755 permissions
-- Some style correction
+**2017-01-27**
+- Corrected sorting bug in projects list
+- Added Material field in DB
+- Added Dashboard graphs
+- Added Students' dashboard in Admin
+
+**2016-09-12**
+- Removed few bug
+- Added folder permission check in system page
+- Removed hardcoded file extensions in admin/project_management.php
+- Added PDF and MP3 basic support
+- Gallery shows only pictures and movies
 
 **2016-08-26**
 - Improved UX

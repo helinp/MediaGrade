@@ -39,7 +39,7 @@
 	<div class="row">
 		<div class = "col-md-6">
 			<div class="form-group">
-				<label class="control-label"><?=  LABEL_DEADLINE ?></label>
+				<label class="control-label"><?=  _('Deadline (jour inclu)') ?></label>
 				<div class="date">
 					<div class="input-group input-append date" id="datePicker">
 						<input type="text" class="form-control" name="deadline" required value="<?= @$curr_project->deadline?>" />
@@ -75,6 +75,15 @@
 					<?php endforeach ?>
 				</select>
 				<p class="help-block with-errors"><?=  LABEL_PRESS_CTRL_SELECT ?></p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class = "col-xs-12">
+			<div class="form-group">
+				<label for="title"><?= _('Matières abordées') ?></label>
+				<input class="form-control input-sm" value="<?= @$curr_project->material ?>" name="material" />
+				<p class="help-block with-errors"><?=  _('Séparez les termes par une virgule.') ?></p>
 			</div>
 		</div>
 	</div>

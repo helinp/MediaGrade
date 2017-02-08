@@ -42,22 +42,35 @@ Class Results_model extends CI_Model
 	 * @param 	boolean		$admin_id
 	 * @return	array
 	 */
-    public function getGaussDataByClassAndSchoolYearAndAdmin($class = FALSE, $school_year = FALSE, $admin_id = FALSE)
+    public function getGaussDataByClassAndSchoolYearAndAdmin($class = FALSE, $school_year = FALSE, $admin_id = FALSE, $skills_group = FALSE)
     {
-        $this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 10, 0) AS percentage');
+        $this->db->select('ROUND(SUM(user_vote) / SUM(results.max_vote) * 10, 0) AS percentage, skills_group');
         $this->db->join('projects', 'projects.id = results.project_id', 'left');
+        $this->db->join('assessments', 'assessments.id = results.assessment_id', 'left');
         $this->db->where('projects.is_activated', TRUE);
 
         if($class) $this->db->where('class', $class);
         if($school_year) $this->db->where('school_year', $school_year);
         if($admin_id) $this->db->where('admin_id', $admin_id);
+        if($skills_group) $this->db->where('skills_group', $skills_group);
 
         $this->db->group_by('user_id');
         $this->db->order_by('percentage', 'ASC');
         $result = $this->db->get('results')->result();
 
         $this->load->helper('graph');
-        return gauss($result, 'percentage');
+        $data['percentage'] = gauss($result, 'percentage');
+
+        if($skills_group && isset($result[0]))
+        {
+        	$data['skills_group'] = js_special_chars($result[0]->skills_group);
+    	}
+    	elseif($skills_group && ! isset($result[0]))
+    	{
+    		$data['skills_group'] = js_special_chars($skills_group);
+    	}
+
+        return $data;
     }
 
 	/**
@@ -78,10 +91,72 @@ Class Results_model extends CI_Model
         $this->db->where('user_id', $user_id);
         $this->db->where('projects.is_activated', TRUE);
         $this->db->where('school_year', $school_year);
+		if($term) $this->db->where('term', $term);
 
         return $this->db->get('results')->row('average');
     }
 
+	/**
+	 * Returns students ranking
+	 *
+	 * @param 	string		'top'
+	 * @param 	string		$term
+	 * @param 	string		$school_year
+	 * @return	float
+	 */
+    public function getStudentsRankingByTermAndClassAndSchoolYear($type, $term = FALSE, $class = FALSE, $school_year = FALSE)
+    {
+        if ( ! $school_year) $school_year = $this->current_school_year;
+
+		$this->db->limit(10);
+		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, name, last_name, users.class, user_id');
+        $this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+		$this->db->join('users', 'users.id = results.user_id', 'LEFT');
+        $this->db->group_by('user_id');
+        $this->db->where('projects.is_activated', TRUE);
+        $this->db->where('school_year', $school_year);
+		if($class) $this->db->where('users.class', $class);
+		if($term) $this->db->where('term', $term);
+
+		if($type === 'top')
+		{
+			$this->db->order_by('average', 'DESC');
+		}
+		else
+		{
+			$this->db->order_by('average', 'ASC');
+		}
+
+        return $this->db->get('results')->result();
+    }
+
+	/**
+	 * Returns detailled results (by cursor)
+	 *
+	 * @param 	integer		$user_id
+	 * @param 	string		$term
+	 * @param 	string		$school_year
+	 * @return	float
+	 */
+    public function getDetailledResults($group_by, $user_id = FALSE, $term = FALSE, $school_year = FALSE)
+    {
+        if ( ! $user_id) $user_id = $this->session->id;
+        if ( ! $school_year) $school_year = $this->current_school_year;
+
+        $this->db->select('ROUND(SUM(user_vote) / SUM(results.max_vote) * 100, 0) as average, COUNT(results.max_vote) as count, user_vote, criterion, cursor');
+		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+        $this->db->join('assessments', 'results.assessment_id = assessments.id', 'LEFT');
+
+        $this->db->where('user_id', $user_id);
+        $this->db->where('projects.is_activated', TRUE);
+        $this->db->where('school_year', $school_year);
+		if($term) $this->db->where('term', $term);
+
+		$this->db->group_by('assessments.' . $group_by);
+		$this->db->order_by('criterion', 'ASC');
+
+        return $this->db->get('results')->result_array();
+    }
 
 	 /**
 	  * Returns body of results table
@@ -119,8 +194,12 @@ Class Results_model extends CI_Model
 
         if($term) $this->db->where('term', $term);
 
-        $this->db->group_by('users.id,  skills_group, projects.id', 'ASC');
-        $this->db->order_by('users.last_name, projects.term, projects.id, skills_group');
+        $this->db->group_by('users.id, skills_group, projects.id', 'ASC');
+
+		$this->db->order_by('users.last_name', 'ASC');
+		$this->db->order_by('deadline', 'ASC');
+		$this->db->order_by('term', 'DESC');
+        $this->db->order_by('skills_group', 'ASC');
 
         $results = $this->db->get()->result();
 

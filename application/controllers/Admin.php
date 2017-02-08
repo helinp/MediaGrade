@@ -41,6 +41,89 @@ class Admin extends CI_Controller {
 	}
 
 
+	public function student_details()
+	{
+
+		$student_id = $this->input->get('student');
+		if($student_id == '') $student_id='1';
+
+		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($this->input->get('class'), $this->school_year);
+		$this->data['projects'] = $this->projects;
+
+		/** get not submitted projects **/
+		$not_submitted_projects = array();
+
+		foreach ($this->data['projects'] as $project)
+		{
+			if ( ! $this->Submit_model->boolIfSubmittedByUserAndProjectId($student_id, $project->project_id)
+				&& ! $this->Submit_model->isDeadlineReached($project->project_id))
+			{
+				$not_submitted_projects[] = $project;
+			}
+		}
+
+		$this->data['not_submitted'] = $not_submitted_projects;
+
+		/** get graded projects **/
+		$graded_projects = array();
+
+		$this->load->model('Results_model','',TRUE);
+		foreach ($this->projects as $project)
+		{
+			$this->load->model('Grade_model','',TRUE);
+			if ($this->Grade_model->boolGradedProjectByProjectAndUser($project->project_id, $student_id))
+			{
+				// get project media vote
+				$project->average = $this->Results_model->getUserProjectOverallResult($student_id, $project->project_id);
+
+				$graded_projects[] = $project;
+			}
+		}
+
+		$this->data['graded'] = array_reverse($graded_projects);
+
+		/** get graph skills progression **/
+		$skills_groups = $this->Skills_model->getAllSkillsGroups();
+
+		/** get overall results **/
+		$this->load->model('Terms_model','',TRUE);
+		$terms = $this->Terms_model->getAllTerms();
+		$terms_results = array();
+
+		$overall_results = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, FALSE, $this->school_year);
+
+		foreach($terms as $term)
+		{
+			$terms_results[$term] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term, $this->school_year);
+		}
+
+		$class = FALSE;
+		if($this->input->get('class')) $class = $this->input->get('class');
+
+		$this->data['students'] = $this->Users_model->getAllUsersByClass('student', $class);
+		$this->data['user_data'] = $this->Users_model->getUserInformations($student_id);
+//dump($this->data['students']);
+		$this->data['cursor_results'] = $this->Results_model->getDetailledResults('cursor', $student_id, FALSE, $this->school_year);
+		$this->data['criterion_results'] = $this->Results_model->getDetailledResults('criterion', $student_id, FALSE, $this->school_year);
+		$this->data['overall_results'] = $overall_results;
+		$this->data['terms_results'] = $terms_results;
+
+		$this->load->helper('graph');
+		$this->data['graph_results'] = graph_results($this->Results_model->getUserOverallResults($skills_groups, $this->projects, $student_id));
+		$this->data['graph_projects_list'] = graph_projects($this->projects);
+		$this->data['title'] = ucfirst('projets'); // Capitalize the first letter
+
+		if($this->input->get('modal') === 'true')
+		{
+			$this->load->template('admin/student_details', $this->data, TRUE);
+		}
+		else
+		{
+			$this->load->template('admin/student_details', $this->data);
+		}
+
+	}
+
 	// Dashboard
 	public function dashboard()
 	{
@@ -50,8 +133,21 @@ class Admin extends CI_Controller {
 
 		$this->load->model('Results_model','',TRUE);
 		$this->load->model('Grade_model','',TRUE);
+		$this->load->model('Skills_model','',TRUE);
 
-		$this->data['gauss'] =  $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $school_year, $this->session->id);
+		$skills_groups = $this->Skills_model->getAllSkillsGroups();
+		$gauss  = array();
+		foreach ($skills_groups as $skills_group)
+		{
+			$gauss[] = $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $school_year, $this->session->id, $skills_group->name);
+		}
+
+		$this->data['gauss'] =  $gauss;
+
+		$this->data['ranking_top'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('top', FALSE, $class, $school_year);
+		$this->data['ranking_bottom'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('bottom', FALSE, $class, $school_year);
+		$this->data['materials_stats'] = $this->Projects_model->getMaterialStatisticsByAdminAndClassAndShoolYear($this->session->id, $class, $school_year);
+		$this->data['gauss_overall'] =  $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $school_year, $this->session->id);
 		$this->data['skills_usage'] = $this->Skills_model->getSkillsUsageByClass($class, FALSE, $school_year);
 		$this->data['last_submitted'] = $this->Submit_model->getNLastSubmitted($class, 5, $school_year);
 		$this->data['active_projects'] = $this->Projects_model->getAllActiveAndCurrentProjects($class);
@@ -65,7 +161,7 @@ class Admin extends CI_Controller {
 
 	public function export()
 	{
-		if(!empty($this->input->get('term')))
+		if( ! empty($this->input->get('term')))
 		{
 			$term = $this->input->get('term');
 		}
@@ -73,8 +169,9 @@ class Admin extends CI_Controller {
 		{
 			$term = FALSE;
 		}
+		if($this->input->get('school_year')) $school_year = $this->input->get('school_year');
 
-		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTerm($term);
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTermAndSchoolYear($term, $school_year);
 		$this->load->template('admin/export', $this->data);
 	}
 
@@ -108,7 +205,7 @@ class Admin extends CI_Controller {
 				$first_col[$key]->results[$user->id] = @$this->Results_model->getResultsByProjectAndUser($project_id, $user->id)[$key]->user_vote;
 			}
 		}
-
+		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id, $user_id);
 		$this->data['project_name'] = $project->project_name;
 		$this->data['results'] = $first_col;
 		$this->data['students'] = $users;
@@ -210,7 +307,10 @@ class Admin extends CI_Controller {
 			{
 				$table[$class][$user->id]['user'] = $user;
 
-				$projects = $this->Projects_model->getAllActiveProjectsByTermAndClassAndSchoolYear($term, $class, get_school_year());
+				$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, get_school_year());
+
+				//workaround
+				//$projects = array_reverse($projects);
 
 				foreach($projects as $key => $project)
 				{
@@ -479,16 +579,16 @@ class Admin extends CI_Controller {
 		if ($action === 'mail_test')
 		{
 			$this->Email_model->sendObjectMessageToEmail(   $this->input->post('subject'),
-									$this->input->post('body'),
-									$this->session->email);
+															$this->input->post('body'),
+															$this->session->email
+														);
 
 			redirect('/admin/settings');
 		}
 
-		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
-                $this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
-
 		// GET
+		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
+        $this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
 		$this->load->template('admin/settings', $this->data);
 	}
 

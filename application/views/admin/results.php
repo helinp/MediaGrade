@@ -1,32 +1,24 @@
 <div id="content" class="col-xs-12 col-md-10 ">
 
     <div class="row chapeau hidden-print">
-        <div class="col-xs-7  col-md-7">
+        <div class="col-xs-6  col-md-6">
             <h1><?= _('Carnet de cotes')?><small> / <?= $class ?> </small></h1>
         </div>
-        <div class="col-xs-2  col-md-2">
+        <div class="col-xs-6  col-md-6">
             <form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
                 <label><?= _('Période: ') ?></label>
-                <div class="input-group">
-                    <select class="form-control input-sm" name="term" onchange="this.form.submit()">
-                        <option value=""><?= _('Toutes')?></option>
-                        <?php foreach($terms as $term): ?>
-                            <?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? 'selected' : '') . '>' . $term . '</option>' . "\n" ?>
+                <select class="form-control input-sm" name="term" onchange="this.form.submit()">
+                    <option value=""><?= _('Toutes')?></option>
+                    <?php foreach($terms as $term): ?>
+                        <?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? 'selected' : '') . '>' . $term . '</option>' . "\n" ?>
+                    <?php endforeach?>
+                    </select>
+                <label><?= _('Année scolaire') ?>: </label>
+                    <select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
+                        <?php foreach($school_years as $school_year): ?>
+                            <?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? 'selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
                         <?php endforeach?>
                     </select>
-                </div>
-            </div>
-            <div class="col-xs-3  col-md-3">
-                <div class="form-inline" style="margin-top:1.5em">
-                    <label><?= _('Année scolaire') ?>: </label>
-                    <div class="input-group" >
-                        <select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
-                            <?php foreach($school_years as $school_year): ?>
-                                <?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? 'selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
-                            <?php endforeach?>
-                        </select>
-                    </div>
-                </div>
             </form>
         </div>
     </div>
@@ -49,7 +41,7 @@
                         <th><small><?= _('Groupe de cpt')?></small></th>
                         <?php foreach ($table_header as $row): ?>
                             <?php foreach ($row['skills_groups'] as $skill_group): ?>
-                                <th><?= substr($skill_group->skills_group, 0, 1)?></th>
+                                <th data-toggle="tooltip" data-placement="top" title="<?= $skill_group->skills_group ?>"><?= substr($skill_group->skills_group, 0, 1)?></th>
                             <?php endforeach ?>
                         <?php endforeach ?>
                         <th></th>
@@ -114,7 +106,7 @@
             ,tmpRowDelim = String.fromCharCode(0) // null character
             // actual delimiter characters for CSV format
             ,colDelim = '";"'
-            ,rowDelim = '"\r\n"';
+            ,rowDelim = '"\n"';
             // Grab text from table into CSV formatted string
             var csv = '';
             csv += formatRows($headers.map(grabRow));
@@ -151,7 +143,7 @@
         function grabCol(j,col){
             var $col = $(col),
             $text = $col.text();
-            return $text.replace('"', '""'); // escape double quotes
+            return $text.replace('"', '""').replace(/\s+/g, ' ').trim(); // escape double quotes and remove space & carriage return
         }
     }
     // This must be a hyperlink

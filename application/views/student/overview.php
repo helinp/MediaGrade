@@ -5,7 +5,7 @@
             </h1>
         </div>
     </div>
-    <?php $term_tmp = NULL; $curr = 0; ?>
+    <?php $term_tmp = NULL; $curr = 0; $projects = array_reverse($projects); ?>
     <?php foreach ($projects as $project):?>
         <?php
         if ($term_tmp !== $project->term)
@@ -28,35 +28,38 @@
                         </div>
                         <div class="panel-body">
                             <p><?= unserialize($project->instructions_txt)['context'] ?> </p>
+							<p style="margin-bottom:4px;"><span class="label label-info"><span class="glyphicon glyphicon-time"></span> <?=$project->deadline?></span>
                             <?php if (countdown($project->raw_deadline)): ?>
-                                <p style="margin-bottom:4px;"><span class="label label-info"><?= countdown($project->raw_deadline); ?> <?=_('jours restants') ?></span></p>
+                                <span class="label label-info"><?= countdown($project->raw_deadline) . ' ' . (countdown($project->raw_deadline) > 1 ? _('jours restants') : _('jour restant')) ?></span></p>
                             <?php endif ?>
-                            <p>
+
+							<p>
                                 <?php if($project->submitted): ?>
                                     <span class="label label-success">Remis</span>
                                 <?php else: ?>
                                     <span class="label label-danger">Non remis</span>
                                 <?php endif ?>
                                 <?php if(countdown($project->raw_deadline)): ?>
-                                    <span class="label label-success">En cours</span>
+                                    <span class="label label-warning">En cours</span>
                                 <?php else: ?>
                                     <span class="label label-info">Clôturé</span>
                                 <?php endif?>
                                 <?php if($project->graded): ?>
                                     <span class="label label-primary">Évalué</span>
                                 <?php endif ?>
+
                             </p>
                             </div>
 
                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                 <div class="btn-group" role="group">
-                                    <a data-toggle="modal" data-target="#projectModal" href="/projects/instructions/<?= $project->project_id ?>" type="button" class="btn btn-sm btn-default">Consignes</a>
+                                    <a data-toggle="modal" data-target="#projectModal" href="/projects/instructions/<?= $project->project_id ?>" type="button" class="btn btn-sm <?= (countdown($project->raw_deadline) ? 'btn-primary' : 'btn-default')?>"><span class="glyphicon glyphicon-file"> </span> Consignes</a>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <a href="<?= (countdown($project->raw_deadline) ? '/projects/submit/' . $project->project_id . '" data-toggle="modal" data-target="#projectModal" ' : '"#"' ) ?> type="button" class="btn btn-sm btn-default" <?= (countdown($project->raw_deadline) ? '' : 'disabled') ?>>Remise</a>
+                                    <a href="<?= (countdown($project->raw_deadline) ? '/projects/submit/' . $project->project_id . '" data-toggle="modal" data-target="#projectModal" ' : '#"' ) ?> type="button" class="btn btn-sm <?= (countdown($project->raw_deadline) ? 'btn-primary' : 'btn-default')?>" <?= (countdown($project->raw_deadline) ? '' : 'disabled') ?>><span class="glyphicon glyphicon-download-alt"> </span> Remise</a>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <a data-toggle="modal" data-target="#projectModal" href="/projects/results/<?= $project->project_id ?>" type="button" class="btn btn-sm btn-default">Résultats</a>
+                                    <a data-toggle="modal" data-target="#projectModal" href="/projects/results/<?= $project->project_id ?>" type="button" class="btn btn-sm <?= (countdown($project->raw_deadline) ? 'btn-primary' : 'btn-default')?>"><span class="glyphicon glyphicon-list-alt"> </span> <?= _('Évaluation')?></a>
                                 </div>
                             </div>
 

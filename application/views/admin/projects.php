@@ -46,11 +46,10 @@
                 else echo 'desactivated';
 
                 ?>">
-                <div class="panel-body">
-                    <b><?= $project->project_name; ?> </b><br /><?= $project->class . ' - ' . $project->term; ?>
-                </div>
-                <div class="panel-body">
-                    <a  data-toggle="modal" data-target="#projectModal"  href="/admin/instructions/<?= $project->project_id ?>"><span class="glyphicon glyphicon-file"></span> Consignes</a><br />
+                <div class="panel-body" style="min-height: 9em">
+                    <p><b><?= $project->project_name; ?> </b><br /><?= $project->class . ' - ' . $project->term; ?></p>
+                    <p><span class="glyphicon glyphicon-time"> </span> <?= date_format(date_create($project->deadline),"d/m/Y"); ?><br /><a data-toggle="modal" data-target="#projectModal"  href="/admin/instructions/<?= $project->project_id ?>"><span class="glyphicon glyphicon-file"></span> Consignes</a>
+                    </p>
                 </div>
                 <div class="panel-footer clearfix">
                     <?php if (countdown($project->deadline)): ?>

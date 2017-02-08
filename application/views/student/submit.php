@@ -10,7 +10,7 @@
         <?php if (!empty($submit->extension)):?>
         <h4><span class="glyphicon glyphicon-download-alt"></span> <?= ($number_of_files > 1 ? LABEL_SUBMIT_FILES : LABEL_SUBMIT_FILE) ?></h4>
         <?php while($number_of_files--): ?>
-      <label for="inputfile">
+        <label for="inputfile">
             <?=LABEL_SELECT_FILE ?>
         </label>
         <input type="hidden" name="MAX_FILE_SIZE" value="<?= MAX_UPLOAD_FILE_SIZE ?>" />
@@ -18,17 +18,20 @@
 
 
 
-        <p class="help-block with-errors">Max.
+        <p class="help-block with-errors"><?= _('Taille max.') ?>
             <?=format_bytes(MAX_UPLOAD_FILE_SIZE) ?>.</p>
 
-        <?= _('Extension du fichier demandé') . ': ' . $project->extension ?>
-        <?=( empty($submitted[$number_of_files]->file) ? '' : '<p>' . LABEL_SUBMITTED_FILE . '
-          <a href="' . $submitted[$number_of_files]->file . '">'
-          . $submitted[$number_of_files]->file . '</a></p>') ?>
-
-            <hr />
-            <?php endwhile ?>
-            <?php endif ?>
+        <?= _('Extension du fichier demandé') . ': <em>.' . $project->extension . '</em>' ?>
+        <?php if(empty($submitted[$number_of_files]->file)): ?>
+        <?php else: ?> 
+        <h5> <?= _('Fichier remis') ?> </h5>
+        <a target="_new" style="display:block;" href="<?= $submitted[$number_of_files]->file ?>">
+            <img src="<?= $submitted[$number_of_files]->thumbnail ?>" alt="thumbnail" style="height:10em;" />
+        </a>
+        <hr />
+        <?php endif ?>
+        <?php endwhile ?>
+        <?php endif ?>
     </div>
 
     <?php if( ! empty($self_assessment)): ?>

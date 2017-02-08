@@ -32,7 +32,7 @@ Class Pdf_assessment_model extends CI_Model
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 
-		$pdf->SetFont('dejavusans', '', 9);
+		$pdf->SetFont('dejavusans', '', 8);
 		$pdf->SetDefaultMonospacedFont('dejavusans', '', 8);
 
 		// set margins

@@ -17,8 +17,13 @@ Class Users_model extends CI_Model
             $this->db->limit(1);
 
             $result = $this->db->get('users')->row();
-            $this->setSession($result);
 
+			if(CONSULTATION_VERSION && $result->role === 'admin')
+			{
+				return FALSE;
+			}
+
+            $this->setSession($result);
             return TRUE;
         }
         else
@@ -171,17 +176,18 @@ Class Users_model extends CI_Model
     }
 
 	/**
-	 * Returns all user
+	 * Returns all user by class
 	 *
 	 * @param 	string	$role = 'student',
 	 * @param	string	$class = FALSE
-	 * @return	object
+	 * @return	array[object]
 	 */
     public function getAllUsersByClass($role = 'student', $class = FALSE)
     {
         // Query
         $this->db->select('id, username, role, name, last_name, class, email');
         $this->db->where('role', $role);
+		$this->db->order_by('class', 'ASC');
 
         if ($class) $this->db->where('class', $class);
 
@@ -203,6 +209,28 @@ Class Users_model extends CI_Model
         return $sorted_by_class;
     }
 
+	/**
+	 * Returns all users
+	 *
+	 * @param 	string	$role = 'student',
+	 * @param	string	$class = FALSE
+	 * @return	array[object]
+	 */
+	public function getAllUsers($role = 'student', $class = FALSE)
+	{
+		// Query
+		$this->db->select('id, username, role, name, last_name, class, email');
+		$this->db->where('role', $role);
+		$this->db->order_by('class', 'ASC');
+		$this->db->order_by('last_name', 'ASC');
+
+		if ($class) $this->db->where('class', $class);
+
+		$this->db->order_by('class, last_name');
+		$results = $this->db->get('users')->result();
+
+		return $results;
+	}
 }
 
 ?>

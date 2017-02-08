@@ -35,7 +35,7 @@ Class Grade_model extends CI_Model
 
 		$this->db->select('projects.class, projects.term, users.name, users.last_name,
 							projects.project_name, users.id as user_id, projects.id as project_id');
-
+		$this->db->distinct();
 		$this->db->from('submitted, users, projects');
 
 		$this->db->where(' 	NOT EXISTS(
@@ -52,7 +52,6 @@ Class Grade_model extends CI_Model
 		$this->db->where('projects.id = submitted.project_id');
 		$this->db->where('users.id = submitted.user_id');
 		$this->db->where('admin_id', $this->session->id);
-		$this->db->group_by('project_id');
 
 		return $this->db->get()->result();
 	}

@@ -44,8 +44,11 @@ class Projects extends CI_Controller {
 
 		foreach ($this->data['projects'] as $project)
 		{
-			if ( ! $this->Submit_model->boolIfSubmittedByUserAndProjectId(FALSE, $project->project_id))
+			if ( ! $this->Submit_model->boolIfSubmittedByUserAndProjectId(FALSE, $project->project_id)
+				&& ! $this->Submit_model->isDeadlineReached($project->project_id))
+			{
 				$not_submitted_projects[] = $project;
+			}
 		}
 
 		$this->data['not_submitted'] = $not_submitted_projects;
@@ -64,13 +67,28 @@ class Projects extends CI_Controller {
 			}
 		}
 
-		$this->data['graded'] = $graded_projects;
+		$this->data['graded'] = array_reverse($graded_projects);
 
 		/** get graph skills progression **/
 		$skills_groups = $this->Skills_model->getAllSkillsGroups();
 
-		$this->data['graph_results'] = graph_results($this->Results_model->getUserOverallResults($skills_groups, array_reverse($this->projects)));
-		$this->data['graph_projects_list'] = graph_projects(array_reverse($this->projects));
+		/** get overall results **/
+		$this->load->model('Terms_model','',TRUE);
+		$terms = $this->Terms_model->getAllTerms();
+		$terms_results = array();
+		$overall_results = $this->Results_model->getUserVoteAverageByTermAndSchoolYear(FALSE, FALSE, $this->school_year);
+
+		foreach($terms as $term)
+		{
+			$terms_results[$term] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear(FALSE, $term, $this->school_year);
+		}
+
+		$this->data['cursor_results'] = $this->Results_model->getDetailledResults('cursor');
+		$this->data['criterion_results'] = $this->Results_model->getDetailledResults('criterion');
+		$this->data['overall_results'] = $overall_results;
+		$this->data['terms_results'] = $terms_results;
+		$this->data['graph_results'] = graph_results($this->Results_model->getUserOverallResults($skills_groups, $this->projects));
+		$this->data['graph_projects_list'] = graph_projects($this->projects);
 		$this->data['title'] = ucfirst('projets'); // Capitalize the first letter
 		$this->data['content'] = $this->Welcome_model->getWelcomeMessage();
 
@@ -111,6 +129,11 @@ class Projects extends CI_Controller {
 
 	public function submit($project_id)
 	{
+		if (CONSULTATION_VERSION)
+		{
+			show_error(_('Version de consultation. Remise impossible!'));
+		}
+		
 		if (!is_numeric($project_id) || empty($this->Projects_model->checkProjectId($project_id)))
 		{
 			// Whoops, we don't have a page for that!
@@ -170,6 +193,12 @@ class Projects extends CI_Controller {
 
 	public function upload($project_id)
 	{
+
+		if (CONSULTATION_VERSION)
+		{
+			show_error(_('Version de consultation. Remise impossible!'));
+		}
+
 		$this->load->model('Submit_model','',TRUE);
 
 		if($this->Submit_model->isDeadlineReached($project_id))
@@ -204,6 +233,8 @@ class Projects extends CI_Controller {
 
 			// Save POST
 			$i = $number_of_files_requested;
+			$submitted_files = array();
+
 			while ($i--)
 			{
 				// $file_name = NULL; TODO
@@ -226,7 +257,9 @@ class Projects extends CI_Controller {
 					{
 						$file_path = $config['upload_path'] . $file_name;
 						$real_path = $this->upload->data('file_path');
-						$this->Submit_model->makeThumbnail($file_path, $real_path);
+						$thumb = $this->Submit_model->makeThumbnail($file_path, $real_path);
+
+						$submitted_files[] = $thumb;
 					}
 				}
 
@@ -246,10 +279,14 @@ class Projects extends CI_Controller {
 		$this->load->model('Email_model','',TRUE);
 
 		if(@$admin_preferences['submit_confirmation'])
-		$this->Email_model->sendSubmitConfirmationToAdmin($project_info->project_name, $admin_email);
+		{
+			$this->Email_model->sendSubmitConfirmationToAdmin($project_info->project_name, $admin_email, $submitted_files);
+		}
 
 		if(@$user_preferences['submit_confirmation'])
-		$this->Email_model->sendSubmitConfirmationToUser($project_info->project_name, $this->session->email);
+		{
+			$this->Email_model->sendSubmitConfirmationToUser($project_info->project_name, $this->session->email, $submitted_files);
+		}
 
 		// Show success page
 		$this->success(_('Ton projet a bien été téléversé!'));
