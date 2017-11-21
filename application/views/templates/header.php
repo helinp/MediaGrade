@@ -10,9 +10,11 @@
 
         <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" type='text/css' href="/assets/css/lightbox.css" />
-        <link rel="stylesheet" type="text/css" href="/assets/css/datepicker.min.css" />
-        <link rel="stylesheet" type="text/css" href="/assets/css/datepicker3.min.css" />
+        <link rel="stylesheet" type="text/css" href="/assets/js/calendar/css/bootstrap-datepicker.standalone.css" />
         <link rel="stylesheet" type='text/css' href="/assets/css/styles.css"/>
+		<link rel="stylesheet" type='text/css' href="/assets/css/fonts.css"/>
+	<!--	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Coming+Soon|Indie+Flower" rel="stylesheet"> -->
 
         <script src="/assets/js/jquery-3.1.1.min.js"></script>
         <script src="/assets/js/scripts.js"></script>
@@ -61,9 +63,9 @@
             <div class="col-xs-2 col-md-2 bg-primary" style="border-bottom:#34495e solid 1px;padding:0.5em 0">
                 <img src="/assets/img/logo_white.png"  alt="MediaGrade" class="center-block img-circle img-responsive" style="text-align:center;width:75px">
             </div>
-            <div class="col-xs-2 col-md-1" >
+			<div class="col-xs-2 col-md-1" >
                 <img src="<?=(empty($this->session->avatar) ? '/assets/img/default_avatar.jpg' : $this->session->avatar )?>"  alt="user_avatar" class="center-block img-circle img-responsive" style="text-align:center;width:75px;margin-top:.5em">
-            </div>
+			</div>
             <div class="col-xs-6 col-md-7" >
                 <h2 class="muted username-title"><?= $this->session->name . ' ' . $this->session->last_name ?></h2>
                 <p class="muted"><?= ($this->session->role === 'admin' ? _('Professeur') : _('Élève de ') . $this->session->class) ?> - <a href="<?= base_url(); ?>profile"><?= _('Modifier mon profil') ?></a></p>

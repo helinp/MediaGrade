@@ -12,7 +12,7 @@ class Pdf_project extends CI_Controller {
 		$this->load->model('Assessment_model','',TRUE);
 		$this->load->model('Comments_model','',TRUE);
 		$this->load->model('Submit_model','',TRUE);
-		$this->load->model('Pdf_assessment_model','',TRUE);
+		$this->load->model('Pdf_model','',TRUE);
 		$this->load->model('Skills_model','',TRUE);
 	}
 
@@ -24,8 +24,8 @@ class Pdf_project extends CI_Controller {
 	public function index()
 	{
 		// creates new PDF object
-        $pdf = new Pdf();
-		$this->Pdf_assessment_model->setDefaultConfig($pdf);
+        $pdf = new pdf();
+		$this->Pdf_model->setDefaultConfig($pdf);
         $pdf->SetAuthor($this->session->name . ' ' . $this->session->last_name);
         $pdf->SetTitle(_('Fiche d\'évaluation'));
 
@@ -34,7 +34,7 @@ class Pdf_project extends CI_Controller {
 		foreach ($data as $student)
 		{
 			$pdf->AddPage();
-			$html = $this->Pdf_assessment_model->processAssessmentsRecordHtml($student);
+			$html = $this->Pdf_model->processAssessmentsRecordHtml($student);
 			$pdf->writeHTML($html, false, false, false, false, '');
 
 			// insert PDF submitted project, if EXISTS

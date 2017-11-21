@@ -16,16 +16,16 @@ Class UsersManager_model extends Users_model
     {
         if ( ! $user_id) $user_id = $this->session->id;
 
+		// check current password
+		$check = parent::checkUserPassword($user_id, $current_password, 'id');
+		if( ! $check) show_error(_('Le mot de passe d\'origine n\'est pas valide'));
+
         // check new password
         if($new_password !== $new_password_confirmation)
             show_error(_('Les mots de passe ne correspondent pas'));
 
         if( ! empty($errors = $this->checkPasswordStrenght($new_password)))
             show_error($errors);
-
-        // check current password
-        $check = parent::checkUserPassword($user_id, $current_password, 'id');
-        if( ! $check) show_error(_('Le mot de passe n\'est pas valide'));
 
         $hash = password_hash($new_password, PASSWORD_DEFAULT);
 
@@ -82,7 +82,7 @@ Class UsersManager_model extends Users_model
 	 *
 	 * @return	string
 	 */
-    private function str_replace_last($str, $search, $replace)
+    private function _strReplaceLast($str, $search, $replace)
     {
         if(($pos = strrpos($str, $search)) !== FALSE)
         {
@@ -197,6 +197,26 @@ Class UsersManager_model extends Users_model
     }
 
 	/**
+	 * Update user motto in DB
+	 *
+	 * @param 	integer		$user_id = $this->session->id
+	 * @param 	string		$email
+	 *
+	 * @return	void
+	 */
+    public function changeMotto($user_id = FALSE, $motto)
+    {
+        if ( ! $user_id) $user_id = $this->session->id;
+
+        $data = array(
+                'id' => $user_id,
+                'motto' => $motto
+        );
+        $this->db->where('id', $user_id);
+        $this->db->update('users', $data);
+    }
+
+	/**
 	 * Update/add user email preferences in DB
 	 *
 	 * @param 	integer		$user_id = $this->session->id
@@ -254,36 +274,11 @@ Class UsersManager_model extends Users_model
 	 *
 	 * @return	void
 	 */
-    public function saveAvatar($user_id, $file_path)
+    public function saveAvatar($user_id = FALSE, $file_path)
     {
         if ( ! $user_id) $user_id = $this->session->id;
-
-        // prepare array
-        $data = array(
-                'user_id' => $user_id,
-                'data' => $file_path,
-                'type' => 'avatar'
-        );
-        $where = array(
-                'user_id' => $user_id,
-                'type' => 'avatar'
-        );
-
-        // checks if reocrd exists
-        $this->db->where($where);
-        $q = $this->db->get_where('users_config', array('user_id' => $user_id), 1);
-
-        // if TRUE, update
-        if ($q->num_rows() > 0)
-        {
-            $this->db->where($where);
-            $this->db->update('users_config', $data);
-        }
-        // else insert
-        else
-        {
-            $this->db->insert('users_config', $data);
-        }
+        $this->db->where('id', $user_id);
+        $this->db->update('users', array('picture' => $file_path));
     }
 }
 ?>

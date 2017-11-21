@@ -39,7 +39,7 @@ Class Users_model extends CI_Model
 	 */
     public function updateSession()
     {
-        $this->db->select('name, last_name, username, email, class, role');
+        $this->db->select('name, last_name, username, email, class, role, picture, motto');
         $this->db->where('id', $this->session->id);
         $this->db->limit(1);
 
@@ -127,9 +127,9 @@ Class Users_model extends CI_Model
     {
         if (!$user_id) $user_id = $this->session->id;
 
-		$this->db->select('data');
-		$query = $this->db->get_where('users_config', array('type' => 'avatar', 'id' => $user_id), 1);
-        $result = $query->row('data');
+		$this->db->select('picture');
+		$query = $this->db->get_where('users', array('id' => $user_id), 1);
+        $result = $query->row('picture');
 
         return $result;
     }
@@ -181,11 +181,13 @@ Class Users_model extends CI_Model
 	 * @param 	string	$role = 'student',
 	 * @param	string	$class = FALSE
 	 * @return	array[object]
+	 * TODO ALL getAllUsers* method should return the same output, $unsorted is a workaround
+	 * TODO $role is useless
 	 */
-    public function getAllUsersByClass($role = 'student', $class = FALSE)
+    public function getAllUsersByClass($role = 'student', $class = FALSE, $unsorted = FALSE)
     {
         // Query
-        $this->db->select('id, username, role, name, last_name, class, email');
+        $this->db->select('id, username, role, name, last_name, class, email, picture, motto');
         $this->db->where('role', $role);
 		$this->db->order_by('class', 'ASC');
 
@@ -194,7 +196,12 @@ Class Users_model extends CI_Model
         $this->db->order_by('class, last_name');
         $results = $this->db->get('users')->result();
 
-        // Array[class] formatting
+		if($unsorted)
+		{
+			return $results;
+		}
+
+		// Array[class] formatting
         $sorted_by_class = array();
 
         foreach($results as $user)
@@ -219,7 +226,7 @@ Class Users_model extends CI_Model
 	public function getAllUsers($role = 'student', $class = FALSE)
 	{
 		// Query
-		$this->db->select('id, username, role, name, last_name, class, email');
+		$this->db->select('id, username, role, name, last_name, class, email, picture, motto');
 		$this->db->where('role', $role);
 		$this->db->order_by('class', 'ASC');
 		$this->db->order_by('last_name', 'ASC');

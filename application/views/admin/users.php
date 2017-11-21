@@ -6,6 +6,7 @@
         </div>
     </div>
     <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
+    <div class="alert alert-info" style="margin-top:1em;" role="info"><?= _('<b>Conseil:</b> Le nom d\'utilisateur devrait toujours se présenter sous la forme <i>nom.prenom</i> et ne comporter ni d\'accent ni de caractères spéciaux.') ?></div>
         <h3><?= _('Ajouter un utilisateur')?></h3>
            <form action="/admin/users/add_user" method="post">
                <table id="rows" class="table">

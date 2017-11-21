@@ -22,12 +22,12 @@
             </form>
         </div>
     </div>
-    <div class="row" style = "margin-top:1em">
+    <div class="row" style="margin-top:1em">
         <div class="col-lg-4 col-md-4 col-xs-12 ">
             <div class="panel panel-danger">
                 <div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('À corriger')?> <span class="badge"><?= count($not_graded_projects) ?></span>
                 </div>
-                <div class="panel-body text-left">
+                <div class="panel-body text-left panel-overflow">
                     <?php if($not_graded_projects): ?>
                     <table class="table table-striped small">
                         <?php foreach($not_graded_projects as $row): ?>
@@ -48,7 +48,7 @@
         <div class="col-lg-4 col-md-4 col-xs-12 ">
             <div class="panel panel-success">
                 <div class="panel-heading text-center" style="background-color:#5cb85c;color:white"><?= _('Projets en cours')?>  <span class="badge"><?= count($active_projects) ?></span></div>
-                <div class="panel-body text-left">
+                <div class="panel-body text-left panel-overflow">
                 <?php if($active_projects): ?>
                     <table class="table table-striped small">
                         <?php foreach($active_projects as $row): ?>
@@ -71,7 +71,7 @@
             <div class="panel panel-primary ">
                 <div class="panel-heading text-center"><?= _('Dernières remises')?>
                 </div>
-                <div class="panel-body text-left">
+                <div class="panel-body text-left panel-overflow">
                 <?php if($last_submitted): ?>
                     <table class="table table-striped small">
                         <?php foreach($last_submitted as $row): ?>
@@ -124,7 +124,6 @@
                                                                         },
 
                                                                     },
-
                                                                     yAxis: {
                                                                         title: {
                                                                             text: '<?= _('Fréquence') ?>'
@@ -155,7 +154,7 @@
                                                                     <?php foreach ($gauss as $gaus): ?>
                                                                     {
                                                                        name: '<?= $gaus['skills_group'] ?>',
-                                                                       data: [<?= implode(', ', $gaus['percentage']) ?>]
+                                                                       data: [<?= @implode(', ', @$gaus['percentage']) ?>]
                                                                     },
                                                                     <?php endforeach ?>
                                                                     {
@@ -177,14 +176,14 @@
         </div>
 		<div class="col-lg-3 col-md-3 col-xs-12 ">
 			<div class="panel panel-success">
-				<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Meilleures moyennes')?></div>
+				<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Élèves à surveiller')?></div>
 				<div class="panel-body text-left">
 					<table class="table table-striped small">
-						<?php foreach($ranking_top as $row): ?>
+						<?php foreach($ranking_bottom as $row): ?>
 							<tr>
 								<td><?= $row->class ?></td>
 								<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student_details?modal=true&school_year=<?= $_GET['school_year'] ?>&class=<?= $row->class ?>&student=<?= $row->user_id?>"><?= $row->name . ' ' . $row->last_name ?></a></td>
-								<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?><?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
+								<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
 							</tr>
 						<?php endforeach ?>
 					</table>
@@ -193,14 +192,14 @@
 		</div>
 		<div class="col-lg-3 col-md-3 col-xs-12 ">
 			<div class="panel panel-success">
-				<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Moins bonnes moyennes')?></div>
+				<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Meilleures moyennes')?></div>
 				<div class="panel-body text-left">
 					<table class="table table-striped small">
-						<?php foreach($ranking_bottom as $row): ?>
+						<?php foreach($ranking_top as $row): ?>
 							<tr>
 								<td><?= $row->class ?></td>
 								<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student_details?modal=true&school_year=<?= $_GET['school_year'] ?>&class=<?= $row->class ?>&student=<?= $row->user_id?>"><?= $row->name . ' ' . $row->last_name ?></a></td>
-								<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
+								<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?><?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
 							</tr>
 						<?php endforeach ?>
 					</table>
@@ -257,16 +256,14 @@
 					        }]
 					    });
 					});
-
                     </script>
                 </div>
             </div>
         </div>
 		<div class="col-lg-6 col-md-6 col-xs-12 ">
             <div class="panel panel-primary">
-                <div class="panel-heading text-center"><?= _('Répartition des compétences travaillées')?>  </div>
+                <div class="panel-heading text-center"><?= _('Répartition des compétences travaillées')?> </div>
                 <div class="panel-body text-left">
-
                     <div id="skills_usage" style="margin: 0 auto"></div>
                     <script>
                     $(function () {
@@ -288,7 +285,8 @@
                                 min: 0,
                                 title: {
                                     text: '<?= _('Occurences') ?>'
-                                }
+                                },
+								allowDecimals: false
                             },
                             tooltip: {
                                 pointFormat: '<?= _('Travaillée') ?>: <b>{point.y} <?= _('fois') ?></b>'
@@ -297,10 +295,97 @@
 
                             },
                             series: [{
-                                name: '<?= _('Nombre de fois travaillées') ?> ',
+                                name: '<?= _('Nombre de fois travaillée') ?> ',
                                 colorByPoint: true,
                                 data: [<?= implode(', ', $skills_usage) ?>]
                                 }]
+                        });
+                    });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+		<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+		<script src="https://code.highcharts.com/modules/treemap.js"></script>
+
+		<div class="col-lg-6 col-md-6 col-xs-12 ">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center"><?= _('Répartition des compétences évaluées')?> </div>
+                <div class="panel-body text-left">
+                    <div id="skills_assessed" style="margin: 0 auto"></div>
+					<?php
+					$js_assessed = '';
+
+					$graph_colors = ['#8085E9','#F15C80', '#90ED7D', '#F45B5B', '#2B908F'];
+					$c_graph_colors = 5;
+					foreach ($assessed_skills as $assessed_skill) {
+						$parent_id = @ord($assessed_skill['skills_group'][0]) . @ord($assessed_skill['skills_group'][1]);
+						$js_assessed[] = 	"name: '". js_special_chars($assessed_skill['id']) ."',
+								            value: " . $assessed_skill['count'] . ",
+								            parent: '" . $parent_id . "',
+								            skill: '" . js_special_chars($assessed_skill['name']) . "',
+								            skills_group: '" . js_special_chars($assessed_skill['skills_group']) . "'
+								            ";
+					}
+					?>
+					<?php
+					$groups = '';
+					$i = 0;
+					 foreach ($skills_groups as $skills_group)
+					{
+						if($skills_group)
+						{
+							$parent_id =  ord($skills_group->name[0]) . ord($skills_group->name[1]);
+
+							$groups .= "{
+							   id:'" .  $parent_id . "',
+							   name: '" . js_special_chars($skills_group->name) . "',
+							   color: '". $graph_colors[$i] . "'},";
+
+							   if($i === $c_graph_colors - 1)
+							   {
+								   $i = 0;
+							   }
+							   $i++;
+						}
+			   		}
+					?>
+                    <script>
+                    $(function () {
+                        $('#skills_assessed').highcharts({
+							/*colorAxis: {
+						        minColor: '#FFFFFF',
+						        maxColor: Highcharts.getOptions().colors[0]
+						    },*/
+                            series: [{
+								type: 'treemap',
+								alternateStartingDirection: true,
+								layoutAlgorithm: 'stripes',
+                                data: [<?= $groups ?> {<?= implode("}, {", $js_assessed) ?>}],
+								levels: [{
+									level: 1,
+									layoutAlgorithm: 'sliceAndDice',
+									dataLabels: {
+										enabled: true,
+										align: 'left',
+										verticalAlign: 'top',
+										style: {
+											fontSize: '15px',
+											fontWeight: 'normal',
+											textOutline: '0'
+										}
+									}
+								}]
+                            }],
+						    title: {
+						        text: ''
+						    },
+							tooltip: {
+							    formatter: function() {
+							        return '<b>Occurences:</b> ' + this.point.value +'<br/><b>Pôle: </b>' + this.point.skills_group  + '<br/><b>Compétence: </b>' + this.point.skill + '';
+							    }
+}
                         });
                     });
 

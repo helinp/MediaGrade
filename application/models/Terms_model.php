@@ -7,7 +7,7 @@ Class Terms_model extends CI_Model
 	 *
 	 * @return	array
 	 */
-	public function getAllTerms()
+	public function getAll()
 	{
 		$this->db->select('name');
 		$this->db->order_by('id');
@@ -28,7 +28,7 @@ Class Terms_model extends CI_Model
 	 * @param 	string		$term
 	 * @return	boolean
 	 */
-	public function addTerm($term)
+	public function add($term)
 	{
 		// checks if record exists
 		$this->db->where('name', $term);
@@ -54,7 +54,7 @@ Class Terms_model extends CI_Model
 	 * @param 	string		$term
 	 * @return	void
 	 */
-	public function deleteTerm($term)
+	public function delete($term)
 	{
 		$this->db->where('name', $term);
 		$this->db->limit(1);

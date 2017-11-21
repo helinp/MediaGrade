@@ -42,9 +42,9 @@ Class Assessment_model extends CI_Model
 	 * @return object
 	 * @todo use querybuilder
 	 */
-	public function getAssessmentTable($project_id)
+	public function getAssessmentsByProjectId($project_id)
 	{
-		$sql ="	SELECT assessments.id, skills_group, criterion, `cursor`, max_vote
+		$sql ="	SELECT assessments.id, skills_group, skill_id, criterion, `cursor`, max_vote, achievement_id
 				FROM projects_assessments
 				LEFT JOIN assessments
 					ON projects_assessments.assessment_id = assessments.id
@@ -57,6 +57,18 @@ Class Assessment_model extends CI_Model
 		if( ! $assessments) return array(new Assessment_model);
 
 		return $assessments;
+	}
+
+	public function getCriteriaFromProjectId($project_id)
+	{
+		$this->db->distinct();
+		$this->db->from('projects_assessments');
+		$this->db->join('assessments', 'projects_assessments.assessment_id = assessments.id');
+		$this->db->select('criterion');
+		$this->db->where('project_id', $project_id);
+	    $this->db->order_by('criterion');
+
+		return $this->db->get()->result();
 	}
 
 	/**
@@ -82,6 +94,7 @@ Class Assessment_model extends CI_Model
 
 		return $this->db->get()->result();
 	}
+
 
 	/**
 	 * Returns all assessment id from given project
@@ -134,5 +147,67 @@ Class Assessment_model extends CI_Model
 		$this->db->select('id, question');
 		return $this->db->get('self_assessments')->result();
 	}
+
+	/**
+	 * Returns self assessments questions from his ID
+	 *
+	 * @param integer $self_assessments_id
+	 * @return object
+	 */
+	public function getSelfAssessmentFromId($self_assessments_id)
+	{
+		$this->db->select('question');
+		$result = $this->db->get_where('self_assessments', array('id' => $self_assessments_id), 1)->row();
+		if($result)
+		{
+			return $result->question;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	// saves assessments
+	public function updateAssessment($assessment)
+	{
+		$this->db->where('id', $assessment['id']);
+		return $this->db->update('assessments', $assessment);
+	}
+
+	public function addAssessment($assessment)
+	{
+		$this->db->insert('assessments', $assessment);
+		$assessment_id = $this->db->insert_id();
+
+		return $assessment_id;
+	}
+
+
+	/**
+	 * Add a row into projects_assessments table
+	 *
+	 * @param 	integer		$project_id
+	 * @param 	integer		$assessment_id
+	 * @return	integer
+	 */
+	public function addProjects_Assessments($project_id, $assessment_id)
+	{
+		$data = array('project_id' => $project_id, 'assessment_id' => $assessment_id);
+
+		// checks if record exists
+		$q = $this->db->get_where('projects_assessments', $data, 1);
+
+		if( ! $q->row())
+		{
+			$this->db->insert('projects_assessments', $data);
+			return $this->db->insert_id();
+		}
+		else
+		{
+			return $q->row('id');
+		}
+	}
+
 }
 ?>

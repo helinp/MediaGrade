@@ -8,7 +8,7 @@
 		<?php if($this->session->role === 'admin'): ?>
 		<div class="col-xs-4  col-md-4">
 			<form id="filter" action="../../gallery/student/" method="get" class="form-inline" style="margin-top:1.5em">
-				<label><?= _('Élève: ') ?></label>
+				<label><?= _('Élève') ?>: </label>
 	                <select class="form-control input-sm" name="id" onchange="this.form.submit()">
 	                    <option value=""><?= _('Tous')?></option>
 	                    <?php foreach($students as $student): ?>
@@ -20,7 +20,7 @@
 		<?php endif ?>
 		<div class="col-xs-<?= ($this->session->role === 'admin' ? '6': '10') ?>  col-md-6<?= ($this->session->role === 'admin' ? '6': '10') ?>">
 			<form id="filter" action="../../gallery/view/" method="get" class="form-inline" style="margin-top:1.5em">
-	            <label><?= _('Classe: ') ?></label>
+	            <label><?= _('Classe') ?>: </label>
 	                <select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
 	                    <option value=""><?= _('Toutes')?></option>
 	                    <?php foreach($classes as $classe): ?>
@@ -36,7 +36,7 @@
 	                </select>
 			</form>
 	    </div>
-    </div> <!-- /. ROW -->
+    </div> <!-- /. ROW chapeau-->
     <div class="text-center">
         <ul class="pagination pagination-sm">
             <?= $this->pagination->create_links(); ?>
@@ -45,49 +45,51 @@
 
     <?php $curr = 0; $tmp_project = ''; ?>
 
-    <?php foreach ($medias as $media): ?>
-        <?php if($tmp_project !== $media->project_name): ?>
+<?php foreach ($medias as $media): ?>
+    <?php if($tmp_project !== $media->project_name): ?>
+    <?php
+	$tmp_project = $media->project_name;
+    echo'<h3>' . $media->project_name . '</h3>' ?>
+    <div class="row" style = "margin-top:1em"><!-- row auto-->
+    <?php endif ?>
+        <div class="col-lg-3 col-md-4 col-xs-12 text-center" style = "margin-bottom:1em">
+        	<?php if ($media->extension === 'mp4' || $media->extension ===  'mov' || $media->extension === 'avi' || $media->extension === 'mp3' || $media->extension === 'wav'):?>
+            <div class="thumbnail" style="margin-bottom:0px">
+	            <div class="embed-responsive embed-responsive-16by9 " >
+	            	<video class="embed-responsive-item thumbnail-180" preload="metadata" controls>
+	                	<source src="<?= $media->file?>" type="video/mp4">
+	                </video>
+	            </div>
 
-            <?php $tmp_project = $media->project_name;
-            echo'<h3>' . $media->project_name . '</h3>' ?>
-            <div class="row" style = "margin-top:1em">
-            <?php endif ?>
+	        <?php elseif($media->extension  === 'jpeg' || $media->extension  === 'jpg' || $media->extension  === 'png' || $media->extension  === 'gif'): ?>
+	        <div class="thumbnail">
+	        	<a data-lightbox="projects" href="<?= $media->file  ?>"><img class="imageClip" src="<?= $media->thumbnail  ?>" alt="<?= $media->name  ?>" /></a>
+			<?php else: ?>
+			<div class="thumbnail">
 
-            <div class="col-lg-3 col-md-4 col-xs-12 text-center" style = "margin-bottom:1em">
-                <?php if ($media->extension === 'mp4' || $media->extension ===  'mov' || $media->extension === 'avi' || $media->extension === 'mp3' || $media->extension === 'wav'):?>
-                    <div class="thumbnail" style="margin-bottom:0px">
-                        <div class="embed-responsive embed-responsive-16by9 " >
-                            <video class="embed-responsive-item thumbnail-180" preload="metadata" controls>
-                                <source src="<?= $media->file?>" type="video/mp4">
-                            </video>
-                        </div>
+	        <?php endif ?>
 
-                        <?php elseif($media->extension  === 'jpeg' || $media->extension  === 'jpg' || $media->extension  === 'png' || $media->extension  === 'gif'): ?>
-                            <div class="thumbnail">
-                                <a data-lightbox="projects" href="<?= $media->file  ?>"><img class="imageClip" src="<?= $media->thumbnail  ?>" alt="<?= $media->name  ?>" /></a>
+			<p class="caption" style="margin:0"><small><a href="<?= $media->file ?>"><?= '#' . $media->name . ' ' . $media->last_name . ' <small>(' . $media->school_year . ')</small>' ?></a></small></p>
+			</div> <!-- thumbnail-->
+	    </div> <!-- /. col -->
 
-                            <?php endif ?>
+	                    <?php
 
-                            <p class="caption" style="margin:0"><small><a href="<?= $media->file ?>"><?= '@' . $media->name . ' ' . $media->last_name . ' <small>(' . $media->school_year . ')</small>' ?></a></small></p>
-                        </div>
-                    </div> <!-- /. col -->
+	                    if ($medias[$curr]->project_name !== @$medias[$curr + 1]->project_name)
+						//if($tmp_project !== $media->project_name)
+						{
+	echo '</div><!-- /. row auto-->';
+	                    }
+	                    $curr++;
+	                    ?>
+	                <?php endforeach ?>
+	<div class="text-center">
+		<ul class="pagination pagination-sm">
+	    	<?= $this->pagination->create_links(); ?>
+	    </ul>
+	</div> <!-- text-center-->
 
-                    <?php
-
-                    if ($medias[$curr]->project_name !== @$medias[$curr + 1]->project_name)
-                    {
-                        echo '</div><!-- /. row -->';
-                    }
-                    $curr++;
-                    ?>
-                <?php endforeach ?>
-                <div class="text-center">
-                    <ul class="pagination pagination-sm">
-                        <?= $this->pagination->create_links(); ?>
-                    </ul>
-                </div><!-- /. row -->
-
-            </div> <!-- /. Content -->
+</div> <!-- /. Content -->
 
 
 

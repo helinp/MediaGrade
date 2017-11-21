@@ -38,7 +38,6 @@ class Typeahead extends CI_Controller {
             $autocomplete = $this->db->get('assessments', 7)->result_array();
 
             // Generate JSON page
-
             print(json_encode($autocomplete, JSON_PRETTY_PRINT));
         }
     }

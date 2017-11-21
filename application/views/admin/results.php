@@ -10,13 +10,13 @@
                 <select class="form-control input-sm" name="term" onchange="this.form.submit()">
                     <option value=""><?= _('Toutes')?></option>
                     <?php foreach($terms as $term): ?>
-                        <?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? 'selected' : '') . '>' . $term . '</option>' . "\n" ?>
+                        <?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? ' selected' : '') . '>' . $term . '</option>' . "\n" ?>
                     <?php endforeach?>
                     </select>
                 <label><?= _('Année scolaire') ?>: </label>
                     <select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
                         <?php foreach($school_years as $school_year): ?>
-                            <?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? 'selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
+                            <?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? ' selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
                         <?php endforeach?>
                     </select>
             </form>
@@ -24,51 +24,57 @@
     </div>
 
     <?php if(isset($table_header)):?>
-        <div id="dvData">
+        <div id="dvData" style="overflow-y: auto;margin-bottom: 1em;">
             <table class="table table-hover table-striped" style="margin-top:5em">
                 <thead>
                     <tr>
                         <th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class ?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
                         <?php foreach ($table_header as $row): ?>
-                            <?php foreach ($row['skills_groups'] as $skill_group): ?>
+                            <?php foreach ($row['skills_groups'] as $skills_group): ?>
                                 <th class="rotate"><div><span><small><a data-toggle="modal" data-target="#projectModal" href="/admin/result_details/<?= $row['project_id'] ?>"  data-toggle="tooltip" data-placement="right" title="<?= _('Détails par projet')?>"><?= character_limiter($row['project_name'], 13) ?></a></small></span></div></th>
 
                             <?php endforeach ?>
                         <?php endforeach ?>
                         <th class="rotate"><div><span><small><?= _('MOYENNE')?></small></span></div></th>
+                        <th class="rotate"><div><span><small><?= _('ÉCART')?></small></span></div></th>
                     </tr>
                     <tr>
                         <th><small><?= _('Groupe de cpt')?></small></th>
                         <?php foreach ($table_header as $row): ?>
-                            <?php foreach ($row['skills_groups'] as $skill_group): ?>
-                                <th data-toggle="tooltip" data-placement="top" title="<?= $skill_group->skills_group ?>"><?= substr($skill_group->skills_group, 0, 1)?></th>
+                            <?php foreach ($row['skills_groups'] as $skills_group): ?>
+                                <th data-toggle="tooltip" data-placement="top" title="<?= $skills_group->skills_group ?>"><?= substr($skills_group->skills_group, 0, 1)?></th>
                             <?php endforeach ?>
                         <?php endforeach ?>
+                        <th></th>
                         <th></th>
                     </tr>
                     <tr>
                         <th><small><?= _('Maximum') ?></small></th>
 
                         <?php foreach ($table_header as $row): ?>
-                            <?php foreach ($row['skills_groups'] as $skill_group): ?>
-                                <th><small><?= $skill_group->max_vote?></small></th>
+                            <?php foreach ($row['skills_groups'] as $skills_group): ?>
+                                <th><small><?= $skills_group->max_vote?></small></th>
                             <?php endforeach ?>
                         <?php endforeach ?>
 
                         <th><small>%</small></th><!-- Average -->
+                        <th><small></small></th><!-- Average -->
                     </tr>
                 </thead>
                 <tbody>
                     <td></td>
                     <?php foreach ($table_body as $student): ?>
-                        <tr>
+                        <tr style="width:5em">
                             <td><?= $student['last_name'] . ' ' . $student['name']?></td>
-                            <?php foreach ($student['results'] as $row): ?>
+                            <?php foreach ($student['results'] as $results): ?>
+								<?php foreach ($results as $result): ?>
                                 <td>
-                                  <a  data-toggle="modal" data-target="#projectModal" <?php if ($row->user_vote < ($row->max_vote / 2) && is_numeric($row->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/result_details/<?= $row->project_id ?>/<?= $row->user_id ?>"><?= custom_round($row->user_vote) ?></a>
+                                  <a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/result_details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
                               </td>
+							  	<?php endforeach ?>
                           <?php endforeach ?>
                           <td<?php if ($student['average'] < 50 && is_numeric($student['average'])) echo(' class="text-danger dotted_underline" ') ?>><?= $student['average']?></td>
+                          <td<?php if ($student['deviation'] < 0 && is_numeric($student['deviation'])) echo(' class="text-danger dotted_underline" ') ?>><small><?= $student['deviation']?></small></td>
                       </tr>
                   <?php endforeach ?>
               </tbody>

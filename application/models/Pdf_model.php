@@ -1,6 +1,6 @@
 <?php
 
-Class Pdf_assessment_model extends CI_Model
+Class Pdf_model extends CI_Model
 {
 	/**
 	 * Loads helpers
@@ -27,16 +27,20 @@ Class Pdf_assessment_model extends CI_Model
 	{
 		// set document information
 		$pdf->SetCreator('MediaGrade');
+		$pdf->SetAuthor($this->session->name . ' ' . $this->session->last_name);
 
 		// remove header and footer
 		$pdf->setPrintHeader(false);
-		$pdf->setPrintFooter(false);
+		$pdf->setPrintFooter(true);
 
-		$pdf->SetFont('dejavusans', '', 8);
+	//	$pdf->AddFont('robotof', 'thin', '/public/application/libraries/tcpdf/fonts/robotothin.php');
+		$pdf->SetFont('helvetica', '', 8);
+
+		//$pdf->SetFont('dejavusans', '', 8);
 		$pdf->SetDefaultMonospacedFont('dejavusans', '', 8);
 
 		// set margins
-		$pdf->SetMargins(15, 15, 15);
+		$pdf->SetMargins(10, 10, 10);
 		$pdf->SetHeaderMargin(10);
 		$pdf->SetFooterMargin(10);
 
@@ -44,7 +48,7 @@ Class Pdf_assessment_model extends CI_Model
 		$pdf->SetAutoPageBreak(FALSE, PDF_MARGIN_BOTTOM);
 
 		// set image scale factor
-		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		$pdf->setImageScale('1.6');
 	}
 
 	/**
@@ -144,4 +148,66 @@ Class Pdf_assessment_model extends CI_Model
 
 		  return $tbl;
     }
+
+	/**
+	 *	Creates HTML assessment Report
+	 *
+	 *	@param array $data
+	 *	@return string HTML
+	 */
+	function processStudentAssessmentReport($data)
+	{
+		$html = '<h1 style="text-align:center">Cahier de compétences de '. $data['name'] . ' ' . $data['last_name'] . '</h1>
+
+				<h2 style="text-align:center">M. Hélin / Laboratoire d\'Audiovisuel<br />
+				<small>Classe de ' . $data['class'] . '- Année scolaire ' . $data['school_year'] . '</small></h2>
+
+				<h3 style="text-align:center">Progression de mes compétences</h3>
+				<p style="text-align:center">
+					<img src="' . $data['skills_chart'] . '" style="width:600px;margin:10px" />
+				</p>
+				<p></p>
+
+				<h3 style="text-align:center">Résultats par critère</h3>
+				<p style="text-align:center">
+					<img src="' . $data['criteria_chart'] . '" style="width:600px;margin:10px"/>
+				</p>
+
+				<h3 style="text-align:center">Résultats globaux pondérés</h3>';
+
+		return $html;
+	}
+
+	/**
+	 *	Canvas for lesson
+	 *
+	 *	@param array $data
+	 *	@return string HTML
+	 */
+	function processLesson($data)
+	{
+
+		$data = get_object_vars($data);
+
+		$html = '<h1>'. $data['class']  . ' / Laboratoire d\'Audiovisuel / '. $data['project_name'] . '</h1>
+
+				<h2>M. Hélin / ' . $data['school_year'] . ' / ' . $data['term'] . '</h2>
+
+				<h3>Mise en situation</h3><p>' . $data['instructions_txt']['context'] . '</p>
+
+				<h3>Consignes</h3><p>' . ($data['instructions_txt']['instructions'] ? $data['instructions_txt']['instructions'] : 'Voir page suivante') . '</p>
+
+				<h3>Fichier' . ($data['number_of_files'] > 1 ? 's' : '') .' à remettre</h3><p>' . $data['number_of_files'] . ' fichier' . ($data['number_of_files'] > 1 ? 's' : '') . ' de format ' . strtoupper($data['extension']) . '.</p>
+
+				<h3>Deadline</h3><p>' . $data['deadline'] . '</p>
+
+				<h3>Compétences activées</h3><p>' . $data['skill_ids'] . '</p>
+
+				<h3>Matière vue</h3><p>' . $data['material']. '</p>
+
+				<h3>Grille d\'évaluation</h3>'
+				;
+
+		return $html;
+	}
 }

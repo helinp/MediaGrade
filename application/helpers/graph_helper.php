@@ -4,7 +4,7 @@
     *  Generate formatted data for highcharts
     *
     */
-    function graph_results($results)
+    function graph_results($results, $delimiter = "'")
     {
         $string = '';
         $tmp_objective = '';
@@ -20,7 +20,7 @@
                 }
 
                 $tmp_objective = js_special_chars($row->skills_group);
-                $string .= "name:'$tmp_objective',\ndata:[";
+                $string .= "type: 'column'," . $delimiter . 'name' . $delimiter . ':' . $delimiter . $tmp_objective . $delimiter . ',' . $delimiter . 'data' . $delimiter . ':[';
             }
 
             $string .= $row->user_percentage;
@@ -28,7 +28,26 @@
         }
 
         $string = substr("$string", 0, -2);
-        $string .= "]";
+        $string .= ']';
+
+        return($string);
+    }
+
+
+    function graph_skills_groups_results($results, $delimiter = "'")
+    {
+        $string = '';
+
+        foreach ($results as $skills_group => $results)
+        {
+            $string .= "{type: 'column',"
+					. $delimiter . 'name' . $delimiter . ':' . $delimiter . js_special_chars($skills_group) . $delimiter . ','
+					. $delimiter . 'data' . $delimiter . ':['
+					. implode(', ', $results) . ']}, ';
+        }
+
+        $string = substr("$string", 0, -2);
+        $string .= '';
 
         return($string);
     }
@@ -37,13 +56,13 @@
     *  Generate x axis names for highcharts
     *
     */
-     function graph_projects($projects)
+     function graph_projects($projects, $delimiter = "'")
     {
         $string = '';
 
         foreach ($projects as $project)
         {
-            $string .= "'" . js_special_chars($project->term) . ' / ' . js_special_chars($project->project_name ). "'";
+            $string .= $delimiter . js_special_chars($project->term) . ' / ' . js_special_chars($project->project_name ). $delimiter;
             $string .= ', ';
         }
 
@@ -64,6 +83,8 @@
 
     function gauss($data, $field = FALSE)
     {
+		if( ! $data) return FALSE;
+
         if($field)
         {
             // tranforms results to unidimensional array

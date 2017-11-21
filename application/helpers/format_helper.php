@@ -8,7 +8,7 @@ function sanitize_name($string)
     // iconv needs locale install on server.
     // setlocale(LC_ALL, 'en_GB');
     // $sanitized = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
-    $sanitized = remove_accents($string);
+    $sanitized = strtolower(remove_accents($string));
 
     $sanitized = preg_replace("/[^a-zA-Z0-9]/", "_", $sanitized);
     return(preg_replace("/_+/", "_", $sanitized));

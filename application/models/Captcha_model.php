@@ -1,6 +1,13 @@
 <?php
 Class Captcha_model extends CI_Model
 {
+
+	/**
+	 *   TODO: Shouldn't this model be an helper instead?
+	 *
+	 *
+	 **/
+
 	/**
 	 * Returns all classes from DB
 	 *

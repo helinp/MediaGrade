@@ -3,7 +3,7 @@ Class Skills_model extends CI_Model
 {
 
 	public $skill_id;
-	public $skill_group;
+	public $skills_group;
 	public $skill;
 
 	/**
@@ -69,7 +69,7 @@ Class Skills_model extends CI_Model
 
 		foreach ($skills as $skill)
 		{
-			$sql ="SELECT skill, skill_group, skill_id FROM skills WHERE skill_id = ?";
+			$sql ="SELECT skill, skills_group, skill_id FROM skills WHERE skill_id = ?";
 			$query = $this->db->query($sql, array($skill));
 			$result = $query->row();
 			if ( ! empty($result)) array_push($project_skills, $result);
@@ -86,18 +86,18 @@ Class Skills_model extends CI_Model
 	 */
 	public function getAllSkills()
 	{
-		$sql = "SELECT skill, skill_group, skill_id FROM skills ORDER BY skill_id ASC";
+		$this->db->order_by('skill_id');
+		$query = $this->db->get('skills');
 
-		$query = $this->db->query($sql);
+  		return $query->result();
+	}
 
-		if($query)
-		{
-			return $query->result();
-		}
-		else
-		{
-			return FALSE;
-		}
+	public function getSkillById($skill_id)
+	{
+		$this->db->where('id', $skill_id);
+		$query = $this->db->get('skills');
+
+  		return $query->row();
 	}
 
 	/**
@@ -107,7 +107,7 @@ Class Skills_model extends CI_Model
 	 * @param 	string				$skill
 	 * @return	boolean
 	 */
-	public function addSkill($skill_id, $skill)
+	public function addSkill($skill_id, $skill, $skills_group)
 	{
 		// checks if record exists
 		$this->db->where('skill_id', $skill_id);
@@ -116,10 +116,13 @@ Class Skills_model extends CI_Model
 
 		$q = $this->db->get('skills');
 
-		if ($q->num_rows()) return FALSE;
+		if ($q->num_rows())
+		{
+			show_error(_('Cette compétence ou cet ID existe déjà.'));
+		}
 
-		//insert data
-		$this->db->insert('skills', array('skill_id' => $skill_id, 'skill' => $skill));
+		// insert data
+		$this->db->insert('skills', array('skill_id' => $skill_id, 'skill' => $skill, 'skills_group' => $skills_group));
 
 		return TRUE;
 	}
@@ -185,5 +188,40 @@ Class Skills_model extends CI_Model
 
   		return $query->result();
 	}
+
+	public function getSkillGroupsFromSkillId($skill_id)
+	{
+  		//$this->db->select('name');
+		$this->db->order_by('skill');
+		$this->db->where('id', $skill_id);
+		$query = $this->db->get('skills');
+
+  		$result = $query->row();
+
+		if($result)
+		{
+			return $result->skills_group;
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public function getAllSkillsGroupsArray()
+	{
+  		//$this->db->select('name');
+		$this->db->order_by('name');
+		$query = $this->db->get('skills_groups');
+
+		$return_array = array();
+		foreach ($query->result() as $row)
+		{
+			$return_array[$row->id] = $row->name;
+		}
+  		return $return_array;
+	}
+
+
 }
 ?>

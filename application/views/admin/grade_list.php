@@ -47,7 +47,7 @@
                             <?php else: ?>
                             <span style="color:gray" class="glyphicon glyphicon-inbox"></span>
                             <?php endif ?>
-                            <a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/<?= $user_projects['user']->class ?>/<?= $project->project_id ?>/<?= $user_projects['user']->id?>" class="text-muted" >
+                            <a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/<?= $user_projects['user']->class ?>/<?= $project->project_id ?>/<?= $user_projects['user']->id?>?origin=<?= htmlentities($_SERVER['REQUEST_URI']) ?>" class="text-muted" >
                             <small><?= $project->term?> - </small>  <?= $project->project_name?>
                             </a>
                         </li>

@@ -135,6 +135,8 @@ Class Projects_model extends CI_Model
 			school_year,
 			class,
 			term,
+			assessment_type,
+			start_date,
 			instructions_txt,
 			deadline as raw_deadline,
 			DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
@@ -158,8 +160,8 @@ Class Projects_model extends CI_Model
 		}
 
 		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('term', 'ASC');
 		$this->db->order_by('raw_deadline', 'ASC');
-		$this->db->order_by('term', 'DESC');
 
 		return $this->db->get('projects')->result();
 	}
@@ -179,7 +181,7 @@ Class Projects_model extends CI_Model
 		if ( ! $class) $class = $this->session->class;
 
 		$this->db->distinct();
-		$this->db->select('projects.id as project_id, project_name, term, deadline, instructions_txt', FALSE);
+		$this->db->select('projects.id as project_id, project_name, term, deadline, start_date, instructions_txt', FALSE);
 
 		$this->db->where('is_activated', TRUE);
 		$this->db->where('class', $class);
@@ -201,7 +203,7 @@ Class Projects_model extends CI_Model
 	 * @param 	integer	$project_id
 	 * @return	object
 	 */
-	public function getInstructionsByProjectId($project_id)
+	public function getInstructionsFromProjectId($project_id)
 	{
 		if( ! $project_id) return FALSE;
 
@@ -215,18 +217,15 @@ Class Projects_model extends CI_Model
 	}
 
 	/**
-	 *  Gets teacher's projects
+	 *  Checks if project_id exists in DB
 	 *
 	 * @param 	boolean	$project_id
-	 * @param 	boolean	$class = FALSE
 	 * @return	boolean
 	 */
-	public function checkProjectId($project_id, $class = FALSE)
+	public function isProjectIdInDb($project_id)
 	{
-		if( ! $class) $class = $this->session->class;
-
-		$sql = "SELECT id FROM projects WHERE id = ? AND class = ? LIMIT 1";
-		$query = $this->db->query($sql, array($project_id, $class));
+		$sql = "SELECT id FROM projects WHERE id = ? LIMIT 1";
+		$query = $this->db->query($sql, array($project_id));
 		$row = $query->row();
 
 		return ($row) ? true : false;
@@ -247,6 +246,9 @@ Class Projects_model extends CI_Model
 			term,
 			deadline,
 			is_activated,
+			assessment_type,
+			start_date,
+			number_of_files,
 			class", TRUE);
 		$this->db->distinct();
 		$this->db->where('admin_id', $this->session->id);
@@ -276,6 +278,7 @@ Class Projects_model extends CI_Model
 			project_name,
 			term,
 			deadline,
+			assessment_type,
 			is_activated,
 			class');
 
@@ -303,17 +306,29 @@ Class Projects_model extends CI_Model
 	 */
 	public function getProjectDataByProjectId($project_id)
 	{
-		if( ! $project_id) return FALSE;
+		if( ! $project_id)
+		{
+			return FALSE;
+		}
 
-		$sql = "SELECT * FROM projects WHERE id = ? LIMIT 1";
+		$this->db->from('projects');
+		$this->db->limit(1);
+		$this->db->where('id', $project_id);
+		$results = $this->db->get()->row();
 
-		$query = $this->db->query($sql, array($project_id));
-		$results = $query->row(0, 'Projects_model');
+		if(isset($results->instructions_txt) && $results->instructions_txt)
+		{
+			 $results->instructions_txt = unserialize($results->instructions_txt);
+		}
 
-		if(@$results->instructions_txt) $results->instructions_txt = unserialize($results->instructions_txt);
-
-		if(! $results) return new Projects_model;
-		return $results;
+		if(! $results)
+		{
+			return new Projects_model;
+		}
+		else
+		{
+			return $results;
+		}
 	}
 
 	/**
@@ -353,6 +368,8 @@ Class Projects_model extends CI_Model
 		return FALSE;
 	}
 
+
+
 	/**
 	 * Returns all school years in projects
 	 *
@@ -377,7 +394,7 @@ Class Projects_model extends CI_Model
 	 * @param 	integer		$project_id
 	 * @return	boolean
 	 */
-	public function boolMatchProjectSchoolYear($project_id)
+	public function isProjectIdFromThisSchoolYear($project_id)
 	{
 		$this->load->helper('school');
 		$project_sy = $this->getProjectDataByProjectId($project_id)->school_year;
@@ -388,7 +405,6 @@ Class Projects_model extends CI_Model
 	public function getMaterialStatisticsByAdminAndClassAndShoolYear($admin_id = FALSE, $class = FALSE, $school_year = FALSE)
 	{
 		$this->db->select('material');
-
 		$this->db->from('projects');
 		$this->db->where('is_activated', TRUE);
 

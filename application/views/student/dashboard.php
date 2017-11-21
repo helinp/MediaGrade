@@ -60,7 +60,7 @@
 			<div class="panel panel-info">
 				<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Moyenne générale')?></div>
 				<div class="panel-body text-left">
-					<big style="font-size: 4em;text-align: center;display:block;"><?= $overall_results?>%</big>
+					<big style="font-size: 4em;text-align: center;display:block;"><?= $total_year_result?>%</big>
 					<table class="table small">
 						<tr>
 							<?php foreach ($terms_results as $term => $overall_result): ?>
@@ -85,125 +85,188 @@
 						<script src="https://code.highcharts.com/modules/exporting.js"></script>
 						<script src="https://code.highcharts.com/highcharts-more.js"></script>
 
-						<script>
-						$(function () {
-							$('#skills_evolution').highcharts({
-								title: {
-									text: '',
-									x: -20 //center
-								},
-								chart: {
-									type: 'spline',
-								},
-								xAxis: {
-									title: {
-										text: 'Projets'
-									},
-									categories: [<?= $graph_projects_list ?>]
-								},
+						<div id="skills_evolution" style="margin-top:1em;" ></div>
 
-								yAxis: {
-									title: {
-										text: '<?= _('Pourcentage') ?>'
-									},
-									min: 0, max: 100,
-									plotLines: [{
-										value: 0,
-										width: 1,
-										color: '#808080'
-									}],
-									minorGridLineWidth: 0,
-									gridLineWidth: 0,
-									alternateGridColor: null,
-									plotBands: [{
-										from: 95,
-										to: 102,
-										color: 'rgba(0, 0, 255, 0.05)',
-										label: {
-											text: 'Super-Héro',
-											style: {
-												color: '#808080'
-											}
-										}
-									}, {
-										from: 82,
-										to: 95,
-										color: 'rgba(0, 0, 0, 0)',
-										label: {
-											text: 'Professionnel',
-											style: {
-												color: '#808080'
-											}
-										}
-									}, {
-										from: 62,
-										to: 82,
-										color: 'rgba(0, 0, 255, 0.05)',
-										label: {
-											text: 'Amateur confirmé',
-											style: {
-												color: '#808080'
-											}
-										}
-									}, {
-										from: 50,
-										to: 62,
-										color: 'rgba(0, 0, 0, 0)',
-										label: {
-											text: 'Amateur',
-											style: {
-												color: '#808080'
-											}
-										}
-									}, {
-										from: 11,
-										to: 50,
-										color: 'rgba(0, 0, 255, 0.05)',
-										label: {
-											text: 'Tantine à la mer',
-											style: {
-												color: '#808080'
-											}
-										}
-									}]
+						<script>
+						Highcharts.chart('skills_evolution', {
+						    title: {
+						        text: ''
+						    },
+						    xAxis: {
+						        categories: [<?= $graph_projects_list ?>]
+						    },
+							yAxis: {
+								title: {
+									text: '<?= _('Pourcentage') ?>'
 								},
-								plotOptions: {
-									series: {
-										connectNulls: true
-									},
-									spline: {
-										marker: {
-											symbol: "circle"
+								min: 0, max: 100,
+
+								plotBands: [{
+									from: 95,
+									to: 102,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Super-Héro',
+										style: {
+											color: '#808080'
 										}
 									}
-								},
-								tooltip: {
-									valueSuffix: '%'
-								},
-								legend: {
-									layout: 'vertical',
-									align: 'right',
-									verticalAlign: 'middle',
-									borderWidth: 0
-								},
-								series: [{
-									<?= $graph_results ?>
-								}]
-							});
+								}, {
+									from: 82,
+									to: 95,
+									color: 'rgba(0, 0, 0, 0)',
+									label: {
+										text: 'Professionnel',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 62,
+									to: 82,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Amateur confirmé',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 50,
+									to: 62,
+									color: 'rgba(0, 0, 0, 0)',
+									label: {
+										text: 'Amateur',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 11,
+									to: 50,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Tantine à la mer',
+										style: {
+											color: '#808080'
+										}
+									}
+								}]},
+						    series: [<?= $graph_results ?>, {
+						        type: 'spline',
+						        name: 'Total pondéré',
+						        data: [<?= implode(', ', $projects_overall_results) ?>],
+								connectNulls: true,
+						        marker: {
+						            lineWidth: 2,
+						            lineColor: Highcharts.getOptions().colors[3],
+						            fillColor: 'white'
+						        }
+						    }]
 						});
 						</script>
-						<div id="skills_evolution" style="margin-top:1em;" ></div>
+
 
 					</div>
 				</div>
 			</div>
-		</div>
+			<div class="col-lg-6 col-md-6 col-xs-12 ">
+				<div class="panel panel-info">
+					<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Moyenne des pôles de compétences')?></div>
+					<div class="panel-body text-left">
+						<div id="skills_groups_graph"  style="margin-top:1em;"></div>
+						<script>
+						Highcharts.chart('skills_groups_graph', {
+							chart: {
+								type: 'column'
+							},
+							title: {
+								text: ''
+							},
+							xAxis: {
+								categories: ["<?= implode("\", \"", array_keys($skills_results)) ?>"],
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Pourcentage'
+								},
+								min: 0, max: 100,
 
-		<div class="row" style="margin-top:1em">
+								plotBands: [{
+									from: 95,
+									to: 102,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Super-Héro',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 82,
+									to: 95,
+									color: 'rgba(0, 0, 0, 0)',
+									label: {
+										text: 'Professionnel',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 62,
+									to: 82,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Amateur confirmé',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 50,
+									to: 62,
+									color: 'rgba(0, 0, 0, 0)',
+									label: {
+										text: 'Amateur',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 11,
+									to: 50,
+									color: 'rgba(0, 0, 255, 0.05)',
+									label: {
+										text: 'Tantine à la mer',
+										style: {
+											color: '#808080'
+										}
+									}
+								}]
+							},
+
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: [{
+								showInLegend: false,
+								data: [<?= implode(", ", $skills_results) ?>]
+							}]
+						});
+						</script>
+					</div>
+				</div>
+			</div>
 			<div class="col-lg-6 col-md-6 col-xs-12 ">
 				<div class="panel panel-info">
 					<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Résultats par critère')?></div>
-					<div class="panel-body text-left">
+					<div class="panel-body">
+						<div id="polar_chart" style="margin-top:1em;"></div>
 						<script>
 							$(function () {
 							    Highcharts.chart('polar_chart', {
@@ -223,7 +286,7 @@
 							        },
 
 							        xAxis: {
-							            categories: ["<?= implode("\", \"", array_column((array) $criterion_results, 'criterion')) ?>"],
+							            categories: ["<?= implode("\", \"", array_column((array) $criterion_results, 'conca')) ?>"],
 							            tickmarkPlacement: 'on',
 							            lineWidth: 0
 							        },
@@ -232,7 +295,8 @@
 							            gridLineInterpolation: 'polygon',
 							            lineWidth: 0,
 							            min: 0,
-										max: 100
+										max: 100,
+ 										tickInterval: 20
 							        },
 
 							        tooltip: {
@@ -253,31 +317,54 @@
 							    });
 							});
 						</script>
-						<div class="row">
-							<div id="polar_chart" style="margin-top:1em;"></div>
-						</div>
+
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-6 col-md-6 col-xs-12 ">
 				<div class="panel panel-info">
-					<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Détail par curseur')?></div>
+					<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Mes points forts')?></div>
 					<div class="panel-body text-left">
 						<table class="table small">
-							<?php $temp = ''; ?>
-							<?php foreach ($cursor_results as $detailled_result): ?>
-								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
-							<tr<?= ($detailled_result['average'] < 50 ? ' class="text-danger"' : '')?>>
-								<td style="border-top: 1px #ddd dotted">
-									J'ai <?= $detailled_result['cursor'] ?>
-								</td>
-								<td style="border-top: 1px #ddd dotted">
-									<?= $detailled_result['average']  ?>%
-								</td>
-								<td style="border-top: 1px #ddd dotted">
-									(<?= $detailled_result['count']  ?>)
-								</td>
-							</tr>
+						<?php $temp = ''; ?>
+						<?php foreach ($best_results as $detailled_result): ?>
+								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
+								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
+									<td style="border-top: 1px #ddd dotted">
+										J'ai <?= $detailled_result['cursor'] ?>
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										<?= $detailled_result['average']  ?>%
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										(<?= $detailled_result['count']  ?>)
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-xs-12 ">
+				<div class="panel panel-info">
+					<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Ce que je dois travailler')?></div>
+					<div class="panel-body text-left">
+						<table class="table small">
+						<?php $temp = ''; ?>
+						<?php foreach ($worst_results as $detailled_result): ?>
+
+								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
+								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
+									<td style="border-top: 1px #ddd dotted">
+										J'ai <?= $detailled_result['cursor'] ?>
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										<?= $detailled_result['average']  ?>%
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										(<?= $detailled_result['count']  ?>)
+									</td>
+								</tr>
 							<?php endforeach; ?>
 						</table>
 					</div>

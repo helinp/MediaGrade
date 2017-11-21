@@ -34,7 +34,6 @@ class VerifyLogin extends CI_Controller {
                 redirect('projects', 'refresh');
             }
         }
-
     }
 
     function check_database($password)

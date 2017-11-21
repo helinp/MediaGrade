@@ -15,12 +15,18 @@ Class Submit_model extends CI_Model
 	 * @param	integer	$project_id
 	 * @return	object
 	 */
-    public function boolIfSubmittedByUserAndProjectId($user_id = FALSE, $project_id )
+    public function IsSubmittedByUserAndProjectId($user_id = FALSE, $project_id )
     {
 		if( ! $user_id) $user_id = $this->session->id;
 
         $query = $this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id), 1);
         return $query->result();
+    }
+
+    public function getNSubmittedByProjectId($project_id)
+    {
+        $query = $this->db->get_where('submitted', array('project_id' => $project_id));
+        return count($query->result());
     }
 
 	/**
@@ -90,17 +96,16 @@ Class Submit_model extends CI_Model
 		if ($get_answers && ! empty($questions[0]))
 		{
 			$i = 0;
+			$answers = $this->getAnswersByProjectIdAndUser($project_id, $user_id);
 			foreach($questions as $question)
-		   {
-				$answers = $this->getAnswersByProjectIdAndUser($project_id, $user_id);
- 				if ( ! empty($answers))
+		   	{
+ 				if ( ! empty($answers[$i]['answer']))
 				{
 					$self_assessments[$i]['answer'] = $answers[$i]['answer'];
 					$i++;
 				}
 			}
 		}
-
 		return $self_assessments;
 	}
 
@@ -159,7 +164,7 @@ Class Submit_model extends CI_Model
         $sql = "SET lc_time_names = 'fr_FR'";
 	$this->db->query($sql);
 
-        $sql = "SELECT file_name, file_path, answers, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
+        $sql = "SELECT file_name, file_path, answers, time as raw_time, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
                     CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail
                 FROM submitted
                 WHERE user_id = ?
@@ -178,7 +183,6 @@ Class Submit_model extends CI_Model
 	 */
     public function do_upload($config, $field_name)
     {
-
             // $this->load->library('upload', $config);
             $this->upload->initialize($config);
 
@@ -213,9 +217,7 @@ Class Submit_model extends CI_Model
         $config['file_ext_tolower']      = TRUE;
         $config['upload_path']          = './assets/uploads/users/avatars/';
         $config['allowed_types']        = 'gif|jpg|png';
-        $config['max_size']             = 100;
-        $config['max_width']            = 1024;
-        $config['max_height']           = 1024;
+        $config['max_size']             = 50000;
 
         return($config);
     }
@@ -241,6 +243,23 @@ Class Submit_model extends CI_Model
 		else
 		{
             return FALSE;
+		}
+	}
+
+	public function getNFilesToSubmitFromProjectId($project_id)
+	{
+		$this->db->select('extension, number_of_files');
+		$this->db->from('projects');
+		$this->db->where('id', $project_id);
+		$result = $this->db->get()->row();
+
+		if($result->extension)
+		{
+			return $result->number_of_files;
+		}
+		else
+		{
+			return 0;
 		}
 	}
 
@@ -386,9 +405,28 @@ Class Submit_model extends CI_Model
 
         $this->load->library('image_lib', $config);
         $this->image_lib->initialize($config);
-        $this->image_lib->resize();
-        //echo $this->image_lib->display_errors();
+
+		$this->image_lib->resize();
+
+        //dump($this->image_lib->display_errors());
         return $config['new_image'];
+    }
+
+	public function rotateThumbnail($image_full_path, $rotation = FALSE)
+    {
+        $this->load->helper('path');
+
+        $file_name = basename($image_full_path);
+		$file_path = pathinfo($image_full_path)['dirname'];
+
+		$config = array();
+        $config['image_library'] = 'GD2';
+        $config['source_image'] = $file_path . '/thumb_' . $file_name;
+		$config['rotation_angle'] = $rotation;
+
+        $this->load->library('image_lib', $config);
+        $this->image_lib->initialize($config);
+		$this->image_lib->rotate();
     }
 
 	/**

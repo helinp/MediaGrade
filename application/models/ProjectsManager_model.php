@@ -15,9 +15,10 @@ Class ProjectsManager_model extends CI_Model
 	 * @param 	integer		$project_id
 	 * @return	void
 	 */
-	public function updateProject($data, $project_id)
+	public function updateProject($project = array())
 	{
-		$this->addProject($data, $project_id);
+		$this->db->where('id', $project['id']);
+		$this->db->update('projects', $project);
 	}
 
 	/**
@@ -28,93 +29,16 @@ Class ProjectsManager_model extends CI_Model
 	 * @param 	integer		$project_id = FALSE
 	 * @return	void
 	 */
-	public function addProject($data = array(), $project_id = FALSE)
+	public function addProject($project = array())
 	{
-		// saves NEWS self-assessments
-		$self_assessment_ids = array();
+		unset($project['id']);
+		$this->db->insert('projects', $project);
 
-		if ( ! empty($data['new_self_assessment'][0]))
-		{
-			foreach($data['new_self_assessment'] as $row)
-			{
-				array_push($self_assessment_ids, $this->addSelfAssessment($row));
-			}
-		}
+		// get id for projects_assessments table
+		$project_id = $this->db->insert_id();
 
-		// adds SELECTED self-assessements
-		if (isset($data['self_assessment_id']))
-		{
-			foreach($data['self_assessment_id'] as $row)
-			{
-				array_push($self_assessment_ids, $row);
-			}
-		}
+		return $project_id;
 
-		$project = array(
-			'project_name' 			=> $this->input->post('project_name'),
-			'assessment_type' 		=> $this->input->post('assessment_type'),
-			'term' 					=> $this->input->post('term'),
-			'class' 				=> $this->input->post('class'),
-			'deadline' 				=> $this->input->post('deadline'),
-			'school_year'			=> $this->current_school_year,
-			'skill_ids' 			=> implode(',', $this->input->post('skill_ids')),
-			'material'				=> $this->input->post('material'),
-			'extension' 			=> $this->input->post('extension'),
-			'instructions_txt' 		=> serialize(array(
-										'instructions'  => $this->input->post('instructions_txt'),
-										'context'		=>  $this->input->post('context_txt')
-										)),
-			'number_of_files'		=> $this->input->post('number_of_files'),
-			'self_assessment_ids' 	=> implode(',', $self_assessment_ids),
-			'is_activated' 			=> '1',
-			'admin_id'				=> $this->session->id
-			);
-
-		// add instructions to array
-		if ($data['instructions_pdf'])
-		{
-			$project['instructions_pdf'] = $data['instructions_pdf'];
-		}
-
-		if($project_id)
-		{
-			$this->db->where('id', $project_id);
-			$this->db->update('projects', $project);
-		}
-		else
-		{
-			$this->db->insert('projects', $project);
-
-			// get id for projects_assesments table
-			$project_id = $this->db->insert_id();
-		}
-
-		// saves assessments
-		$assessment_ids = array();
-
-		foreach($data['skills_group'] as $key => $row)
-		{
-			if( ! empty($data['assessment_id'][$key]))
-			{
-				$data_assessment_id = $data['assessment_id'][$key];
-			}
-			else
-			{
-				$data_assessment_id = NULL;
-			}
-
-			$assessment = array(
-				'id' =>  $data_assessment_id,
-				'skills_group' => $data['skills_group'][$key],
-				'criterion' => $data['criterion'][$key],
-				'cursor' => $data['cursor'][$key],
-				'max_vote' => $data['max_vote'][$key],
-				);
-
-			// saves in DBs
-			$assessment_id = $this->addAssessment($assessment);
-			$this->addProjects_Assessments($project_id, $assessment_id);
-		}
 	}
 
 	/**
@@ -169,56 +93,7 @@ Class ProjectsManager_model extends CI_Model
 		return($config);
 	}
 
-	/**
-	 * Add a row in table assessment
-	 * array keys must be [skills_group, criterion, cursor, max_vote]
-	 *
-	 * @param 	array		$assessment
-	 * @TODO	move in Assessment model
-	 * @return	integer
-	 */
-	public function addAssessment($assessment = array())
-	{
-		$data = $assessment;
 
-		if( ! is_null($data['id']))
-		{
-			$this->db->where('id', $data['id']);
-			$this->db->update('assessments', $data);
-			return $data['id'];
-		}
-		else
-		{
-			// else insert
-			$this->db->insert('assessments', $data);
-			return $this->db->insert_id();
-		}
-	}
-
-	/**
-	 * Add a row into projects_assessments table
-	 *
-	 * @param 	integer		$project_id
-	 * @param 	integer		$assessment_id
-	 * @return	integer
-	 */
-	private function addProjects_Assessments($project_id, $assessment_id)
-	{
-		$data = array('project_id' => $project_id, 'assessment_id' => $assessment_id);
-
-		// checks if record exists
-		$q = $this->db->get_where('projects_assessments', $data, 1);
-
-		if( ! $q->row())
-		{
-			$this->db->insert('projects_assessments', $data);
-			return $this->db->insert_id();
-		}
-		else
-		{
-			return $q->row('id');
-		}
-	}
 
 	/**
 	 * Will check projects_assessments table for orphans

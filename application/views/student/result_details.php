@@ -8,8 +8,7 @@
             <tr>
                 <th><?= _('Compétences') ?></th>
                 <th><?= _('Critères') ?></th>
-                <th><?= _('Tu as: ') ?></th>
-                <th class="rotate"><div><span><small><?= _('Résultat') ?></small></span></div></th>
+                <th><?= _('Tu as: ') ?></th></small></span></div></th>
                 <th class="rotate"><div><span><small><?= _('Maximum') ?></small></span></div></th>
             </tr>
         </thead>

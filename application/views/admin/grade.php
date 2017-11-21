@@ -59,7 +59,7 @@
             <?php if(!empty($self_assessments)): ?>
                 <h3><?=  LABEL_SELF_ASSESSMENT ?></h3>
                 <?php foreach($self_assessments as $self_assessment):?>
-                    <b> <?= $self_assessment['question'] ?> </b><p> <?= (!empty($self_assessment['answer']) ? '&quot;' . $self_assessment['answer'] . '&quot;': _("L'élève n'a pas répondu à la question.")) ?></p>
+                    <b> <?= $self_assessment['question'] ?> </b><p> <?= ( ! empty($self_assessment['answer']) ? '&quot;' . preg_replace("<br/>", "/\n", htmlspecialchars_decode($self_assessment['answer'])) . '&quot;': _("L'élève n'a pas répondu à la question.")) ?></p>
                 <?php endforeach ?>
 
                 <hr />
@@ -70,14 +70,15 @@
                     <col width="10%">
                     <col width="15%">
                     <col width="40%">
-                    <col width="25%">
+                    <col width="30%">
+					<col width="5%">
                     <thead>
                         <tr>
                             <th><?= _('Groupe de compétences') ?></th>
                             <th><?= _('Critères') ?></th>
                             <th><?= _('Indicateurs') ?></th>
                             <th><?= _('Évaluation') ?></th>
-                            <th><?= _('Note max. pondérée') ?></th>
+                            <th><?= _('Max.') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,10 +91,11 @@
                                 <td><?= $row->cursor ?></td>
                                 <td>
                                     <input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
-                                    <span class="small" data-onload="genAssessment()"></span>
+									<span class="small" data-onload="genAssessment()"></span>
                                     <input type="hidden" name="assessments_id[]" value="<?= $row->id?>">
                                 </td>
-                                <td><!--<span class="balancedVote"><?= ($row->user_vote ? $row->user_vote : 'NE') ?></span> / --><?= $row->max_vote ?></td>
+                                <td><span class="balanced-max-vote"><?= $row->max_vote ?></span>
+								</td>
                             </tr>
                             <?php $i++ ?>
                         <?php endforeach ?>
@@ -103,13 +105,14 @@
                 <!-- END CRITERIA -->
                 <hr />
                 <h3><?=  LABEL_COMMENT ?></h3>
-                <textarea rows="5" cols="50" name="comment"><?= $comment->comment ?></textarea>
+                <textarea rows="5" cols="50" name="comment"><?= $comment ?></textarea>
 
                 <hr />
                 <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span><?= LABEL_SAVE_RATING ?></button>
                 <input type="hidden" name="submitted_project_date" value="<?= @$submitted[0]->time ?>">
                 <input type="hidden" name="user_id" value="<?= $user->id ?>">
                 <input type="hidden" name="project_id" value="<?= $project->id ?>">
+                <input type="hidden" name="origin" value="<?= $this->input->get('origin');?>">
             </form>
         </div>
     </div>
@@ -140,8 +143,17 @@
             case 5:
             return("<?= LABEL_VOTE_05 ?>" + append);
             break;
-            case 1: case 2: case 3: case 4:
+            case 4:
             return("<?= LABEL_VOTE_04 ?>" + append);
+            break;
+			case 3:
+            return("<?= LABEL_VOTE_03 ?>" + append);
+            break;
+			case 2:
+            return("<?= LABEL_VOTE_02 ?>" + append);
+            break;
+			case 1:
+            return("<?= LABEL_VOTE_01 ?>" + append);
             break;
             case 0:
             currVal--;
@@ -149,11 +161,10 @@
             break;
             case -1:
             currVal--;
-            return("<?= _('Non évalué') ?>");
+            return("<?= _('NE - Non évalué') ?>");
             break;
         }
     }
-
 
     $('input.range-assessment').on( "input", function(){
         $("input.range-assessment").change(function(){
@@ -175,12 +186,14 @@
     }
 
     $('input.range-assessment').on( "input", genAssessment );
+	$( 'input.range-assessment').trigger( "input" ); // generates input call onload
     </script>
 
     <!-- Updates modal-->
     <script>
     $(document).on('hidden.bs.modal', function (e) {
         $(e.target).removeData('bs.modal');
+//		window.location = "<?= $this->input->get('origin');?>";
     });
     </script>
 

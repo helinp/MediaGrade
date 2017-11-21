@@ -26,6 +26,7 @@ class Profile extends CI_Controller {
 
     public function upload()
     {
+		// TODO getAvatarConfig() shouln'd be in submit model
         $config = $this->Submit_model->getAvatarConfig();
         $error = $this->Submit_model->do_upload($config, 'avatar_file');
 
@@ -35,8 +36,49 @@ class Profile extends CI_Controller {
         }
         else
         {
-            $file_path = '/assets/uploads/users/avatars/' . $this->upload->data()['file_name'];
-            $this->UsersManager_model->saveAvatar(FALSE, $file_path);
+			$file_path = '/assets/uploads/users/avatars/' . $this->upload->data()['file_name'];
+			$this->UsersManager_model->saveAvatar(FALSE, $file_path);
+
+			$img_size = getimagesize('.' . $file_path);
+
+			$this->load->library('image_lib');
+			$config['image_library'] 	= 'gd2';
+			$config['source_image'] 	= '.' . $file_path;
+			$config['maintain_ratio'] 	= TRUE;
+			$config['x_axis']			= 0;
+			$config['y_axis'] 			= 0;
+
+			if($img_size[0] > $img_size[1])
+			{
+				$config['height']      	= 300;
+			}
+			else
+			{
+				$config['width']       	= 300;
+			}
+			//$this->load->library('image_lib', $config);
+
+			$this->image_lib->initialize($config);
+
+			if ( ! $this->image_lib->resize())
+			{
+			        show_error($this->image_lib->display_errors());
+			}
+
+			$config['maintain_ratio'] 	= FALSE;
+			$config['width']       		= 300;
+			$config['height']       	= 300;
+
+			$this->image_lib->initialize($config);
+
+			if ( ! $this->image_lib->crop())
+			{
+			        show_error($this->image_lib->display_errors());
+			}
+
+			// crop and resize picture
+			// del original
+
         }
         // update session
         $this->session->set_userdata('avatar', $file_path);
@@ -69,6 +111,10 @@ class Profile extends CI_Controller {
         elseif(isset($post['change_mail_preferences']))
 		{
             $this->UsersManager_model->changeEmailPreferences(FALSE, $post);
+		}
+		elseif(isset($post['motto']))
+		{
+			$this->UsersManager_model->changeMotto(FALSE, $post['motto']);
 		}
         else
 		{
