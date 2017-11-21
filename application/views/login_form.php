@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <input class="form-control" name="password" autocomplete="off" placeholder="<?= LABEL_PASSWORD ?>" type="password"/>
                 </div>
-				<?php if(CAPTCHA): ?>
+				<?php if($this->config->item('captcha')): ?>
 				<div class="form-group captcha">
 					<?= $captcha ?>
 				</div>
@@ -29,12 +29,12 @@
             </fieldset>
         </form>
 
-        <?php if(DEMO_VERSION): ?>
+        <?php if($this->config->item('mode') === 'demo'): ?>
         <div class="demo-version">
             <h5 style="margin-top:0"><b><?= _('Comptes de démonstration') ?></b></h5>
             <code>student 123456</code><br /> <code>teacher 123456</code>
         </div>
-		<?php elseif(CONSULTATION_VERSION): ?>
+	  <?php elseif($this->config->item('mode') === 'read_only'): ?>
 		<div class="consultation-version background-danger">
 			<h5 style="margin-top:0"><b><?= _('Version de consultation') ?></b></h5>
 			<p>La remise des travaux est désactivée.</p>

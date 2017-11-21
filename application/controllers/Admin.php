@@ -22,8 +22,12 @@ class Admin extends CI_Controller {
 		$this->load->model('Classes_model','',TRUE);
 		$this->load->model('Results_model','',TRUE);
 		$this->load->model('Grade_model','',TRUE);
-
 		$this->load->helper('school');
+
+		if($this->config->item('mode') === 'development')
+		{
+			$this->output->enable_profiler(TRUE);
+		}
 
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 		$this->data['terms'] = $this->Terms_model->getAll();
@@ -37,13 +41,12 @@ class Admin extends CI_Controller {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
-
-
-		$this->output->enable_profiler(TRUE);
 	}
 
 	public function index()
 	{
+//		dump(
+
 		redirect('admin/dashboard?school_year=' . get_school_year());
 	}
 
@@ -749,7 +752,7 @@ class Admin extends CI_Controller {
 				/**
 				 * SAVE ASSESSMENTS
 				 */
-				if(ASSESS_BY_GROUP_ASSESSMENT)
+				if($this->config->item('assessment_mode') === 'skills_group')
 				{
 					$skills = $this->input->post('skills_groups');
 				}
@@ -760,7 +763,7 @@ class Admin extends CI_Controller {
 
 				foreach($skills as $key => $skill_id)
 				{
-					if( ! ASSESS_BY_GROUP_ASSESSMENT)
+					if( ! $this->config->item('assessment_mode') === 'skills_group')
 					{
 						$_POST['skills_groups'][$key] = $this->Skills_model->getSkillGroupsFromSkillId($skill_id);
 					}

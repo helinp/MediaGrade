@@ -2,14 +2,14 @@
 Class Welcome_model extends CI_Model
 {
 	/**
-	 * Returns Welcome message
-	 *
-	 * @param boolean $interpret
-	 * @return string
-	 */
+	* Returns Welcome message
+	*
+	* @param boolean $interpret
+	* @return string
+	*/
 	public function getWelcomeMessage($interpret = TRUE)
 	{
-		$this->db->where('type', 'welcome_message');
+		$this->db->where('key', 'welcome_message');
 		$result = $this->db->get('config', 1);
 
 		if($result->row('content'))
@@ -31,15 +31,15 @@ Class Welcome_model extends CI_Model
 	}
 
 	/**
-	 * Saves Welcome message
-	 *
-	 * @param string $message
-	 * @return void
-	 */
+	* Saves Welcome message
+	*
+	* @param string $message
+	* @return void
+	*/
 	public function saveWelcomeMessage($message)
 	{
-		$this->db->set('content', $message);
-		$this->db->where('type', 'welcome_message');
+		$this->db->set('data', $message);
+		$this->db->where('key', 'welcome_message');
 		$this->db->update('config');
 	}
 }

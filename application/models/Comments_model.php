@@ -3,27 +3,27 @@ Class Comments_model extends CI_Model
 {
 
 	/**
-	 * @var int
-	 */
+	* @var int
+	*/
 	public $user_id;
 
 	/**
-	 * @var int
-	 */
+	* @var int
+	*/
 	public $project_id;
 
 	/**
-	 * @var string
-	 */
+	* @var string
+	*/
 	public $comment = '';
 
 	/**
-	 * Returns teacher comment of an user's submitted project
-	 *
-	 * @param integer $project_id
-	 * @param integer $user_id
-	 * @return object
-	 */
+	* Returns teacher comment of an user's submitted project
+	*
+	* @param integer $project_id
+	* @param integer $user_id
+	* @return object
+	*/
 	public function getCommentsByProjectIdAndUserId($project_id, $user_id = false)
 	{
 		if ( ! $project_id)
@@ -49,22 +49,22 @@ Class Comments_model extends CI_Model
 	}
 
 	/**
-	 * Saves comment in DB for a determined user submitted project
-	 *
-	 * @param integer $project_id
-	 * @param integer $user_id
-	 * @param string $comment
-	 * @return boolean
-	 */
+	* Saves comment in DB for a determined user submitted project
+	*
+	* @param integer $project_id
+	* @param integer $user_id
+	* @param string $comment
+	* @return boolean
+	*/
 	public function comment($project_id, $user_id, $comment = NULL)
 	{
 		// Do not record empty comment
 		if($comment === NULL) return FALSE;
 
 		$data = array(
-				'user_id' => $user_id,
-				'project_id' => $project_id,
-				'comment' => $comment
+			'user_id' => $user_id,
+			'project_id' => $project_id,
+			'comment' => $comment
 		);
 
 		$where = array(
@@ -90,6 +90,5 @@ Class Comments_model extends CI_Model
 		return TRUE;
 	}
 }
-
 
 ?>

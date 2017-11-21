@@ -20,7 +20,7 @@ class Login extends CI_Controller {
         $this->load->model('Projects_model','',TRUE);
         $this->data['random_media'] = $this->Projects_model->random_media();
 
-		if(CAPTCHA)
+		if($this->config->item('captcha'))
 		{
 			$this->data['captcha'] = $this->_captcha();
 		}
@@ -42,7 +42,7 @@ class Login extends CI_Controller {
         	redirect('login', 'refresh');
 		}
 
-		if(CAPTCHA)
+		if($this->config->item('captcha'))
 		{
 			// First, delete old captchas
 			$expiration = time() - 7200; // Two hour limit

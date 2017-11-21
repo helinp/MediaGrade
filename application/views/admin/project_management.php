@@ -115,11 +115,11 @@
 	<!-- MISE EN SITUATION / CONSIGNES-->
 	<label><?= _('Mise en situation') ?></label>
 	<textarea name="context_txt" class="form-control" rows="3"><?= @$curr_project->instructions_txt['context'] ?></textarea>
-	<p class="help-block">HTML tags: <code style="color:gray;"><?= htmlspecialchars(ALLOWED_HTML_TAGS) ?></code> <br />Custom: <code style="color:gray;">%user_name% %user_lastname%</code></p>
+	<p class="help-block">HTML tags: <code style="color:gray;"><?= htmlspecialchars($this->config->item('allowed_html_tags')) ?></code> <br />Custom: <code style="color:gray;">%user_name% %user_lastname%</code></p>
 
 	<label><?= _('Consignes') ?></label>
 	<textarea name="instructions_txt" class="form-control tinymce" rows="12"><?= @$curr_project->instructions_txt['instructions'] ?></textarea>
-	<p class="help-block">HTML tags: <code style="color:gray;"><?= htmlspecialchars(ALLOWED_HTML_TAGS) ?></code> <br />Custom: <code style="color:gray;">%user_name% %user_lastname%</code></p>
+	<p class="help-block">HTML tags: <code style="color:gray;"><?= htmlspecialchars($this->config->item('allowed_html_tags')) ?></code> <br />Custom: <code style="color:gray;">%user_name% %user_lastname%</code></p>
 <hr />
 <h3><?= _('Remises')?></h3>
 	<div class="row">
@@ -163,7 +163,7 @@
 			<table id="rows" class="table">
 				<thead>
 					<tr>
-						<th><?= (ASSESS_BY_GROUP_ASSESSMENT ? _('Pôle') : _('Compétence')) ?></th>
+						<th><?= ($this->config->item('assessment_mode') === 'skills_group' ? _('Pôle') : _('Compétence')) ?></th>
 						<th><?= LABEL_CRITERION?></th>
 						<th><?= LABEL_CURSOR?></th>
 						<th><?= LABEL_COEFFICIENT?></th>
@@ -175,7 +175,7 @@
 					<?php foreach($assessment_table as $row): ?>
 					<tr>
 						<td>
-							<?php if(ASSESS_BY_GROUP_ASSESSMENT): ?>
+							<?php if($this->config->item('assessment_mode') === 'skills_group'): ?>
 							<select class="form-control input-sm" name="skills_group[]" required>
 								<?php foreach($skills_groups as $skills_group): ?>
 								<option<?php if($skills_group->name === $row->skills_group) echo(' selected') ?>><?= $skills_group->name ?></option>

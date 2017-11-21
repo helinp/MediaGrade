@@ -30,6 +30,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 # Application Files
 #-------------------------
 /assets/uploads/*
+/config/database.php
 
 # Temp Files
 #-------------------------

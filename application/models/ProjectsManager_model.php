@@ -9,12 +9,12 @@ Class ProjectsManager_model extends CI_Model
 	}
 
 	/**
-	 * Dummy function for future code improvement
-	 *
-	 * @param 	mixed[]		$data
-	 * @param 	integer		$project_id
-	 * @return	void
-	 */
+	* Dummy function for future code improvement
+	*
+	* @param 	mixed[]		$data
+	* @param 	integer		$project_id
+	* @return	void
+	*/
 	public function updateProject($project = array())
 	{
 		$this->db->where('id', $project['id']);
@@ -22,13 +22,13 @@ Class ProjectsManager_model extends CI_Model
 	}
 
 	/**
-	 * Saves project data in DB
-	 * If second param FALSE, creates new entry in DB
-	 *
-	 * @param 	mixed[]		$data
-	 * @param 	integer		$project_id = FALSE
-	 * @return	void
-	 */
+	* Saves project data in DB
+	* If second param FALSE, creates new entry in DB
+	*
+	* @param 	mixed[]		$data
+	* @param 	integer		$project_id = FALSE
+	* @return	void
+	*/
 	public function addProject($project = array())
 	{
 		unset($project['id']);
@@ -42,12 +42,12 @@ Class ProjectsManager_model extends CI_Model
 	}
 
 	/**
-	 * Upload PDF instruction file
-	 *
-	 * @param 	array		$config 	do_upload CI config
-	 * @param 	string		$field_name form field name
-	 * @return	boolean|show_error()
-	 */
+	* Upload PDF instruction file
+	*
+	* @param 	array		$config 	do_upload CI config
+	* @param 	string		$field_name form field name
+	* @return	boolean|show_error()
+	*/
 	public function uploadPDF($config, $field_name)
 	{
 		$this->upload->initialize($config);
@@ -65,13 +65,13 @@ Class ProjectsManager_model extends CI_Model
 	}
 
 	/**
-	 * Creates do_upload CI config for PDF instructions file
-	 *
-	 * @param 	string		$class
-	 * @param 	string		$term
-	 * @param 	string		$project_name
-	 * @return	array
-	 */
+	* Creates do_upload CI config for PDF instructions file
+	*
+	* @param 	string		$class
+	* @param 	string		$term
+	* @param 	string		$project_name
+	* @return	array
+	*/
 	public function getUploadPDFConfig($class, $term, $project_name)
 	{
 		$this->load->helper('school');
@@ -96,20 +96,20 @@ Class ProjectsManager_model extends CI_Model
 
 
 	/**
-	 * Will check projects_assessments table for orphans
-	 * and delete them
-	 * @todo write method
-	 * @return boolean
-	 */
+	* Will check projects_assessments table for orphans
+	* and delete them
+	* @todo write method
+	* @return boolean
+	*/
 	public function cleanProjects_assessmentsTable()
 	{
 		// TODO
 	}
 
 	/**
-	 * Switch project state (activated / disactivates)
-	 * @return void
-	 */
+	* Switch project state (activated / disactivates)
+	* @return void
+	*/
 	public function switchProjectState($project_id)
 	{
 		$this->db->where('id', $project_id);
@@ -118,32 +118,32 @@ Class ProjectsManager_model extends CI_Model
 	}
 
 	/**
-	 * Deletes a project
-	 * @return void
-	 */
+	* Deletes a project
+	* @return void
+	*/
 	public function deleteProject($project_id)
 	{
 		$this->db->delete('projects', array('id' => $project_id));
 	}
 
 	/**
-	 * Add or updates self_assessment row in DB
-	 * @return integer
-	 */
+	* Add or updates self_assessment row in DB
+	* @return integer
+	*/
 	public function addSelfAssessment($self_assessment)
 	{
 		$data = array(
 			'question' => $self_assessment
-			);
+		);
 
 		$where = array(
 			'question' => $self_assessment
-			);
+		);
 
 		// checks if record exists
 		$q = $this->db->get_where('self_assessments', $where, 1);
 
-	    // if true, return id
+		// if true, return id
 		if ($q->num_rows() > 0)
 		{
 			return $q->row('id');

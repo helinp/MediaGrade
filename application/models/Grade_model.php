@@ -3,13 +3,13 @@ Class Grade_model extends CI_Model
 {
 
 	/**
-	 * Returns if a student project is already graded
-	 *
-	 * @param 	integer		$project_id
-	 * @param 	integer		$user_id = Current user_id
-	 * @param 	string		$term = All terms
-	 * @return	boolean
-	 */
+	* Returns if a student project is already graded
+	*
+	* @param 	integer		$project_id
+	* @param 	integer		$user_id = Current user_id
+	* @param 	string		$term = All terms
+	* @return	boolean
+	*/
 	public function isProjectGradedByProjectAndUser($project_id, $user_id = FALSE, $term = FALSE)
 	{
 		if( ! $user_id) $user_id = $this->session->id;
@@ -24,27 +24,27 @@ Class Grade_model extends CI_Model
 	}
 
 	/**
-	 * Returns NOT graded projects
-	 *
-	 * @param 	integer		$class = all classes
-	 * @param 	integer		$school_year = all school years
-	 * @return	object
-	 */
+	* Returns NOT graded projects
+	*
+	* @param 	integer		$class = all classes
+	* @param 	integer		$school_year = all school years
+	* @return	object
+	*/
 	public function listUngradedProjects($class = FALSE, $school_year = FALSE)
 	{
 
 		$this->db->select('projects.class, projects.term, users.name, users.last_name,
-							projects.project_name, users.id as user_id, projects.id as project_id');
+		projects.project_name, users.id as user_id, projects.id as project_id');
 		$this->db->distinct();
 		$this->db->from('submitted, users, projects');
 
 		$this->db->where(' 	NOT EXISTS(
-								SELECT NULL
-								FROM results
-								WHERE submitted.user_id = results.user_id
-								AND submitted.project_id = results.project_id
-								)
-						');
+									SELECT NULL
+									FROM results
+									WHERE submitted.user_id = results.user_id
+									AND submitted.project_id = results.project_id
+									)
+			');
 
 		if($class) $this->db->where('projects.class', $class);
 		if($school_year) $this->db->where('school_year', $school_year);
@@ -60,18 +60,18 @@ Class Grade_model extends CI_Model
 	{
 
 		$this->db->select('projects.class, projects.term, users.name, users.last_name,
-							projects.project_name, users.id as user_id, projects.id as project_id');
+		projects.project_name, users.id as user_id, projects.id as project_id');
 		$this->db->select("DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`", FALSE);
 		$this->db->distinct();
 		$this->db->from('submitted, users, projects');
 
 		$this->db->where(' 	NOT EXISTS(
-								SELECT NULL
-								FROM results
-								WHERE submitted.user_id = results.user_id
-								AND submitted.project_id = results.project_id
-								)
-						');
+									SELECT NULL
+									FROM results
+									WHERE submitted.user_id = results.user_id
+									AND submitted.project_id = results.project_id
+									)
+			');
 		$this->db->where('projects.id', $project_id);
 		$this->db->where('projects.id = submitted.project_id');
 		$this->db->where('users.id = submitted.user_id');
@@ -80,14 +80,14 @@ Class Grade_model extends CI_Model
 	}
 
 	/**
-	 * Saves or update votes on DB
-	 *
-	 * @param 	integer		$project_id
-	 * @param 	integer		$user_id
-	 * @param 	integer		$assessment_id
-	 * @param 	integer		$user_vote
-	 * @return	boolean
-	 */
+	* Saves or update votes on DB
+	*
+	* @param 	integer		$project_id
+	* @param 	integer		$user_id
+	* @param 	integer		$assessment_id
+	* @param 	integer		$user_vote
+	* @return	boolean
+	*/
 	public function grade($project_id, $user_id, $assessment_id, $user_vote)
 	{
 		// get max_vote from assessments DB
@@ -131,24 +131,24 @@ Class Grade_model extends CI_Model
 	}
 
 	/**
-	 * removes vote on DB
-	 *
-	 * @param 	integer		$user_id
-	 * @param 	integer		$assessment_id
-	 * @return	void
-	 */
+	* removes vote on DB
+	*
+	* @param 	integer		$user_id
+	* @param 	integer		$assessment_id
+	* @return	void
+	*/
 	public function removeVote($assessment_id, $user_id)
 	{
 		$this->db->delete('results', array('assessment_id' => $assessment_id, 'user_id' => $user_id));
 	}
 
 	/**
-	 * Checks if user is already graded
-	 *
-	 * @param 	integer		$user_id
-	 * @param 	integer		$assessment_id
-	 * @return	boolean
-	 */
+	* Checks if user is already graded
+	*
+	* @param 	integer		$user_id
+	* @param 	integer		$assessment_id
+	* @return	boolean
+	*/
 	public function isAssessmentGraded($assessment_id, $user_id)
 	{
 		$query = $this->db->get_where('results', array('assessment_id' => $assessment_id, 'user_id' => $user_id), 1);

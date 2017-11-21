@@ -3,31 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
-|	User Constants
+|	Configuration Constants
 |--------------------------------------------------------------------------
 */
-define('END_OF_YEAR', '0630'); // School year ends on (mmdd)
-define('NO_REPLY_MAIL', 'NO-REPLY@yopmail.com'); // NO-REPLY email
-define('TIMEZONE', 'Europe/Brussels'); // Mail timezone (see https://secure.php.net/manual/fr/timezones.php)
 
-
- /* YOU SHOULDN'T HAVE TO EDIT ANYTHING BELOW THIS LINE */
-
- /*
- |--------------------------------------------------------------------------
- |	MediaGrade Constants
- |--------------------------------------------------------------------------
- */
-define('RELEASE_VERSION', '2.1-20170125');
-define('DEMO_VERSION', FALSE);
-define('CONSULTATION_VERSION', TRUE);
-define('CAPTCHA', TRUE);
-define('ALLOWED_HTML_TAGS', '<table><p><a><h4><h5><h6><i><b><code><pre><video><audio>');
-
-// max size of uploaded files in octet TODO: see php.ini
-if (DEMO_VERSION) define('MAX_UPLOAD_FILE_SIZE', '715200');
-else define('MAX_UPLOAD_FILE_SIZE', '209715200');
-
+// if you have installated a PHANTOMJS server (for reports generation)
+define('PHANTOMJS_SERVER', FALSE);
+define('PHANTOMJS_SERVER_ADRESS', 'http://127.0.0.1:3003');
 
 /*
 |--------------------------------------------------------------------------

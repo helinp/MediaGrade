@@ -3,23 +3,23 @@ Class Achievements_model extends CI_Model
 {
 
 	/**
-	 * Returns all achievements from table
-	 *
-	 * @return	array
-	 */
+	* Returns all achievements from table
+	*
+	* @return	array
+	*/
 	public function getAllAchievements()
 	{
 		$this->db->order_by('name', 'ASC');
 		$this->db->order_by('star', 'ASC');
-	//	$this->db->group_by('name');
+		//	$this->db->group_by('name');
 		return $this->db->from('achievements')->get()->result();
 	}
 
 	/**
-	 * Returns all achievements from table
-	 *
-	 * @return	array
-	 */
+	* Returns all achievements from table
+	*
+	* @return	array
+	*/
 	public function getAllFirstAchievements()
 	{
 		$this->db->order_by('name', 'ASC');
@@ -30,11 +30,11 @@ Class Achievements_model extends CI_Model
 	}
 
 	/**
-	 *
-	 *
-	 * @param 	int		$student_id
-	 * @return	boolean
-	 */
+	*
+	*
+	* @param 	int		$student_id
+	* @return	boolean
+	*/
 	public function getAllAchievementsByStudent($student_id = FALSE)
 	{
 		if ( ! $student_id) $student_id = $this->session->id;
@@ -63,10 +63,10 @@ Class Achievements_model extends CI_Model
 		{
 			$got = FALSE;
 
-		  	foreach($student_achievements as $student_ach)
+			foreach($student_achievements as $student_ach)
 			{
 				//dump($student_ach);
-			    if($student_ach->achievement_id === $class->achievement_id)
+				if($student_ach->achievement_id === $class->achievement_id)
 				{
 					$got = TRUE;
 				}
@@ -74,16 +74,15 @@ Class Achievements_model extends CI_Model
 
 			if($got === FALSE) $unrewarded[] = $class;
 		}
-
 		return $unrewarded;
 	}
 
 	/**
-	 *
-	 *
-	 * @param 	int		$student_id
-	 * @return	boolean
-	 */
+	*
+	*
+	* @param 	int		$student_id
+	* @return	boolean
+	*/
 	public function getAllAchievementsByProject($project_id = FALSE, $group_achievements = FALSE)
 	{
 		$this->db->distinct();
@@ -152,7 +151,6 @@ Class Achievements_model extends CI_Model
 		return TRUE;
 	}
 
-
 	public function award($student_id, $achievement_id)
 	{
 		$this->db->from('achievements_student');
@@ -173,11 +171,11 @@ Class Achievements_model extends CI_Model
 	}
 
 	/**
-	 *	Returns true if percentage > 79 AND $count >
-	 *
-	 * @param 	int		$type formative | certifivative
-	 * @return	boolean
-	 */
+	*	Returns true if percentage > 79 AND $count >
+	*
+	* @param 	int		$type formative | certifivative
+	* @return	boolean
+	*/
 	public function isEligible($percentage, $count, $type)
 	{
 		if($percentage > 79)
@@ -195,8 +193,6 @@ Class Achievements_model extends CI_Model
 		{
 			return FALSE;
 		}
-
 	}
-
 }
 ?>

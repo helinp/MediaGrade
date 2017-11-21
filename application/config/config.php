@@ -511,3 +511,43 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+
+/*
+|--------------------------------------------------------------------------
+| GET Config from Database
+|--------------------------------------------------------------------------
+*/
+require_once( BASEPATH .'database/DB.php');
+$db =& DB();
+
+$query = $db->get('config');
+
+$result = $query->result();
+
+foreach($result as $row)
+{
+	if($row->value)
+	{
+		 $config[$row->key] = $row->value;
+	}
+	else
+	{
+		 $config[$row->key] = $row->default_value;
+	}
+}
+
+/*
+|--------------------------------------------------------------------------
+| SET MAX_UPLOAD_FILE_SIZE
+|--------------------------------------------------------------------------
+*/
+// max size of uploaded files in octet TODO: see php.ini
+if ($config['mode'] === 'demo')
+{
+	define('MAX_UPLOAD_FILE_SIZE', '715200');
+}
+else
+{
+	define('MAX_UPLOAD_FILE_SIZE', '209715200');
+}

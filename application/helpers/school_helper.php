@@ -17,9 +17,15 @@
        $md = date('md');
    }
 
-   if($md > END_OF_YEAR) return $yy . '-' . ($yy + 1);
-
-   else return (($yy - 1) . '-' . $yy);
+	$ci =& get_instance(); // Needed to access config
+   if($md > $ci->config->item('school_year_end'))
+	{
+		return $yy . '-' . ($yy + 1);
+	}
+   else
+	{
+		return (($yy - 1) . '-' . $yy);
+	}
  }
 
 

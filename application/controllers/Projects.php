@@ -22,6 +22,11 @@ class Projects extends CI_Controller {
 		$this->load->helper('school');
 		$this->load->helper('graph');
 
+		if($this->config->item('mode') === 'development')
+		{
+			$this->output->enable_profiler(TRUE);
+		}
+
 		if( ! empty($this->input->get('school_year')))
 		{
 			$this->school_year = $this->input->get('school_year');
@@ -235,7 +240,7 @@ class Projects extends CI_Controller {
 
 	public function submit($project_id)
 	{
-		if (CONSULTATION_VERSION)
+		if ($this->config->item('mode') === 'read_only')
 		{
 			show_error(_('Version de consultation. Remise impossible!'));
 		}
@@ -304,7 +309,7 @@ class Projects extends CI_Controller {
 
 	public function upload($project_id)
 	{
-		if (CONSULTATION_VERSION)
+		if ($this->config->item('mode') === 'read_only')
 		{
 			$this->triggerError(_('Version de consultation. Remise impossible!'));
 

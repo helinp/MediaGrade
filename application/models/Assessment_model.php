@@ -9,47 +9,47 @@
 Class Assessment_model extends CI_Model
 {
 	/**
-	 * Assessment id
-	 *
-	 * @var integer
-	 */
+	* Assessment id
+	*
+	* @var integer
+	*/
 	public $id;
 
 	/**
-	 * @var string
-	 */
-    public $skills_group;
+	* @var string
+	*/
+	public $skills_group;
 
 	/**
-	 * @var string
-	 */
-    public $criterion;
+	* @var string
+	*/
+	public $criterion;
 
 	/**
-	 * @var string
-	 */
-    public $cursor;
+	* @var string
+	*/
+	public $cursor;
 
 	/**
-	 * @var int
-	 */
-    public $max_vote;
+	* @var int
+	*/
+	public $max_vote;
 
 	/**
-	 * Returns assessement grid for given project
-	 *
-	 * @param integer $project_id
-	 * @return object
-	 * @todo use querybuilder
-	 */
+	* Returns assessement grid for given project
+	*
+	* @param integer $project_id
+	* @return object
+	* @todo use querybuilder
+	*/
 	public function getAssessmentsByProjectId($project_id)
 	{
 		$sql ="	SELECT assessments.id, skills_group, skill_id, criterion, `cursor`, max_vote, achievement_id
-				FROM projects_assessments
-				LEFT JOIN assessments
-					ON projects_assessments.assessment_id = assessments.id
-				WHERE project_id = ?
-			    ORDER BY skills_group, assessments.id ";
+		FROM projects_assessments
+		LEFT JOIN assessments
+		ON projects_assessments.assessment_id = assessments.id
+		WHERE project_id = ?
+		ORDER BY skills_group, assessments.id ";
 
 		$query = $this->db->query($sql, array($project_id));
 		$assessments = $query->result();
@@ -66,17 +66,17 @@ Class Assessment_model extends CI_Model
 		$this->db->join('assessments', 'projects_assessments.assessment_id = assessments.id');
 		$this->db->select('criterion');
 		$this->db->where('project_id', $project_id);
-	    $this->db->order_by('criterion');
+		$this->db->order_by('criterion');
 
 		return $this->db->get()->result();
 	}
 
 	/**
-	 * Returns group skills used in a given project
-	 *
-	 * @param integer $project_id
-	 * @return object
-	 */
+	* Returns group skills used in a given project
+	*
+	* @param integer $project_id
+	* @return object
+	*/
 	public function getSkillsGroupByProject($project_id)
 	{
 		$this->db->select("skills_group, SUM(max_vote) as max_vote", FALSE);
@@ -97,16 +97,16 @@ Class Assessment_model extends CI_Model
 
 
 	/**
-	 * Returns all assessment id from given project
-	 *
-	 * @param integer $project_id
-	 * @return array
-	 */
+	* Returns all assessment id from given project
+	*
+	* @param integer $project_id
+	* @return array
+	*/
 	private function _getAssessmentsIdByProject($project_id)
 	{
 		$sql ="SELECT assessment_id
-				FROM projects_assessments
-				WHERE project_id = ?";
+		FROM projects_assessments
+		WHERE project_id = ?";
 
 		$query = $this->db->query($sql, array($project_id));
 		$results = $query->result();
@@ -122,11 +122,11 @@ Class Assessment_model extends CI_Model
 	}
 
 	/**
-	 * Returns self assessments questions used in a given project
-	 *
-	 * @param integer $project_id
-	 * @return object
-	 */
+	* Returns self assessments questions used in a given project
+	*
+	* @param integer $project_id
+	* @return object
+	*/
 	public function getSelfAssessmentIdsByProject($project_id)
 	{
 		$this->db->select('self_assessment_ids');
@@ -138,10 +138,10 @@ Class Assessment_model extends CI_Model
 	}
 
 	/**
-	 * Returns all self-assessment questions in DB
-	 *
-	 * @return object
-	 */
+	* Returns all self-assessment questions in DB
+	*
+	* @return object
+	*/
 	public function getAllSelfAssessments()
 	{
 		$this->db->select('id, question');
@@ -149,11 +149,11 @@ Class Assessment_model extends CI_Model
 	}
 
 	/**
-	 * Returns self assessments questions from his ID
-	 *
-	 * @param integer $self_assessments_id
-	 * @return object
-	 */
+	* Returns self assessments questions from his ID
+	*
+	* @param integer $self_assessments_id
+	* @return object
+	*/
 	public function getSelfAssessmentFromId($self_assessments_id)
 	{
 		$this->db->select('question');
@@ -185,12 +185,12 @@ Class Assessment_model extends CI_Model
 
 
 	/**
-	 * Add a row into projects_assessments table
-	 *
-	 * @param 	integer		$project_id
-	 * @param 	integer		$assessment_id
-	 * @return	integer
-	 */
+	* Add a row into projects_assessments table
+	*
+	* @param 	integer		$project_id
+	* @param 	integer		$assessment_id
+	* @return	integer
+	*/
 	public function addProjects_Assessments($project_id, $assessment_id)
 	{
 		$data = array('project_id' => $project_id, 'assessment_id' => $assessment_id);

@@ -14,7 +14,7 @@ Class Gallery_model extends CI_Model
 	public function getProjectsGalleryBy($wheres = array(), $offset = 0, $limit = 0)
 	{
 
-		if(DEMO_VERSION)
+		if($this->config->item('mode') === 'demo')
 		{
 			$this->db->select("'https://loremflickr.com/g/640/480/photography?random=1' as file,
 			'https://loremflickr.com/g/320/240/photography?random=1' as thumbnail,

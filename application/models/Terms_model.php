@@ -3,10 +3,10 @@ Class Terms_model extends CI_Model
 {
 
 	/**
-	 * Returns all terms from table terms
-	 *
-	 * @return	array
-	 */
+	* Returns all terms from table terms
+	*
+	* @return	array
+	*/
 	public function getAll()
 	{
 		$this->db->select('name');
@@ -23,11 +23,11 @@ Class Terms_model extends CI_Model
 	}
 
 	/**
-	 * Add term, if not already exists, in database
-	 *
-	 * @param 	string		$term
-	 * @return	boolean
-	 */
+	* Add term, if not already exists, in database
+	*
+	* @param 	string		$term
+	* @return	boolean
+	*/
 	public function add($term)
 	{
 		// checks if record exists
@@ -49,11 +49,11 @@ Class Terms_model extends CI_Model
 	}
 
 	/**
-	 * Removes term from database
-	 *
-	 * @param 	string		$term
-	 * @return	void
-	 */
+	* Removes term from database
+	*
+	* @param 	string		$term
+	* @return	void
+	*/
 	public function delete($term)
 	{
 		$this->db->where('name', $term);
