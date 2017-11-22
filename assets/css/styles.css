@@ -1,120 +1,3 @@
-/************************/
-/****** TYPOGRAPHY ******/
-/************************/
-* {
-	font-family: 'Roboto', sans-serif;
-	font-weight: 300;
-}
-
-h1, h2, h3 {
-	font-weight:200;
-}
-
-h1 small, h2 small, h3 small {
-	font-weight:300;
-}
-
-h1,
-	h3 {
-  color: rgb(69, 69, 69);
-}
-
-h1 {font-style:italic;}
-
-h3 {
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 0.5em;
-}
-h4 {
-	font-weight: 300;
-	font-style: italic;
-}
-
-b, strong {
-    font-weight: 500;
-}
-
-
-/* admin/projects*/
-span.classe {
-	font-size: 4em;
-	color: #d3d3d380;
-	font-weight: 200;
-}
-
-.progress-modal {
-	height: 6px;
-	margin-bottom: 0;
-	border-radius: 0px;
-}
-.projects-subcols {
-	margin: 0;
-	margin-right: -1px;
-}
-.projects-subcols div{
-	border-right: 1px solid #e5e5e5;
-	border-top: 1px solid #e5e5e5;
-}
-/************************/
-/******** CUSTOM ********/
-/************************/
-
-.panel-overflow {
-max-height: 20em;
-overflow: auto;
-}
-
-/* Detailled Results table color codes */
-.table > tbody > tr.success > td, .table > tbody > tr.success > th, .table > tbody > tr > td.success,
-.table > tbody > tr > th.success, .table > tfoot > tr.success > td, .table > tfoot > tr.success > th,
-.table > tfoot > tr > td.success, .table > tfoot > tr > th.success, .table > thead > tr.success > td,
-.table > thead > tr.success > th, .table > thead > tr > td.success, .table > thead > tr > th.success,
-.table > tbody > tr.danger > td, .table > tbody > tr.danger > th, .table > tbody > tr > td.danger,
-.table > tbody > tr > th.danger, .table > tfoot > tr.danger > td, .table > tfoot > tr.danger > th,
-.table > tfoot > tr > td.danger, .table > tfoot > tr > th.danger, .table > thead > tr.danger > td,
-.table > thead > tr.danger > th, .table > thead > tr > td.danger, .table > thead > tr > th.danger,
-.table > tbody > tr.warning > td, .table > tbody > tr.warning > th, .table > tbody > tr > td.warning,
-.table > tbody > tr > th.warning, .table > tfoot > tr.warning > td, .table > tfoot > tr.warning > th,
-.table > tfoot > tr > td.warning, .table > tfoot > tr > th.warning, .table > thead > tr.warning > td,
-.table > thead > tr.warning > th, .table > thead > tr > td.warning, .table > thead > tr > th.warning {
-	background: transparent;
-}
-
-.table > tbody > tr.danger {
-	border-right: 7px #d9534f solid;
-}
-
-.table > tbody > tr.danger-left {
-	border-left: 3px #d9534f solid;
-}
-
-.table > tbody > tr.warning {
-	border-right: 7px orange solid;
-}
-
-.table > tbody > tr.success {
-	border-right: 7px #5cb85c  solid;
-}
-
-tr.students-detailled-tr > td {
-	vertical-align: middle!important;
-}
-
-tr.students-detailled-tr > td > p {
-	margin: 0;
-}
-
-
-.checkbox label, .radio label {
-    font-weight: 300;
-}
-
-.username-title {
-  font-weight: 400;
-  margin-top: 18px;
-  margin-bottom: 5px;
-}
-
 .dotted_underline {
 	text-decoration-line: underline;
 	text-decoration-style: dotted;
@@ -167,18 +50,10 @@ aside.sidebar {
   background-color: #34495e;
 }
 
-.label {
-	font-weight: 400;
+.username-title {
+  font-size: 1.5em;
+  font-weight: bold;
 }
-
-.labels {
-
-}
-
-.submit-self-assessment {
-	font-size: 1.1em;
-}
-
 
 li.active a {
   background-color: rgba(0, 0, 0, 0.25);
@@ -191,7 +66,7 @@ li.divider {
 
 .bottom-align-text {
   position: absolute;
-  bottom: 5px;
+  bottom: 10px;
   right: 2em;
 }
 
@@ -199,9 +74,8 @@ header div {
   border-bottom: lightgray solid 1px;
 }
 
-.projects-panel-body {
+.panel-body {
   min-height: 10em;
-  padding-bottom: 0px;
 }
 
 .panel-body + .panel-body {
@@ -224,28 +98,6 @@ div.captcha img {
   border-left: 4px solid lightgray;
 }
 
-/* Student results*/
-.table > thead > tr > th {
-    font-weight: 400;
-}
-
-.tooltip-inner {
-    white-space:pre-wrap;
-}
-
-div#teacher-comment {
-	min-height:10em;
-
-}
-
-#teacher-comment p {
-	font-family: 'Indie Flower', sans-serif;
-	background-color: white;
-	border: none;
-	font-size: 1.4em;
-	margin-top:1em;
-}
-
 #content {
   background-color: white;
 	border-bottom:lightgray 1px solid;
@@ -261,7 +113,17 @@ div#teacher-comment {
 	margin: -13px;
 	margin-bottom:1em;;
 }
+h1,
+	h3 {
+  color: rgb(69, 69, 69);
+}
 
+h1 {font-weight:600;font-style:italic;}
+
+h3 {
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 0.5em;
+}
 
 .demo-version {
     background-color: rgba(255,255,255 , 0.6);
@@ -288,40 +150,41 @@ div#teacher-comment {
 
 label
 {
-	font-weight: 00;
+font-weight: 500;
+margin-left:1em;
 }
 
 .form-inline
 {
-	text-align: right;
+text-align: right;
 }
 
 /***** OVERVIEW ****/
 .btn-group .btn{
-	border-top-right-radius: 0 !important;
-	border-top-left-radius: 0 !important;
+border-top-right-radius: 0 !important;
+border-top-left-radius: 0 !important;
 }
 
 .badge {font-size: 14px;
 }
-
 /***** PROFILE ***/
+
+
 table.profile tr td   {
-	border: none;
+  border: none;
 }
 
 /****** AFFIX **********/
+
+
 .affix {
-	top: 20px;
-	min-width: 16.66666667%;
-	margin-left: -15px;
-	padding-left: 15px;
+  top: 20px;
+  min-width:100%;
  }
 
 .nav > li > a {
     padding-right: 0;
 }
-
 /***** LOGIN ******/
 main.login {
 	/*background-color: rgba(225, 225, 225, 0.9);*/
@@ -331,49 +194,54 @@ main.login {
 
 
 .login input {
-   text-align:center;
-   background-color: rgba(0,0,0,.2);
+   text-align:center;  
+   background-color: #0003;
    border: 0px solid #fff;
    color: #FFF;
 }
 
-.user-avatar {
-
-}
-
 .vertical-center {
 
-   margin-top:-50px; /* compens body padding 50px */
-   min-height: 100%;  /* Fallback for vh unit */
-   min-height: 100vh; /* You might also want to use
+  margin-top:-50px; /* compens body padding 50px */
+  min-height: 100%;  /* Fallback for vh unit */
+  min-height: 100vh; /* You might also want to use
                         'height' property instead.
-   /* Make it a flex container */
-   display: -webkit-box;
-   display: -moz-box;
-   display: -ms-flexbox;
-   display: -webkit-flex;
-   display: flex;
 
-   /* Align the bootstrap's container vertically */
-   -webkit-box-align : center;
-   -webkit-align-items : center;
-   -moz-box-align : center;
-   -ms-flex-align : center;
-   align-items : center;
+                        Note that for percentage values of
+                        'height' or 'min-height' properties,
+                        the 'height' of the parent element
+                        should be specified explicitly.
 
-   /* In legacy web browsers such as Firefox 9
-   we need to specify the width of the flex container */
-   width: 100%;
+                        In this case the parent of '.vertical-center'
+                        is the <body> element */
 
-   /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
-   hence the bootstrap's container won't be aligned to the center anymore.
+  /* Make it a flex container */
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
 
-   Therefore, we should use the following declarations to get it centered again */
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -ms-flex-pack: center;
-  	-webkit-justify-content: center;
-	justify-content: center;
+  /* Align the bootstrap's container vertically */
+    -webkit-box-align : center;
+  -webkit-align-items : center;
+       -moz-box-align : center;
+       -ms-flex-align : center;
+          align-items : center;
+
+  /* In legacy web browsers such as Firefox 9
+     we need to specify the width of the flex container */
+  width: 100%;
+
+  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+     hence the bootstrap's container won't be aligned to the center anymore.
+
+     Therefore, we should use the following declarations to get it centered again */
+         -webkit-box-pack: center;
+            -moz-box-pack: center;
+            -ms-flex-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
 }
 
 video#bgvid {
@@ -405,9 +273,10 @@ video#bgvid {
   flex-direction: column;
 }
 
-/*******************************/
-/***** ROTATE TABLE HEADER *****/
-/*******************************/
+/*******/
+
+/**** ROTATE TABLE HEADER CLASS ****/
+
 /*
  * Trick credit from
  * https://css-tricks.com/rotated-table-column-headers/
@@ -420,6 +289,7 @@ th.rotate {
 
 th.rotate > div {
   transform:
+    /* 45 is really 360 - 45 */
     rotate(315deg);
   width: 30px;
 }
@@ -427,44 +297,8 @@ th.rotate > div > span {
   padding-left: 0;
 }
 
-/************************/
-/****** ACHIEVEMENT *****/
-/************************/
 
-.achievement-frame {
-	border: none;
-	background-color: #d6ebf2;
-	border-radius: 50%;
-	margin:auto;
-	width:7em;
-	height:7em;
-}
-
-.achievement-container {
-	min-height:20em;
-}
-
-.achievement-img {
-	height: 5em;
-	margin-top: 1em
-
-}
-
-.inactive {
-	filter: grayscale(100%);
-}
-
-.achievement-star-img {
-	display: inline-block;
-	margin: auto;
-	margin-top:-.5em;
-	margin-bottom:.5em;
-	height:	1.5em;
-}
-
-/************************/
-/****** TYPEAHEAD ******/
-/************************/
+/** TYPEAHEAD **/
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {

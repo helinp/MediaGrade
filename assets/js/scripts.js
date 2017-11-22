@@ -29,19 +29,8 @@ function addRow(tableID) {
 		for(var i=0; i<colCount; i++) {
 			var newcell = row.insertCell(i);
 			newcell.innerHTML = table.rows[0].cells[i].innerHTML;
-			var elements = newcell.getElementsByTagName("input");
-			for (var ii=0; ii < elements.length; ii++) {
-			  elements[ii].value = "";
-			}
-			var elements = newcell.getElementsByTagName("textarea");
-			for (var ii=0; ii < elements.length; ii++) {
-			  elements[ii].value = "";
-			}
-			var elements = newcell.getElementsByTagName("select");
-			for (var ii=0; ii < elements.length; ii++) {
-			  elements[ii].value = "";
-			}
-			//console.log(newcell.getElementsByTagName("input"));
+		    newcell.getElementsByTagName("input");
+		    newcell.getElementsByTagName("input").val="";
 		}
 	}else{
 		 // error message
