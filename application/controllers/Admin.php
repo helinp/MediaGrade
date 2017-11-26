@@ -3,7 +3,7 @@
 class Admin extends CI_Controller {
 
 	private $data;
-
+// test auto-updater
 	function __construct()
 	{
 		parent::__construct();
