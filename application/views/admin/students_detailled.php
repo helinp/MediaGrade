@@ -127,7 +127,7 @@ $(document).ready(function(){
 </script>
 
 <!-- Sparklines -->
-<script src="../assets/js/highcharts.js"></script>
+<script src="/assets/js/highcharts.js"></script>
 
 <script>
 /**

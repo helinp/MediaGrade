@@ -28,7 +28,7 @@
   <!-- BY CLASS -->
   	<h3><?= _('Projets') ?></h3>
 	<div class="row">
-		<form method="POST" action="/pdf_lesson">
+		<form method="POST" action="/admin/export/pdf_lesson">
 			<div class="col-md-12">
 					<div class="form-group">
 

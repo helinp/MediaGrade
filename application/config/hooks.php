@@ -11,3 +11,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
+/*
+$hook['pre_controller'] = array(
+        'class'    => 'LoginCheck',
+        'function' => 'loginCheck',
+        'filename' => 'loginCheck.php',
+        'filepath' => 'hooks'
+	  );
+
+$hook['pre_controller'] = array(
+        'class'    => 'DebugMode',
+        'function' => 'debugMode',
+        'filename' => 'DebugMode.php',
+        'filepath' => 'hooks'
+	  );
+*/
+// loginCheck
+// debug mode

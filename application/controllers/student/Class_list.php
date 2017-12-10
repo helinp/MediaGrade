@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Students_overview extends CI_Controller {
+class Class_list extends MY_Controller {
 
 	private $school_year = FALSE;
 	private $students_list = array();
@@ -10,10 +10,7 @@ class Students_overview extends CI_Controller {
     {
         parent::__construct();
 
-        $this->load->model('Users_model','',TRUE);
-        $this->Users_model->loginCheck();
-
-        $this->load->model('UsersManager_model','',TRUE);
+     $this->load->model('UsersManager_model','',TRUE);
         $this->load->model('Results_model','',TRUE);
 		$this->load->model('Classes_model','',TRUE);
 		$this->load->model('Achievements_model','',TRUE);
@@ -67,27 +64,13 @@ class Students_overview extends CI_Controller {
 		$this->data['students'] = $this->students_list;
 
 		// VIEW
-		if($this->input->get('view') === 'general' || $this->session->role === 'student')
-		{
-			$this->general();
-		}
-		else
-		{
-			$this->detailled();
-		}
+		$this->load->template('students_overview', $this->data);
 	}
 
 	// general view
 	function general()
 	{
 		//dump($this->students_list);
-		$this->load->template('students_overview', $this->data);
-	}
-
-	function detailled()
-	{
-		$this->Users_model->adminCheck();
-		$this->load->template('admin/students_detailled', $this->data);
 	}
 
 

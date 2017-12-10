@@ -31,7 +31,7 @@
                         <th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class ?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
                         <?php foreach ($table_header as $row): ?>
                             <?php foreach ($row['skills_groups'] as $skills_group): ?>
-                                <th class="rotate"><div><span><small><a data-toggle="modal" data-target="#projectModal" href="/admin/result_details/<?= $row['project_id'] ?>"  data-toggle="tooltip" data-placement="right" title="<?= _('Détails par projet')?>"><?= character_limiter($row['project_name'], 13) ?></a></small></span></div></th>
+                                <th class="rotate"><div><span><small><a data-toggle="modal" data-target="#projectModal" href="/admin/results/details/<?= $row['project_id'] ?>"  data-toggle="tooltip" data-placement="right" title="<?= _('Détails par projet')?>"><?= character_limiter($row['project_name'], 13) ?></a></small></span></div></th>
 
                             <?php endforeach ?>
                         <?php endforeach ?>
@@ -69,11 +69,15 @@
                             <?php foreach ($student['results'] as $results): ?>
 								<?php foreach ($results as $result): ?>
                                 <td>
-                                  <a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/result_details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
-                              </td>
+											  <span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>"
+												  	data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">&nbsp;&nbsp;</span>
+                                  <a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
+										</td>
 							  	<?php endforeach ?>
                           <?php endforeach ?>
-                          <td<?php if ($student['average'] < 50 && is_numeric($student['average'])) echo(' class="text-danger dotted_underline" ') ?>><?= $student['average']?></td>
+                          <td<?php if ($student['average'] < 50 && is_numeric($student['average'])) echo(' class="text-danger dotted_underline" ') ?>>
+							  <span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode($student['average'])) ?>"
+								  data-toggle="tooltip" data-placement="top" title="<?= returnLSUMentionTextFromPercentage($student['average']) ?>">&nbsp;&nbsp;</span> <?= $student['average']?></td>
                           <td<?php if ($student['deviation'] < 0 && is_numeric($student['deviation'])) echo(' class="text-danger dotted_underline" ') ?>><small><?= $student['deviation']?></small></td>
                       </tr>
                   <?php endforeach ?>

@@ -27,3 +27,80 @@ function format_assessment_type($assessment_type)
 
 	return $assessment;
 }
+
+function convertPercentageToLSUCode($percentage)
+{
+	if( ! is_numeric($percentage) || $percentage < 0 || $percentage > 100 || ! $percentage)
+	{
+		return FALSE;
+	}
+
+	if($percentage < 50)
+	{
+		return 1;
+	}
+	elseif($percentage < 70)
+	{
+		return 2;
+	}
+	elseif($percentage < 80)
+	{
+		return 3;
+	}
+	else
+	{
+		return 4;
+	}
+}
+
+function returnLSUTextFromLSUCode($code)
+{
+	if( ! is_numeric($code) || $code < 0 || $code > 4 || ! $code)
+	{
+		return FALSE;
+	}
+	else
+	{
+		$lsu = array('insuffisante', 'fragile', 'satisfaisante', 'très bonne');
+		return 'Maîtrise ' . $lsu[$code - 1];
+	}
+}
+
+function returnLSUColorFromLSUCode($code)
+{
+	if( ! is_numeric($code) || $code < 0 || $code > 4 || ! $code)
+	{
+		return FALSE;
+	}
+	else
+	{
+		$lsu = array('red', 'orange', '#eeff33', '#33cc33');
+		return $lsu[$code - 1];
+	}
+
+}
+
+function returnLSUMentionTextFromPercentage($percentage)
+{
+	if( ! is_numeric($percentage) || $percentage < 0 || $percentage > 100 || ! $percentage)
+	{
+		return FALSE;
+	}
+	elseif($percentage >= 80)
+	{
+		return "Très bien";
+	}
+	elseif($percentage >= 70)
+	{
+		return "Bien";
+	}
+	elseif($percentage >= 60)
+	{
+		return "Assez bien";
+	}
+	else
+	{
+		return "Pas de mention";
+	}
+}
+?>

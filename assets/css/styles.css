@@ -59,6 +59,25 @@ span.classe {
 /******** CUSTOM ********/
 /************************/
 
+
+.alert, .panel, .panel-heading  {
+    border-radius: 0px;
+}
+
+.panel-body {
+    padding: 4px;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+/*** LSU ****/
+span.lsu {
+	border: 1px solid lightgray; 
+}
+
+
 .panel-overflow {
 max-height: 20em;
 overflow: auto;
@@ -440,64 +459,4 @@ th.rotate > div > span {
 	height:7em;
 }
 
-.achievement-container {
-	min-height:20em;
-}
-
-.achievement-img {
-	height: 5em;
-	margin-top: 1em
-
-}
-
-.inactive {
-	filter: grayscale(100%);
-}
-
-.achievement-star-img {
-	display: inline-block;
-	margin: auto;
-	margin-top:-.5em;
-	margin-bottom:.5em;
-	height:	1.5em;
-}
-
-/************************/
-/****** TYPEAHEAD ******/
-/************************/
-
-.twitter-typeahead .tt-query,
-.twitter-typeahead .tt-hint {
-	margin-bottom: 0;
-}
-
-.tt-menu {
-	font-size: 12px;
-	min-width: 160px;
-	margin-top: 2px;
-	padding: 5px 0;
-	background-color: #ffffff;
-	border: 1px solid #cccccc;
-	border: 1px solid rgba(0, 0, 0, 0.15);
-	border-radius: 4px;
-	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-	      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-	background-clip: padding-box;
-
-}
-.tt-suggestion {
-	display: block;
-	padding: 3px 20px;
-}
-.tt-suggestion.tt-selectable:hover {
-	color: #fff;
-	background-color: #428bca;
-	cursor: pointer;
-
-}
-.tt-suggestion.tt-under-cursor a {
-	color: #fff;
-}
-.tt-suggestion p {
-	margin: 0;
-}
+.

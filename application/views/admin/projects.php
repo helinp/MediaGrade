@@ -3,7 +3,7 @@
     <div class="row chapeau">
         <div class="col-xs-9  col-md-9">
             <h1> <?= _('Gestion des projets') ?>
-                <a data-toggle="modal" data-target="#projectModal" href="/admin/project_management/new" class="btn btn-xs btn-primary"  role="button" style="font-style:normal"> <span class="glyphicon glyphicon-plus"></span> Nouveau</a>
+                <a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/new" class="btn btn-xs btn-primary"  role="button" style="font-style:normal"> <span class="glyphicon glyphicon-plus"></span> Nouveau</a>
             </h1>
         </div>
         <div class="col-xs-3  col-md-3">
@@ -106,9 +106,9 @@
 						</span>
 
                         <div class="dropdown pull-right">
-							<a data-toggle="modal" data-target="#projectModal" href="/admin/project_management/<?= $project->project_id; ?>" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Modifier')?>> <span class="glyphicon glyphicon-file"></span></a>
-							<a data-toggle="modal" data-target="#projectModal"  href="/admin/instructions/<?= $project->project_id ?>" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Corriger')?>> <span class="glyphicon glyphicon-pencil"></span> </a>
-							<a data-toggle="modal" data-target="#projectModal"  href="/admin/project_stats?project=<?= $project->project_id ?>&modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Statistiques')?>> <span class="glyphicon glyphicon-stats"></span> </a>
+							<a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/<?= $project->project_id; ?>" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Modifier')?>> <span class="glyphicon glyphicon-file"></span></a>
+							<a data-toggle="modal" data-target="#projectModal"  href="/admin/project/instructions/<?= $project->project_id ?>" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Corriger')?>> <span class="glyphicon glyphicon-pencil"></span> </a>
+							<a data-toggle="modal" data-target="#projectModal"  href="/admin/project/statistics?project=<?= $project->project_id ?>&modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Statistiques')?>> <span class="glyphicon glyphicon-stats"></span> </a>
                         </div>
                     </div>
                 </div>

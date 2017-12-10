@@ -31,8 +31,8 @@
                                 <td><?= $row->term ?></td>
                                 <td><?= $row->project_name ?></td>
                                 <td><?= $row->deadline; ?></td>
-                                <td><a data-toggle="modal" data-target="#projectModal" href="/projects/instructions/<?= $row->project_id?>"><span class="glyphicon glyphicon-file" data-toggle="tooltip" data-placement="top" title="Consignes"> </span></a></td>
-                                <td><a data-toggle="modal" data-target="#projectModal" href="/projects/submit/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Remise" class="glyphicon glyphicon-save"> </span></a></td>
+                                <td><a data-toggle="modal" data-target="#projectModal" href="/student/project/instructions/<?= $row->project_id?>"><span class="glyphicon glyphicon-file" data-toggle="tooltip" data-placement="top" title="Consignes"> </span></a></td>
+                                <td><a data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Remise" class="glyphicon glyphicon-save"> </span></a></td>
                             </tr>
                         <?php endforeach ?>
                     </table>
@@ -49,7 +49,7 @@
 								<td><?= $row->term ?></td>
 								<td><?= $row->project_name ?></td>
 								<td<?= ($row->average->total_user < $row->average->total_max / 2 ?  ' class="text-danger dotted_underline" ' : '') ?>><?= $row->average->total_user . ' / ' . $row->average->total_max ?></td>
-								<td><a data-toggle="modal" data-target="#projectModal" href="/projects/results/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>
+								<td><a data-toggle="modal" data-target="#projectModal" href="/student/project/results/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>
 							</tr>
 						<?php endforeach ?>
 					</table>

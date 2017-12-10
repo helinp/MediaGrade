@@ -28,7 +28,7 @@
   <!-- BY CLASS -->
   	<h3><?= _('Projets') ?></h3>
 	<div class="row">
-		<form method="POST" action="/pdf_student_report">
+		<form method="POST" action="/admin/export/pdf_student_report">
 	        <?php foreach($students_list as $name => $class): ?>
 			<div class="col-md-6">
 					<div class="form-group">

@@ -14,7 +14,7 @@ class Login extends CI_Controller {
         if($this->input->post()) $this->login_route();
 
         // redirection if on index page
-        if($this->session->role === 'student') redirect('/projects');
+        if($this->session->role === 'student') redirect('/student');
         if($this->session->role === 'admin') redirect('/admin');
 
         $this->load->model('Projects_model','',TRUE);

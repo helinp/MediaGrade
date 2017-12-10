@@ -24,7 +24,7 @@
 
 
   <!-- BY PROJECT -->
-  <form method="POST" action="/pdf_project">
+  <form method="POST" action="/admin/export/pdf_project">
    <div class="form-group">
      <h3><?= _('Projets') ?></h3>
      <select class="form-control" name="project_id[]" size="15" multiple>

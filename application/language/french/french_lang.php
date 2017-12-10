@@ -107,10 +107,10 @@
     define('LABEL_PROJECT_FILE_INFO', 'Consignes');
     define('LABEL_ASSESSMENT_TYPE', 'Type d\'évaluation');
     define('LABEL_ASSESSMENT_TYPE_1', 'Formative');
-    define('LABEL_ASSESSMENT_TYPE_2', 'Certificative');
-    define('LABEL_ASSESSMENT_TYPE_3', 'Diagnostique');
-    define('LABEL_ASSESSMENT_TYPE_4', 'Sommative');
-    define('LABEL_PRESS_CTRL_SELECT', 'Appuyez sur <kbd>CTRL</kbd> pour une sélection multiple');
+    define('LABEL_ASSESSMENT_TYPE_2', 'Sommative');
+    define('LABEL_ASSESSMENT_CERTIFIED', 'Certificative'); // must be certified assessment
+    define('LABEL_ASSESSMENT_DIAGNOSTIC', 'Diagnostique'); // must be diagnostic
+    define('LABEL_PRESS_CTRL_SELECT', 'Laissez appuyé <kbd>CTRL</kbd> pour une sélection multiple');
     define('LABEL_SKILLS_SEEN', 'Compétences travaillées');
     define('LABEL_UPLOAD_INSTRUCTIONS', 'Téléverser les consignes');
     define('LABEL_ONLY_PDF_ALLOWED', 'Format PDF uniquement');
@@ -149,24 +149,37 @@
     define('LABEL_HERE', 'ici');
     define('LABEL_RATING', 'Pondération');
     define('LABEL_SAVE_RATING', ' Sauver l\'évaluation');  // mind the first space!
-    define('LABEL_NOT_SUBMITTED', 'Travail non remis');
+    define('LABEL_NOT_SUBMITTED', 'non remis');
     define('LABEL_EVERY_CLASSES', 'Toutes les classes');
     define('LABEL_NO_AVAILABLE_RESULTS', 'Aucun résultat disponible.');
     define('LABEL_SUBMITTED_ON', 'Remis le: ');
     define('LABEL_ASSESSMENT', 'Évaluation');
     define('LABEL_COMMENT', 'Commentaire');
 
-    define('LABEL_VOTE_00', 'Travail non remis');
-    define('LABEL_VOTE_01', 'Travail non satisfaisant ');
-    define('LABEL_VOTE_02', 'Travail non satisfaisant ');
-    define('LABEL_VOTE_03', 'Travail non satisfaisant ');
-    define('LABEL_VOTE_04', 'Travail non satisfaisant ');
-    define('LABEL_VOTE_05', 'Travail à la limite de l’acceptable');
-    define('LABEL_VOTE_06', 'Travail très faible');
-    define('LABEL_VOTE_07', 'Travail faible');
-    define('LABEL_VOTE_08', 'Travail satisfaisant');
-    define('LABEL_VOTE_09', 'Travail excellent');
-    define('LABEL_VOTE_10', 'Travail exceptionnel');
+	// From ECTS Grading Scale
+//    define('LABEL_VOTE_00', 'NR - Non remis');
+//    define('LABEL_VOTE_01', 'NA - Travail considérable nécessaire');
+//    define('LABEL_VOTE_02', 'NA - Travail considérable nécessaire');
+//    define('LABEL_VOTE_03', 'NA - Travail considérable nécessaire');
+//    define('LABEL_VOTE_04', 'NA - Un travail supplémentaire est nécessaire');
+//    define('LABEL_VOTE_05', 'EA - Suffisant');
+//    define('LABEL_VOTE_06', 'EA - Satisfaisant avec des lacunes importantes');
+//    define('LABEL_VOTE_07', 'EA - Bon avec quelques erreurs notables');
+//    define('LABEL_VOTE_08', 'A - Très bon avec quelques erreurs');
+//    define('LABEL_VOTE_09', 'A - Excellent avec erreurs mineures');
+//    define('LABEL_VOTE_10', 'A - Exceptionnel');
+
+	define('LABEL_VOTE_00', 'NR - Non remis');
+    define('LABEL_VOTE_01', 'NA - Travail considérable nécessaire');
+    define('LABEL_VOTE_02', 'NA - Travail considérable nécessaire');
+    define('LABEL_VOTE_03', 'NA - Travail considérable nécessaire');
+    define('LABEL_VOTE_04', 'NA - Travail supplémentaire nécessaire');
+    define('LABEL_VOTE_05', 'EA - Passable');
+    define('LABEL_VOTE_06', 'EA - Satisfaisant');
+    define('LABEL_VOTE_07', 'EA - Bien');
+    define('LABEL_VOTE_08', 'A - Très bien');
+    define('LABEL_VOTE_09', 'A - Excellent');
+    define('LABEL_VOTE_10', 'A - Exceptionnel');
 
     define('LABEL_ADMIN_SKILLS', 'Administration des compétences');
     define('LABEL_ADMIN_USERS', 'Administration des utilisateurs');

@@ -89,7 +89,7 @@
 								<td><?= $row->term ?></td>
 								<td><?= $row->project_name ?></td>
 								<td<?= ($row->average->total_user < $row->average->total_max / 2 ?  ' class="text-danger dotted_underline" ' : '') ?>><?= $row->average->total_user . ' / ' . $row->average->total_max ?></td>
-								<td><a data-toggle="modal" data-target="#projectModal" href="/admin/result_details/<?= $row->project_id?>/<?= $row->average->user_id ?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>
+								<td><a data-toggle="modal" data-target="#projectModal" href="/admin/results/details/<?= $row->project_id?>/<?= $row->average->user_id ?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>
 							</tr>
 						<?php endforeach ?>
 					</table>
@@ -156,7 +156,7 @@
 								text: '<?= _('Pourcentage') ?>'
 							},
 							min: 0, max: 100,
-
+							<?php if(FALSE): ?>
 							plotBands: [{
 								from: 95,
 								to: 102,
@@ -207,7 +207,52 @@
 										color: '#808080'
 									}
 								}
-							}]},
+							}]
+							<?php else: ?>
+							plotBands: [{
+								from: 80,
+								to: 100,
+								color: 'rgba(204, 255, 153, .5)',
+								label: {
+									text: 'Très bonne maîtrise',
+									style: {
+										color: '#808080'
+									}
+								}
+							}, {
+								from: 60,
+								to: 79,
+								color: 'rgba(229, 255, 204, .5)',
+								label: {
+									text: 'Maîtrise satisfaisante',
+									style: {
+										color: '#808080'
+									}
+								}
+							}, {
+								from: 50,
+								to: 59,
+								color: 'rgba(255, 229, 204, .5)',
+								label: {
+									text: 'Maîtrise fragile',
+									style: {
+										color: '#808080'
+									}
+								}
+							}, {
+								from: 0,
+								to: 49,
+								color: 'rgba(255, 204, 204, .5)',
+								label: {
+									text: 'Maîtrise insuffisante',
+									style: {
+										color: '#808080'
+									}
+								}
+							}
+							]
+							<?php endif ?>
+						},
 					    series: [<?= $graph_results ?>, {
 					        type: 'spline',
 					        name: 'Total pondéré',
@@ -250,7 +295,6 @@
 					            text: 'Pourcentage'
 					        },
 							min: 0, max: 100,
-
 							plotBands: [{
 								from: 95,
 								to: 102,
@@ -303,7 +347,6 @@
 								}
 							}]
 					    },
-
 					    plotOptions: {
 					        column: {
 					            pointPadding: 0.2,
@@ -336,22 +379,18 @@
 									polar: true,
 									type: 'line'
 								},
-
 								title: {
 									text: '',
 									x: -80
 								},
-
 								pane: {
 									size: '80%'
 								},
-
 								xAxis: {
 									categories: ["<?= implode("\", \"", array_column((array) $criterion_results, 'conca')) ?>"],
 									tickmarkPlacement: 'on',
 									lineWidth: 0
 								},
-
 								yAxis: {
 									gridLineInterpolation: 'polygon',
 									lineWidth: 0,
@@ -359,22 +398,18 @@
 									max: 100,
 										tickInterval: 20
 								},
-
 								tooltip: {
 									shared: true,
 									pointFormat: '<span style="color:{series.color}"><b>{point.y:,.0f}%</b><br/>'
 								},
-
 								legend: {
 									enabled: false
 								},
-
 								series: [{
 									name: 'Moyenne',
 									data: [<?= implode(', ', array_column((array) $criterion_results, 'average')) ?>],
 									pointPlacement: 'on'
 								}]
-
 							});
 						});
 					</script>

@@ -100,9 +100,9 @@
     define('LABEL_PROJECT_FILE_INFO', 'Instructions');
     define('LABEL_ASSESSMENT_TYPE', 'Evaluation type');
     define('LABEL_ASSESSMENT_TYPE_1', 'Formative');
-    define('LABEL_ASSESSMENT_TYPE_2', 'Certification');
-    define('LABEL_ASSESSMENT_TYPE_3', 'Diagnosis');
-    define('LABEL_ASSESSMENT_TYPE_4', 'Summative');
+    define('LABEL_ASSESSMENT_CERTIFIED', 'Certification');
+    define('LABEL_ASSESSMENT_DIAGNOSTIC', 'Diagnosis');
+    define('LABEL_ASSESSMENT_TYPE_2', 'Summative');
     define('LABEL_PRESS_CTRL_SELECT', 'Press <kbd>CTRL</kbd> for multiple selection');
     define('LABEL_SKILLS_SEEN', 'Knowledge (Students will be able to:)');
     define('LABEL_UPLOAD_INSTRUCTIONS', 'Upload instructions');

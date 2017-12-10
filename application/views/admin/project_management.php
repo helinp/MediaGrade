@@ -10,7 +10,7 @@
 </div>
 
 
-<form action="/admin/project_management/<?= @$curr_project->id ?>" method="post" enctype="multipart/form-data" id="form">
+<form action="/admin/project/record/<?= @$curr_project->id ?>" method="post" enctype="multipart/form-data" id="form">
 	<div class="row">
 		<div class = "col-md-6">
 			<div class="form-group">

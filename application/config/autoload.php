@@ -132,4 +132,16 @@ $autoload['language'] = array('french');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array();
+$autoload['model'] = array('Results_model',
+									'Grade_model',
+									'Skills_model',
+									'Classes_model',
+									'Terms_model',
+									'Projects_model',
+									'Submit_model',
+									'System_model',
+									'Assessment_model',
+									'Comments_model',
+									'Achievements_model',
+									'Email_model'
+								);

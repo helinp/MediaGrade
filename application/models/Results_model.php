@@ -707,6 +707,54 @@ Class Results_model extends CI_Model
 		return $result[0]->user_percentage;
 	}
 
+	public function getSkillsResultsByClassAndSchoolYear($class = FALSE, $school_year = FALSE)
+	{
+		if ( ! $school_year) $school_year = get_school_year();
+
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+		$this->db->select('school_year, skill_id, skills_group');
+		$this->db->select('ROUND(SUM(user_vote) / SUM(results.max_vote) * 100) as percentage', FALSE);
+		$this->db->join('projects', 'projects.id = project_id');
+		$this->db->join('assessments', 'assessments.id = assessment_id');
+
+		if($class)
+		{
+			$this->db->where('class', $class);
+		}
+		$this->db->where('school_year', $school_year);
+		$this->db->group_by('skill_id');
+		$results = $this->db->get()->result();
+
+		return $results;
+	}
+
+	public function getUserResultsBySkillAndProjectId($skill_id, $user_id = FALSE, $school_year = FALSE)
+	{
+		if ( ! $user_id) $user_id = $this->session->id;
+		if ( ! $school_year) $school_year = get_school_year();
+
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+		$this->db->select('school_year', 'skill_id', 'skills_group');
+		$this->db->select('SUM(user_vote) as user_vote SUM(results.max_vote) as max_vote', FALSE);
+		$this->db->join('projects', 'projects.id = project_id');
+		$this->db->join('assessments', 'assessments.id = assessment_id');
+		$this->db->where('results.user_id', $user_id);
+		$this->db->where('skill_id', $user_id);
+		$this->db->where('project_id', $project_id);
+		$this->db->where('school_year', $school_year);
+		$this->db->group_by('skill_id');
+		$this->db->limit(1);query($sql, array($user_id, $skill_id, $school_year));
+		$result = $this->db->row();
+
+		if( ! $result)
+		{
+			return '--';
+		}
+		return $result;
+	}
+
 	/**
 	* Returns final averaged vote of a student's project
 	*
@@ -794,6 +842,7 @@ Class Results_model extends CI_Model
 		if(! $results->user_vote) return FALSE;
 		return $results;
 	}
+
 
 
 }

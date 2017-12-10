@@ -28,7 +28,7 @@
         <div class="col-lg-4 col-md-4 col-xs-12 ">
         </div>
     </div>
-	<script src="../assets/js/highcharts.js"></script>
+	<script src="/assets/js/highcharts.js"></script>
     <!-- row -->
     <div class="row">
 		<?php if($students_results): ?>

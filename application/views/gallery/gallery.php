@@ -7,7 +7,7 @@
 
 		<?php if($this->session->role === 'admin'): ?>
 		<div class="col-xs-4  col-md-4">
-			<form id="filter" action="../../gallery/student/" method="get" class="form-inline" style="margin-top:1.5em">
+			<form id="filter" action="/student/gallery/" method="get" class="form-inline" style="margin-top:1.5em">
 				<label><?= _('Élève') ?>: </label>
 	                <select class="form-control input-sm" name="id" onchange="this.form.submit()">
 	                    <option value=""><?= _('Tous')?></option>
@@ -19,7 +19,7 @@
 		</div>
 		<?php endif ?>
 		<div class="col-xs-<?= ($this->session->role === 'admin' ? '6': '10') ?>  col-md-6<?= ($this->session->role === 'admin' ? '6': '10') ?>">
-			<form id="filter" action="../../gallery/view/" method="get" class="form-inline" style="margin-top:1.5em">
+			<form id="filter" action="/gallery/" method="get" class="form-inline" style="margin-top:1.5em">
 	            <label><?= _('Classe') ?>: </label>
 	                <select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
 	                    <option value=""><?= _('Toutes')?></option>

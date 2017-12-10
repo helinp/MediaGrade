@@ -26,7 +26,7 @@
 		Dropzone.autoDiscover = false;
 
 		var myDropzone = new Dropzone("div#my-awesome-dropzone", {
-		  	url: "/projects/upload/<?= $project->id ?>",
+		  	url: "/student/project/upload/<?= $project->id ?>",
 			addRemoveLinks: true,
 			autoProcessQueue: false,
 			maxFilesize: <?= (int) (MAX_UPLOAD_FILE_SIZE / 1000 / 1000) ?>, // MB
@@ -92,7 +92,7 @@
 		</script>
 
 
-		<form role="form" action="/projects/upload/<?= $project->id ?>" enctype="multipart/form-data" method="POST" data-toggle="validator">
+		<form role="form" action="/student/project/upload/<?= $project->id ?>" enctype="multipart/form-data" method="POST" data-toggle="validator">
 
 			<h4><span class="glyphicon glyphicon-save-file"></span> <?= _('Fichiers') ?></h4>
 			<p><?= _('Extension demandée') . ': <em style="font-weight:600">.' . $project->extension . '</em>

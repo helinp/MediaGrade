@@ -44,6 +44,7 @@ Links:
 - PHP5 & SQL
 - Disk space, likely a lot, depending on the number of students and the projects size
 - Access to php.ini to change "upload_max_filesize" and "post_max_size" to 200M
+- PhantomJS server for student' details PDF exportation
 
 ## MediaGrade is using:
 - CodeIgniter 3.0.6
@@ -51,6 +52,8 @@ Links:
 - TCPDF Class
 - TinyMCE
 - Twitter Typeahead
+- DropzoneJS
+
 
 ## TODO
 - [ ] Automated installation
@@ -71,6 +74,20 @@ Links:
 
 
 ## CHANGE LOG
+
+**2017-09**
+- Assessment_type in DB is no more related to language constants
+- User's avatar url is now saved in user table :-)
+- Added achievements rewards
+- Diagnostic assessment is not summed anymore in total averages
+- Auto-rotate thumbnails
+- Added page "general view of students"
+
+**2017-03-17**
+- Changed font
+- Added PDF exportation of student' details
+- Added Dropzone JS in student submit page
+- Bugs correction
 
 **2017-01-27**
 - Corrected sorting bug in projects list

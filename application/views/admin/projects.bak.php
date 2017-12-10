@@ -3,7 +3,7 @@
     <div class="row chapeau">
         <div class="col-xs-9  col-md-9">
             <h1> <?= _('Gestion des projets') ?>
-                <a data-toggle="modal" data-target="#projectModal" href="/admin/project_management/new" class="btn btn-xs btn-primary"  role="button" style="font-style:normal"> <span class="glyphicon glyphicon-plus"></span> Nouveau</a>
+                <a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/new" class="btn btn-xs btn-primary"  role="button" style="font-style:normal"> <span class="glyphicon glyphicon-plus"></span> Nouveau</a>
             </h1>
         </div>
         <div class="col-xs-3  col-md-3">
@@ -48,7 +48,7 @@
                 ?>">
                 <div class="panel-body" style="min-height: 9em">
                     <p><b><?= $project->project_name; ?> </b><br /><?= $project->class . ' - ' . $project->term; ?></p>
-                    <p><span class="glyphicon glyphicon-time"> </span> <?= date_format(date_create($project->deadline),"d/m/Y"); ?><br /><a data-toggle="modal" data-target="#projectModal"  href="/admin/instructions/<?= $project->project_id ?>"><span class="glyphicon glyphicon-file"></span> Consignes</a>
+                    <p><span class="glyphicon glyphicon-time"> </span> <?= date_format(date_create($project->deadline),"d/m/Y"); ?><br /><a data-toggle="modal" data-target="#projectModal"  href="/admin/project/instructions/<?= $project->project_id ?>"><span class="glyphicon glyphicon-file"></span> Consignes</a>
                     </p>
                 </div>
                 <div class="panel-footer clearfix">
@@ -63,7 +63,7 @@
 
                         ?></span>
                         <div class="dropdown pull-right">
-                          <a data-toggle="modal" data-target="#projectModal" href="/admin/project_management/<?= $project->project_id; ?>" class="btn btn-default btn-xs" role="button">
+                          <a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/<?= $project->project_id; ?>" class="btn btn-default btn-xs" role="button">
                             <?=_('Modifier') ?></a>
                         </div>
                     </div>
