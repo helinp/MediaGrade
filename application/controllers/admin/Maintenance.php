@@ -31,9 +31,9 @@ class Maintenance extends CI_Controller {
 
 		print(json_encode($has_update, JSON_PRETTY_PRINT));
 
-		// update Database
-		// $this->session->sess_destroy();
-		// redirect('/', 'refresh');
+		// @TODO update Database
+		$this->session->sess_destroy();
+		redirect('/', 'refresh');
 	}
 	function upgrade()
 	{
