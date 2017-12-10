@@ -30,10 +30,6 @@ class Maintenance extends CI_Controller {
 		$has_update = $this->github_updater->has_update();
 
 		print(json_encode($has_update, JSON_PRETTY_PRINT));
-
-		// @TODO update Database
-		$this->session->sess_destroy();
-		redirect('/', 'refresh');
 	}
 	function upgrade()
 	{
@@ -42,10 +38,9 @@ class Maintenance extends CI_Controller {
 
 		$success = $this->github_updater->update();
 
-		dump('$success');
-		// update Database
-		// $this->session->sess_destroy();
-		// redirect('/', 'refresh');
+		// @TODO update Database
+		$this->session->sess_destroy();
+		redirect('/', 'refresh');
 	}
 
 	function backup_db($action = FALSE)
