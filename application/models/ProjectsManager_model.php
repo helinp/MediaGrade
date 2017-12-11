@@ -19,6 +19,8 @@ Class ProjectsManager_model extends CI_Model
 	{
 		$this->db->where('id', $project['id']);
 		$this->db->update('projects', $project);
+
+		return $project['id'];
 	}
 
 	/**
