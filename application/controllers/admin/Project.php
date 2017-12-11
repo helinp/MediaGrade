@@ -304,7 +304,7 @@ class Project extends MY_AdminController {
 
 			// results by criterion getAllSkillsGroups
 			$criteria = $this->Assessment_model->getCriteriaFromProjectId($project->id);
-			$results = NULL;
+			$results = array();
 			foreach ($criteria as $criterion)
 			{
 				// get only array with resutls
