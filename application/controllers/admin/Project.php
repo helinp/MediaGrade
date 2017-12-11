@@ -293,7 +293,7 @@ class Project extends MY_AdminController {
 
 			// results by skills getAllSkillsGroups
 			$skills_groups = $this->Skills_model->getAllSkillsGroups();
-			$results = NULL;
+			$results = array();
 			foreach ($skills_groups as $skills_group)
 			{
 				// get only array with resutls
