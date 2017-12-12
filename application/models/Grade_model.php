@@ -95,8 +95,12 @@ Class Grade_model extends CI_Model
 		$q = $this->db->get('assessments', 1);
 		$max_vote = $q->row('max_vote');
 
-		// get balanced vote
-		$user_vote = $user_vote * ($max_vote / 10);
+		// avoid calulation errors
+		if($user_vote > 0)
+		{
+			// get percentual vote
+			$user_vote = $user_vote * round($max_vote / 10, 1, PHP_ROUND_HALF_DOWN);
+		}
 
 		$data = array(
 			'user_id' => $user_id,
