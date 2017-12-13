@@ -552,21 +552,17 @@ Class Results_model extends CI_Model
 		return $this->db->get()->result();
 	}
 
-	public function getStudentsResultsByAssessmentIdAndStudentId($assessment_id, $student_id)
+	public function getStudentResultsByAssessmentIdAndStudentId($assessment_id, $student_id)
 	{
-		$this->db->select('assessments.max_vote, user_vote, user_id, assessment_id, project_id, assessment_type, date');
+		$this->db->select('max_vote, user_vote');
+		//$this->db->select('(user_vote / max_vote * 100 ) AS percentage', FALSE);
 		$this->db->from('results');
-		$this->db->join('projects', 'results.project_id = projects.id');
-		$this->db->join('assessments', 'assessments.id = results.assessment_id');
-		$this->db->select_sum('results.max_vote');
-		$this->db->select_sum('user_vote');
-		$this->db->where('assessments.id', $assessment_id);
-		$this->db->where('results.user_id', $student_id);
-		$this->db->group_by('user_id');
-		$this->db->order_by('user_id', 'ASC');
-		$this->db->order_by('date', 'DESC');
+		$this->db->limit(1);
 
-		return $this->db->get()->result();
+		$this->db->where('assessment_id', $assessment_id);
+		$this->db->where('user_id', $student_id);
+
+		return $this->db->get()->row();
 	}
 
 	/**
