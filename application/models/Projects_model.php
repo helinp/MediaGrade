@@ -160,7 +160,7 @@ Class Projects_model extends CI_Model
 		}
 
 		$this->db->order_by('class', 'DESC');
-		$this->db->order_by('term', 'ASC');
+		//$this->db->order_by('id', 'ASC');
 		$this->db->order_by('raw_deadline', 'ASC');
 
 		return $this->db->get('projects')->result();

@@ -70,7 +70,6 @@ class Project extends MY_Controller {
 		$project_data = $this->Projects_model->getProjectDataByProjectId($project_id);
 		$this->load->model('FilesFormat_model','',TRUE);
 		$project_data->mime = $this->FilesFormat_model->returnMimeFromExtension($project_data->extension);
-
 		$this->load->helper('format_bytes');
 		$this->data['submit'] = $this->Submit_model->getSubmitInformations($project_id);
 		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id);

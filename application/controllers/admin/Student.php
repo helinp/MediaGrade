@@ -76,10 +76,12 @@ class Student extends MY_AdminController {
 			// Note: a project can be graded even if not submitted
 			// Get overall user result
 			$project_overall_result = $this->Results_model->getUserProjectOverallResult($student_id, $project->project_id);
+			$project_overall_result->average = @round($project_overall_result->total_user / $project_overall_result->total_max * 100, 1, PHP_ROUND_HALF_DOWN);
+			$project_overall_result->total_user = round($project_overall_result->total_user, 1, PHP_ROUND_HALF_DOWN);
 
 			if($this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, $student_id) && $project_overall_result->total_max > 0)
 			{
-				$projects_overall_results[$project->project_id] = round($project_overall_result->total_user / $project_overall_result->total_max * 100);
+				$projects_overall_results[$project->project_id] = round($project_overall_result->total_user / $project_overall_result->total_max * 100, 1, PHP_ROUND_HALF_DOWN);
 
 				// get project results (for 10 last results panel)
 				$project->average = $project_overall_result;
@@ -106,7 +108,7 @@ class Student extends MY_AdminController {
 
 				if($skills_group_results->max_vote)
 				{
-					$skills_result_by_project[$skills_group->name][$project->project_id] = $skills_group_results->user_vote / $skills_group_results->max_vote * 100;
+					$skills_result_by_project[$skills_group->name][$project->project_id] = round($skills_group_results->user_vote / $skills_group_results->max_vote * 100, 1, PHP_ROUND_HALF_DOWN);
 				}
 				else
 				{
@@ -117,6 +119,7 @@ class Student extends MY_AdminController {
 
 		$this->load->helper('graph');
 		$this->data['graph_results'] = graph_skills_groups_results($skills_result_by_project);
+		//dump($skills_groups);
 		//dump($skills_result_by_project);
 		/*$this->data['graph_results'] = graph_skills_groups_results($this->Results_model->getUserOverallResults($skills_groups, $projects, $student_id));*/
 		$this->data['graph_projects_list'] = graph_projects($projects);
@@ -124,7 +127,8 @@ class Student extends MY_AdminController {
 		/**
 		 *  Get 10 last projects results
 		 **/
-		$limited_projects = array_slice(array_reverse($graded_projects), 0, 10);
+		$max_results_number = 10;
+		$limited_projects = array_slice(array_reverse($graded_projects), 0, $max_results_number);
 		$this->data['graded'] = $limited_projects;
 
 		/**

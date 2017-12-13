@@ -6,18 +6,18 @@
         </div>
     </div>
     <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
-    <form action="/admin/terms/add_term" method="post">
+    <form action="/admin/config/terms/add_term" method="post">
         <h3><?=_('Ajouter une période')?></h3>
         <div class="form-group ">
             <div class="input-group col-md-4">
-                <input name="term" type="text" placeholder="<?=_('Nom du nouveau groupe')?>" class="form-control input-md" required>
+                <input name="term" type="text" placeholder="<?=_('Nom de la nouvelle période')?>" class="form-control input-md" required>
                     <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
                 </span>
             </div>
         </div>
     </form>
-    <form action="/admin/terms/del_term" method="post">
+    <form action="/admin/config/terms/del_term" method="post">
     <h3><?=_('Périodes actuelles')?></h3>
     <div class="form-group">
         <div class="input-group col-md-4">
@@ -28,7 +28,7 @@
             </select>
         </div>
     </div>
-    <form action="/admin/terms/add_term" method="post">
+    <form action="/admin/config/terms/add_term" method="post">
         <h3><?=_('Supprimer une période')?></h3>
         <p class="text-danger"><?=_('Attention, supprimer une période déjà utilisée entraînera des erreurs dans la base de données.')?></p>
         <div class="form-group ">

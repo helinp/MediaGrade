@@ -34,4 +34,16 @@ class Config extends MY_AdminController {
 		$this->load->template('admin/welcome_message', $this->data);
 	}
 
+	public function terms($action = FALSE)
+	{
+		$this->load->model('Terms_model','',TRUE);
+
+		// POST
+		if($action === 'add_term')  $this->Terms_model->add($this->input->post('term'));
+		elseif ($action === 'del_term') $this->Terms_model->delete($this->input->post('term'));
+		if($action) redirect('/admin/config/terms');
+
+		// GET
+		$this->load->template('admin/terms', $this->data);
+	}
 }

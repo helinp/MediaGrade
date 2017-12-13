@@ -818,7 +818,6 @@ Class Results_model extends CI_Model
 		$this->db->where('user_id', $student_id);
 		$this->db->where('skills_group', $skills_group);
 
-
 		$results = $this->db->get()->row();
 		return $results;
 	}

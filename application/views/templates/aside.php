@@ -38,7 +38,7 @@
 
 				<li<?= ( $this->uri->segment(1) === 'gallery'  ? ' class="active"' : '') ?>><a href="/gallery"><span class="glyphicon glyphicon-sunglasses"></span> <?= _('GALLERIE') ?></a></li>
 				<li class="divider" role="separator"></li>
-				<li <?= ( $this->uri->segment(2) === 'skills' || $this->uri->segment(2) === 'skills_groups' || $this->uri->segment(2) === 'users' || $this->uri->segment(2) === 'terms'? 'class="active"' : '') ?>>
+				<li <?= ( $this->uri->segment(2) === 'skills' || $this->uri->segment(2) === 'groups' || $this->uri->segment(2) === 'users' || $this->uri->segment(2) === 'terms'? 'class="active"' : '') ?>>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span  class="glyphicon glyphicon-wrench"></span> <?= _('CONFIG') ?> <span class="caret"></span></a>
 					<ul class="nav dropdown-menu custom-menu">
 						<li<?= ( $this->uri->segment(2) === 'users'  ? ' class="active"' : '') ?>><a href="/admin/users"><?= _('ÉLÈVES') ?></a></li>
@@ -46,7 +46,7 @@
 						<li<?= ( $this->uri->segment(2) === 'welcome_message'  ? ' class="active"' : '') ?>><a href="/admin/config/welcome_message"><?= _('ACCUEIL') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'terms'  ? ' class="active"' : '') ?>><a href="/admin/config/terms"><?= _('PÉRIODES') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'skills'  ? ' class="active"' : '') ?>><a href="/admin/skills"><?= _('COMPÉTENCES') ?></a></li>
-						<li<?= ( $this->uri->segment(2) === 'skills_groups'  ? ' class="active"' : '') ?>><a href="/admin/skills_groups"><?= _('PÔLES DE CPT') ?></a></li>
+						<li<?= ( $this->uri->segment(2) === 'skills'  ? ' class="active"' : '') ?>><a href="/admin/skills/groups"><?= _('PÔLES DE CPT') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'settings'  ? ' class="active"' : '') ?>><a href="/admin/config/system"><?= _('SYSTÉME') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'maintenance'  ? ' class="active"' : '') ?>><a href="/admin/maintenance"><?= _('MAINTENANCE') ?></a></li>
 					</ul>

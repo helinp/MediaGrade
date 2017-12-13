@@ -76,7 +76,7 @@
 			<td><div  data-sparkline="<?= @implode(', ', $student->trend) ?> "></div></td>
 			<!--<td><span style="font-size:1em;" class="text-<?=$progress_color?> glyphicon glyphicon-arrow-<?= $progress ?>"> <span></td>  -->
 			<td><img data-toggle="tooltip"  data-placement="bottom" title="&quot;<?= $student->motto ?>&quot;" alt="avatar" style="height: 4em;" class="center-block img-circle img-responsive"  src="<?= ($student->picture ? $student->picture : '/assets/img/default_avatar.jpg') ?>"></td> <!-- Avatar -->
-			<td><a href="/admin/student_details?class=<?=$student->class?>&student=<?=$student->id?>"><?= $student->name . ' ' . $student->last_name ?></a></td> <!-- Name -->
+			<td><a href="/admin/student/details/<?=$student->id?>"><?= $student->name . ' ' . $student->last_name ?></a></td> <!-- Name -->
 			<td>
 				<?php foreach ($student->achievements as $achievement): ?>
 				<img src="<?= $achievement->icon?>" style="height:1.5em;" data-toggle="tooltip" data-placement="right"

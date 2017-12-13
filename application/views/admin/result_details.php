@@ -12,29 +12,29 @@
                 <th><?= _('Indicateurs (l\'élève a:)') ?></th>
 
 
-                <?php foreach(array_values($students)[0] as $student): ?>
+                <?php foreach($students as $student): ?>
                 <th class="rotate"><div><span><small><?= $student->last_name . ' ' . substr($student->name, 0, 1) . '.'?></small></span></div></th>
                 <?php endforeach ?>
                 <th class="rotate"><div><span><small><?= _('Maximum') ?></small></span></div></th>
-                <th class="rotate"><div><span><small><?php if(count($results[0]->results) > 1) echo _('Moyenne') ?></small></span></div></th>
+                <th class="rotate"><div><span><small><?php if(count($students_assessments_results[0]->results) > 1) echo _('Moyenne') ?></small></span></div></th>
             </tr>
         </thead>
 
 
         <tbody>
-            <?php foreach($results as $row): ?>
+            <?php foreach($students_assessments_results as $assessment): ?>
             <tr>
-                <td><?= $row->skills_group ?></td>
-                <td><?= $row->criterion ?></td>
-                <td><?= $row->cursor ?></td>
+                <td><?= $assessment->skills_group ?></td>
+                <td><?= $assessment->criterion ?></td>
+                <td><?= $assessment->cursor ?></td>
 
-                <?php foreach($row->results as $result): ?>
-                <td<?php if ($result < ($row->max_vote / 2) && is_numeric($result)) echo(' class="text-danger dotted_underline" ') ?>><?= $result ?></td>
+                <?php foreach($assessment->results as $result): ?>
+                <td<?php if ($result < ($assessment->max_vote / 2) && is_numeric($result)) echo(' class="text-danger dotted_underline" ') ?>><?= $result ?></td>
                 <?php endforeach ?>
-                <td><strong><?= $row->max_vote ?></strong></td>
+                <td><strong><?= $assessment->max_vote ?></strong></td>
                 <td>
-                  <?php if(count($row->results) > 1):?>
-                    <strong><?= (count(array_filter($row->results,'is_numeric')) ? custom_round(array_sum($row->results) / count(array_filter($row->results,'is_numeric'))) : _('NA'))?></strong></td>
+                  <?php if(count($assessment->results) > 1):?>
+                    <strong><?= (count(array_filter($assessment->results,'is_numeric')) ? custom_round(array_sum($assessment->results) / count(array_filter($assessment->results,'is_numeric'))) : _('NA'))?></strong></td>
                   <?php endif ?>
                 </tr>
             <?php endforeach ?>

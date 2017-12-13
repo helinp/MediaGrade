@@ -53,6 +53,12 @@ class Maintenance extends CI_Controller {
 		}
 	}
 
+	// @TODO Removes orphan entries
+	function cleanDb()
+	{
+
+	}
+
 	function backup_db($action = FALSE)
 	{
 		$this->load->dbutil();

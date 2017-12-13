@@ -296,56 +296,47 @@
 					        },
 							min: 0, max: 100,
 							plotBands: [{
-								from: 95,
-								to: 102,
-								color: 'rgba(0, 0, 255, 0.05)',
+								from: 80,
+								to: 100,
+								color: 'rgba(204, 255, 153, .5)',
 								label: {
-									text: 'Super-Héro',
+									text: 'Très bonne maîtrise',
 									style: {
 										color: '#808080'
 									}
 								}
 							}, {
-								from: 82,
-								to: 95,
-								color: 'rgba(0, 0, 0, 0)',
+								from: 60,
+								to: 79,
+								color: 'rgba(229, 255, 204, .5)',
 								label: {
-									text: 'Professionnel',
-									style: {
-										color: '#808080'
-									}
-								}
-							}, {
-								from: 62,
-								to: 82,
-								color: 'rgba(0, 0, 255, 0.05)',
-								label: {
-									text: 'Amateur confirmé',
+									text: 'Maîtrise satisfaisante',
 									style: {
 										color: '#808080'
 									}
 								}
 							}, {
 								from: 50,
-								to: 62,
-								color: 'rgba(0, 0, 0, 0)',
+								to: 59,
+								color: 'rgba(255, 229, 204, .5)',
 								label: {
-									text: 'Amateur',
+									text: 'Maîtrise fragile',
 									style: {
 										color: '#808080'
 									}
 								}
 							}, {
-								from: 11,
-								to: 50,
-								color: 'rgba(0, 0, 255, 0.05)',
+								from: 0,
+								to: 49,
+								color: 'rgba(255, 204, 204, .5)',
 								label: {
-									text: 'Tantine à la mer',
+									text: 'Maîtrise insuffisante',
 									style: {
 										color: '#808080'
 									}
 								}
-							}]
+							}
+							]
 					    },
 					    plotOptions: {
 					        column: {
@@ -396,7 +387,49 @@
 									lineWidth: 0,
 									min: 0,
 									max: 100,
-										tickInterval: 20
+										tickInterval: 20,
+										plotBands: [{
+											from: 80,
+											to: 100,
+											color: 'rgba(204, 255, 153, .5)',
+											label: {
+												text: '',
+												style: {
+													color: '#808080'
+												}
+											}
+										}, {
+											from: 60,
+											to: 79,
+											color: 'rgba(229, 255, 204, .5)',
+											label: {
+												text: '',
+												style: {
+													color: '#808080'
+												}
+											}
+										}, {
+											from: 50,
+											to: 59,
+											color: 'rgba(255, 229, 204, .5)',
+											label: {
+												text: '',
+												style: {
+													color: '#808080'
+												}
+											}
+										}, {
+											from: 0,
+											to: 49,
+											color: 'rgba(255, 204, 204, .5)',
+											label: {
+												text: '',
+												style: {
+													color: '#808080'
+												}
+											}
+										}
+										]
 								},
 								tooltip: {
 									shared: true,

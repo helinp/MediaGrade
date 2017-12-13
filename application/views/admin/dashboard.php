@@ -238,7 +238,7 @@
 									allowDecimals: false
 								},
 								tooltip: {
-									pointFormat: '<?= _('Pourcentage') ?>: <b>{point.y} % ?></b>'
+									pointFormat: '<?= _('Pourcentage') ?>: <b>{point.y} % </b>'
 								},
 								plotOptions: {
 

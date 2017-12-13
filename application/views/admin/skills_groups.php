@@ -6,7 +6,7 @@
         </div>
     </div>
     <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
-    <form action="/admin/skills_groups/add_skills_group" method="post">
+    <form action="/admin/skills/groups/add_skills_group" method="post">
         <h3><?=_('Ajouter')?></h3>
         <div class="form-group ">
             <div class="input-group col-md-4">
@@ -17,7 +17,7 @@
             </div>
         </div>
     </form>
-    <form action="/admin/skills_groups/del_skills_group" method="post">
+    <form action="/admin/skills/groups/del_skills_group" method="post">
     <h3><?=_('Pôles actuels')?></h3>
     <div class="form-group">
         <div class="input-group col-md-4">
@@ -28,7 +28,7 @@
             </select>
         </div>
     </div>
-    <form action="/admin/skills_groups/add_skills_group" method="post">
+    <form action="/admin/skills/groups/add_skills_group" method="post">
         <h3><?=_('Supprimer')?></h3>
         <div class="form-group ">
             <div class="input-group col-md-4">

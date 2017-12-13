@@ -15,6 +15,7 @@ class Project extends MY_AdminController {
 
 		// helpers
 		$this->load->helper('school');
+		$this->load->helper('text');
 
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 		$this->data['terms'] = $this->Terms_model->getAll();
@@ -259,7 +260,7 @@ class Project extends MY_AdminController {
 		// cleaner url
 		if(is_numeric($this->input->get('project')))
 		{
-			redirect('/admin/project/statistics/' . $this->input->get('project') . '?classe=' . $this->input->get('classe'));
+			redirect('/admin/project/statistics/' . $this->input->get('project') . '?classe=' . $this->input->get('classe') . '&modal=' . $this->input->get('modal'));
 		}
 
 		// for the filter form in view

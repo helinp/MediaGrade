@@ -31,7 +31,7 @@ Class FilesFormat_model extends CI_Model
 
 		if($result)
 		{
-			return array_values($result[0]);
+			return array_column($result, 'mime');
 		}
 	}
 }

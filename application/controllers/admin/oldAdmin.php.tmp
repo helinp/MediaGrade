@@ -276,18 +276,7 @@ class Admin extends CI_Controller {
 		$this->load->template('admin/skills_groups', $this->data);
 	}
 
-	public function terms($action = FALSE)
-	{
-		$this->load->model('Terms_model','',TRUE);
 
-		// POST
-		if($action === 'add_term')  $this->Terms_model->add($this->input->post('term'));
-		elseif ($action === 'del_term') $this->Terms_model->delete($this->input->post('term'));
-		if($action) redirect('/admin/terms');
-
-		// GET
-		$this->load->template('admin/terms', $this->data);
-	}
 
 
 	public function achievements($action = FALSE)

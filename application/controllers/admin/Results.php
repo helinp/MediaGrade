@@ -10,7 +10,7 @@ class Results extends MY_AdminController {
 
 		$this->load->helper('school');
 		$this->load->helper('text');
-		
+
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 		$this->data['terms'] = $this->Terms_model->getAll();
 
@@ -92,36 +92,53 @@ class Results extends MY_AdminController {
 
 	public function details($project_id, $user_id = FALSE)
 	{
-		$this->load->model('Results_model','',TRUE);
-		$this->load->model('Assessment_model','',TRUE);
-
 		// get project info
 		$project = $this->Projects_model->getProjectDataByProjectId($project_id);
 		$class = $project->class;
-		$first_col = $this->Assessment_model->getAssessmentsByProjectId($project_id);
 
 		// if one student only, create dummy array
 		if ($user_id)
 		{
-			$students_in_class[$class][0] = $this->Users_model->getUserInformations($user_id);
-			//$students_in_class[$class][0]->id = $user_id;
+			$students_in_class[0] = $this->Users_model->getUserInformations($user_id);
 		}
 		else
 		{
 			// get all students
-			$students_in_class = $this->Users_model->getAllUsersByClass('student', $class);
+			$students_in_class = $this->Users_model->getAllUsersByClass('student', $class)[$class];
 		}
 
-		foreach($first_col as $key => $row)
+		$students_assessments_results = array();
+		$assessments = $this->Assessment_model->getAssessmentsByProjectId($project_id);
+
+		// make array for table in view
+		foreach($assessments as $key => $assessment)
 		{
-			foreach($students_in_class[$class] as $user)
+			foreach($students_in_class as $student)
 			{
-				$first_col[$key]->results[$user->id] = @$this->Results_model->getResultsByProjectAndUser($project_id, $user->id)[$key]->user_vote;
+				$assessment_result = $this->Results_model->getStudentResultsByAssessmentIdAndStudentId($assessment->id, $student->id);
+
+				$students_assessments_results[$key] = $assessment;
+				if(isset($assessment_result->user_vote))
+				{
+					if($assessment_result->user_vote === -1)  // student has not been graded, keep it for future compability
+					{
+						$students_assessments_results[$key]->results[$student->id] = 'NE';
+					}
+					else
+					{
+						$students_assessments_results[$key]->results[$student->id] = $assessment_result->user_vote;
+					}
+				}
+				else // student has not been graded
+				{
+					$students_assessments_results[$key]->results[$student->id] = '--';
+				}
 			}
 		}
+
 		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id, $user_id);
 		$this->data['project_name'] = $project->project_name;
-		$this->data['results'] = $first_col;
+		$this->data['students_assessments_results'] = $students_assessments_results;
 		$this->data['students'] = $students_in_class;
 
 		$this->load->helper('round');

@@ -6,7 +6,7 @@
         </div>
     </div>
 <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
-            <form action="/admin/skills/add_skill" method="post" role="form">
+            <form action="/admin/skills/index/add_skill" method="post" role="form">
               <table id="rows" class="table">
 				  <col width="5%">
 				  <col width="10%">
@@ -38,7 +38,7 @@
                </table>
           </form>
 
-          <form action="/admin/skills/del_skill" method="post" role="form">
+          <form action="/admin/skills/index/del_skill" method="post" role="form">
               <table id="rows" class="table table-striped">
                        <col width="5%">
                        <col width="10%">
