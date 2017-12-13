@@ -31,21 +31,30 @@ class Maintenance extends CI_Controller {
 
 		print(json_encode($has_update, JSON_PRETTY_PRINT));
 	}
+
 	function upgrade()
 	{
-
 		$this->load->library('github_updater');
 
 		$success = $this->github_updater->update();
 
-		// @TODO update Database
-		$this->session->sess_destroy();
-		redirect('/', 'refresh');
+		if($success)
+		{
+			// @TODO update Database
+			// get SQL update
+			// query sql
+
+			$this->session->sess_destroy();
+			redirect('/', 'refresh');
+		}
+		else
+		{
+			show_error('Erreur dans la mise à jour.');
+		}
 	}
 
 	function backup_db($action = FALSE)
 	{
-
 		$this->load->dbutil();
 		$this->load->helper('date');
 		$datestring = '%Y-%m-%d';
@@ -72,6 +81,10 @@ class Maintenance extends CI_Controller {
 			force_download($filename, $backup);
 			break;
 
+			case 'email':
+			// @TODO
+			break;
+
 			default:
 			// Load the file helper and write the file to your server
 			$this->load->helper('file');
@@ -79,7 +92,6 @@ class Maintenance extends CI_Controller {
 			break;
 		}
 	}
-
 }
 
 ?>

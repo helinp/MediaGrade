@@ -9,7 +9,8 @@ class Results extends MY_AdminController {
 		parent::__construct();
 
 		$this->load->helper('school');
-
+		$this->load->helper('text');
+		
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 		$this->data['terms'] = $this->Terms_model->getAll();
 
@@ -81,8 +82,6 @@ class Results extends MY_AdminController {
 			foreach($projects as $project)
 			{
 				$this->data['table_body'][$index]['results'][] = $this->Results_model->studentProjectResults($student->id, $project->project_id, $term);
-
-
 			}
 			$index++;
 		}
