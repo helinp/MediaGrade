@@ -90,7 +90,7 @@
 								<td><?= $row->criterion ?></td>
 								<td><?= $row->cursor ?></td>
 								<td>
-									<input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
+									<input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote <> -1 ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
 									<span class="small" data-onload="genAssessment()"></span>
 									<input type="hidden" name="assessments_id[]" value="<?= $row->id?>">
 								</td>

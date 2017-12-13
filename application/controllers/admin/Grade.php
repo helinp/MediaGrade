@@ -101,7 +101,7 @@ class Grade extends MY_AdminController {
 				{
 					$this->Grade_model->removeVote($assessment_id, $user_id);
 				}
-				elseif($user_vote <> -1)
+				else
 				{
 					$this->Grade_model->grade(	$this->input->post('project_id'),
 												$user_id,
