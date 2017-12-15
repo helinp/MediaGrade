@@ -259,7 +259,7 @@
 				<?php if(@$curr_project->school_year === get_school_year()): ?>
 				<button type="submit" class="btn btn-success" name="<?= (isset($curr_project->id) ? 'update' : 'save'); ?>_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
 				<?php if(isset($curr_project->id)): ?>
-				<button type="submit" class="btn btn-primary" name="save_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
+				<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
 				<?php endif ?>
 				<?php if(isset($curr_project->id)): ?>
 				<button type="submit" class="btn btn-danger pull-right" name="delete_project" value="<?= $curr_project->id ?>"><span class="glyphicon glyphicon-remove"></span><?=  LABEL_DEL_PROJECT ?></button>

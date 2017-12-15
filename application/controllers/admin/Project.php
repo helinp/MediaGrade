@@ -110,8 +110,8 @@ class Project extends MY_AdminController {
 				$this->ProjectsManager_model->deleteProject($this->input->post('delete_project'));
 				redirect('/admin/projects');
 			}
-			// ADD or UPDATE PROJECT
-			elseif($this->input->post('save_project') || $this->input->post('update_project'))
+			// ADD, UPDATE or DUPLICATE PROJECT
+			elseif($this->input->post('save_project') || $this->input->post('update_project') || $this->input->post('duplicate_project'))
 			{
 				/**
 				 * HYDRATE SELF ASSESSEMENTS
@@ -140,31 +140,31 @@ class Project extends MY_AdminController {
 				 * HYDRATE PROJECT
 				 */
 				$project = array(
-					'id' 					=> $this->input->post('project_id'),
+					'id' 							=> $this->input->post('project_id'),
 					'project_name' 			=> $this->input->post('project_name'),
 					'assessment_type' 		=> $this->input->post('assessment_type'),
-					'term' 					=> $this->input->post('term'),
-					'class' 				=> $this->input->post('class'),
-					'deadline' 				=> $this->input->post('deadline'),
-					'start_date'			=> $this->input->post('start_date'),
-					'school_year'			=> get_school_year(),
-					'skill_ids' 			=> implode(',', $this->input->post('seen_skill_ids')),
-					'material'				=> $this->input->post('material'),
-					'extension' 			=> $this->input->post('extension'),
+					'term' 						=> $this->input->post('term'),
+					'class' 						=> $this->input->post('class'),
+					'deadline' 					=> $this->input->post('deadline'),
+					'start_date'				=> $this->input->post('start_date'),
+					'school_year'				=> get_school_year(),
+					'skill_ids' 				=> implode(',', $this->input->post('seen_skill_ids')),
+					'material'					=> $this->input->post('material'),
+					'extension' 				=> $this->input->post('extension'),
 					'instructions_txt' 		=> serialize(array(
-												'instructions'  => $this->input->post('instructions_txt'),
-												'context'		=>  $this->input->post('context_txt')
-												)),
-					'number_of_files'		=> $this->input->post('number_of_files'),
+													'instructions'  => $this->input->post('instructions_txt'),
+													'context'		=>  $this->input->post('context_txt')
+													)),
+					'number_of_files'			=> $this->input->post('number_of_files'),
 					'self_assessment_ids' 	=> implode(',', $self_assessment_ids),
 					'is_activated' 			=> '1',
-					'admin_id'				=> $this->session->id
+					'admin_id'					=> $this->session->id
 					);
 
 				/**
 				 * SAVE PROJECT
 				 */
-				if($this->input->post('save_project'))
+				if($this->input->post('save_project') || $this->input->post('duplicate_project'))
 				{
 					$project_id = $this->ProjectsManager_model->addProject($project);
 				}
@@ -193,19 +193,20 @@ class Project extends MY_AdminController {
 					}
 
 					$assessment = array(
-						'id' => $this->input->post('assessment_id')[$key],
-						'skills_group' => $this->input->post('skills_groups')[$key],
-						'skill_id' => $this->input->post('skill_ids')[$key],
-						'criterion' => $this->input->post('criterion')[$key],
-						'cursor' => $this->input->post('cursor')[$key],
-						'max_vote' => $this->input->post('max_vote')[$key],
-						'achievement_id' => $this->input->post('achievement_id')[$key],
+						'id' 					=> $this->input->post('assessment_id')[$key],
+						'skills_group' 	=> $this->input->post('skills_groups')[$key],
+						'skill_id' 			=> $this->input->post('skill_ids')[$key],
+						'criterion'			=> $this->input->post('criterion')[$key],
+						'cursor' 			=> $this->input->post('cursor')[$key],
+						'max_vote' 			=> $this->input->post('max_vote')[$key],
+						'achievement_id' 	=> $this->input->post('achievement_id')[$key],
 						);
-					if($this->input->post('update_project'))
+					// Update existent assessment
+					if($this->input->post('update_project') && $this->input->post('assessment_id')[$key])
 					{
-						$assessment_id = $this->Assessment_model->updateAssessment($assessment);
+						$this->Assessment_model->updateAssessment($assessment);
 					}
-					else
+					else // assessment doesn't exist or needs to be duplicated
 					{
 						unset($assessment['id']);
 						$assessment_id = $this->Assessment_model->addAssessment($assessment);
