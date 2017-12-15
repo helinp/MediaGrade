@@ -187,7 +187,7 @@ class Project extends MY_AdminController {
 
 				foreach($skills as $key => $skill_id)
 				{
-					if( ! $this->config->item('assessment_mode') === 'skills_group')
+					if($this->config->item('assessment_mode') !== 'skills_group')
 					{
 						$_POST['skills_groups'][$key] = $this->Skills_model->getSkillGroupsFromSkillId($skill_id);
 					}
@@ -201,12 +201,13 @@ class Project extends MY_AdminController {
 						'max_vote' => $this->input->post('max_vote')[$key],
 						'achievement_id' => $this->input->post('achievement_id')[$key],
 						);
-					if($this->input->post('assessment_id')[$key])
+					if($this->input->post('update_project'))
 					{
 						$assessment_id = $this->Assessment_model->updateAssessment($assessment);
 					}
 					else
 					{
+						unset($assessment['id']);
 						$assessment_id = $this->Assessment_model->addAssessment($assessment);
 						$this->Assessment_model->addProjects_Assessments($project_id, $assessment_id);
 					}
