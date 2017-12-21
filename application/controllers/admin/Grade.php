@@ -20,25 +20,44 @@ class Grade extends MY_AdminController {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
+
+		/* SUBMENU */
+		$submenu = array();
+		$submenu[] = array('title' => 'Par élève', 'url' => '/admin/grade/by_student');
+		$submenu[] = array('title' => 'Par projet', 'url' => '/admin/grade/by_project');
+		$this->data['submenu'] = $submenu;
 	}
 
-	public function index($class = FALSE, $project_id = FALSE, $user_id = FALSE)
+	// TODO index (list) and grade methods
+	public function index($dest)
 	{
-		$this->load->model('Comments_model','',TRUE);
-		// Load Models
-		$this->load->model('Users_model','',TRUE);
-		$this->load->model('Results_model','',TRUE);
-		$this->load->model('Submit_model','',TRUE);
+		if( ! $dest)
+		{
+			redirect('/admin/grade/by_student');
+		}
+		else
+		{
+			redirect('/admin/grade/' . $dest);
+		}
+	}
+	public function by_student($class = FALSE, $term = FALSE)
+	{
+		// cleaner url
+		if($this->input->get('class'))
+		{
+			redirect('/admin/grade/by_student/' . $this->input->get('class') . '/' . $this->input->get('term'));
+		}
 
-		// catch gets for grading_list table
-		if( ! $class = $this->input->get('classe')) $class = NULL;
-		if( ! $term = $this->input->get('term')) $term = NULL;
+		if($class === 'all')
+		{
+			$class = FALSE;
+		}
 
-		$this->data['class_users'] = $this->Users_model->getAllUsersByClass('student', $class);
+		$class_roll = $this->Users_model->getAllUsersByClass('student', $class);
 
 		// TODO mhash_keygen_s2k table CLASS -> USER_ID -> PROJECTS & USER
-		$table = '';
-		foreach($this->data['class_users'] as $class => $students_in_class)
+		$table = NULL;
+		foreach($class_roll as $class => $students_in_class)
 		{
 			foreach($students_in_class as $user)
 			{
@@ -58,32 +77,59 @@ class Grade extends MY_AdminController {
 			}
 		}
 		$this->data['grade_table'] = $table;
-
-
-		/**
-		 *  Routing
-		 */
-		// to grade page
-		if($class && $project_id && $user_id)
-		{
-			// gather informations
-			$this->data['user'] = $this->Users_model->getUserInformations($user_id);
-			$this->data['submitted'] = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
-			$this->data['self_assessments'] = $this->Submit_model->getSelfAssessmentByProjectId($project_id, TRUE, $user_id);
-			$this->data['comment'] = preg_replace('<br/>', "/\n", $this->Comments_model->getCommentsByProjectIdAndUserId($project_id, $user_id)->comment);
-			$this->data['assessment_table'] = $this->Results_model->getResultsTable($user_id, $project_id);
-			$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
-
-			// GET
-			$this->load->template('admin/grade', $this->data, TRUE);
-		}
-		// To grade_list
-		else
-		{
-			$this->load->template('admin/grade_list', $this->data);
-		}
+		$this->data['class_users'] = $class_roll;
+		$this->data['page_title'] = _('Projets à corriger');
+		$this->load->template('admin/grade_list', $this->data);
 	}
 
+	public function by_project($class = FALSE, $term = FALSE)
+	{
+		// cleaner url
+		if($this->input->get('class'))
+		{
+			redirect('/admin/grade/by_project/' . $this->input->get('class') . '/' . $this->input->get('term'));
+		}
+
+		if($class === 'all')
+		{
+			$class = FALSE;
+		}
+
+		$projects = $this->Projects_model->getAllActiveProjectsByTermAndClassAndSchoolYear($term, $class, get_school_year());
+
+		$table = NULL;
+		$status = NULL;
+		foreach($projects as $project)
+		{
+			$students = $this->Users_model->getAllUsersByClass($role = 'student', $project->class, TRUE);
+			$table[$project->project_id]['project'] = $project;
+
+			foreach ($students as $student)
+			{
+				$status['is_graded'] = $this->Results_model->IsProjectGraded($student->id, $project->project_id);
+				$status['is_submitted'] = $this->Submit_model->IsSubmittedByUserAndProjectId($student->id, $project->project_id);
+				$table[$project->project_id]['students'][$student->id]['student'] = $student;
+				$table[$project->project_id]['students'][$student->id]['status'] = $status;
+			}
+		}
+		$this->data['grade_table'] = $table;
+		$this->data['page_title'] = _('Projets à corriger');
+		$this->load->template('admin/grade_list_by_project', $this->data);
+	}
+
+	function assess($class, $project_id, $user_id)
+	{
+		// gather informations
+		$this->data['user'] = $this->Users_model->getUserInformations($user_id);
+		$this->data['submitted'] = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+		$this->data['self_assessments'] = $this->Submit_model->getSelfAssessmentByProjectId($project_id, TRUE, $user_id);
+		$this->data['comment'] = preg_replace('<br/>', "/\n", $this->Comments_model->getCommentsByProjectIdAndUserId($project_id, $user_id)->comment);
+		$this->data['assessment_table'] = $this->Results_model->getResultsTable($user_id, $project_id);
+		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
+
+		// GET
+		$this->load->template('admin/grade', $this->data, TRUE);
+	}
 	function record()
 	{
 		if($this->input->post() && $this->Projects_model->isProjectIdFromThisSchoolYear($this->input->post('project_id')))

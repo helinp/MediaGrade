@@ -44,6 +44,7 @@ class Achievements extends CI_Controller {
 		}
 
 		// GET
+		$this->data['page_title'] = _('Gestion des badges');
 		$this->data['achievements'] = $this->Achievements_model->getAllAchievements();
 		$this->load->template('admin/achievements', $this->data);
 	}

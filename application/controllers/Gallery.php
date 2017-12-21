@@ -8,9 +8,6 @@ class Gallery extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Users_model','',TRUE);
-		$this->Users_model->loginCheck();
-
 		$this->load->model('Gallery_model','',TRUE);
 		$this->load->helper('form');
 
@@ -27,34 +24,48 @@ class Gallery extends CI_Controller {
 		$this->pag_config['cur_tag_close'] = '</a></li>';
 	}
 
-
-	function index($offset = 0, $project_id = FALSE)
+	function index($offset = 0)
 	{
-		// cleaner url
-		if(is_numeric($this->input->get('project')))
+		$class = $this->input->get('classe');
+		$project_id = $this->input->get('project');
+		$user_id = FALSE;
+
+		if($offset === 'my')
 		{
-			redirect('/gallery/' . $offset . '/' . $this->input->get('project'));
+			$user_id = $this->session->user_id;
 		}
 
-		$class = $this->input->get('classe');
+		if( ! $user_id && $this->input->get('id'))
+		{
+			$user_id = $this->input->get('id');
+			unset($this->data['classes']);
 
-		$args = array( 'projects.class' => $class,
-		'projects.id' => $project_id
-		);
+		}
 
-	$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClass($class);
-	$this->data['medias'] =  $this->Gallery_model->getProjectsGalleryBy($args, $offset * $this->limit, $this->limit);
+		$filters = array(	'projects.class' => $class,
+		'project_id' => $project_id,
+		'user_id' => $user_id
+	);
 
-	// PAGINATION
-	$this->load->library('pagination');
-	$this->pag_config['num_links'] =  $this->pag_config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($args));
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClass($class);
+		$this->data['medias'] =  $this->Gallery_model->getProjectsGalleryBy($filters, $offset * $this->limit, $this->limit);
 
-	$this->pag_config['base_url'] = '/gallery/';
-	$this->pagination->initialize($this->pag_config);
-	// . PAGINATION
+		// PAGINATION
+		$this->load->library('pagination');
 
-	$this->load->template('gallery/gallery', $this->data);
-}
+		$this->pag_config['base_url'] = '/gallery/';
+		$this->pag_config['num_links'] =  10;
+		$this->pag_config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($filters));
+		$this->pagination->initialize($this->pag_config);
+		$this->data['page_title'] = _('Gallerie');
+		$this->load->template('gallery/gallery', $this->data);
+	}
+
+	function my()
+	{
+
+		$this->index();
+	}
 }
 
 ?>

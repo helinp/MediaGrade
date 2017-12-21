@@ -19,8 +19,8 @@ Class Submit_model extends CI_Model
 	{
 		if( ! $user_id) $user_id = $this->session->id;
 
-		$query = $this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id), 1);
-		return $query->result();
+		$this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id), 1);
+		return ($this->db->count_all_results() > 0 ? TRUE : FALSE);
 	}
 
 	public function getNSubmittedByProjectId($project_id)

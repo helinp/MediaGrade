@@ -1,25 +1,20 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Maintenance extends CI_Controller {
+class Maintenance extends MY_AdminController {
 
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Users_model','',TRUE);
-		$this->Users_model->loginCheck();
-		$this->Users_model->adminCheck();
 
-		if($this->config->item('mode') === 'development')
-		{
-			error_reporting(-1);
-			ini_set('display_errors', 'On');
-			$this->output->enable_profiler(TRUE);
-		}
+		$submenu[] = array('title' => 'Maintenance', 			'url' => '/admin/maintenance');
+		$submenu[] = array('title' => 'Contrôle du système', 	'url' => '/admin/maintenance/system');
+		$this->data['submenu'] = $submenu;
 	}
 
 	function index()
 	{
-		$this->load->template('admin/maintenance');
+		$this->data['page_title'] = 'Maintenance';
+		$this->load->template('admin/maintenance', $this->data);
 	}
 
 	function check_update()
@@ -97,6 +92,36 @@ class Maintenance extends CI_Controller {
 			write_file("/backup/$filename", $backup);
 			break;
 		}
+	}
+
+	function update_db($confirm)
+	{
+		$this->load->model('Update_model','',TRUE);
+		$this->Update_model->update_db();
+	}
+
+	function system($action = FALSE)
+	{
+		$this->load->model('System_model','',TRUE);
+		$this->data['folder_perms'] = array('/assets/uploads' => $this->System_model->getFolderPerms('/assets/uploads/'));
+
+		$this->load->model('Skills_model','',TRUE);
+		$this->load->model('Welcome_model','',TRUE);
+
+		// POST
+		if ($action === 'mail_test')
+		{
+			$this->Email_model->sendObjectMessageToEmail(   $this->input->post('subject'),
+															$this->input->post('body'),
+															$this->session->email
+														);
+		}
+
+		// GET
+		$this->data['page_title'] = 'Contrôle du système';
+		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
+		$this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
+		$this->load->template('admin/system', $this->data);
 	}
 }
 

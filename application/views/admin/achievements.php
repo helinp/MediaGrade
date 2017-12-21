@@ -1,9 +1,6 @@
 <div id="content" class="col-xs-12 col-md-10 ">
-
+	<?php $this->view('templates/submenu'); ?>
     <div class="row chapeau">
-        <div class="col-xs-12  col-md-12">
-            <h1><?= _('Gestion des badges')?></h1>
-        </div>
     </div>
     <div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
 

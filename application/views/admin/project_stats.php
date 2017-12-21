@@ -1,8 +1,8 @@
 <?php if( ! $this->input->get('modal')): ?>
 	<div id="content" class="col-xs-12 col-md-10 ">
+		<?php $this->view('templates/submenu'); ?>
 		<div class="row chapeau">
 			<div class="col-xs-6  col-md-6">
-				<h1> <?= _('Statistiques par projet') ?></h1>
 			</div>
 			<div class="col-xs-6  col-md-6">
 				<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
@@ -17,7 +17,7 @@
 					<select class="form-control input-sm" name="project" onchange="this.form.submit()">
 						<option value=""><?= _('Merci de choisir un projet')?></option>
 						<?php foreach($projects as $project): ?>
-							<?= '<option value="' . $project->project_id . '"' . (@$_GET['project'] === $project->project_id ? ' selected' : '') . '>' . $project->class . ' | ' . $project->project_name . '</option>' . "\n" ?>
+							<?= '<option value="' . $project->project_id . '"' . ($this->uri->segment(4) === $project->project_id ? ' selected' : '') . '>' . $project->class . ' | ' . $project->project_name . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
 				</form>

@@ -17,6 +17,13 @@ class Config extends MY_AdminController {
 		{
 			$this->school_year = get_school_year();
 		}
+
+		$submenu = array(
+			array('title' => 'Périodes', 'url' => '/admin/config/terms'),
+			//array('title' => 'Cours', 'url' => '/admin/config/courses'),
+			array('title' => 'Message d\'accueil', 'url' => '/admin/config/welcome_message'),
+		);
+		$this->data['submenu'] = $submenu;
 	}
 
 	public function welcome_message($action = FALSE)
@@ -29,6 +36,7 @@ class Config extends MY_AdminController {
 		}
 
 		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
+		$this->data['page_title'] = _('Message d\'accueil');
 
 		// GET
 		$this->load->template('admin/welcome_message', $this->data);
@@ -44,6 +52,14 @@ class Config extends MY_AdminController {
 		if($action) redirect('/admin/config/terms');
 
 		// GET
+		$this->data['page_title'] = _('Périodes de cours');
 		$this->load->template('admin/terms', $this->data);
 	}
+
+	public function courses()
+	{
+		// @TODO
+	}
+
+
 }

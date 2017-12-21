@@ -97,7 +97,6 @@
 								<td><span class="balanced-max-vote"><?= $row->max_vote ?></span>
 								</td>
 							</tr>
-							<?php $i++ ?>
 						<?php endforeach ?>
 					</tbody>
 				</table>

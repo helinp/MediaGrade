@@ -29,6 +29,13 @@ class Project extends MY_AdminController {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
+
+		$submenu = array(
+			array('title' => 'Nouveau', 'url' => '/admin/project/management/new'),
+			array('title' => 'Vue d\'ensemble', 'url' => '/admin/projects'),
+			array('title' => 'Statistiques', 'url' => '/admin/project/statistics')
+		);
+		$this->data['submenu'] = $submenu;
 	}
 
 	/**
@@ -51,6 +58,7 @@ class Project extends MY_AdminController {
 		$this->load->helper('pdf');
 		$this->load->helper('url');
 
+		$this->data['title'] = _('Consignes');
 		$this->load->template('admin/instructions', $this->data, TRUE);
 	}
 
@@ -64,21 +72,22 @@ class Project extends MY_AdminController {
 	{
 		// TODO : control for empty fields
 
-		// GET
-		if( ! $this->input->post())
+		// GET data from argument (to get project info)
 		{
-			// GET data from argument (to get project info)
-			if($project_id)
+			if(is_numeric($project_id))
 			{
 				$this->data['curr_project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
 				$this->data['active_skills'] = $this->Skills_model->getAllSkillsByProjects($project_id, TRUE);
 				$this->data['assessment_table'] = $this->Assessment_model->getAssessmentsByProjectId($project_id, TRUE);
 				$this->data['active_self_assessments'] = $this->Assessment_model->getSelfAssessmentIdsByProject($project_id);
+
+				$this->data['page_title'] = _('Gestion');
 			}
 			else
 			{
 				// user wants to create a new empty project
 				$this->data['assessment_table'] = array(new Assessment_model);
+				$this->data['page_title'] = _('Nouveau projet');
 			}
 
 			// Get data
@@ -91,8 +100,10 @@ class Project extends MY_AdminController {
 
 			$this->load->helper('text');
 			$this->load->helper('deadline');
-			$this->load->template('admin/project_management', $this->data, TRUE);
+
+
 		}
+		$this->load->template('admin/project_management', $this->data, $this->input->get('modal'));
 
 	}
 
@@ -358,6 +369,7 @@ class Project extends MY_AdminController {
 			$this->data['n_to_assess'] = 0;
 		}
 
+		$this->data['page_title'] = _('Statistiques');
 		if($this->input->get('modal'))
 		{
 			$this->load->template('admin/project_stats', $this->data, TRUE);

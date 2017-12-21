@@ -31,6 +31,7 @@ class Gallery extends CI_Controller {
     }
 
 
+
 	function index($offset = 0)
 	{
 		$class = $this->input->get('classe');
@@ -65,6 +66,13 @@ class Gallery extends CI_Controller {
 	    $this->pagination->initialize($this->pag_config);
 
 	    $this->load->template('gallery/gallery', $this->data);
+	}
+
+	function my()
+	{
+		$this->input->get('id') = $this->session->user_id;
+		dump('aa');
+		redirect('/gallery/');
 	}
 }
 

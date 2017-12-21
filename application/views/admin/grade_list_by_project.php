@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="col-md-4">
-			<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
+			<form id="filter" action="/admin/grade/by_project" method="get" class="form-inline" style="margin-top:1.5em">
 				<div class="form-group">
 					<select class="form-control input-sm" name="class" onchange="this.form.submit()">
 						<option value="all" <?=( $this->uri->segment(4) === 'all' ? ' selected' : '') ?>><?= _('Toutes les classes') ?></option>
@@ -23,28 +23,26 @@
 			</form>
 		</div>
 	</div>
-	<?php foreach($grade_table as $class): ?>
-		<h3><?= array_values($class)[0]['user']->class ?></h3>
-		<div class="row">
-			<?php foreach($class as $user_projects): ?>
+		<div class="row" style = "margin-top: 1em">
+			<?php foreach($grade_table as $project): ?>
 				<div class="col-md-3 thumb">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<?= strtoupper($user_projects['user']->last_name) . " ". $user_projects['user']->name ?>
+							<?=  $project['project']->class . ' / ' . $project['project']->term . ' / ' . $project['project']->project_name?>
 						</div>
 
 						<ul class="list-group">
-							<?php foreach($user_projects['projects'] as $project): ?>
+							<?php foreach($project['students'] as $student): ?>
 								<li class="list-group-item">
-									<?php if ($project->is_graded): ?>
+									<?php if ($student['status']['is_graded']): ?>
 										<span style="color:green" class="glyphicon glyphicon-check"></span>
-									<?php elseif ($project->is_submitted): ?>
+									<?php elseif ($student['status']['is_submitted']): ?>
 										<span style="color:red" class="glyphicon glyphicon-edit"></span>
 									<?php else: ?>
 										<span style="color:gray" class="glyphicon glyphicon-inbox"></span>
 									<?php endif ?>
-									<a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/assess/<?= $user_projects['user']->class ?>/<?= $project->project_id ?>/<?= $user_projects['user']->id?>?origin=<?= htmlentities($_SERVER['REQUEST_URI']) ?>" class="text-muted" >
-										<small><?= $project->term?> - </small>  <?= $project->project_name?>
+									<a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/assess/<?= $project['project']->class ?>/<?=$project['project']->project_id ?>/<?= $student['student']->id?>?origin=<?= htmlentities($_SERVER['REQUEST_URI']) ?>" class="text-muted" >
+										<?= $student['student']->name ?> <?= $student['student']->last_name ?>
 									</a>
 								</li>
 							<?php endforeach ?>
@@ -54,7 +52,7 @@
 				</div>
 			<?php endforeach ?>
 		</div>
-	<?php endforeach ?>
+
 </div>
 <!-- Modal -->
 <div class="modal sudo"  id="projectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

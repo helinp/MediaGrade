@@ -45,7 +45,6 @@ class Dashboard extends MY_AdminController {
 		ksort($skills_results);
 
 		$this->data['skills_results'] = $skills_results;
-
 		$this->data['ranking_top'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('DESC', 60, 5, FALSE, $class, $this->school_year);
 		$this->data['ranking_bottom'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('ASC', 60, FALSE, FALSE, $class, $this->school_year);
 		$this->data['materials_stats'] = $this->Projects_model->getMaterialStatisticsByAdminAndClassAndShoolYear($this->session->id, $class, $this->school_year);
@@ -61,6 +60,7 @@ class Dashboard extends MY_AdminController {
 		$this->data['current_school_year'] = $this->school_year;
 
 		$this->load->helper('form');
+		$this->data['page_title'] = _('Dashboard');
 		$this->load->template('admin/dashboard', $this->data);
 	}
 

@@ -6,7 +6,9 @@ class Skills extends MY_AdminController {
 	{
 		parent::__construct();
 
-
+		$submenu[] = array('title' => 'Compétences', 'url' => '/admin/skills');
+		$submenu[] = array('title' => 'Pôles de compétences', 'url' => '/admin/skills/groups');
+		$this->data['submenu'] = $submenu;
 	}
 
 	public function index($action = FALSE)
@@ -22,11 +24,10 @@ class Skills extends MY_AdminController {
 			{
 				$this->Skills_model->deleteSkill($this->input->post('skill_id'));
 			}
-			redirect('/admin/skills');
 		}
 
-
 		// GET
+		$this->data['page_title'] = 'Gestion des compétences';
 		$this->data['skills'] = $this->Skills_model->getAllSkills();
 		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
 		$this->data['skills_groups_array'] = $this->Skills_model->getAllSkillsGroupsArray();
@@ -50,6 +51,7 @@ class Skills extends MY_AdminController {
 		}
 
 		// GET
+		$this->data['page_title'] = 'Gestion des pôles de compétences';
 		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
 		$this->load->template('admin/skills_groups', $this->data);
 	}

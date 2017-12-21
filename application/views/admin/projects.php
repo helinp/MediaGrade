@@ -1,10 +1,7 @@
 <div id="content" class="col-xs-12 col-md-10 ">
-
+<?php $this->view('templates/submenu'); ?>
     <div class="row chapeau">
         <div class="col-xs-9  col-md-9">
-            <h1> <?= _('Gestion des projets') ?>
-                <a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/new" class="btn btn-xs btn-primary"  role="button" style="font-style:normal"> <span class="glyphicon glyphicon-plus"></span> Nouveau</a>
-            </h1>
         </div>
         <div class="col-xs-3  col-md-3">
             <form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">

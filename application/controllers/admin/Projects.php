@@ -22,6 +22,13 @@ class Projects extends MY_AdminController {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
+
+		$submenu = array(
+			array('title' => 'Nouveau', 'url' => '/admin/project/management/new'),
+			array('title' => 'Vue d\'ensemble', 'url' => '/admin/projects'),
+			array('title' => 'Statistiques', 'url' => '/admin/project/statistics')
+		);
+		$this->data['submenu'] = $submenu;
 	}
 
 	/**
@@ -32,11 +39,9 @@ class Projects extends MY_AdminController {
 	public function index($project_id = FALSE)
 	{
 		// Models
-		$this->load->model('Assessment_model','',TRUE);
 		$this->load->model('ProjectsManager_model','',TRUE);
 		$this->load->model('Terms_model','',TRUE);
 		$this->load->model('Achievements_model','',TRUE);
-		$this->load->model('Users_model','',TRUE);
 
 		// TODO : control for empty fields
 
@@ -87,6 +92,7 @@ class Projects extends MY_AdminController {
 		$this->load->helper('assessment');
 
 		// template
+		$this->data['page_title'] = _('Vue d\'ensemble');
 		$this->load->template('admin/projects', $this->data);
 	}
 }

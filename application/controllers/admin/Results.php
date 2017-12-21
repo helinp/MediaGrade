@@ -23,125 +23,497 @@ class Results extends MY_AdminController {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
-	}
-	public function index($class)
-	{
-		$this->load->helper('assessment');
 
-		if($this->input->get('term'))
+		$submenu = array();
+		/*foreach ($this->Classes_model->getAllClasses() as $class)
 		{
-			$term = $this->input->get('term');
+		$submenu[] = array('title' => $class, 'url' => '/admin/results/' . $class);
+	}*/
+	$submenu[] = array('title' => 'Cahier de cotes', 'url' => '/admin/results');
+	$submenu[] = array('title' => 'Détail par élève', 'url' => '/admin/results/detail_by_student');
+	$submenu[] = array('title' => 'vue d\'ensemble', 'url' => '/admin/results/detail_by_class');
+	$this->data['submenu'] = $submenu;
+}
+
+public function index()
+{
+	$class = $this->input->get('classe');
+
+	if($class == FALSE)
+	{
+		$class = $this->data['classes'][0];
+	}
+	$this->load->helper('assessment');
+
+	if($this->input->get('term'))
+	{
+		$term = $this->input->get('term');
+	}
+	else
+	{
+		$term = FALSE;
+	}
+	$students_in_class = $this->Users_model->getAllUsersByClass('student', $class);
+
+	$this->load->helper('text');
+	$this->load->helper('round');
+
+	$this->load->model('Results_model','',TRUE);
+	$this->load->model('Assessment_model','',TRUE);
+
+	// make table header
+	$header = array();
+	$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, $this->school_year);
+
+	// prepare data for body table
+	foreach ($projects as $project)
+	{
+		$skills_group = $this->Assessment_model->getSkillsGroupByProject($project->project_id);
+
+		$header[$project->project_id] = array(
+			'project_name' => $project->project_name,
+			'skills_groups' => $skills_group,
+			'project_id' => $project->project_id
+		);
+	}
+
+	$this->data['class'] = $class;
+	$this->data['table_header'] = $header;
+	// OBSOLETE $this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $term, $this->school_year);
+
+	$this->data['table_body'] = array();
+
+	$index = 0;
+	foreach ($students_in_class[$class] as $student)
+	{
+		$user_info = $this->Users_model->getUserInformations($student->id);
+
+		$this->data['table_body'][$index]['user_id'] = $student->id;
+		$this->data['table_body'][$index]['name'] = $user_info->name;
+		$this->data['table_body'][$index]['last_name'] = $user_info->last_name;
+		$this->data['table_body'][$index]['term'] = $term;
+		$this->data['table_body'][$index]['average'] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, $term);
+		$this->data['table_body'][$index]['deviation'] = $this->Results_model->getUserDeviationByTermAndSchoolYear($student->id, $term);
+
+		if ( ! $projects) $this->data['table_body'][$index]['results'][0][0] = $this->Results_model;
+		foreach($projects as $project)
+		{
+			$this->data['table_body'][$index]['results'][] = $this->Results_model->studentProjectResults($student->id, $project->project_id, $term);
+		}
+		$index++;
+	}
+	//dump($this->data['table_body']);
+	$this->data['page_title'] = _('Cahier de cotes');
+	$this->load->template('admin/results', $this->data);
+}
+
+
+public function details($project_id, $user_id = FALSE)
+{
+	// get project info
+	$project = $this->Projects_model->getProjectDataByProjectId($project_id);
+	$class = $project->class;
+
+	// if one student only, create dummy array
+	if ($user_id)
+	{
+		$students_in_class[0] = $this->Users_model->getUserInformations($user_id);
+	}
+	else
+	{
+		// get all students
+		$students_in_class = $this->Users_model->getAllUsersByClass('student', $class)[$class];
+	}
+
+	$students_assessments_results = array();
+	$assessments = $this->Assessment_model->getAssessmentsByProjectId($project_id);
+
+	// make array for table in view
+	foreach($assessments as $key => $assessment)
+	{
+		foreach($students_in_class as $student)
+		{
+			$assessment_result = $this->Results_model->getStudentResultsByAssessmentIdAndStudentId($assessment->id, $student->id);
+
+			$students_assessments_results[$key] = $assessment;
+			if(isset($assessment_result->user_vote))
+			{
+				if($assessment_result->user_vote === -1)  // student has not been graded, keep it for future compability
+				{
+					$students_assessments_results[$key]->results[$student->id] = 'NE';
+				}
+				else
+				{
+					$students_assessments_results[$key]->results[$student->id] = $assessment_result->user_vote;
+				}
+			}
+			else // student has not been graded
+			{
+				$students_assessments_results[$key]->results[$student->id] = '--';
+			}
+		}
+	}
+
+	$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id, $user_id);
+	$this->data['project_name'] = $project->project_name;
+	$this->data['students_assessments_results'] = $students_assessments_results;
+	$this->data['students'] = $students_in_class;
+
+	$this->load->helper('round');
+	$this->data['page_title'] = _('Détail par élève');
+	$this->load->template('admin/result_details', $this->data, TRUE);
+}
+
+public function detail_by_student($student_id = FALSE)
+{
+	/**
+	*  Filters management
+	**/
+	if(is_numeric($this->input->get('student')))
+	{
+		// get a cleaner URL
+		redirect('/admin/results/detail_by_student/' . $this->input->get('student') . '?classe=' . $this->input->get('classe'));
+	}
+
+	$class = $this->input->get('classe');
+	if($class && $class !== 'all')
+	{
+		$students = $this->Users_model->getAllUsersByClass('student', $class);
+	}
+	else
+	{
+		$students = $this->Users_model->getAllUsersByClass('student');
+		$class = current($students)[0]->class;
+	}
+
+	if($student_id === FALSE)
+	{
+		$student_id = current($students)[0]->id;
+	}
+
+	$skills_groups = $this->Skills_model->getAllSkillsGroups();
+
+	/**
+	*  Get overall results for each projects
+	**/
+	$projects_overall_results = array();
+	$skills_result_by_project = array();
+	$not_submitted_projects = array();
+	$graded_projects = array();
+	$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class, $this->school_year);
+
+	foreach ($projects as $project)
+	{
+		if ($this->Submit_model->getNFilesToSubmitFromProjectId($project->project_id) > 0
+		&& ! $this->Submit_model->IsSubmittedByUserAndProjectId($student_id, $project->project_id)
+		&& ! $this->Results_model->IsProjectGraded($student_id, $project->project_id) )
+		{
+			// Project has not been submitted, add to array
+			$not_submitted_projects[] = $project;
+
+			// Project has not been graded, put 'null' in array (required for highcharts)
+			$projects_overall_results[$project->project_id] = 'null';
+		}
+
+		// Note: a project can be graded even if not submitted
+		// Get overall user result
+		$project_overall_result = $this->Results_model->getUserProjectOverallResult($student_id, $project->project_id);
+		$project_overall_result->average = @round($project_overall_result->total_user / $project_overall_result->total_max * 100, 1, PHP_ROUND_HALF_DOWN);
+		$project_overall_result->total_user = round($project_overall_result->total_user, 1, PHP_ROUND_HALF_DOWN);
+
+		if($this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, $student_id) && $project_overall_result->total_max > 0)
+		{
+			$projects_overall_results[$project->project_id] = round($project_overall_result->total_user / $project_overall_result->total_max * 100, 1, PHP_ROUND_HALF_DOWN);
+
+			// get project results (for 10 last results panel)
+			$project->average = $project_overall_result;
+			$graded_projects[] = $project;
 		}
 		else
 		{
-			$term = FALSE;
+			// Project has not been graded, put 'null' in array (required for highcharts)
+			$projects_overall_results[$project->project_id] = 'null';
 		}
-		$students_in_class = $this->Users_model->getAllUsersByClass('student', $class);
+	}
+	// Send to view
+	$this->data['projects_overall_results'] = $projects_overall_results;
+	$this->data['not_submitted'] = $not_submitted_projects;
 
-		$this->load->helper('text');
-		$this->load->helper('round');
-
-		$this->load->model('Results_model','',TRUE);
-		$this->load->model('Assessment_model','',TRUE);
-
-		// make table header
-		$header = array();
-		$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, $this->school_year);
-
-		// prepare data for body table
+	/**
+	*  get highcharts skills progression
+	**/
+	foreach ($skills_groups as $skills_group)
+	{
 		foreach ($projects as $project)
 		{
-			$skills_group = $this->Assessment_model->getSkillsGroupByProject($project->project_id);
+			$skills_group_results = $this->Results_model->getAverageByProjectIdAndStudentIdAndSkillsGroup($project->project_id, $student_id, $skills_group->name);
 
-			$header[$project->project_id] = array(
-				'project_name' => $project->project_name,
-				'skills_groups' => $skills_group,
-				'project_id' => $project->project_id
-				);
-		}
-
-		$this->data['class'] = $class;
-		$this->data['table_header'] = $header;
-		// OBSOLETE $this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $term, $this->school_year);
-
-		$this->data['table_body'] = array();
-
-		$index = 0;
-		foreach ($students_in_class[$class] as $student)
-		{
-			$user_info = $this->Users_model->getUserInformations($student->id);
-
-			$this->data['table_body'][$index]['user_id'] = $student->id;
-			$this->data['table_body'][$index]['name'] = $user_info->name;
-			$this->data['table_body'][$index]['last_name'] = $user_info->last_name;
-			$this->data['table_body'][$index]['term'] = $term;
-			$this->data['table_body'][$index]['average'] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, $term);
-			$this->data['table_body'][$index]['deviation'] = $this->Results_model->getUserDeviationByTermAndSchoolYear($student->id, $term);
-
-			if ( ! $projects) $this->data['table_body'][$index]['results'][0][0] = $this->Results_model;
-			foreach($projects as $project)
+			if($skills_group_results->max_vote)
 			{
-				$this->data['table_body'][$index]['results'][] = $this->Results_model->studentProjectResults($student->id, $project->project_id, $term);
+				$skills_result_by_project[$skills_group->name][$project->project_id] = round($skills_group_results->user_vote / $skills_group_results->max_vote * 100, 1, PHP_ROUND_HALF_DOWN);
 			}
-			$index++;
+			else
+			{
+				$skills_result_by_project[$skills_group->name][$project->project_id] = 'null';
+			}
 		}
-	//dump($this->data['table_body']);
-		$this->load->template('admin/results', $this->data);
 	}
 
+	$this->load->helper('graph');
+	$this->data['graph_results'] = graph_skills_groups_results($skills_result_by_project);
+	//dump($skills_groups);
+	//dump($skills_result_by_project);
+	/*$this->data['graph_results'] = graph_skills_groups_results($this->Results_model->getUserOverallResults($skills_groups, $projects, $student_id));*/
+	$this->data['graph_projects_list'] = graph_projects($projects);
 
-	public function details($project_id, $user_id = FALSE)
+	/**
+	*  Get 10 last projects results
+	**/
+	$max_results_number = 10;
+	$limited_projects = array_slice(array_reverse($graded_projects), 0, $max_results_number);
+	$this->data['graded'] = $limited_projects;
+
+	/**
+	*  get periods overall results
+	**/
+	$terms = $this->Terms_model->getAll();
+	$terms_results = array();
+	foreach($terms as $term)
 	{
-		// get project info
-		$project = $this->Projects_model->getProjectDataByProjectId($project_id);
-		$class = $project->class;
-
-		// if one student only, create dummy array
-		if ($user_id)
-		{
-			$students_in_class[0] = $this->Users_model->getUserInformations($user_id);
-		}
-		else
-		{
-			// get all students
-			$students_in_class = $this->Users_model->getAllUsersByClass('student', $class)[$class];
-		}
-
-		$students_assessments_results = array();
-		$assessments = $this->Assessment_model->getAssessmentsByProjectId($project_id);
-
-		// make array for table in view
-		foreach($assessments as $key => $assessment)
-		{
-			foreach($students_in_class as $student)
-			{
-				$assessment_result = $this->Results_model->getStudentResultsByAssessmentIdAndStudentId($assessment->id, $student->id);
-
-				$students_assessments_results[$key] = $assessment;
-				if(isset($assessment_result->user_vote))
-				{
-					if($assessment_result->user_vote === -1)  // student has not been graded, keep it for future compability
-					{
-						$students_assessments_results[$key]->results[$student->id] = 'NE';
-					}
-					else
-					{
-						$students_assessments_results[$key]->results[$student->id] = $assessment_result->user_vote;
-					}
-				}
-				else // student has not been graded
-				{
-					$students_assessments_results[$key]->results[$student->id] = '--';
-				}
-			}
-		}
-
-		$this->data['submitted'] = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project_id, $user_id);
-		$this->data['project_name'] = $project->project_name;
-		$this->data['students_assessments_results'] = $students_assessments_results;
-		$this->data['students'] = $students_in_class;
-
-		$this->load->helper('round');
-		$this->load->template('admin/result_details', $this->data, TRUE);
+		$terms_results[$term] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term, $this->school_year);
 	}
+	$this->data['terms_results'] = $terms_results;
+
+	/**
+	*  Get total year result
+	**/
+	$this->data['total_year_result'] = $this->Results_model->getUserVoteAverageBySchoolYear($student_id);
+
+
+	/**
+	*  get average results for each skills groups
+	**/
+	$skills_results = array();
+	foreach ($skills_groups as $skill)
+	{
+		$tmp = $this->Results_model->getUserOverallResultsBySkillGroup($skill->name, $student_id);
+		if(is_null($tmp) || ! is_numeric($tmp))
+		{
+			$tmp = 'null';
+		}
+		$skills_results[$skill->name] = $tmp;
+	}
+	$this->data['skills_results'] = $skills_results;
+
+	/**
+	*  get average results for each criteria
+	**/
+	// count graded occurences for each cursors
+	$graded_cursors = $this->Results_model->getDetailledResults('cursor', $student_id, FALSE, $this->school_year);
+	$tmp_cnt = '';
+	$cnt_graded_criteria = array();
+
+	foreach ($graded_cursors as $graded_cursor)
+	{
+		if($tmp_cnt !== $graded_cursor['criterion'])
+		{
+			$tmp_cnt = $graded_cursor['criterion'];
+			$cnt_graded_criteria[$tmp_cnt] = 1;
+		}
+		$cnt_graded_criteria[$tmp_cnt]++;
+	}
+	$this->data['cnt_graded_criteria'] = $cnt_graded_criteria;
+	$this->data['cursor_results'] = $graded_cursors;
+
+	/**
+	*  get results for each criteria
+	**/
+	$this->data['criterion_results'] = $this->Results_model->getDetailledResults('criterion', $student_id, FALSE, $this->school_year);
+
+	/**
+	*  get general infos
+	**/
+	$this->data['students'] = $students;
+	$this->data['user_data'] = $this->Users_model->getUserInformations($student_id);
+	$this->data['page_title'] = _('Détail par élève');
+	/**
+	*  Call view
+	**/
+	if($this->input->get('modal') === 'true')
+	{
+		$this->load->template('admin/student_details', $this->data, TRUE);
+	}
+	else
+	{
+		$this->load->template('admin/student_details', $this->data);
+	}
+}
+
+function detail_by_class()
+{
+	$this->load->model('skills_model','',TRUE);
+	$this->skills_groups = $this->skills_model->getAllSkillsGroups();
+	$this->data['skills_groups'] = $this->skills_groups;
+
+	// FILTERS
+	$class = $this->input->get('classe');
+	if($class)
+	{
+		$this->students_list = $this->Users_model->getAllUsersByClass('student', $class, TRUE);
+	}
+	else
+	{
+		$this->students_list = $this->Users_model->getAllUsers();
+	}
+
+	// Gets averages and achievements
+	foreach ($this->students_list as $key => $student)
+	{
+		// GETS RESULTS FOR ADMIN
+		if($this->session->role === 'admin')
+		{
+			$this->students_list[$key]->results = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, FALSE, $this->school_year);
+			$this->projects_list = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($student->class, $this->school_year);
+			$this->students_list[$key]->all_results = $this->Results_model->getUserOverallResults(FALSE, $this->projects_list, $student->id, $this->school_year);
+			//$this->students_list[$key]->progression = $this->Results_model->getLastProgression($this->projects_list, $student->id, $this->school_year);
+
+			foreach ($this->skills_groups as $skills_group)
+			{
+				$this->students_list[$key]->skills_groups_results[$skills_group->id] = $this->Results_model->getUserOverallResultsBySkillGroup($skills_group->name, $student->id, $this->school_year);
+			}
+			$this->students_list[$key]->trend = $this->_trendLine($this->students_list[$key]->all_results);
+			$this->students_list[$key]->progression = $this->_progression($this->_linearProgression($this->students_list[$key]->all_results), 1);
+		}
+		$this->students_list[$key]->achievements = $this->Achievements_model->getAllAchievementsByStudent($student->id);
+	}
+	$this->data['students'] = $this->students_list;
+	$this->data['page_title'] = _('Détail par classe');
+	// VIEW
+	if($this->input->get('view') === 'general' || $this->session->role === 'student')
+	{
+		$this->general();
+	}
+	else
+	{
+		$this->detailled();
+	}
+}
+
+// general view
+function general()
+{
+	//dump($this->students_list);
+	$this->load->template('students_overview', $this->data);
+}
+
+function detailled()
+{
+	$this->Users_model->adminCheck();
+	$this->load->template('admin/students_detailled', $this->data);
+}
+
+
+/* TODO Sould be helpers functions*/
+private function _progression($results = array(), $round = FALSE)
+{
+	//dump($results);
+	$n = count($results);
+	if( ! $n | $n < 2 ) return 0;
+
+	if($round)
+	{
+		$results[0] = round($results[0] 			* 2 / 100, 2);
+		$results[$n - 1] = round($results[$n - 2] 	* 2 / 100, 2);
+	}
+
+	if($results[$n - 1] > $results[0]) return 1;
+	if($results[$n - 1] < $results[0]) return -1;
+	else return 0;
+}
+
+private function _trendLine($array_y = array())
+{
+	$i = 0; $y = $x = false;
+	foreach ($array_y as $array)
+	{
+		if ($array <> 'null')
+		{
+			 $y[] = $array;
+			 $x[] = $i;
+			 $i++;
+		}
+		# code...
+	}
+	if( ! $x) return false;
+
+	/**/
+	$data = $y;
+
+	$range;
+	if($i > 10) $range = $i / 2;
+	elseif($i >= 5) $range = 3;
+	elseif($i > 1) $range = 2;
+	else return 0;
+
+	$range = (int)($range) ;
+	$sum = array_sum(array_slice($data, 0, $range));
+
+	 $result = array($range - 1 => $sum / $range);
+
+	 for ($i = $range, $n = count($data); $i != $n; ++$i) {
+		  $result[$i] = (int) ( $result[$i - 1] + ($data[$i] - $data[$i - $range]) / $range);
+	 }
+
+	/**/
+
+
+	return ($result);
+}
+
+private function _linearProgression($array_y = array())
+{
+	$i = 0; $y = $x = false;
+	foreach ($array_y as $array)
+	{
+		if ($array <> 'null')
+		{
+			 $y[] = $array;
+			 $x[] = $i;
+			 $i++;
+		}
+		# code...
+	}
+	if( ! $x) return false;
+
+	$n     = count($x);     // number of items in the array
+	$x_sum = array_sum($x); // sum of all X values
+	$y_sum = array_sum($y); // sum of all Y values
+
+	$xx_sum = 0;
+	$xy_sum = 0;
+
+	for($i = 0; $i < $n; $i++) {
+	$xy_sum += ( $x[$i]*$y[$i] );
+	$xx_sum += ( $x[$i]*$x[$i] );
+	}
+	 // Slope
+	$divider = ( ( $n * $xx_sum ) - ( $x_sum * $x_sum ) );
+	 $slope = ( ( $n * $xy_sum ) - ( $x_sum * $y_sum ) ) / ($divider === 0 ? 1 : $divider);
+
+	 // calculate intercept
+	 $intercept = ( $y_sum - ( $slope * $x_sum ) ) / $n;
+
+	 $trend = array(
+		  'slope'     => $slope,
+		  'intercept' => $intercept,
+	 );
+
+	for($x = 0 ; $x <= $n ; $x++)
+	{
+		$graph[] = (int)($trend['intercept'] + ($x * $trend['slope']));
+	}
+
+	return ($graph);
+
+}
 }

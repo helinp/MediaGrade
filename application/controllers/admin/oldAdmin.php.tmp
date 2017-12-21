@@ -248,33 +248,7 @@ class Admin extends CI_Controller {
 	}
 
 
-	public function skills($action = FALSE)
-	{
-		// POST
-		if($action === 'add_skill')  $this->Skills_model->addSkill($this->input->post('skill_id'), $this->input->post('skill'), $this->input->post('skills_group'));
-		elseif ($action === 'del_skill') $this->Skills_model->deleteSkill($this->input->post('skill_id'));
 
-		if($action) redirect('/admin/skills');
-
-		// GET
-		$this->load->model('Assessment_model','',TRUE);
-		$this->data['skills'] = $this->Skills_model->getAllSkills();
-		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
-		$this->data['skills_groups_array'] = $this->Skills_model->getAllSkillsGroupsArray();
-		$this->load->template('admin/skills', $this->data);
-	}
-
-	public function skills_groups($action = FALSE)
-	{
-		// POST
-		if($action === 'add_skills_group')  $this->Skills_model->addSkillsGroup($this->input->post('skills_group'));
-		elseif ($action === 'del_skills_group') $this->Skills_model->deleteSkillsGroup($this->input->post('skills_group'));
-		if($action) redirect('/admin/skills_groups');
-
-		// GET
-		$this->data['skills_groups'] = $this->Skills_model->getAllSkillsGroups();
-		$this->load->template('admin/skills_groups', $this->data);
-	}
 
 
 
@@ -410,30 +384,7 @@ class Admin extends CI_Controller {
 
 
 
-	public function settings($action = FALSE)
-	{
-        $this->load->model('System_model','',TRUE);
-        $this->data['folder_perms'] = array('/assets/uploads' => $this->System_model->getFolderPerms('/assets/uploads/'));
 
-		$this->load->model('Skills_model','',TRUE);
-		$this->load->model('Welcome_model','',TRUE);
-
-		// POST
-		if ($action === 'mail_test')
-		{
-			$this->Email_model->sendObjectMessageToEmail(   $this->input->post('subject'),
-															$this->input->post('body'),
-															$this->session->email
-														);
-
-			redirect('/admin/settings');
-		}
-
-		// GET
-		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
-        $this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
-		$this->load->template('admin/settings', $this->data);
-	}
 
 
 

@@ -26,6 +26,11 @@ class Export extends MY_AdminController {
 			$this->school_year = get_school_year();
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
+
+		$submenu[] = array('title' => 'Projets', 'url' => '/admin/export/projects');
+		$submenu[] = array('title' => 'Évaluations', 'url' => '/admin/export/projects_assessments');
+		$submenu[] = array('title' => 'Fiches élèves', 'url' => '/admin/export/students_report');
+		$this->data['submenu'] = $submenu;
 	}
 
 	/*
@@ -42,19 +47,20 @@ class Export extends MY_AdminController {
 		{
 			$term = FALSE;
 		}
-		if($this->input->get('school_year')) $school_year = $this->input->get('school_year');
 
-		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTermAndSchoolYear($term, $school_year);
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTermAndSchoolYear($term, $this->school_year);
+		$this->data['page_title'] = _('Exporter les résultats d\'un projet');
 		$this->load->template('admin/export_assessments', $this->data);
 	}
 
 	public function students_report()
 	{
 		$this->data['students_list'] = $this->Users_model->getAllUsersByClass();
+		$this->data['page_title'] = _('Exporter les résultats d\'un élève');
 		$this->load->template('admin/export_student_report', $this->data);
 	}
 
-	public function lessons()
+	public function projects()
 	{
 		if( ! empty($this->input->get('class')))
 		{
@@ -65,6 +71,7 @@ class Export extends MY_AdminController {
 			$class = FALSE;
 		}
 		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class, $this->school_year);
+		$this->data['page_title'] = _('Exporter des leçons');
 		$this->load->template('admin/export_lessons', $this->data);
 	}
 
