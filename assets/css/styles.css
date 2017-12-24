@@ -1,3 +1,6 @@
+
+
+
 /************************/
 /****** TYPOGRAPHY ******/
 /************************/
@@ -15,15 +18,15 @@ h1 small, h2 small, h3 small {
 }
 
 h1,
-	h3 {
-  color: rgb(69, 69, 69);
+h3 {
+	color: rgb(69, 69, 69);
 }
 
 h1 {font-style:italic;}
 
 h3 {
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 0.5em;
+	border-bottom: 1px solid lightgray;
+	padding-bottom: 0.5em;
 }
 h4 {
 	font-weight: 300;
@@ -31,7 +34,7 @@ h4 {
 }
 
 b, strong {
-    font-weight: 500;
+	font-weight: 500;
 }
 
 
@@ -61,26 +64,26 @@ span.classe {
 
 
 .alert, .panel, .panel-heading  {
-    border-radius: 0px;
+	border-radius: 0px;
 }
 
 .panel-body {
-    padding: 4px;
+	padding: 4px;
 }
 
 .table {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 /*** LSU ****/
 span.lsu {
-	border: 1px solid lightgray; 
+	border: 1px solid lightgray;
 }
 
 
 .panel-overflow {
-max-height: 20em;
-overflow: auto;
+	max-height: 20em;
+	overflow: auto;
 }
 
 /* Detailled Results table color codes */
@@ -125,13 +128,13 @@ tr.students-detailled-tr > td > p {
 
 
 .checkbox label, .radio label {
-    font-weight: 300;
+	font-weight: 300;
 }
 
 .username-title {
-  font-weight: 400;
-  margin-top: 18px;
-  margin-bottom: 5px;
+	font-weight: 400;
+	margin-top: 18px;
+	margin-bottom: 5px;
 }
 
 .dotted_underline {
@@ -145,7 +148,7 @@ tr.students-detailled-tr > td > p {
 	padding:0;
 	margin: 0;
 	float:none;
-box-shadow: none;
+	box-shadow: none;
 }
 .custom-menu > li > a
 {
@@ -153,37 +156,37 @@ box-shadow: none;
 }
 
 .container-fluid {
-    padding-left: 0;
+	padding-left: 0;
 }
 
 .nav {
-  background-color: #34495e;
+	background-color: #34495e;
 }
 
 .nav > li > a {
-  color: #b5d0f6;
+	color: #b5d0f6;
 }
 
 .nav > li > a:focus,
-	.nav > li > a:hover {
-  color: #4d72a7;
+.nav > li > a:hover {
+	color: #4d72a7;
 }
 
 .nav > li > a > span {
-  margin-right: 0.5em;
-  font-size: 1.2em;
-  line-height: 2px;
+	margin-right: 0.5em;
+	font-size: 1.2em;
+	line-height: 2px;
 }
 
 .modal-lg {
-    width: 1000px;
+	width: 1000px;
 }
 
 aside.sidebar {
-  padding-right: 0px;
-  padding-top: 1em;
-  min-height: 95vh;
-  background-color: #34495e;
+	padding-right: 0px;
+	padding-top: 1em;
+	min-height: 95vh;
+	background-color: #34495e;
 }
 
 .label {
@@ -200,39 +203,39 @@ aside.sidebar {
 
 
 li.active a {
-  background-color: rgba(0, 0, 0, 0.25);
-  color: white;
+	background-color: rgba(0, 0, 0, 0.25);
+	color: white;
 }
 
 li.divider {
-  border-top: 1px dashed rgba(0, 0, 0, 0.35);
+	border-top: 1px dashed rgba(0, 0, 0, 0.35);
 }
 
 .bottom-align-text {
-  position: absolute;
-  bottom: 5px;
-  right: 2em;
+	position: absolute;
+	bottom: 5px;
+	right: 2em;
 }
 
 header div {
-  border-bottom: lightgray solid 1px;
+	border-bottom: lightgray solid 1px;
 }
 
 .projects-panel-body {
-  min-height: 10em;
-  padding-bottom: 0px;
+	min-height: 10em;
+	padding-bottom: 0px;
 }
 
 .panel-body + .panel-body {
-  padding-bottom: 1em;
+	padding-bottom: 1em;
 }
 
 .reached-deadline {
-  border-left: 4px solid #ff7471;
+	border-left: 4px solid #ff7471;
 }
 
 .current {
-  border-left: 4px solid #5cb85c;
+	border-left: 4px solid #5cb85c;
 }
 
 div.captcha img {
@@ -240,16 +243,16 @@ div.captcha img {
 }
 
 .desactivated {
-  border-left: 4px solid lightgray;
+	border-left: 4px solid lightgray;
 }
 
 /* Student results*/
 .table > thead > tr > th {
-    font-weight: 400;
+	font-weight: 400;
 }
 
 .tooltip-inner {
-    white-space:pre-wrap;
+	white-space:pre-wrap;
 }
 
 div#teacher-comment {
@@ -266,14 +269,14 @@ div#teacher-comment {
 }
 
 #content {
-  background-color: white;
+	background-color: white;
 	border-bottom:lightgray 1px solid;
 	padding-bottom:1em;
 }
 
 .chapeau {
 	background-color:rgb(248, 248, 248);
-	border-bottom:lightgray 1px dashed;
+	/*border-bottom:lightgray 1px dashed;*/
 }
 
 .chapeau-modal {
@@ -283,26 +286,26 @@ div#teacher-comment {
 
 
 .demo-version {
-    background-color: rgba(255,255,255 , 0.6);
-    border-radius: 10px;
-    padding:.5em;
+	background-color: rgba(255,255,255 , 0.6);
+	border-radius: 10px;
+	padding:.5em;
 }
 
 .consultation-version {
 	background-color: #396c9880;
 	color: white;
-    border-radius: 5px;
+	border-radius: 5px;
 	padding-top: 1em;
 	padding-bottom: 0.3em;
 }
 
 .tooltip-arrow, .tooltip-inner {
-    background: white;
-    color: black;
+	background: white;
+	color: black;
 }
 
 .tooltip-inner {
-    border: 1px lightgray solid;
+	border: 1px lightgray solid;
 }
 
 label
@@ -331,14 +334,17 @@ table.profile tr td   {
 
 /****** AFFIX **********/
 .affix {
-	top: 20px;
+	top: 0;
 	min-width: 16.66666667%;
 	margin-left: -15px;
 	padding-left: 15px;
- }
+}
 
 .nav > li > a {
-    padding-right: 0;
+	padding-right: 0;
+}
+.dropdown-menu  {
+	// padding-left: 60px;
 }
 
 /***** LOGIN ******/
@@ -350,10 +356,10 @@ main.login {
 
 
 .login input {
-   text-align:center;
-   background-color: rgba(0,0,0,.2);
-   border: 0px solid #fff;
-   color: #FFF;
+	text-align:center;
+	background-color: rgba(0,0,0,.2);
+	border: 0px solid #fff;
+	color: #FFF;
 }
 
 .user-avatar {
@@ -362,88 +368,88 @@ main.login {
 
 .vertical-center {
 
-   margin-top:-50px; /* compens body padding 50px */
-   min-height: 100%;  /* Fallback for vh unit */
-   min-height: 100vh; /* You might also want to use
-                        'height' property instead.
-   /* Make it a flex container */
-   display: -webkit-box;
-   display: -moz-box;
-   display: -ms-flexbox;
-   display: -webkit-flex;
-   display: flex;
+	margin-top:-50px; /* compens body padding 50px */
+	min-height: 100%;  /* Fallback for vh unit */
+	min-height: 100vh; /* You might also want to use
+	'height' property instead.
+	/* Make it a flex container */
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
 
-   /* Align the bootstrap's container vertically */
-   -webkit-box-align : center;
-   -webkit-align-items : center;
-   -moz-box-align : center;
-   -ms-flex-align : center;
-   align-items : center;
+	/* Align the bootstrap's container vertically */
+	-webkit-box-align : center;
+	-webkit-align-items : center;
+	-moz-box-align : center;
+	-ms-flex-align : center;
+	align-items : center;
 
-   /* In legacy web browsers such as Firefox 9
-   we need to specify the width of the flex container */
-   width: 100%;
+	/* In legacy web browsers such as Firefox 9
+	we need to specify the width of the flex container */
+	width: 100%;
 
-   /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
-   hence the bootstrap's container won't be aligned to the center anymore.
+	/* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+	hence the bootstrap's container won't be aligned to the center anymore.
 
-   Therefore, we should use the following declarations to get it centered again */
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -ms-flex-pack: center;
-  	-webkit-justify-content: center;
+	Therefore, we should use the following declarations to get it centered again */
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
 	justify-content: center;
 }
 
 video#bgvid {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    -ms-transform: translateX(-50%) translateY(-50%);
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-    background-size: cover;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	min-width: 100%;
+	min-height: 100%;
+	width: auto;
+	height: auto;
+	z-index: -100;
+	-ms-transform: translateX(-50%) translateY(-50%);
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+	background-size: cover;
 }
 
 /** EQUAL ROW HEIGHTS**/
 .row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display:         flex;
-  flex-wrap: wrap;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display:         flex;
+	flex-wrap: wrap;
 }
 .row > [class*='col-'] {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 /*******************************/
 /***** ROTATE TABLE HEADER *****/
 /*******************************/
 /*
- * Trick credit from
- * https://css-tricks.com/rotated-table-column-headers/
- * by Chris Coyier
+* Trick credit from
+* https://css-tricks.com/rotated-table-column-headers/
+* by Chris Coyier
 **/
 
 th.rotate {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 th.rotate > div {
-  transform:
-    rotate(315deg);
-  width: 30px;
+	transform:
+	rotate(315deg);
+	width: 30px;
 }
 th.rotate > div > span {
-  padding-left: 0;
+	padding-left: 0;
 }
 
 /************************/
@@ -459,4 +465,94 @@ th.rotate > div > span {
 	height:7em;
 }
 
-.
+/**********************/
+#submenu ul {
+	background-color: transparent;
+}
+
+#submenu .nav-tabs > li.active > a {
+	border: none;
+	margin: 0 2px;
+	border-bottom: 3px #337AB7 solid;
+	color: black;
+}
+
+#submenu .nav-tabs > li > a:hover {
+	border: none;
+	border-bottom: 3px purple solid;
+	color: inherit;
+	background-color: transparent;
+	padding: 0.6em 2em;
+}
+
+#submenu {
+	background-color: white;
+	z-index: 200;
+	height: 2.8em;
+	margin:0;
+	margin: 0 -15px;
+	border-bottom: 1px solid #DDD;
+}
+.sidebar-nav {
+	margin-top: 2.8em;
+}
+nav#submenu.affix {
+	border-bottom: 1px lightgray dashed;
+	width: 100%;
+}
+
+.dropdown-menu {
+	border-radius: 0;
+}
+
+#submenu .nav > li > a {
+	padding: 0.6em 2em;
+	border: none;
+	color: #337AB7;
+	border-bottom: 3px transparent solid;
+
+}
+
+header div {
+	border-bottom: none; ;
+}
+
+.chapeau > div >  a.btn {
+	width: 7em;
+}
+
+.chapeau {
+	border: none;
+}
+
+h1{
+	margin-bottom: 0;
+}
+
+#profile-menu  {
+	text-align: center;
+}
+
+header > div {
+	border-bottom: 1px dashed #33495E;
+}
+
+.chapeau {
+
+}
+
+.chapeau label {
+	font-weight: 200;
+}
+
+.chapeau form {
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em;
+}
+.nav-tabs {
+	border: none;
+}
+
+label {
+	font-weight: 300;
+}
