@@ -49,10 +49,71 @@ class Maintenance extends MY_AdminController {
 	}
 
 	// @TODO Removes orphan entries
+	function term_to_id()
+	{
+
+		$this->db->where('term', 'P1')->update('projects', array('term' => 1));
+		$this->db->where('term', 'P2')->update('projects', array('term' => 2));
+		$this->db->where('term', 'P3')->update('projects', array('term' => 3));
+		$this->db->where('term', 'XDEC')->update('projects', array('term' => 4));
+		$this->db->where('term', 'XJUN')->update('projects', array('term' => 5));
+
+	}
+
 	function cleanDb()
 	{
 
 	}
+
+	/************************************************/
+	/***************** manual update ****************/
+	/************************************************/
+
+	/* Run once on update 31/12/2017 (ion auth) */
+	public function auto_assign_roles()
+	{
+		$this->load->model('Roles_model','',TRUE);
+		$users = $this->Users_model->getAllUsers();
+		foreach ($users as $user)
+		{
+			if($user->class)
+			{
+				$this->Roles_model->RemoveAllRolesFromUser($user->id);
+				$this->Roles_model->addRoleToUser(2, $user->id);
+			}
+		}
+		dump($this->Users_model->messages());
+	}
+
+	public function activate_all_users()
+	{
+		$this->load->model('UsersManager_model','',TRUE);
+		$users = $this->Users_model->getAllStudents();
+		foreach ($users as $user)
+		{
+			if($user->class <> 6 && $user->class <> 0)
+			{
+				$this->UsersManager_model->updateUser($user->id, array('active' => 1));
+			}
+
+		}
+		dump($this->UsersManager_model->messages());
+	}
+
+	public function set_classes_id()
+	{
+		$this->load->model('ProjectsManager_model','',TRUE);
+		$projects = $this->Projects_model->getAllActiveProjects();
+		foreach ($projects as $project)
+		{
+			$class_id = $this->Classes_model->getClassIdByName($project->class);
+			$this->ProjectsManager_model->updateProject(array('id' => $project->project_id, 'class' => $class_id));
+		}
+	}
+
+	/************************************************/
+	/************************************************/
+	/************************************************/
 
 	function backup_db($action = FALSE)
 	{
@@ -112,17 +173,17 @@ class Maintenance extends MY_AdminController {
 		if ($action === 'mail_test')
 		{
 			$this->Email_model->sendObjectMessageToEmail(   $this->input->post('subject'),
-															$this->input->post('body'),
-															$this->session->email
-														);
-		}
-
-		// GET
-		$this->data['page_title'] = 'Contrôle du système';
-		$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
-		$this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
-		$this->load->template('admin/system', $this->data);
+			$this->input->post('body'),
+			$this->session->email
+		);
 	}
+
+	// GET
+	$this->data['page_title'] = 'Contrôle du système';
+	$this->data['welcome_message'] = $this->Welcome_model->getWelcomeMessage(FALSE);
+	$this->data['disk_space'] = $this->System_model->getUsedDiskSpace();
+	$this->load->template('admin/system', $this->data);
+}
 }
 
 ?>

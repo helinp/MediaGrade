@@ -13,7 +13,7 @@
 
 
                 <?php foreach($students as $student): ?>
-                <th class="rotate"><div><span><small><?= $student->last_name . ' ' . substr($student->name, 0, 1) . '.'?></small></span></div></th>
+                <th class="rotate"><div><span><small><?= $student->last_name . ' ' . substr($student->first_name, 0, 1) . '.'?></small></span></div></th>
                 <?php endforeach ?>
                 <th class="rotate"><div><span><small><?= _('Maximum') ?></small></span></div></th>
                 <th class="rotate"><div><span><small><?php if(count($students_assessments_results[0]->results) > 1) echo _('Moyenne') ?></small></span></div></th>

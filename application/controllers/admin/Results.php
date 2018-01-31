@@ -31,19 +31,21 @@ class Results extends MY_AdminController {
 	}*/
 	$submenu[] = array('title' => 'Cahier de cotes', 'url' => '/admin/results');
 	$submenu[] = array('title' => 'Détail par élève', 'url' => '/admin/results/detail_by_student');
-	$submenu[] = array('title' => 'vue d\'ensemble', 'url' => '/admin/results/detail_by_class');
+	$submenu[] = array('title' => 'Vue d\'ensemble', 'url' => '/admin/results/detail_by_class');
 	$this->data['submenu'] = $submenu;
 }
 
 public function index()
 {
-	$class = $this->input->get('classe');
-
-	if($class == FALSE)
+	if($this->input->get('classe'))
 	{
+		$class = $this->Classes_model->getClass($this->input->get('classe'));
+	}
+	else
+	{
+		// get first class as default value
 		$class = $this->data['classes'][0];
 	}
-	$this->load->helper('assessment');
 
 	if($this->input->get('term'))
 	{
@@ -53,17 +55,17 @@ public function index()
 	{
 		$term = FALSE;
 	}
-	$students_in_class = $this->Users_model->getAllUsersByClass('student', $class);
+
+	$students_in_class = $this->Users_model->getAllStudentsSortedByClass($class->id);
 
 	$this->load->helper('text');
 	$this->load->helper('round');
 
-	$this->load->model('Results_model','',TRUE);
-	$this->load->model('Assessment_model','',TRUE);
+	$this->load->model('TableResults_model','',TRUE);
 
 	// make table header
 	$header = array();
-	$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, $this->school_year);
+	$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYearAndOrder($class->id, $term, $this->school_year, 'ASC');
 
 	// prepare data for body table
 	foreach ($projects as $project)
@@ -77,19 +79,18 @@ public function index()
 		);
 	}
 
-	$this->data['class'] = $class;
 	$this->data['table_header'] = $header;
 	// OBSOLETE $this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $term, $this->school_year);
 
 	$this->data['table_body'] = array();
 
 	$index = 0;
-	foreach ($students_in_class[$class] as $student)
+	foreach ($students_in_class[$class->id] as $student)
 	{
 		$user_info = $this->Users_model->getUserInformations($student->id);
 
 		$this->data['table_body'][$index]['user_id'] = $student->id;
-		$this->data['table_body'][$index]['name'] = $user_info->name;
+		$this->data['table_body'][$index]['first_name'] = $user_info->first_name;
 		$this->data['table_body'][$index]['last_name'] = $user_info->last_name;
 		$this->data['table_body'][$index]['term'] = $term;
 		$this->data['table_body'][$index]['average'] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, $term);
@@ -102,8 +103,10 @@ public function index()
 		}
 		$index++;
 	}
-	//dump($this->data['table_body']);
+
+	$this->load->helper('assessment');
 	$this->data['page_title'] = _('Cahier de cotes');
+	$this->data['class'] = $class;
 	$this->load->template('admin/results', $this->data);
 }
 
@@ -117,12 +120,14 @@ public function details($project_id, $user_id = FALSE)
 	// if one student only, create dummy array
 	if ($user_id)
 	{
-		$students_in_class[0] = $this->Users_model->getUserInformations($user_id);
+		$user_info = $this->Users_model->getUserInformations($user_id);
+		$user_info->class_name = $this->Classes_model->getClass($user_info->class)->name;
+		$students_in_class[0] = $user_info;
 	}
 	else
 	{
 		// get all students
-		$students_in_class = $this->Users_model->getAllUsersByClass('student', $class)[$class];
+		$students_in_class = $this->Users_model->getAllStudentsSortedByClass($class)[$class];
 	}
 
 	$students_assessments_results = array();
@@ -175,15 +180,14 @@ public function detail_by_student($student_id = FALSE)
 		redirect('/admin/results/detail_by_student/' . $this->input->get('student') . '?classe=' . $this->input->get('classe'));
 	}
 
-	$class = $this->input->get('classe');
-	if($class && $class !== 'all')
+	$class_id = $this->input->get('classe');
+	if(is_numeric($class_id))
 	{
-		$students = $this->Users_model->getAllUsersByClass('student', $class);
+		$students = $this->Users_model->getAllStudentsSortedByClass($class_id);
 	}
 	else
 	{
-		$students = $this->Users_model->getAllUsersByClass('student');
-		$class = current($students)[0]->class;
+		$students[0] = $this->Users_model->getAllStudents();
 	}
 
 	if($student_id === FALSE)
@@ -200,7 +204,8 @@ public function detail_by_student($student_id = FALSE)
 	$skills_result_by_project = array();
 	$not_submitted_projects = array();
 	$graded_projects = array();
-	$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class, $this->school_year);
+	$class_id = $this->Users_model->getUserInformations($student_id)->class;
+	$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class_id, $this->school_year);
 
 	foreach ($projects as $project)
 	{
@@ -280,7 +285,7 @@ public function detail_by_student($student_id = FALSE)
 	$terms_results = array();
 	foreach($terms as $term)
 	{
-		$terms_results[$term] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term, $this->school_year);
+		$terms_results[$term->name] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term->id, $this->school_year);
 	}
 	$this->data['terms_results'] = $terms_results;
 
@@ -356,21 +361,21 @@ function detail_by_class()
 	$this->data['skills_groups'] = $this->skills_groups;
 
 	// FILTERS
-	$class = $this->input->get('classe');
-	if($class)
+	$class_id = $this->input->get('classe');
+	if($class_id && is_numeric($class_id))
 	{
-		$this->students_list = $this->Users_model->getAllUsersByClass('student', $class, TRUE);
+		$this->students_list = $this->Users_model->getAllStudentsSortedByClass($class_id)[$class_id];
 	}
 	else
 	{
-		$this->students_list = $this->Users_model->getAllUsers();
+		$this->students_list = $this->Users_model->getAllStudents();
 	}
 
 	// Gets averages and achievements
 	foreach ($this->students_list as $key => $student)
 	{
 		// GETS RESULTS FOR ADMIN
-		if($this->session->role === 'admin')
+		if($this->Users_model->isAdmin())
 		{
 			$this->students_list[$key]->results = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, FALSE, $this->school_year);
 			$this->projects_list = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($student->class, $this->school_year);
@@ -381,11 +386,13 @@ function detail_by_class()
 			{
 				$this->students_list[$key]->skills_groups_results[$skills_group->id] = $this->Results_model->getUserOverallResultsBySkillGroup($skills_group->name, $student->id, $this->school_year);
 			}
+
 			$this->students_list[$key]->trend = $this->_trendLine($this->students_list[$key]->all_results);
 			$this->students_list[$key]->progression = $this->_progression($this->_linearProgression($this->students_list[$key]->all_results), 1);
 		}
 		$this->students_list[$key]->achievements = $this->Achievements_model->getAllAchievementsByStudent($student->id);
 	}
+
 	$this->data['students'] = $this->students_list;
 	$this->data['page_title'] = _('Détail par classe');
 	// VIEW
@@ -412,6 +419,13 @@ function detailled()
 	$this->load->template('admin/students_detailled', $this->data);
 }
 
+
+
+/* ****************************
+ *
+ *			PRIVATE METHODS
+ *
+ *****************************/
 
 /* TODO Sould be helpers functions*/
 private function _progression($results = array(), $round = FALSE)

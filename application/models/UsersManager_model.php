@@ -102,30 +102,7 @@ Class UsersManager_model extends Users_model
 	*/
 	public function addUser($data = array())
 	{
-		// checks if record already exists in DB
-		$where = array(
-			'username' => $data['username']
-		);
-
-		$this->db->where($where);
-		$this->db->limit(1);
-		$q = $this->db->get('users');
-
-		// if TRUE, returns error
-		if ($q->num_rows() > 0)
-		{
-			return FALSE;
-		}
-		// else insert
-		else
-		{
-			// crypt password
-			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-			// insert in DB
-			$this->db->insert('users', $data);
-		}
-		return TRUE;
+		return $this->ion_auth->register($data['username'], $data['password'], $data['email'], $data, $data['group_id']);
 	}
 
 	/**
@@ -135,45 +112,19 @@ Class UsersManager_model extends Users_model
 	*
 	* @return	boolean
 	*/
-	public function updateUser($data = array())
+	public function updateUser($user_id, $data = array())
 	{
-		// checks if record already exists in DB
-		$where = array(
-			'id' => $data['id']
-		);
+		 $this->ion_auth->update($user_id, $data);
+	}
 
-		$this->db->where($where);
-		$this->db->limit(1);
-		$q = $this->db->get('users');
-
-		// if TRUE, returns error
-		if ($q->num_rows() == 0)
-		{
-			return FALSE;
-		}
-		// else update
-		else
-		{
-			// unset empty fields
-			$data = array_filter($data);
-
-			// crypt pasword
-			if(isset($data['password'])) $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-			// update DB
-			$this->db->where($where);
-			$this->db->update('users', $data);
-		}
-		return TRUE;
+	public function messages()
+	{
+		 return $this->ion_auth->messages();
 	}
 
 	public function delUser($user_id)
 	{
-		$this->db->where('id', $user_id);
-		$this->db->limit(1);
-		$this->db->delete('users');
-
-		return TRUE;
+		return $this->ion_auth->delete_user($user_id);
 	}
 
 	/**

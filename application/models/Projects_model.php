@@ -125,22 +125,31 @@ Class Projects_model extends CI_Model
 		if(count($args) !== count($wheres))
 		throw new Exception("Error: Missing argument in function $method", 1);
 
+		// var
+		$order = 'DESC';
+
 		// Format data language in french
 		// TODO: set a config file
 		$this->db->query("SET lc_time_names = 'fr_FR'");
 
 		$this->db->distinct();
-		$this->db->select("projects.id as project_id,
-		project_name,
-		school_year,
-		class,
-		term,
-		assessment_type,
-		start_date,
-		instructions_txt,
-		deadline as raw_deadline,
-		DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
-		material");
+		$this->db->join('classes', 'classes.id = projects.class');
+		$this->db->join('terms', 'terms.id = projects.term');
+		$this->db->select("	projects.id as project_id,
+									project_name,
+									school_year,
+									class,
+									classes.name AS class_name,
+									term,
+									terms.name AS term_name,
+									assessment_type,
+									start_date,
+									instructions_txt,
+									number_of_files,
+									is_activated,
+									deadline as raw_deadline,
+									DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
+									material");
 
 		$this->db->where('is_activated', TRUE);
 
@@ -152,16 +161,30 @@ Class Projects_model extends CI_Model
 		for($i = 0, $count = count($wheres) - 1 ; $i <= $count ; $i++)
 		{
 			// arguments translation
-			if($wheres[$i] === 'User') $wheres[$i] = 'user_id';
-			elseif($wheres[$i] === 'SchoolYear') $wheres[$i] = 'school_year';
-
+			if($wheres[$i] === 'User')
+			{
+				$wheres[$i] = 'user_id';
+			}
+			elseif($wheres[$i] === 'SchoolYear')
+			{
+				$wheres[$i] = 'school_year';
+			}
+			elseif($wheres[$i] === 'Order')
+			{
+				$order = strtoupper($args[$i]);
+				$args[$i] = FALSE;
+			}
 			// Do not consider WHERE if no ARG
-			if($args[$i]) $this->db->where(strtolower($wheres[$i]), $args[$i]);
+			if($args[$i])
+			{
+				$this->db->where(strtolower($wheres[$i]), $args[$i]);
+			}
 		}
 
-		$this->db->order_by('class', 'DESC');
+		$this->db->order_by('class', $order);
 		//$this->db->order_by('id', 'ASC');
-		$this->db->order_by('raw_deadline', 'ASC');
+		$this->db->order_by('term', $order);
+		$this->db->order_by('raw_deadline',  $order);
 
 		return $this->db->get('projects')->result();
 	}
@@ -176,7 +199,7 @@ Class Projects_model extends CI_Model
 	* @return	object
 	*/
 
-	public function getAllActiveProjectsByClassAndTermAndSchoolYear($class = FALSE, $term = FALSE, $school_year)
+	public function _getAllActiveProjectsByClassAndTermAndSchoolYear($class = FALSE, $term = FALSE, $school_year)
 	{
 		if ( ! $class) $class = $this->session->class;
 
@@ -280,13 +303,17 @@ Class Projects_model extends CI_Model
 		deadline,
 		assessment_type,
 		is_activated,
-		class');
+		class,
+		classes.name AS class_name,
+		terms.name AS term_name');
 
 		$this->db->distinct();
 		$this->db->from('projects');
 		$this->db->where('is_activated', TRUE);
 		$this->db->where('deadline > CURDATE()');
 		$this->db->where("school_year", $this->school_year);
+		$this->db->join('classes', 'classes.id = projects.class');
+		$this->db->join('terms', 'terms.id = projects.term');
 
 		if($class) $this->db->where('projects.class', $class);
 		if($this->session->role === 'admin') $this->db->where('admin_id', $this->session->id);

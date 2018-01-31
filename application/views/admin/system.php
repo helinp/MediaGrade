@@ -20,7 +20,6 @@
 
 	<h3><?= _('Écriture des dossiers') ?></h3>
 	<div class="col-xs-6">
-
 		<table class="table">
 			<?php $not_writable = FALSE; ?>
 			<?php foreach ($folder_perms as $folder => $perm): ?>
@@ -31,26 +30,25 @@
 					<td><span class="glyphicon <?= ($not_writable === FALSE ? ($perm === '0775' ? 'glyphicon-ok text-success' : 'glyphicon-warning-sign text-warning') : 'glyphicon-remove text-danger') ?> "<?= $perm ?></td>
 					</tr>
 				<?php endforeach ?>
-			</table>
-		</div>
+		</table>
+	</div>
 		<?php if($not_writable === TRUE): ?>
-			<div class="alert alert-danger" role="alert"><?= _('Remise des projets impossible, veuillez régler les permissions des dossiers sur 0755.') ?></div>
+	<div class="alert alert-danger" role="alert"><?= _('Remise des projets impossible, veuillez régler les permissions des dossiers sur 0755.') ?></div>
 		<?php endif ?>
 
 		<h3><?= _('Espace disque') ?></h3>
-		<div class="col-xs-6">
-
-			<table class="table">
-				<tr>
-					<td><?= _('Libre')?>:</td>
-					<td><?= $disk_space['free'] ?></td>
-				</tr>
-				<tr>
-					<td><?= _('Utilisé')?>:</td>
-					<td><?= $disk_space['used'] ?></td>
-				</tr>
-				<td><?= _('Total')?>:</td>
-				<td><?= $disk_space['total'] ?></td>
+	<div class="col-xs-6">
+		<table class="table">
+			<tr>
+				<td><?= _('Libre')?>:</td>
+				<td><?= $disk_space['free'] ?></td>
+			</tr>
+			<tr>
+				<td><?= _('Utilisé')?>:</td>
+				<td><?= $disk_space['used'] ?></td>
+			</tr>
+			<td><?= _('Total')?>:</td>
+			<td><?= $disk_space['total'] ?></td>
 			</tr>
 		</table>
 	</div>
@@ -73,3 +71,4 @@
 	});
 
 	</script>
+</div>

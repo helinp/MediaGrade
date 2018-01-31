@@ -25,7 +25,7 @@
 		<title>MediaGrade</title>
 	<?php endif ?>
 
-	<?php if(!isset($_SESSION['id'])): ?>
+	<?php if( ! $this->ion_auth->logged_in()): ?>
 		<?php if(substr(@$random_media, -3) === 'jpg') : ?>
 		<style>
 		body
@@ -49,7 +49,7 @@
 </head>
 
 <body>
-	<?php if(!isset($_SESSION['id'])): ?>
+	<?php if( ! $this->ion_auth->logged_in()): ?>
 		<?php if(substr($random_media, -3) === 'mp4') : ?>
 			<video autoplay loop id="bgvid" muted>
 				<source src="<?= $random_media ?>" type="video/mp4">
@@ -57,7 +57,7 @@
 			<?php endif ?>
 		<?php endif ?>
 		<div class="container-fluid">
-			<?php if(isset($_SESSION['id'])): ?>
+			<?php if($this->ion_auth->logged_in()): ?>
 			<header class="row row-eq-height hidden-print">
 
 				<!-- Logo -->
@@ -68,7 +68,7 @@
 				<!-- title -->
 				<div class="col-xs-8 col-md-8" >
 					<h1><?= @$page_title ?></h1>
-					<p class="muted"><?= $this->session->name . ' ' . $this->session->last_name ?> | <?= ($this->session->role === 'admin' ? _('Professeur') : _('Élève de ') . $this->session->class) ?></p>
+					<p class="muted"><?= $this->session->first_name . ' ' . $this->session->last_name ?>, <?= ($this->Users_model->isAdmin() ? _('Professeur') : $this->session->class_name) ?></p>
 				</div>
 
 				<!-- Avatar -->
@@ -85,4 +85,4 @@
 				</div>
 			</header>
 		<?php endif ?>
-			<div class="row">
+			<div class="row" id="body-row">

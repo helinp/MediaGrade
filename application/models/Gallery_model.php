@@ -29,7 +29,7 @@ Class Gallery_model extends CI_Model
 			CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail,
 			RIGHT(file_name, 3) as extension,
 			school_year,
-			name, CONCAT(LEFT(last_name, 1), '.') as last_name, project_name", FALSE);
+			first_name, CONCAT(LEFT(last_name, 1), '.') as last_name, project_name", FALSE);
 		}
 
 		$this->db->from('submitted');
@@ -48,7 +48,7 @@ Class Gallery_model extends CI_Model
 		$this->db->offset($offset);
 
 		$this->db->order_by('project_id', 'DESC');
-		$this->db->order_by('name', 'ASC');
+		$this->db->order_by('first_name', 'ASC');
 		$this->db->order_by('school_year', 'DESC');
 
 		return $this->db->get()->result();

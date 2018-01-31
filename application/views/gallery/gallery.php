@@ -5,30 +5,32 @@
 		</div>
 
 		<div class="col-xs-10">
-			<form id="filter" action="/gallery/" method="get" class="form-inline" style="margin-top:1.5em">
-				<label><?= _('Classe') ?>: </label>
-				<select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
-					<option value=""><?= _('Toutes')?></option>
-					<?php foreach($classes as $classe): ?>
-						<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
-					<?php endforeach?>
-				</select>
-				<?php if($this->session->role === 'admin'): ?>
-					<label><?= _('Élève') ?>: </label>
-					<select class="form-control input-sm" name="id" onchange="this.form.project.value = '';this.form.submit()">
-						<option value=""><?= _('Tous')?></option>
-						<?php foreach($students as $student): ?>
-							<?= '<option value="' . $student->id . '"' . (@$_GET['id'] === $student->id ? 'selected' : '') . '>' . $student->last_name . ' ' .  $student->name . '</option>' . "\n" ?>
+			<form id="filter" action="/gallery/" method="get" class="form-inline " style="margin-top:1.5em">
+				<div class="form-group pull-right">
+					<label><?= _('Classe') ?>: </label>
+					<select class="form-control input-sm" name="classe" onchange="this.form.project.value = '';this.form.submit();">
+						<option value=""><?= _('Toutes')?></option>
+						<?php foreach($classes as $classe): ?>
+							<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
-				<?php endif ?>
-				<label><?= _('Projet: ') ?></label>
-				<select class="form-control input-sm" name="project" onchange="this.form.submit()">
-					<option value=""><?= _('Tous')?></option>
-					<?php foreach($projects as $project): ?>
-						<?= '<option value="' . $project->project_id . '"' . (@$_GET['project'] === $project->project_id ? 'selected' : '') . '>' . $project->class . ' | ' . $project->project_name . '</option>' . "\n" ?>
-					<?php endforeach?>
-				</select>
+					<?php if($this->session->role === 'admin'): ?>
+						<label><?= _('Élève') ?>: </label>
+						<select class="form-control input-sm" name="id" onchange="this.form.project.value = '';this.form.submit()">
+							<option value=""><?= _('Tous')?></option>
+							<?php foreach($students as $student): ?>
+								<?= '<option value="' . $student->id . '"' . (@$_GET['id'] === $student->id ? 'selected' : '') . '>' . $student->last_name . ' ' .  $student->first_name . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
+					<?php endif ?>
+					<label><?= _('Projet: ') ?></label>
+					<select class="form-control input-sm" name="project" onchange="this.form.submit()">
+						<option value=""><?= _('Tous')?></option>
+						<?php foreach($projects as $project): ?>
+							<?= '<option value="' . $project->project_id . '"' . (@$_GET['project'] === $project->project_id ? 'selected' : '') . '>' . $project->class . ' | ' . $project->project_name . '</option>' . "\n" ?>
+						<?php endforeach?>
+					</select>
+				</div>
 			</form>
 		</div>
 	</div> <!-- /. ROW chapeau-->
@@ -58,13 +60,13 @@
 
 						<?php elseif($media->extension  === 'jpeg' || $media->extension  === 'jpg' || $media->extension  === 'png' || $media->extension  === 'gif'): ?>
 							<div class="thumbnail">
-								<a data-lightbox="projects" href="<?= $media->file  ?>"><img class="imageClip" src="<?= $media->thumbnail  ?>" alt="<?= $media->name  ?>" /></a>
+								<a data-lightbox="projects" href="<?= $media->file  ?>"><img class="imageClip" src="<?= $media->thumbnail  ?>" alt="<?= $media->first_name  ?>" /></a>
 							<?php else: ?>
 								<div class="thumbnail">
 
 								<?php endif ?>
 
-								<p class="caption" style="margin:0"><small><a href="<?= $media->file ?>"><?= '#' . $media->name . ' ' . $media->last_name . ' <small>(' . $media->school_year . ')</small>' ?></a></small></p>
+								<p class="caption" style="margin:0"><small><a href="<?= $media->file ?>"><?= '#' . $media->first_name . ' ' . $media->last_name . ' <small>(' . $media->school_year . ')</small>' ?></a></small></p>
 							</div> <!-- thumbnail-->
 						</div> <!-- /. col -->
 

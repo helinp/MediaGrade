@@ -1,22 +1,72 @@
 <?php
 Class Classes_model extends CI_Model
 {
-	/**
-	 * Returns all classes from DB
-	 *
-	 * @return array
-	 */
-	public function getAllClasses()
-	{
-		$query = $this->db->select('class')
-					->distinct()
-					->from('users')
-					->where('role', 'student')
-					->order_by('class', 'ASC')
-					->get();
 
-		if( ! $query) return false;
-		return array_column($query->result_array(), 'class');
+	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
+	 * @var string
+	 */
+	public $name;
+
+	/**
+	 * @var string
+	 */
+	public $description;
+
+	/*
+	 * Get class by id
+	 */
+	function getClass($id)
+	{
+		 return $this->db->get_where('classes',array('id'=>$id))->row();
 	}
+
+	function getClassIdByName($name)
+	{
+		 return $this->db->get_where('classes',array('name'=>$name))->row()->id;
+	}
+
+	/*
+	 * Get all classes
+	 */
+	function getAllClasses()
+	{
+		 $this->db->order_by('name', 'asc');
+		 return $this->db->get('classes')->result();
+	}
+
+	/*
+	 * function to add new class
+	 */
+	function addClass($params)
+	{
+		 $this->db->insert('classes',$params);
+		 return $this->db->insert_id();
+	}
+
+	/*
+	 * function to update class
+	 */
+	function updateClass($id, $params)
+	{
+		 $this->db->where('id',$id);
+		 return $this->db->update('classes',$params);
+	}
+
+	/*
+	 * function to delete class
+	 */
+	function deleteClass($id)
+	{
+		 return $this->db->delete('classes',array('id'=>$id));
+	}
+
+	/*
+	 * Saves student class in history
+	 */
 }
 ?>

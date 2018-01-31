@@ -1,36 +1,39 @@
 <div id="content" class="col-xs-12 col-md-10 ">
 	<?php $this->view('templates/submenu'); ?>
 	<div class="row chapeau">
-		<div class="col-md-8">
-		</div>
-
-		<div class="col-md-4">
+		<div class="col-md-12">
 			<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
-				<div class="form-group">
-					<select class="form-control input-sm" name="class" onchange="this.form.submit()">
-						<option value="all" <?=( $this->uri->segment(4) === 'all' ? ' selected' : '') ?>><?= _('Toutes les classes') ?></option>
-						 	<?php foreach($classes as $class): ?>
-							<?= '<option value="' . $class . '"' . ( $this->uri->segment(4) === $class ? ' selected' : '') . '>' . $class . '</option>' . "\n" ?>
-						  <?php endforeach?>
-					 </select>
-					<select class="form-control input-sm" name="term" onchange="this.form.submit()">
-						<option value=""><?= _('Toutes les périodes')?></option>
-						<?php foreach($terms as $term): ?>
-							<?= '<option value="' . $term . '"' . ($this->uri->segment(5) === $term ? 'selected' : '') . '>' . $term . '</option>' . "\n" ?>
-						<?php endforeach?>
-					</select>
+				<div class="pull-right">
+					<label><?= _('Classe') ?>: </label>
+					<div class="input-group">
+						<select class="form-control input-sm" name="class" onchange="this.form.submit()">
+							<option value="all"><?php echo _('Toutes') ?></option>
+							<?php foreach($classes as $class): ?>
+								<?= '<option value="' . $class->id . '"' . ($this->uri->segment(4) === $class->id ? ' selected' : '') . '>' . $class->description . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
+					</div>
+					<label><?= _('Période') ?>: </label>
+					<div class="input-group">
+						<select class="form-control input-sm" name="term" onchange="this.form.submit()">
+								<option value="all"><?php echo _('Toutes') ?></option>
+							<?php foreach($terms as $term): ?>
+								<?= '<option value="' . $term->id . '"' . ($this->uri->segment(5) === $term->id ? ' selected' : '') . '>' . $term->name . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
+					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 	<?php foreach($grade_table as $class): ?>
-		<h3><?= array_values($class)[0]['user']->class ?></h3>
+		<h3><?= array_values($class)[0]['user']->class_name ?></h3>
 		<div class="row">
 			<?php foreach($class as $user_projects): ?>
 				<div class="col-md-3 thumb">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<?= strtoupper($user_projects['user']->last_name) . " ". $user_projects['user']->name ?>
+							<?= mb_strtoupper($user_projects['user']->last_name) . " ". $user_projects['user']->first_name ?>
 						</div>
 
 						<ul class="list-group">
@@ -44,7 +47,7 @@
 										<span style="color:gray" class="glyphicon glyphicon-inbox"></span>
 									<?php endif ?>
 									<a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/assess/<?= $user_projects['user']->class ?>/<?= $project->project_id ?>/<?= $user_projects['user']->id?>?origin=<?= htmlentities($_SERVER['REQUEST_URI']) ?>" class="text-muted" >
-										<small><?= $project->term?> - </small>  <?= $project->project_name?>
+										<small><?= $project->term_name ?> - </small>  <?= $project->project_name?>
 									</a>
 								</li>
 							<?php endforeach ?>

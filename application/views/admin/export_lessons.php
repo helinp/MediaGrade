@@ -9,7 +9,7 @@
 				<select class="form-control input-sm" name="class" onchange="this.form.submit()">
 					<option value=""><?= _('Toutes')?></option>
 					<?php foreach($classes as $class): ?>
-						<?= '<option value="' . $class . '"' . (@$_GET['class'] === $class ? 'selected' : '') . '>' . $class . '</option>' . "\n" ?>
+						<?= '<option value="' . $class->id . '"' . (@$_GET['class'] === $class->id ? 'selected' : '') . '>' . $class->description . '</option>' . "\n" ?>
 					<?php endforeach?>
 				</select>
 				<label><?= _('Année scolaire') ?>: </label>
@@ -29,7 +29,7 @@
 				<div class="form-group">
 					<select class="form-control" name="projects[]" size="10" multiple>
 						<?php foreach($projects as $project): ?>
-							<option value="<?= $project->project_id?>"><?= $project->term . ' / ' .  $project->project_name?></option>
+							<option value="<?= $project->project_id?>"><?= $classes[array_search($project->class, array_column($classes, 'id'))]->name; ?> / <?= $project->term . ' / ' .  $project->project_name?></option>
 						<?php endforeach ?>
 					</select>
 				</div>

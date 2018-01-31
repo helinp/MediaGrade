@@ -11,13 +11,21 @@ class Login extends CI_Controller {
 
 	function index()
 	{
-		if($this->input->post()) $this->login_route();
+		if($this->input->post())
+		{
+			$this->login_route();
+		}
 
 		// redirection if on index page
-		if($this->session->role === 'student') redirect('/student');
-		if($this->session->role === 'admin') redirect('/admin');
+		if($this->Users_model->isLoggedIn() && $this->Users_model->isAdmin())
+		{
+			redirect('/admin');
+	 	}
+		elseif($this->Users_model->isLoggedIn())
+		{
+			redirect('/student');
+		}
 
-		$this->load->model('Projects_model','',TRUE);
 		$this->data['random_media'] = $this->Projects_model->random_media();
 
 		if($this->config->item('captcha'))
@@ -61,10 +69,12 @@ class Login extends CI_Controller {
 			}
 		}
 
-		if($this->Users_model->login($this->input->post('username'), $this->input->post('password')))
+		// Authentification
+		if($this->Users_model->logUser($this->input->post('username'), $this->input->post('password')))
 		{
+			$this->Users_model->setSession();
 			// user routing
-			if($this->session->role === 'admin')
+			if($this->Users_model->isAdmin())
 			{
 				redirect('admin', 'refresh');
 			}
@@ -72,6 +82,10 @@ class Login extends CI_Controller {
 			{
 				redirect('/', 'refresh');
 			}
+		}
+		else
+		{
+			$this->session->set_flashdata('error','Mauvais nom d\'utilisateur et/ou mot de passe');
 		}
 	}
 

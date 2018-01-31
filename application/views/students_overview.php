@@ -1,27 +1,22 @@
 <div id="content" class="col-xs-12 col-md-10 ">
 	<div class="row chapeau">
 		<div class="col-xs-7 col-md-7">
-			<h1> <?= _('Vue d\'ensemble des élèves') ?></h1>
 		</div>
-		<div class="col-md-3 ">
-			<?php if($this->session->role == 'admin'): ?>
-				<form id="view" action="" method="get" class="form-inline" style="margin-top:1.5em">
-					<div class="form-group">
+		<div class="col-md-5 ">
+			<form id="view" action="" method="get" class="form-inline" style="margin-top:1.5em">
+				<div class="form-group pull-right">
+					<?php if($this->session->role == 'admin'): ?>
 						<select class="form-control input-sm" name="view" onchange="this.form.submit()">
 							<option value="detailled"<?= (@$_GET['view'] !== 'general' ? ' selected' : '')?>><?= _('Vue détaillée')?></option>
 							<option value="general"<?= (@$_GET['view'] === 'general' ? ' selected' : '')?>><?= _('Vue d\'ensemble')?></option>
 						</select>
-					</div>
-				</form>
-			<?php endif ?>
-		</div>
-		<div class="col-md-2">
-			<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
-				<div class="form-group">
+					<?php endif ?>
+
+
 					<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
 						<option value=""><?= _('Toutes les classes')?></option>
 						<?php foreach($classes as $classe): ?>
-							<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
+							<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
 				</div>
@@ -42,37 +37,37 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<?php if($this->session->role == 'admin'): ?>
-							<a style="color:white" href="/admin/student/details?class=<?=$student->class?>&student=<?=$student->id?>"><?= $student->name ?></a>
+							<a style="color:white" href="/admin/student/details?class=<?=$student->class?>&student=<?=$student->id?>"><?= $student->first_name ?></a>
 						<?php else: ?>
-							<?= $student->name ?>
+							<?= $student->first_name ?>
 						<?php endif ?>
-						</div>
-						<div class="panel-body text-center" style="min-height:17em">
-							<img alt="avatar" class="center-block img-circle img-responsive"  src=<?= ($student->picture ? $student->picture : '/assets/img/default_avatar.jpg') ?>>
-							<div style="margin-top:1em">
-								<?php if($this->session->role == 'admin'): ?>
-									<p<?= ($student->results < 50 ? ' style="color:darkred;font-weight:400"' : '') ?>>
-									<?= $student->results ?>%
-								</p>
-								<h5><small><?= _('Résultats') ?></small></h5>
-								<div style="margin-bottom:1em;" data-sparkline="<?= implode(', ', $student->all_results) ?> ; column"></div>
-								<h5><small><?=_('Moyenne glissante')?></small></h5>
-								<div style="margin-bottom:1em;" data-sparkline="<?= @implode(', ', $student->trend) ?> "></div>
-							<?php endif; ?>
-							<p style="font-size: smaller;">&quot;<?= $student->motto ?>&quot;</p>
-						</div>
 					</div>
-					<div class="panel-footer" style="min-height: 3em;">
-						<?php foreach ($student->achievements as $achievement): ?>
-							<img src="<?= $achievement->icon?>" style="height:1.5em;" data-toggle="tooltip" data-placement="left"
-							title="<?= $achievement->name ?>&#013;&#010;<?= str_repeat('&#9733;', $achievement->star)?>&#013;&#010;&quot;<?= $achievement->description; ?>&quot;" />
-							<!--	<?= str_repeat('<img src="/assets/img/badges/star.svg" class="achievement-star-img" alt="stars" />', $achievement->star) ?>-->
-						<?php endforeach ?>
+					<div class="panel-body text-center" style="min-height:17em">
+						<img alt="avatar" class="center-block img-circle img-responsive"  src=<?= ($student->picture ? $student->picture : '/assets/img/default_avatar.jpg') ?>>
+						<div style="margin-top:1em">
+							<?php if($this->session->role == 'admin'): ?>
+								<p<?= ($student->results < 50 ? ' style="color:darkred;font-weight:400"' : '') ?>>
+								<?= $student->results ?>%
+							</p>
+							<h5><small><?= _('Résultats') ?></small></h5>
+							<div style="margin-bottom:1em;" data-sparkline="<?= implode(', ', $student->all_results) ?> ; column"></div>
+							<h5><small><?=_('Moyenne glissante')?></small></h5>
+							<div style="margin-bottom:1em;" data-sparkline="<?= @implode(', ', $student->trend) ?> "></div>
+						<?php endif; ?>
+						<p style="font-size: smaller;">&quot;<?= $student->motto ?>&quot;</p>
 					</div>
 				</div>
+				<div class="panel-footer" style="min-height: 3em;">
+					<?php foreach ($student->achievements as $achievement): ?>
+						<img src="<?= $achievement->icon?>" style="height:1.5em;" data-toggle="tooltip" data-placement="left"
+						title="<?= $achievement->name ?>&#013;&#010;<?= str_repeat('&#9733;', $achievement->star)?>&#013;&#010;&quot;<?= $achievement->description; ?>&quot;" />
+						<!--	<?= str_repeat('<img src="/assets/img/badges/star.svg" class="achievement-star-img" alt="stars" />', $achievement->star) ?>-->
+					<?php endforeach ?>
+				</div>
 			</div>
-		<?php endforeach ?>
-	</div>
+		</div>
+	<?php endforeach ?>
+</div>
 
 </div>
 

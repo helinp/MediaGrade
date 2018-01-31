@@ -14,7 +14,7 @@
 		<div class="col-lg-3 col-md-3 col-xs-12 ">
 			<div class="panel panel-default achievement-container">
 				<div class="panel-body text-center">
-					<?= $student->name & ' ' & $student->last_name ?>
+					<?= $student->first_name & ' ' & $student->last_name ?>
 					<div class="achievement-frame ">
 						<?php foreach ($student['achievements'] as $achievement): ?>
 							<img src='<?= $achievement->icon ?>' alt='<?= $achievement->name ?>' class="achievement-img "/>

@@ -18,6 +18,7 @@ class Project extends MY_AdminController {
 		$this->load->helper('text');
 
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
+		$this->data['courses'] = $this->Courses_model->getAllCourses();
 		$this->data['terms'] = $this->Terms_model->getAll();
 
 		if($this->input->get('school_year'))
@@ -59,7 +60,7 @@ class Project extends MY_AdminController {
 		$this->load->helper('url');
 
 		$this->data['title'] = _('Consignes');
-		$this->load->template('admin/instructions', $this->data, TRUE);
+		$this->load->template('admin/instructions', $this->data, $this->input->get('modal'));
 	}
 
 
@@ -328,7 +329,7 @@ class Project extends MY_AdminController {
 			$this->data['results_criteria'] = $results;
 
 			// get detailled students results TODO Check for a mysql query
-			$students = $this->Users_model->getAllUsersByClass('student', $project->class)[$project->class];
+			$students = $this->Users_model->getAllStudentsSortedByClass($project->class)[$project->class];
 			$students_results = array();
 			$submitted = 0;
 			$p_to_submit = array();
@@ -338,7 +339,7 @@ class Project extends MY_AdminController {
 				$students_results[$i]['results'] = $this->Results_model->getResultsTable($student->id, $project->id);
 				$students_results[$i]['overall'] = $this->Results_model->getUserProjectOverallResult($student->id, $project->id);
 				$students_results[$i]['submitted_time'] = @$this->Submit_model->getSubmittedInfosByUserIdAndProjectId($student->id, $project->id)[0];
-				$students_results[$i]['name'] = $student->name;
+				$students_results[$i]['first_name'] = $student->first_name;
 				$students_results[$i]['last_name'] = $student->last_name;
 
 				// count how many to correct yet
@@ -370,14 +371,8 @@ class Project extends MY_AdminController {
 		}
 
 		$this->data['page_title'] = _('Statistiques');
-		if($this->input->get('modal'))
-		{
-			$this->load->template('admin/project_stats', $this->data, TRUE);
-		}
-		else
-		{
-			$this->load->template('admin/project_stats', $this->data);
-		}
+
+		$this->load->template('admin/project_stats', $this->data, $this->input->get('modal'));
 	}
 
 }

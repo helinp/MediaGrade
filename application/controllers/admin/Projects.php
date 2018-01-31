@@ -43,32 +43,34 @@ class Projects extends MY_AdminController {
 		$this->load->model('Terms_model','',TRUE);
 		$this->load->model('Achievements_model','',TRUE);
 
-		// TODO : control for empty fields
+		// TODO : control empty fields
 
 		// Get data
-		$admin_projects = $this->Projects_model->getAllActiveProjectsByAdmin(FALSE, $this->school_year);
+		$class_id = $this->input->get('class');
+		$term_id = $this->input->get('term');
+		$admin_projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class_id, $term_id, $this->school_year);
 
-		$current_classe = ''; // for perf
+		$current_classe = NULL;
 		$n_students = 0;
-		foreach ($admin_projects as $row)
+		foreach ($admin_projects as $project)
 		{
-			$this->data['achievements_by_project'][$row->project_id] = $this->Achievements_model->getAllAchievementsByProject($row->project_id);
+			$this->data['achievements_by_project'][$project->project_id] = $this->Achievements_model->getAllAchievementsByProject($project->project_id);
 
-			if($current_classe !== $row->class)
+			if($current_classe !== $project->class)
 			{
-				$n_students = count($this->Users_model->getAllUsersByClass('student', $row->class)[$row->class]);
-				$current_classe = $row->class;
+				$n_students = $this->Users_model->CountStudentsByClass($project->class);
+				$current_classe = $project->class;
 			}
 
-			$n_files_to_submit = $row->number_of_files;
-			$n_submitted =  $this->Submit_model->getNSubmittedByProjectId($row->project_id) / $n_files_to_submit;
-			$n_graded = count($this->Grade_model->listUngradedProjectsByProjectId($row->project_id));
+			$n_files_to_submit = $project->number_of_files;
+			$n_submitted =  $this->Submit_model->getNSubmittedByProjectId($project->project_id) / $n_files_to_submit;
+			$n_graded = count($this->Grade_model->listUngradedProjectsByProjectId($project->project_id));
 
-			$this->data['n_students'][$row->project_id] = $n_students;
-			$this->data['n_submitted'][$row->project_id] = $n_submitted;
-			$this->data['n_graded'][$row->project_id] = $n_submitted - $n_graded;
+			$this->data['n_students'][$project->project_id] = $n_students;
+			$this->data['n_submitted'][$project->project_id] = $n_submitted;
+			$this->data['n_graded'][$project->project_id] = $n_submitted - $n_graded;
 
-			$results = $this->Results_model->getStudentsAverageByProjectId($row->project_id);
+			$results = $this->Results_model->getStudentsAverageByProjectId($project->project_id);
 			$n_success = $n_pass = $n_fail = 0;
 			foreach ($results as $result)
 			{
@@ -81,7 +83,7 @@ class Projects extends MY_AdminController {
 					elseif($percentage < 50) $n_fail++;
 				}
 			}
-			$this->data['success'][$row->project_id] = array('success' => $n_success, 'pass' => $n_pass, 'fail' => $n_fail);
+			$this->data['success'][$project->project_id] = array('success' => $n_success, 'pass' => $n_pass, 'fail' => $n_fail);
 		}
 
 		$this->data['projects'] = $admin_projects;

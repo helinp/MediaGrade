@@ -11,7 +11,7 @@ class Dashboard extends MY_Controller {
 		$this->load->helper('school');
 		$this->load->helper('graph');
 
-		if( ! empty($this->input->get('school_year')))
+		if($this->input->get('school_year'))
 		{
 			$this->school_year = $this->input->get('school_year');
 		}
@@ -38,7 +38,8 @@ class Dashboard extends MY_Controller {
 		 *  Get overall results for each projects
 		 **/
 		$not_submitted_projects = array();
-		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class, $this->school_year);
+		$projects_overall_results = array();
+		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($class, $this->school_year, 'DESC');
 
 		foreach ($projects as $project)
 		{
@@ -74,7 +75,7 @@ class Dashboard extends MY_Controller {
 		// Send to view
 		$this->data['projects_overall_results'] = $projects_overall_results;
 		$this->data['not_submitted'] = $not_submitted_projects;
-
+		$skills_result_by_project = array();
 		/**
 		*  get highcharts skills progression
 		**/
@@ -114,7 +115,8 @@ class Dashboard extends MY_Controller {
 		$terms_results = array();
 		foreach($terms as $term)
 		{
-			$terms_results[$term] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term, $this->school_year);
+			$terms_results[$term->id]['results'] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student_id, $term->id, $this->school_year);
+			$terms_results[$term->id]['term_name'] = $term->name;
 		}
 		$this->data['terms_results'] = $terms_results;
 
@@ -172,7 +174,7 @@ class Dashboard extends MY_Controller {
 		$this->data['best_results'] = $this->Results_model->getBestCursorResults(5);
 		$this->data['worst_results'] = $this->Results_model->getWorstCursorResults(5);
 		$this->data['criterion_results'] = $this->Results_model->getDetailledResults('criterion');
-		$this->data['title'] = ucfirst('projets'); // Capitalize the first letter
+		$this->data['page_title'] =  _('Tableau de bord');
 		$this->data['content'] = $this->Welcome_model->getWelcomeMessage();
 
 		$this->load->template('student/dashboard', $this->data);

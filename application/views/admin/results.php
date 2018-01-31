@@ -4,31 +4,25 @@
 		<div class="col-xs-6  col-md-6">
 		</div>
 		<div class="col-xs-6  col-md-6">
-			<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
-				<div class="form-group">
-					<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
-						<option value=""><?= _('Toutes les classes')?></option>
-						<?php foreach($classes as $classe): ?>
-							<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
-						<?php endforeach?>
-					</select>
+			<div class="form-group pull-right">
+				<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
+					<div class="pull-right">
+						<label><?= _('Classe: ') ?></label>
+						<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
+							<?php foreach($classes as $classe): ?>
+								<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
+						<label><?= _('Période: ') ?></label>
+						<select class="form-control input-sm" name="term" onchange="this.form.submit()">
+							<option value=""><?= _('Toutes')?></option>
+							<?php foreach($terms as $term): ?>
+								<?= '<option value="' . $term->id . '"' . (@$_GET['term'] === $term->id ? ' selected' : '') . '>' . $term->name . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
+					</form>
 				</div>
-				<label><?= _('Période: ') ?></label>
-				<select class="form-control input-sm" name="term" onchange="this.form.submit()">
-					<option value=""><?= _('Toutes')?></option>
-					<?php foreach($terms as $term): ?>
-						<?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? ' selected' : '') . '>' . $term . '</option>' . "\n" ?>
-					<?php endforeach?>
-				</select>
-<!--
-				<label><?= _('Année scolaire') ?>: </label>
-				<select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
-					<?php foreach($school_years as $school_year): ?>
-						<?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? ' selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
-					<?php endforeach?>
-				</select>
-			-->
-			</form>
+			</div>
 		</div>
 	</div>
 
@@ -37,7 +31,7 @@
 			<table class="table table-hover table-striped" style="margin-top:5em">
 				<thead>
 					<tr>
-						<th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class ?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
+						<th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class->id?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
 						<?php foreach ($table_header as $row): ?>
 							<?php foreach ($row['skills_groups'] as $skills_group): ?>
 								<th class="rotate"><div><span><small><a data-toggle="modal" data-target="#projectModal" href="/admin/results/details/<?= $row['project_id'] ?>"  data-toggle="tooltip" data-placement="right" title="<?= _('Détails par projet')?>"><?= character_limiter($row['project_name'], 13) ?></a></small></span></div></th>
@@ -74,13 +68,15 @@
 					<td></td>
 					<?php foreach ($table_body as $student): ?>
 						<tr style="width:5em">
-							<td><?= $student['last_name'] . ' ' . $student['name']?></td>
+							<td><?= $student['last_name'] . ' ' . $student['first_name']?></td>
 							<?php foreach ($student['results'] as $results): ?>
 								<?php foreach ($results as $result): ?>
 									<td>
-										<span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
-											data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">&nbsp;&nbsp;</span>
-											<a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
+										<?php if($result->max_vote > 0): ?>
+											<span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
+												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">&nbsp;&nbsp;</span>
+												<a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
+											<?php endif ?>
 										</td>
 									<?php endforeach ?>
 								<?php endforeach ?>
@@ -169,7 +165,7 @@
 		$("#export").click(function (event) {
 			// var outputFile = 'export'
 			<?php $this->load->helper('school'); ?>
-			var outputFile = '<?=  get_school_year() . '_' . $this->uri->segment(4, 0)  . '_' . $class  ?>' + '.csv'
+			var outputFile = '<?=  get_school_year() . '_' . $this->uri->segment(4, 0)  . '_' . $class->id ?>' + '.csv'
 
 			// CSV
 			exportTableToCSV.apply(this, [$('#dvData>table'), outputFile]);

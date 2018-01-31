@@ -10,7 +10,7 @@
 					<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
 						<option value=""><?= _('Toutes')?></option>
 						<?php foreach($classes as $classe): ?>
-							<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
+							<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? ' selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
 					<label><?= _('Projet: ') ?></label>
@@ -23,8 +23,8 @@
 				</form>
 			</div>
 		</div>
-	<?php endif ?>
-	<div class="row" style = "margin-top:1em">
+<?php endif ?>
+	<div class="row" style="margin-top:1em">
 		<div class="col-lg-4 col-md-4 col-xs-12 ">
 		</div>
 	</div>
@@ -102,7 +102,7 @@
 							</thead>
 							<?php foreach ($p_to_submit as $student): ?>
 								<tr>
-									<td><?= $student->name . ' ' . $student->last_name?></td>
+									<td><?= $student->first_name . ' ' . $student->last_name?></td>
 								</tr>
 							<?php endforeach ?>
 						</table>
@@ -112,7 +112,7 @@
 							</thead>
 							<?php foreach ($p_to_assess as $student): ?>
 								<tr>
-									<td><?= $student->name . ' ' . $student->last_name?></td>
+									<td><?= $student->first_name . ' ' . $student->last_name?></td>
 								</tr>
 							<?php endforeach ?>
 						</table>
@@ -365,7 +365,7 @@
 							</thead>
 							<?php foreach ($students_results as $student): ?>
 								<tr>
-									<td><?= $student['name'] . ' ' . $student['last_name']?></td>
+									<td><?= $student['first_name'] . ' ' . $student['last_name']?></td>
 									<?php foreach ($student['results'] as $result): ?>
 										<td<?= @(($result->user_vote / $result->max_vote * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($result->user_vote ? $result->user_vote . ' / ' . $result->max_vote : '-') ?></td>
 									<?php endforeach ?>

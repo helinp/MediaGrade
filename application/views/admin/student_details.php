@@ -6,43 +6,45 @@
 			</div>
 			<div class="col-xs-8  col-md-8">
 				<form id="filter" method="get" class="form-inline" style="margin-top:1.5em">
-					<label><?= _('Année scolaire') ?>: </label>
+					<div class="pull-right">
+						<label><?= _('Année scolaire') ?>: </label>
 
-					<select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
-						<?php foreach($school_years as $row): ?>
-							<?= '<option value="' . $row->school_year . '"' . ( @$_GET['school_year'] === $row->school_year || ( !isset($_GET['school_year']) && $row->school_year === get_school_year() ) ? ' selected' : '') . '>' . $row->school_year . '</option>' . "\n" ?>
-						<?php endforeach?>
-					</select>
+						<select class="form-control input-sm" name="school_year" onchange="this.form.submit()">
+							<?php foreach($school_years as $row): ?>
+								<?= '<option value="' . $row->school_year . '"' . ( @$_GET['school_year'] === $row->school_year || ( !isset($_GET['school_year']) && $row->school_year === get_school_year() ) ? ' selected' : '') . '>' . $row->school_year . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
 
-					<label><?= _('Classe') ?>: </label>
+						<label><?= _('Classe') ?>: </label>
 
-					<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
-						<option value="all" <?=( @$_GET['classe'] === 'all' ? ' selected' : '') ?>><?= _('Toutes les classes') ?></option>
-						<?php foreach($classes as $class): ?>
-							<?= '<option value="' . $class . '"' . ( @$_GET['classe'] === $class ? ' selected' : '') . '>' . $class . '</option>' . "\n" ?>
-						<?php endforeach?>
-					</select>
+						<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
+							<option value="all" <?=( @$_GET['classe'] === 'all' ? ' selected' : '') ?>><?= _('Toutes les classes') ?></option>
+							<?php foreach($classes as $class): ?>
+								<?= '<option value="' . $class->id . '"' . ( @$_GET['classe'] === $class->id ? ' selected' : '') . '>' . $class->description . '</option>' . "\n" ?>
+							<?php endforeach?>
+						</select>
 
-					<label><?= _('Élève') ?>: </label>
+						<label><?= _('Élève') ?>: </label>
 
-					<select id="student-select" class="form-control input-sm" name="student" onchange="this.form.submit()">
-						<?php foreach($students as $class): ?>
-							<?php foreach($class as $row): ?>
-								<?= '<option value="' . $row->id . '"' . ( $this->uri->segment(4) === $row->id  ? ' selected' : '') . '>' . $row->class . ' | ' . $row->name . ' ' . $row->last_name . '</option>' . "\n" ?>
-							<?php endforeach ?>
-						<?php endforeach?>
-					</select>
+						<select id="student-select" class="form-control input-sm" name="student" onchange="this.form.submit()">
+							<?php foreach($students as $class): ?>
+								<?php foreach($class as $row): ?>
+									<?= '<option value="' . $row->id . '"' . ( $this->uri->segment(4) === $row->id  ? ' selected' : '') . '>' . $row->class_name . ' | ' . $row->first_name . ' ' . $row->last_name . '</option>' . "\n" ?>
+								<?php endforeach ?>
+							<?php endforeach?>
+						</select>
+					</div>
 				</form>
 			</div>
-		<?php else: ?>
+<?php else: ?>
 			<div class="row chapeau chapeau-modal">
 				<div class="col-xs-12  col-md-12">
-					<h2><?= _('Fiche détaillée de') . ' ' . $user_data->name . ' ' . $user_data->last_name ?></h2>
+					<h2><?= _('Fiche détaillée de') . ' ' . $user_data->first_name . ' ' . $user_data->last_name ?></h2>
 				</div>
 			</div>
 
 
-		<?php endif; ?>
+<?php endif; ?>
 	</div>
 
 	<?php if(! isset($not_submitted)): ?>
@@ -57,7 +59,7 @@
 		<?php if( ! $this->input->get('modal')): ?>
 			<div class="row" style="margin-top:1em">
 				<div class="col-xs-12 ">
-					<h2><?= _('Fiche détaillée de') . ' ' . $user_data->name . ' ' . $user_data->last_name ?></h2>
+					<h2><?= _('Fiche détaillée de') . ' ' . $user_data->first_name . ' ' . $user_data->last_name ?></h2>
 				</div>
 			</div>
 		<?php endif ?>
@@ -69,7 +71,7 @@
 						<table class="table table-striped small">
 							<?php foreach($not_submitted as $row): ?>
 								<tr>
-									<td><?= $row->term ?></td>
+									<td><?= $row->term_name ?></td>
 									<td><?= $row->project_name ?></td>
 									<td><?= $row->deadline; ?></td>
 									<td><a data-toggle="modal" data-target="#projectModal" href="/projects/instructions/<?= $row->project_id?>"><span class="glyphicon glyphicon-file" data-toggle="tooltip" data-placement="top" title="Consignes"> </span></a></td>
@@ -87,7 +89,7 @@
 						<table class="table table-striped small">
 							<?php foreach($graded as $row): ?>
 								<tr>
-									<td><?= $row->term ?></td>
+									<td><?= $row->term_name ?></td>
 									<td><?= $row->project_name ?></td>
 									<td<?= ($row->average->total_user < $row->average->total_max / 2 ?  ' class="text-danger dotted_underline" ' : '') ?>><?= $row->average->total_user . ' / ' . $row->average->total_max ?></td>
 									<td><a data-toggle="modal" data-target="#projectModal" href="/admin/results/details/<?= $row->project_id?>/<?= $row->average->user_id ?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>

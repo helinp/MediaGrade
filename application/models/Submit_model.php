@@ -15,12 +15,22 @@ Class Submit_model extends CI_Model
 	* @param	integer	$project_id
 	* @return	object
 	*/
-	public function IsSubmittedByUserAndProjectId($user_id = FALSE, $project_id )
+	public function IsSubmittedByUserAndProjectId($user_id = FALSE, $project_id)
 	{
-		if( ! $user_id) $user_id = $this->session->id;
+		if( ! $user_id)
+		{
+			$user_id = $this->session->id;
+		}
 
-		$this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id), 1);
-		return ($this->db->count_all_results() > 0 ? TRUE : FALSE);
+		$check = $this->db->get_where('submitted', array('user_id' => $user_id, 'project_id' => $project_id));
+		if($check->row())
+		{
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	public function getNSubmittedByProjectId($project_id)
@@ -210,7 +220,7 @@ Class Submit_model extends CI_Model
 		$user = $this->Users_model->getUserInformations($user_id);
 
 		// rename file LASTNAME_Name_avatar
-		$file_name = strtoupper(sanitize_name($user->last_name)) . '_' . $user->name . '_avatar';
+		$file_name = strtoupper(sanitize_name($user->last_name)) . '_' . $user->first_name . '_avatar';
 
 		$config['file_name']            = $file_name;
 		$config['overwrite']            = TRUE;
@@ -319,7 +329,7 @@ Class Submit_model extends CI_Model
 
 		// get data
 		$project_data = $this->getSubmitInformations($project_id);
-		$sanitized_user_name = sanitize_name(strtoupper($this->session->last_name) . "_" .  $this->session->name);
+		$sanitized_user_name = sanitize_name(strtoupper($this->session->last_name) . "_" .  $this->session->first_name);
 		$sanitized_project_name = sanitize_name($project_data->project_name);
 
 		$file_name =  $sanitized_user_name . '_' . $sanitized_project_name . '_' . sprintf("%02d", $i) . '.' . $project_data->extension;
@@ -441,13 +451,14 @@ Class Submit_model extends CI_Model
 	{
 		if($class) $this->db->where('projects.class', $class);
 
-		$query = $this->db   ->select('name, last_name, project_name, projects.class')
+		$query = $this->db   ->select('first_name, last_name, project_name, projects.class, classes.name AS class_name')
 		->select("DATE_FORMAT(`time`, '%d-%m-%Y à %k:%i') AS 'time'", FALSE)
 		->where('admin_id', $this->session->id)
 		->from('submitted')
 		->join('users', 'user_id = users.id', 'left')
 		->join('projects', 'project_id = projects.id', 'left')
-		->group_by('users.name')
+		->join('classes', 'classes.id = projects.class')
+		->group_by('users.first_name')
 		->order_by('submitted.id', 'DESC')
 		->limit($limit);
 

@@ -34,11 +34,11 @@ class Students_overview extends MY_AdminController {
 		$class = $this->input->get('classe');
 		if($class)
 		{
-			$this->students_list = $this->Users_model->getAllUsersByClass('student', $class, TRUE);
+			$this->students_list = $this->Users_model->getAllStudentsSortedByClass($class, TRUE);
 		}
 		else
 		{
-			$this->students_list = $this->Users_model->getAllUsers();
+			$this->students_list = $this->Users_model->getAllStudents();
 		}
 
 		// Gets averages and achievements

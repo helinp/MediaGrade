@@ -55,22 +55,16 @@ class Export extends MY_AdminController {
 
 	public function students_report()
 	{
-		$this->data['students_list'] = $this->Users_model->getAllUsersByClass();
+		$this->data['students_list'] = $this->Users_model->getAllStudentsSortedByClass();
 		$this->data['page_title'] = _('Exporter les résultats d\'un élève');
 		$this->load->template('admin/export_student_report', $this->data);
 	}
 
 	public function projects()
 	{
-		if( ! empty($this->input->get('class')))
-		{
-			$class = $this->input->get('class');
-		}
-		else
-		{
-			$class = FALSE;
-		}
-		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class, $this->school_year);
+		$class_id = $this->input->get('class');
+
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class_id, $this->school_year);
 		$this->data['page_title'] = _('Exporter des leçons');
 		$this->load->template('admin/export_lessons', $this->data);
 	}
@@ -197,7 +191,7 @@ class Export extends MY_AdminController {
 		// creates new PDF object
 		$pdf = new pdf();
 		$this->Pdf_model->setDefaultConfig($pdf);
-		$pdf->SetAuthor($this->session->name . ' ' . $this->session->last_name);
+		$pdf->SetAuthor($this->session->first_name . ' ' . $this->session->last_name);
 		$pdf->SetTitle(_('Fiche d\'évaluation'));
 
 		// adds a page for each student
@@ -233,7 +227,7 @@ class Export extends MY_AdminController {
 		foreach ($projects_id as $project_id)
 		{
 			$project = $this->Projects_model->getProjectDataByProjectId($project_id);
-			$students = $this->Users_model->getAllUsersByClass('student', $project->class);
+			$students = $this->Users_model->getAllStudentsSortedByClass($project->class);
 			$students = $students[$project->class];
 			$skills = implode(', ', $this->Skills_model->getAllSkillsByProjects($project_id, TRUE));
 
@@ -260,7 +254,7 @@ class Export extends MY_AdminController {
 				$data[] = array(
 					'project_name' => $project->project_name,
 					'term' => $project->term,
-					'name' => $student->name,
+					'name' => $student->first_name,
 					'last_name' => $student->last_name,
 					'class' => $project->class,
 					'school_year' => $project->school_year,
@@ -326,7 +320,7 @@ class Export extends MY_AdminController {
 			write_file('./assets/reports/' . $filename, $png);
 			array_push($png_report_files, './assets/reports/' . $filename);
 
-			$data = array(	'name' => $student_info->name,
+			$data = array(	'name' => $student_info->first_name,
 			'last_name' => $student_info->last_name,
 			'class' => $student_info->class,
 			'school_year' => get_school_year(),

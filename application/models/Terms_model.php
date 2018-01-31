@@ -9,17 +9,15 @@ Class Terms_model extends CI_Model
 	*/
 	public function getAll()
 	{
-		$this->db->select('name');
 		$this->db->order_by('id');
-		$q = $this->db->get('terms');
+		return $this->db->get('terms')->result();
+	}
 
-		$array = array();
-		foreach($q->result() as $row)
-		{
-			$array[] = $row->name;
-		}
-
-		return $array;
+	public function getTerm($term_id)
+	{
+		$this->db->where('id', $term_id);
+		$this->db->order_by('name');
+		return $this->db->get('terms')->row();
 	}
 
 	/**

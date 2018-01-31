@@ -21,7 +21,7 @@
 					<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
 						<option value=""><?= _('Toutes les classes')?></option>
 						<?php foreach($classes as $classe): ?>
-							<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
+							<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
 				</div>
@@ -30,11 +30,10 @@
 	</div>
 	<?php $class_txt = NULL?>
 	<table class="table">
-
 		<?php foreach($students as $student): ?>
 			<?php if($student->class !== $class_txt): ?>
 			</table>
-			<h3 style="margin-bottom: 0;"><?= $student->class ?></h3>
+			<h3 style="margin-bottom: 0;"><?= $classes[array_search($student->class , array_column($classes, 'id'))]->description; ?></h3>
 			<table class="table">
 				<thead>
 					<tr>
@@ -76,7 +75,7 @@
 				<td><div  data-sparkline="<?= @implode(', ', $student->trend) ?> "></div></td>
 				<!--<td><span style="font-size:1em;" class="text-<?=$progress_color?> glyphicon glyphicon-arrow-<?= $progress ?>"> <span></td>  -->
 				<td><img data-toggle="tooltip"  data-placement="bottom" title="&quot;<?= $student->motto ?>&quot;" alt="avatar" style="height: 4em;" class="center-block img-circle img-responsive"  src="<?= ($student->picture ? $student->picture : '/assets/img/default_avatar.jpg') ?>"></td> <!-- Avatar -->
-				<td><a href="/admin/student/details/<?=$student->id?>"><?= $student->name . ' ' . $student->last_name ?></a></td> <!-- Name -->
+				<td><a href="/admin/student/details/<?=$student->id?>"><?= $student->first_name . ' ' . $student->last_name ?></a></td> <!-- Name -->
 				<td>
 					<?php foreach ($student->achievements as $achievement): ?>
 						<img src="<?= $achievement->icon?>" style="height:1.5em;" data-toggle="tooltip" data-placement="right"

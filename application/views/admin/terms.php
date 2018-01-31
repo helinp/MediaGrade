@@ -20,7 +20,7 @@
 			<div class="input-group col-md-4">
 				<select  name="term" class="form-control" size="5">
 					<?php foreach ($terms as $term): ?>
-						<option value="<?= $term ?>"><?= $term ?></option>
+						<option value="<?= $term->id ?>"><?= $term->name ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>

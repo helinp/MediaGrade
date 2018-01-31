@@ -1,5 +1,5 @@
 
-				<?php if($this->session->role == 'admin'): ?>
+				<?php if($this->Users_model->isAdmin()): ?>
 					<!--
 					ADMIN
 				-->
@@ -22,6 +22,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span  class="glyphicon glyphicon-cog"></span> <?= _('CONFIGURATION') ?> <span class="caret"></span></a>
 					<ul class="nav dropdown-menu custom-menu">
 						<li<?= ( $this->uri->segment(2) === 'users'  ? ' class="active"' : '') ?>><a href="/admin/users/students"><?= _('UTILISATEURS') ?></a></li>
+						<li<?= ( $this->uri->segment(2) === 'classes'  ? ' class="active"' : '') ?>><a href="/admin/classes/classes"><?= _('CLASSES') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'config'  ? ' class="active"' : '') ?>><a href="/admin/config/terms"><?= _('CONFIGURATION') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'skills'  ? ' class="active"' : '') ?>><a href="/admin/skills"><?= _('COMPÉTENCES') ?></a></li>
 					</ul>
@@ -41,11 +42,11 @@
 						<li class="divider" role="separator"></li>
 						<li<?= ( $this->uri->segment(2) === 'projects'  ? ' class="active"' : '') ?>><a href="/student/projects"><span  class="glyphicon glyphicon-file"></span> <?= _('REMISES & PROJETS') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'achievements'  ? ' class="active"' : '') ?>><a href="/student/achievements"><span  class="glyphicon glyphicon-education"></span> <?= _('MES BADGES') ?></a></li>
-						<li<?= ( $this->uri->segment(2) === 'gallery' ? ' class="active"' : '') ?>><a href="/student/gallery"><span  class="glyphicon glyphicon-sunglasses"></span> <?= _('MA GALLERIE') ?></a></li>
+						<li<?= ( $this->uri->segment(1) === 'gallery' && $this->uri->segment(3) ? ' class="active"' : '') ?>><a href="/gallery/0/1"><span  class="glyphicon glyphicon-sunglasses"></span> <?= _('MA GALLERIE') ?></a></li>
 
 						<li class="divider" role="separator"></li>
-						<li<?= ( $this->uri->segment(1) === 'gallery' && ! $this->uri->segment(2) ? ' class="active"' : '') ?>><a href="/gallery"><span  class="glyphicon glyphicon-film"></span> <?= _('GALLERIE') ?></a></li>
-						<li<?= ( $this->uri->segment(1) === 'students_overview'  ? ' class="active"' : '') ?>><a href="/student/class_list">
+						<li<?= ( $this->uri->segment(1) === 'gallery' && ! $this->uri->segment(3) ? ' class="active"' : '') ?>><a href="/gallery"><span  class="glyphicon glyphicon-film"></span> <?= _('GALLERIE') ?></a></li>
+						<li<?= ( $this->uri->segment(2) === 'class_list'  ? ' class="active"' : '') ?>><a href="/student/class_list">
 							<span class="glyphicon glyphicon-th"></span> <?= _('MA CLASSE') ?><span class="sr-only">(current)</span></a></li>
 
 

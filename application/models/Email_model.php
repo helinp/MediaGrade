@@ -55,7 +55,7 @@ Class Email_model extends CI_Model
 	public function sendHtmlSubmitConfirmationToUser($project_name, $email, $thumb_url = FALSE)
 	{
 		$subject = _('Projet remis!');
-		$message = _('<p>Bonjour ' . $this->session->name . ",</p> <p>Ton travail ($project_name) a bien été remis.</p><p>Félicitations!</p>");
+		$message = _('<p>Bonjour ' . $this->session->first_name . ",</p> <p>Ton travail ($project_name) a bien été remis.</p><p>Félicitations!</p>");
 		if($thumbs_url ==! FALSE )
 		{
 			foreach ($thumbs_url as $thumb_url)
@@ -76,7 +76,7 @@ Class Email_model extends CI_Model
 	public function sendAssessmentNotificationToUser($project_name, $email)
 	{
 		$subject = _('Projet corrigé!');
-		$message = _('<p>Bonjour ' . $this->session->name . ",</p><p>Ton travail ($project_name) vient d'être évalué. Tu peux désormais consulter tes résultats sur MediaGrade.</p>");
+		$message = _('<p>Bonjour ' . $this->session->first_name . ",</p><p>Ton travail ($project_name) vient d'être évalué. Tu peux désormais consulter tes résultats sur MediaGrade.</p>");
 
 		return $this->sendObjectMessageToEmail($subject, $message, $email);
 	}

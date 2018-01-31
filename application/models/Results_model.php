@@ -96,14 +96,16 @@ Class Results_model extends CI_Model
 	{
 		if ( ! $user_id) $user_id = $this->session->id;
 		if ( ! $school_year) $school_year = $this->current_school_year;
+		if($term && ! empty($term)) $this->db->where('term', $term);
 
-		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote');
+		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, terms.name AS term_name');
 		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+		$this->db->join('terms', 'projects.term = terms.id');
 		$this->db->where('user_id', $user_id);
 		$this->db->where('projects.is_activated', TRUE);
-		$this->db->where('projects.assessment_type !=', 'diagnostic');
+		$this->db->where('projects.assessment_type <>', 'diagnostic');
 		$this->db->where('school_year', $school_year);
-		if($term) $this->db->where('term', $term);
+
 
 		$result = $this->db->get('results');
 
@@ -122,8 +124,9 @@ Class Results_model extends CI_Model
 		if ( ! $user_id) $user_id = $this->session->id;
 		if ( ! $school_year) $school_year = $this->current_school_year;
 
-		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote');
+		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, terms.name AS term_name');
 		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+		$this->db->join('terms', 'projects.term = terms.id');
 		$this->db->where('user_id', $user_id);
 		$this->db->where('projects.is_activated', TRUE);
 		$this->db->where('projects.assessment_type !=', 'diagnostic');
@@ -185,9 +188,10 @@ Class Results_model extends CI_Model
 		if ( ! $school_year) $school_year = $this->current_school_year;
 
 		$this->db->limit($limit);
-		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, name, last_name, users.class, user_id');
+		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, first_name, last_name, users.class, user_id, classes.name AS class_name');
 		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
 		$this->db->join('users', 'users.id = results.user_id', 'LEFT');
+		$this->db->join('classes', 'classes.id = projects.class');
 		$this->db->group_by('user_id');
 		$this->db->where('projects.assessment_type !=', 'diagnostic');
 		$this->db->where('projects.is_activated', TRUE);
@@ -365,7 +369,7 @@ Class Results_model extends CI_Model
 	*/
 	public function tableBodyClassResultsBySkillsGroup($class, $term = FALSE, $school_year = FALSE)
 	{
-		$this->db->select("users.id as user_id, name, last_name, project_name, skills_group, projects.id as project_id,
+		$this->db->select("users.id as user_id, first_name, last_name, project_name, skills_group, projects.id as project_id,
 		(CASE WHEN ISNULL(results.id) THEN '" . _('NE') . "' ELSE SUM(user_vote) END ) AS user_vote,
 		SUM(assessments.max_vote) as max_vote", FALSE);
 
@@ -405,11 +409,11 @@ Class Results_model extends CI_Model
 
 		foreach($results as $result)
 		{
-			$table[$result->user_id]['name'] = $result->name;
+			$table[$result->user_id]['first_name'] = $result->first_name;
 			$table[$result->user_id]['last_name'] =$result->last_name;
 			$table[$result->user_id]['average'] = $this->getUserVoteAverageByTermAndSchoolYear($result->user_id, $term);
 
-			unset($result->name, $result->last_name);
+			unset($result->first_name, $result->last_name);
 			$table[$result->user_id]['results'][] = $result;
 		}
 
@@ -723,6 +727,55 @@ Class Results_model extends CI_Model
 		$results = $this->db->get()->result();
 
 		return $results;
+	}
+
+	public function getSkillsStatsByClassAndSchoolYear($class = FALSE, $school_year = FALSE)
+	{
+		if ( ! $school_year) $school_year = get_school_year();
+
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+		$this->db->select('school_year, assessments.skill_id, assessments.skills_group, user_id, skills.skill_id AS skill_shortname');
+		$this->db->select('ROUND(SUM(user_vote) / SUM(results.max_vote) * 100) as percentage', FALSE);
+		$this->db->join('projects', 'projects.id = project_id');
+		$this->db->join('assessments', 'assessments.id = assessment_id');
+		$this->db->join('skills', 'skills.id = assessments.skill_id');
+
+		if($class)
+		{
+			$this->db->where('class', $class);
+		}
+		$this->db->where('school_year', $school_year);
+		$this->db->group_by('user_id, skill_id');
+		$results = $this->db->get()->result();
+
+		$global = array();
+
+		foreach ($results as $result)
+		{
+			if( ! isset($global[$result->skill_id]))
+			{
+				$global[$result->skill_id]['success'] = 0;
+				$global[$result->skill_id]['failed'] = 0;
+				$global[$result->skill_id]['skill'] = $result->skill_id;
+				$global[$result->skill_id]['skill_name'] = $result->skill_shortname;
+			}
+
+			if($result->percentage < 50)
+			{
+				$global[$result->skill_id]['failed']++;
+			}
+			else
+			{
+				$global[$result->skill_id]['success']++;
+			}
+		}
+	//	dump($global);
+		return $global;
+
+
+
+
 	}
 
 	public function getUserResultsBySkillAndProjectId($skill_id, $user_id = FALSE, $school_year = FALSE)

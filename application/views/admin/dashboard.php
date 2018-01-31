@@ -6,11 +6,12 @@
 	</div>
 	<div class="col-xs-6  col-md-6">
 		<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
+			<div class="pull-right">
 			<label><?= _('Classe: ') ?></label>
 			<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
 				<option value=""><?= _('Toutes')?></option>
 				<?php foreach($classes as $classe): ?>
-					<?= '<option value="' . $classe . '"' . (@$_GET['classe'] === $classe ? 'selected' : '') . '>' . $classe . '</option>' . "\n" ?>
+					<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
 				<?php endforeach?>
 			</select>
 			<label><?= _('Année scolaire') ?>: </label>
@@ -20,6 +21,7 @@
 					<?= '<option value="' . $school_year->school_year . '"' . (@$_GET['school_year'] === $school_year->school_year ? ' selected' : '') . '>' . $school_year->school_year . '</option>' . "\n" ?>
 				<?php endforeach?>
 			</select>
+			</div>
 		</form>
 	</div>
 </div>
@@ -33,10 +35,10 @@
 					<table class="table table-striped small">
 						<?php foreach($not_graded_projects as $row): ?>
 							<tr>
-								<td><?= $row->class ?></td>
-								<td><?= $row->last_name . ' ' . $row->name ?></td>
+								<td><?= $row->class_name ?></td>
+								<td><?= $row->last_name . ' ' . $row->first_name ?></td>
 								<td><?= $row->project_name ?></td>
-								<td><a title="Corriger"  data-toggle="modal" data-target="#projectModal" href="/admin/grade/<?= $row->class?>/<?= $row->project_id?>/<?= $row->user_id?>"><span class="glyphicon glyphicon-pencil"> </span></a></td>
+								<td><a title="Corriger"  data-toggle="modal" data-target="#projectModal" href="/admin/grade/assess/<?= $row->class?>/<?= $row->project_id?>/<?= $row->user_id?>"><span class="glyphicon glyphicon-pencil"> </span></a></td>
 							</tr>
 						<?php endforeach ?>
 					</table>
@@ -54,7 +56,7 @@
 					<table class="table table-striped small">
 						<?php foreach($active_projects as $row): ?>
 							<tr>
-								<td><?= $row->class ?></td>
+								<td><?= $row->class_name ?></td>
 								<td><?= $row->term ?></td>
 								<td><?= $row->project_name ?></td>
 								<td><?= date_format(date_create($row->deadline),"d/m/Y"); ?></td>
@@ -77,8 +79,8 @@
 					<table class="table table-striped small">
 						<?php foreach($last_submitted as $row): ?>
 							<tr>
-								<td><?= $row->class ?></td>
-								<td><?= $row->last_name . ' ' . $row->name ?></td>
+								<td><?= $row->class_name ?></td>
+								<td><?= $row->last_name . ' ' . $row->first_name ?></td>
 								<td><?= $row->project_name ?></td>
 							</tr>
 						<?php endforeach ?>
@@ -121,8 +123,50 @@
 							},
 							xAxis: {
 								title: {
-									text: '<?= _('Pourcentage') ?>'
+									text: '<?= _('Max. /10') ?>'
 								},
+								plotBands: [{
+									from: 8,
+									to: 10,
+									color: 'rgba(204, 255, 153, .5)',
+									label: {
+										text: 'Très bonne maîtrise',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 6,
+									to: 7.9,
+									color: 'rgba(229, 255, 204, .5)',
+									label: {
+										text: 'Maîtrise satisfaisante',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 5.0,
+									to: 5.9,
+									color: 'rgba(255, 229, 204, .5)',
+									label: {
+										text: 'Maîtrise fragile',
+										style: {
+											color: '#808080'
+										}
+									}
+								}, {
+									from: 0,
+									to: 4.9,
+									color: 'rgba(255, 204, 204, .5)',
+									label: {
+										text: 'Maîtrise insuffisante',
+										style: {
+											color: '#808080'
+										}
+									}
+								}
+							]
 
 							},
 							yAxis: {
@@ -182,8 +226,8 @@
 				<table class="table table-striped small">
 					<?php foreach($ranking_bottom as $row): ?>
 						<tr>
-							<td><?= $row->class ?></td>
-							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student/details/<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->name . ' ' . $row->last_name ?></a></td>
+							<td><?= $row->class_name ?></td>
+							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/results/detail_by_student/<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->first_name . ' ' . $row->last_name ?></a></td>
 							<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
 						</tr>
 					<?php endforeach ?>
@@ -198,8 +242,8 @@
 				<table class="table table-striped small">
 					<?php foreach($ranking_top as $row): ?>
 						<tr>
-							<td><?= $row->class ?></td>
-							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student/details'<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->name . ' ' . $row->last_name ?></a></td>
+							<td><?= $row->class_name ?></td>
+							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student/details'<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->first_name . ' ' . $row->last_name ?></a></td>
 							<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?><?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
 						</tr>
 					<?php endforeach ?>
@@ -212,12 +256,67 @@
 
 	<div class="col-lg-6 col-md-6 col-xs-12 ">
 		<div class="panel panel-primary">
-			<div class="panel-heading text-center"><?= _('Résultats par compétence')?> </div>
+			<div class="panel-heading text-center"><?= _('Réussites par compétence')?> </div>
 			<div class="panel-body text-left">
 				<div id="skills_results" style="margin: 0 auto"></div>
 				<script>
-				$(function () {
-					$('#skills_results').highcharts({
+
+
+					 // Age categories
+					 var categories = ['<?= implode("', '", array_column($skills_stats, 'skill_name') ) ?>'];
+
+					 Highcharts.chart('skills_results', {
+					     chart: {
+					         type: 'column'
+					     },
+					     title: {
+					         text: ''
+					     },
+					     xAxis: [{
+							  title: {
+									text: 'Compétences'
+							  },
+					         categories: categories,
+					         reversed: false,
+					         labels: {
+					             step: 1
+					         }
+
+					     }],
+					     yAxis: {
+					         title: {
+					             text: 'Nombre de réussites/échecs'
+					         },
+					         labels: {
+					             formatter: function () {
+					                 return Math.abs(this.value) + 'x';
+					             }
+					         }
+					     },
+
+					     plotOptions: {
+					         series: {
+					             stacking: 'normal'
+					         }
+					     },
+
+					     tooltip: {
+					         formatter: function () {
+					             return this.series.name + ': ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+					         }
+					     },
+
+					     series: [{
+							  color: '#2B908F',
+					         name: 'Réussites (>49%)',
+					         data: [<?= implode(", ", array_column($skills_stats, 'success') ) ?>]
+					     }, {
+							  color: '#F45B5B',
+					         name: 'Échecs',
+					         data: [-<?= implode(", -", array_column($skills_stats, 'failed') ) ?>]
+					     }]
+					 });
+						/**
 						chart: {
 							plotBackgroundColor: null,
 							plotBorderWidth: null,
@@ -234,9 +333,10 @@
 						yAxis: {
 							min: 0,
 							title: {
-								text: '<?= _('Occurences') ?>'
+								text: '<?= _('Pourcentage') ?>'
 							},
 							allowDecimals: false
+
 						},
 						tooltip: {
 							pointFormat: '<?= _('Pourcentage') ?>: <b>{point.y} % </b>'
@@ -244,6 +344,7 @@
 						plotOptions: {
 
 						},
+
 						series: [{
 							name: '<?= _('Pourcentage') ?> ',
 							colorByPoint: true,
@@ -251,6 +352,7 @@
 						}]
 					});
 				});
+				**/
 
 				</script>
 			</div>
@@ -287,6 +389,7 @@
 						tooltip: {
 							pointFormat: '<?= _('Travaillée') ?>: <b>{point.y} <?= _('fois') ?></b>'
 						},
+
 						plotOptions: {
 
 						},
@@ -354,8 +457,9 @@
 				</div>
 			</div>
 		</div>
-		<script src="https://code.highcharts.com/modules/heatmap.js"></script>
 		<script src="https://code.highcharts.com/modules/treemap.js"></script>
+
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 		<div class="col-lg-6 col-md-6 col-xs-12 ">
 			<div class="panel panel-primary">

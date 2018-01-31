@@ -1,6 +1,3 @@
-<div id="content" class="col-xs-12 col-md-10 ">
-	<?php $this->view('templates/submenu'); ?>
-
 	<!-- https://github.com/twitter/typeahead.js/ -->
 	<script src="/assets/js/typeahead.bundle.js"></script>
 	<script src="/assets/js/scripts.js"></script>
@@ -13,6 +10,10 @@
 	</div>
 	<?php endif ?>
 
+	<?php if( ! $this->input->get('modal')):?>
+	<div id="content" class="col-xs-12 col-md-10 ">
+		<?php $this->view('templates/submenu'); ?>
+	<?php endif ?>
 	<form action="/admin/project/record/<?= @$curr_project->id ?>" method="post" enctype="multipart/form-data" id="form"  style="margin-top: 1em;">
 		<div class="row">
 			<div class = "col-md-6">
@@ -34,7 +35,7 @@
 				<label for="title"><?= LABEL_PERIOD ?></label>
 				<select class="form-control" name="term">
 					<?php foreach($terms as $term): ?>
-						<option<?php if(@$curr_project->term === $term) echo(' selected'); ?>><?= $term ?></option>
+						<option<?php if(@$curr_project->term === $term->id) echo(' selected'); ?> value="<?= $term->id ?>"><?= $term->name ?></option>
 					<?php endforeach ?>
 				</select>
 			</div>
@@ -62,20 +63,32 @@
 					</div>
 				</div>
 			</div>
-			<div class = "col-xs-4">
+			<div class = "col-xs-3">
 				<div class="form-group">
 					<label for="title"><?=  LABEL_CLASS ?></label>
 					<select class="form-control" name="class" style=" white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;" required>
 					<?php foreach($classes as $class): ?>
-						<option  <?php if(@$curr_project->class === $class) echo(" selected"); ?>><?= $class ?></option>
+						<option  <?php if(@$curr_project->class === $class->id) echo(" selected"); ?> value="<?= $class->id?>"><?= $class->description ?></option>
+					<?php endforeach ?>
+				</select>
+			</div>
+			</div>
+			<div class = "col-xs-3">
+				<div class="form-group">
+					<label for="title"><?= _('Cours') ?></label>
+					<select class="form-control" name="course" style=" white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;" disabled>
+					<option value="">--</option>
+					<?php foreach($courses as $course): ?>
+						<option  <?php if(@$curr_project->course === $course->id) echo(" selected"); ?>><?= $course->class_name ?> <?= $course->name ?></option>
 					<?php endforeach ?>
 				</select>
 			</div>
 		</div>
-		<div class = "col-xs-3">
-		</div>
+
 	</div>
 	<div class="row">
 		<div class = "col-xs-12">
@@ -259,26 +272,29 @@
 				<div class = "col-md-12">
 					<div class="form-group">
 						<input type="hidden" name="project_id" value="<?= (isset($curr_project->id) ? $curr_project->id : '-1'); ?>">
-						<?php if(@$curr_project->school_year === get_school_year()): ?>
-							<button type="submit" class="btn btn-success" name="<?= (isset($curr_project->id) ? 'update' : 'save'); ?>_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
 							<?php if(isset($curr_project->id)): ?>
+								<?php if($curr_project->school_year === get_school_year()): ?>
+								<button type="submit" class="btn btn-success" name="update_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
 								<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
-							<?php endif ?>
-							<?php if(isset($curr_project->id)): ?>
 								<button type="submit" class="btn btn-danger pull-right" name="delete_project" value="<?= $curr_project->id ?>"><span class="glyphicon glyphicon-remove"></span><?=  LABEL_DEL_PROJECT ?></button>
 								<button type="submit" class="btn <?= (@$curr_project->is_activated ? 'btn-warning' : 'btn-success'); ?>  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $curr_project->id ?>">
 									<span class="glyphicon glyphicon-ban-circle"></span> <?= (@$curr_project->is_activated ?  LABEL_DISACTIVATE_PROJECT :  LABEL_ACTIVATE_PROJECT)?>
 								</button>
+
+								<?php else: ?>
+									<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
+									<p><?= _('Projet verrouillé (année scolaire ' . @$curr_project->school_year  . ').')?></p>
+								<?php endif ?>
+							<?php else: ?>
+
+								<button type="submit" class="btn btn-success" name="save_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
 							<?php endif ?>
-						<?php else: ?>
-							<p><?= _('Projet verrouillé (année scolaire ' . @$curr_project->school_year  . ').')?></p>
-							<button type="submit" class="btn btn-primary" name="save_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
-						<?php endif ?>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
+
 	<script src="/assets/js/jquery-1.10.2.min.js"></script>
 	<script src="/assets/js/typeahead.bundle.js"></script>
 	<script>

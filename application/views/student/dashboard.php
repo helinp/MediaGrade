@@ -1,7 +1,6 @@
 <div id="content" class="col-xs-12 col-md-10 ">
     <div class="row chapeau">
         <div class="col-xs-9 col-md-9">
-            <h1> <?= _('Tableau de bord') ?></h1>
         </div>
         <div class="col-xs-3  col-md-3">
               <form id="filter" method="get" class="form-inline" style="margin-top:1.5em">
@@ -28,7 +27,7 @@
                     <table class="table table-striped small">
                         <?php foreach($not_submitted as $row): ?>
                             <tr>
-                                <td><?= $row->term ?></td>
+                                <td><?= $row->term_name ?></td>
                                 <td><?= $row->project_name ?></td>
                                 <td><?= $row->deadline; ?></td>
                                 <td><a data-toggle="modal" data-target="#projectModal" href="/student/project/instructions/<?= $row->project_id?>"><span class="glyphicon glyphicon-file" data-toggle="tooltip" data-placement="top" title="Consignes"> </span></a></td>
@@ -46,7 +45,7 @@
 					<table class="table table-striped small">
 						<?php foreach($graded as $row): ?>
 							<tr>
-								<td><?= $row->term ?></td>
+								<td><?= $row->term_name ?></td>
 								<td><?= $row->project_name ?></td>
 								<td<?= ($row->average->total_user < $row->average->total_max / 2 ?  ' class="text-danger dotted_underline" ' : '') ?>><?= $row->average->total_user . ' / ' . $row->average->total_max ?></td>
 								<td><a data-toggle="modal" data-target="#projectModal" href="/student/project/results/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Détails" class="glyphicon glyphicon-zoom-in"> </span></a></td>
@@ -63,9 +62,9 @@
 					<big style="font-size: 4em;text-align: center;display:block;"><?= $total_year_result?>%</big>
 					<table class="table small">
 						<tr>
-							<?php foreach ($terms_results as $term => $overall_result): ?>
+							<?php foreach ($terms_results as $overall_result): ?>
 							<td style="text-align: center">
-								<?= $term ?><br><?= ($overall_result ? $overall_result . '%' : '-')  ?>
+								<?= $overall_result['term_name'] ?><br><?= ($overall_result['results'] ? $overall_result['results'] . '%' : '-')  ?>
 							</td>
 							<?php endforeach; ?>
 						</tr>
@@ -93,8 +92,9 @@
 						        text: ''
 						    },
 						    xAxis: {
-						        categories: [<?= $graph_projects_list ?>]
-						    },
+						        categories: [<?= $graph_projects_list ?>],
+								   reversed: true
+							  	 },
 							yAxis: {
 								title: {
 									text: '<?= _('Pourcentage') ?>'
@@ -102,56 +102,47 @@
 								min: 0, max: 100,
 
 								plotBands: [{
-									from: 95,
-									to: 102,
-									color: 'rgba(0, 0, 255, 0.05)',
+									from: 80,
+									to: 100,
+									color: 'rgba(204, 255, 153, .5)',
 									label: {
-										text: 'Super-Héro',
+										text: 'Très bonne maîtrise',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
-									from: 82,
-									to: 95,
-									color: 'rgba(0, 0, 0, 0)',
+									from: 60,
+									to: 79,
+									color: 'rgba(229, 255, 204, .5)',
 									label: {
-										text: 'Professionnel',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 62,
-									to: 82,
-									color: 'rgba(0, 0, 255, 0.05)',
-									label: {
-										text: 'Amateur confirmé',
+										text: 'Maîtrise satisfaisante',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
 									from: 50,
-									to: 62,
-									color: 'rgba(0, 0, 0, 0)',
+									to: 59,
+									color: 'rgba(255, 229, 204, .5)',
 									label: {
-										text: 'Amateur',
+										text: 'Maîtrise fragile',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
-									from: 11,
-									to: 50,
-									color: 'rgba(0, 0, 255, 0.05)',
+									from: 0,
+									to: 49,
+									color: 'rgba(255, 204, 204, .5)',
 									label: {
-										text: 'Tantine à la mer',
+										text: 'Maîtrise insuffisante',
 										style: {
 											color: '#808080'
 										}
 									}
-								}]},
+								}
+							]},
 						    series: [<?= $graph_results ?>, {
 						        type: 'spline',
 						        name: 'Total pondéré',
@@ -167,6 +158,55 @@
 						</script>
 
 
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-xs-12 ">
+				<div class="panel panel-info">
+					<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Mes points forts')?></div>
+					<div class="panel-body text-left">
+						<table class="table small">
+						<?php $temp = ''; ?>
+						<?php foreach ($best_results as $detailled_result): ?>
+								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
+								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
+									<td style="border-top: 1px #ddd dotted">
+										J'ai <?= $detailled_result['cursor'] ?>
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										<?= $detailled_result['average']  ?>%
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										(<?= $detailled_result['count']  ?>)
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-xs-12 ">
+				<div class="panel panel-info">
+					<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Ce que je dois travailler')?></div>
+					<div class="panel-body text-left">
+						<table class="table small">
+						<?php $temp = ''; ?>
+						<?php foreach ($worst_results as $detailled_result): ?>
+
+								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
+								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
+									<td style="border-top: 1px #ddd dotted">
+										J'ai <?= $detailled_result['cursor'] ?>
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										<?= $detailled_result['average']  ?>%
+									</td>
+									<td style="border-top: 1px #ddd dotted">
+										(<?= $detailled_result['count']  ?>)
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -195,56 +235,47 @@
 								min: 0, max: 100,
 
 								plotBands: [{
-									from: 95,
-									to: 102,
-									color: 'rgba(0, 0, 255, 0.05)',
+									from: 80,
+									to: 100,
+									color: 'rgba(204, 255, 153, .5)',
 									label: {
-										text: 'Super-Héro',
+										text: 'Très bonne maîtrise',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
-									from: 82,
-									to: 95,
-									color: 'rgba(0, 0, 0, 0)',
+									from: 60,
+									to: 79,
+									color: 'rgba(229, 255, 204, .5)',
 									label: {
-										text: 'Professionnel',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 62,
-									to: 82,
-									color: 'rgba(0, 0, 255, 0.05)',
-									label: {
-										text: 'Amateur confirmé',
+										text: 'Maîtrise satisfaisante',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
 									from: 50,
-									to: 62,
-									color: 'rgba(0, 0, 0, 0)',
+									to: 59,
+									color: 'rgba(255, 229, 204, .5)',
 									label: {
-										text: 'Amateur',
+										text: 'Maîtrise fragile',
 										style: {
 											color: '#808080'
 										}
 									}
 								}, {
-									from: 11,
-									to: 50,
-									color: 'rgba(0, 0, 255, 0.05)',
+									from: 0,
+									to: 49,
+									color: 'rgba(255, 204, 204, .5)',
 									label: {
-										text: 'Tantine à la mer',
+										text: 'Maîtrise insuffisante',
 										style: {
 											color: '#808080'
 										}
 									}
-								}]
+								}
+							]
 							},
 
 							plotOptions: {
@@ -321,55 +352,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-6 col-md-6 col-xs-12 ">
-				<div class="panel panel-info">
-					<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Mes points forts')?></div>
-					<div class="panel-body text-left">
-						<table class="table small">
-						<?php $temp = ''; ?>
-						<?php foreach ($best_results as $detailled_result): ?>
-								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
-								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
-									<td style="border-top: 1px #ddd dotted">
-										J'ai <?= $detailled_result['cursor'] ?>
-									</td>
-									<td style="border-top: 1px #ddd dotted">
-										<?= $detailled_result['average']  ?>%
-									</td>
-									<td style="border-top: 1px #ddd dotted">
-										(<?= $detailled_result['count']  ?>)
-									</td>
-								</tr>
-							<?php endforeach; ?>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-6 col-md-6 col-xs-12 ">
-				<div class="panel panel-info">
-					<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Ce que je dois travailler')?></div>
-					<div class="panel-body text-left">
-						<table class="table small">
-						<?php $temp = ''; ?>
-						<?php foreach ($worst_results as $detailled_result): ?>
 
-								<?php if($detailled_result['criterion'] === $temp) {} else {$temp = $detailled_result['criterion'];echo('<tr><th colspan="3" style="font-weight:400;padding-bottom:4px;border-top:none;border-bottom: 1px lightgray solid">' . $temp . '</th></tr>');} ?>
-								<tr<?= ($detailled_result['average'] < 50 ? ' class="danger-left"' : '')?>>
-									<td style="border-top: 1px #ddd dotted">
-										J'ai <?= $detailled_result['cursor'] ?>
-									</td>
-									<td style="border-top: 1px #ddd dotted">
-										<?= $detailled_result['average']  ?>%
-									</td>
-									<td style="border-top: 1px #ddd dotted">
-										(<?= $detailled_result['count']  ?>)
-									</td>
-								</tr>
-							<?php endforeach; ?>
-						</table>
-					</div>
-				</div>
-			</div>
 		</div>
 </div>
 

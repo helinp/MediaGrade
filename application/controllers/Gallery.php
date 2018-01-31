@@ -12,7 +12,7 @@ class Gallery extends CI_Controller {
 		$this->load->helper('form');
 
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
-		$this->data['students'] = $this->Users_model->getAllUsers();
+		$this->data['students'] = $this->Users_model->getAllStudents();
 
 		// pagination config
 		$this->pag_config['per_page'] = $this->limit = 12;
@@ -24,22 +24,19 @@ class Gallery extends CI_Controller {
 		$this->pag_config['cur_tag_close'] = '</a></li>';
 	}
 
-	function index($offset = 0)
+	function index($offset = 0, $personal =  FALSE)
 	{
+		$this->data['page_title'] = _('Gallerie');
+
 		$class = $this->input->get('classe');
 		$project_id = $this->input->get('project');
 		$user_id = FALSE;
 
-		if($offset === 'my')
+		if($personal)
 		{
 			$user_id = $this->session->user_id;
-		}
-
-		if( ! $user_id && $this->input->get('id'))
-		{
-			$user_id = $this->input->get('id');
 			unset($this->data['classes']);
-
+			$this->data['page_title'] = _('Ma gallerie');
 		}
 
 		$filters = array(	'projects.class' => $class,
@@ -57,13 +54,12 @@ class Gallery extends CI_Controller {
 		$this->pag_config['num_links'] =  10;
 		$this->pag_config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($filters));
 		$this->pagination->initialize($this->pag_config);
-		$this->data['page_title'] = _('Gallerie');
+
 		$this->load->template('gallery/gallery', $this->data);
 	}
 
 	function my()
 	{
-
 		$this->index();
 	}
 }

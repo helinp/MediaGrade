@@ -25,7 +25,7 @@ class Projects extends MY_Controller {
 			$this->school_year = get_school_year();
 		}
 
-		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($this->session->class, $this->school_year);
+		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($this->session->class, $this->school_year, 'ASC');
 		$this->data['projects'] = $this->projects;
 
 		$this->data['school_year'] = $this->school_year;
@@ -38,7 +38,7 @@ class Projects extends MY_Controller {
 
 		foreach($this->projects as $key => $project)
 		{
-			$this->projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id);
+			$this->projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
 			$this->projects[$key]->result = $this->Results_model->getUserProjectOverallResult(FALSE, $project->project_id);
 			$this->projects[$key]->submitted = $this->Submit_model->IsSubmittedByUserAndProjectId(FALSE, $project->project_id);
 			$this->projects[$key]->graded = $this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, FALSE);
@@ -46,6 +46,7 @@ class Projects extends MY_Controller {
 
 		$this->load->helper('deadline');
 		$this->load->helper('assessment');
+		$this->data['page_title'] = _('Mes projets');
 		$this->load->template('student/overview', $this->data);
 	}
 }

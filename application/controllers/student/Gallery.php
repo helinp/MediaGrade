@@ -18,7 +18,7 @@ class Gallery extends CI_Controller {
 
 
         $this->data['classes'] = $this->Classes_model->getAllClasses();
-		$this->data['students'] = $this->Users_model->getAllUsers();
+		$this->data['students'] = $this->Users_model->getAllStudents();
 
 		// pagination config
 		$this->pag_config['per_page'] = $this->limit = 12;

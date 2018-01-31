@@ -33,10 +33,12 @@ Class Grade_model extends CI_Model
 	public function listUngradedProjects($class = FALSE, $school_year = FALSE)
 	{
 
-		$this->db->select('projects.class, projects.term, users.name, users.last_name,
-		projects.project_name, users.id as user_id, projects.id as project_id');
+		$this->db->select('projects.class, projects.term, users.first_name, users.last_name,
+		projects.project_name, users.id as user_id, projects.id as project_id, classes.name AS class_name');
 		$this->db->distinct();
 		$this->db->from('submitted, users, projects');
+
+		$this->db->join('classes', 'classes.id = projects.class');
 
 		$this->db->where(' 	NOT EXISTS(
 									SELECT NULL
@@ -53,13 +55,14 @@ Class Grade_model extends CI_Model
 		$this->db->where('users.id = submitted.user_id');
 		$this->db->where('admin_id', $this->session->id);
 
+
 		return $this->db->get()->result();
 	}
 
 	public function listUngradedProjectsByProjectId($project_id)
 	{
 
-		$this->db->select('projects.class, projects.term, users.name, users.last_name,
+		$this->db->select('projects.class, projects.term, users.first_name, users.last_name,
 		projects.project_name, users.id as user_id, projects.id as project_id');
 		$this->db->select("DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`", FALSE);
 		$this->db->distinct();

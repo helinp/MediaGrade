@@ -43,7 +43,7 @@ class Grade extends MY_AdminController {
 	public function by_student($class = FALSE, $term = FALSE)
 	{
 		// cleaner url
-		if($this->input->get('class'))
+		if($this->input->get('class') | $this->input->get('term'))
 		{
 			redirect('/admin/grade/by_student/' . $this->input->get('class') . '/' . $this->input->get('term'));
 		}
@@ -52,8 +52,12 @@ class Grade extends MY_AdminController {
 		{
 			$class = FALSE;
 		}
+		if($term === 'all')
+		{
+			$term = FALSE;
+		}
 
-		$class_roll = $this->Users_model->getAllUsersByClass('student', $class);
+		$class_roll = $this->Users_model->getAllStudentsSortedByClass($class);
 
 		// TODO mhash_keygen_s2k table CLASS -> USER_ID -> PROJECTS & USER
 		$table = NULL;
@@ -61,6 +65,7 @@ class Grade extends MY_AdminController {
 		{
 			foreach($students_in_class as $user)
 			{
+				$user->class_name = $this->Classes_model->getClass($user->class)->name;
 				$table[$class][$user->id]['user'] = $user;
 
 				$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYear($class, $term, get_school_year());
@@ -70,6 +75,7 @@ class Grade extends MY_AdminController {
 
 				foreach($projects as $key => $project)
 				{
+					$projects[$key]->term_name = @$this->Terms_model->getTerm($projects[$key]->term)->name;
 					$projects[$key]->is_graded = $this->Results_model->IsProjectGraded($user->id, $project->project_id);
 					$projects[$key]->is_submitted = $this->Submit_model->IsSubmittedByUserAndProjectId($user->id, $project->project_id);
 				}
@@ -85,7 +91,7 @@ class Grade extends MY_AdminController {
 	public function by_project($class = FALSE, $term = FALSE)
 	{
 		// cleaner url
-		if($this->input->get('class'))
+		if($this->input->get('class') || $this->input->get('term'))
 		{
 			redirect('/admin/grade/by_project/' . $this->input->get('class') . '/' . $this->input->get('term'));
 		}
@@ -94,6 +100,10 @@ class Grade extends MY_AdminController {
 		{
 			$class = FALSE;
 		}
+		if($term === 'all')
+		{
+			$term = FALSE;
+		}
 
 		$projects = $this->Projects_model->getAllActiveProjectsByTermAndClassAndSchoolYear($term, $class, get_school_year());
 
@@ -101,7 +111,9 @@ class Grade extends MY_AdminController {
 		$status = NULL;
 		foreach($projects as $project)
 		{
-			$students = $this->Users_model->getAllUsersByClass($role = 'student', $project->class, TRUE);
+			$students = $this->Users_model->getAllStudentsByClass($project->class);
+			$project->class_name = @$this->Classes_model->getClass($project->class)->name;
+			$project->term_name = @$this->Terms_model->getTerm($project->term)->name;
 			$table[$project->project_id]['project'] = $project;
 
 			foreach ($students as $student)
@@ -112,6 +124,7 @@ class Grade extends MY_AdminController {
 				$table[$project->project_id]['students'][$student->id]['status'] = $status;
 			}
 		}
+
 		$this->data['grade_table'] = $table;
 		$this->data['page_title'] = _('Projets à corriger');
 		$this->load->template('admin/grade_list_by_project', $this->data);

@@ -1,7 +1,7 @@
 
 <div class="row chapeau chapeau-modal">
 	<div class="col-md-12">
-		<h2> <?= _('Fiche d\'évaluation') ?> <small><?= $user->class?> / <?= $user->name . " " . $user->last_name?></small>
+		<h2> <?= _('Fiche d\'évaluation') ?> <small><?= $user->class?> / <?= $user->first_name . " " . $user->last_name?></small>
 		</h2>
 	</div>
 </div>
@@ -28,7 +28,7 @@
 					<?php elseif($submitted[$count]->extension == 'jpg' || $submitted[$count]->extension == 'jpeg' || $submitted[$count]->extension == 'png' || $submitted[$count]->extension == 'gif'): ?>
 
 						<a data-lightbox="projects" href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
-							<img alt="<?= $user->name . " " . $user->last_name . " / " . $project->project_name?>"
+							<img alt="<?= $user->first_name . " " . $user->last_name . " / " . $project->project_name?>"
 							style="max-height:200px;"
 							src="/assets/<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
 						</a>

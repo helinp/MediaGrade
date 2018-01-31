@@ -33,7 +33,7 @@
 						<h4><?= $name ?></h4>
 						<select class="form-control" name="students_id[]" size="10" multiple>
 							<?php foreach($class as $student): ?>
-								<option value="<?= $student->id?>"><?= $student->name . ' ' . $student->last_name?></option>
+								<option value="<?= $student->id?>"><?= $student->first_name . ' ' . $student->last_name?></option>
 							<?php endforeach ?>
 						</select>
 					</div>

@@ -1,8 +1,6 @@
 <div id="content" class="col-xs-12 col-md-10 ">
 	<div class="row chapeau">
 		<div class="col-md-12">
-			<h1> <?= _('Mes projets') ?>
-			</h1>
 		</div>
 	</div>
 	<?php $term_tmp = NULL; $curr = 0; $projects = array_reverse($projects); ?>
@@ -52,9 +50,9 @@
 								</p>
 
 								<div style="min-height:1.5em;">
-									<small><?= ($project->achievements ? _('Badges à obtenir:') : '')?></small>
+									<small><?= ($project->achievements ? _('Contribue à l\'obtention de(s) badge(s):') : '')?></small>
 									<?php foreach ($project->achievements as $achievement): ?>
-										<img src="<?= $achievement->icon?>" style="height:1em;" data-toggle="tooltip" data-placement="left" title="<?= $achievement->name ?> <?= str_repeat('&#9733;', $achievement->star)?>" />
+										<img src="<?= $achievement->icon?>" style="height:1.4em;vertical-align: sub;" data-toggle="tooltip" data-placement="left" title="<?= $achievement->name ?> <?= str_repeat('&#9733;', $achievement->star)?>" />
 									<?php endforeach ?>
 								</div>
 							</div>

@@ -6,11 +6,17 @@ Class Pdf_model extends CI_Model
 	* Loads helpers
 	*
 	*/
+
+	private $classes;
+
 	function __construct()
 	{
 		$this->load->helpers('format');
 		$this->load->helpers('school');
 		$this->load->library('Pdf');
+
+		$this->classes = $this->Classes_model->getAllClasses();
+		// $this->teachers = $this->Users_model->getAllAdminss();
 	}
 
 	/**
@@ -27,7 +33,7 @@ Class Pdf_model extends CI_Model
 	{
 		// set document information
 		$pdf->SetCreator('MediaGrade');
-		$pdf->SetAuthor($this->session->name . ' ' . $this->session->last_name);
+		$pdf->SetAuthor($this->session->first_name . ' ' . $this->session->last_name);
 
 		// remove header and footer
 		$pdf->setPrintHeader(false);
@@ -71,7 +77,7 @@ Class Pdf_model extends CI_Model
 		<td>Prénom: '. $student['name'] . '</td>
 		</tr>
 		<tr>
-		<td>Classe: <b>'. $student['class'] . '</b></td>
+		<td>Classe: <b>'. $this->classes[array_search($student['class'], array_column($this->classes, 'id'))]->name . '</b></td>
 		<td>Année scolaire: ' . $student['school_year'] . '</td>
 		</tr>
 		<tr>
@@ -189,7 +195,7 @@ Class Pdf_model extends CI_Model
 
 		$data = get_object_vars($data);
 
-		$html = '<h1>'. $data['class']  . ' / Laboratoire d\'Audiovisuel / '. $data['project_name'] . '</h1>
+		$html = '<h1>'. $this->classes[array_search($data['class'], array_column($this->classes, 'id'))]->name   . ' / Laboratoire d\'Audiovisuel / '. $data['project_name'] . '</h1>
 
 		<h2>M. Hélin / ' . $data['school_year'] . ' / ' . $data['term'] . '</h2>
 

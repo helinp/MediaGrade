@@ -6,12 +6,12 @@ class Class_list extends MY_Controller {
 	private $students_list = array();
 	private $projects_list = array();
 
-    function __construct()
-    {
-        parent::__construct();
+	function __construct()
+	{
+		parent::__construct();
 
-     $this->load->model('UsersManager_model','',TRUE);
-        $this->load->model('Results_model','',TRUE);
+		$this->load->model('UsersManager_model','',TRUE);
+		$this->load->model('Results_model','',TRUE);
 		$this->load->model('Classes_model','',TRUE);
 		$this->load->model('Achievements_model','',TRUE);
 
@@ -26,7 +26,7 @@ class Class_list extends MY_Controller {
 		$this->school_year = $this->input->get('school_year');
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 
-    }
+	}
 
 	function index()
 	{
@@ -34,11 +34,11 @@ class Class_list extends MY_Controller {
 		$class = $this->input->get('classe');
 		if($class)
 		{
-			$this->students_list = $this->Users_model->getAllUsersByClass('student', $class, TRUE);
+			$this->students_list = $this->Users_model->getAllStudentsByClass($class);
 		}
 		else
 		{
-			$this->students_list = $this->Users_model->getAllUsers();
+			$this->students_list = $this->Users_model->getAllStudents();
 		}
 
 		// Gets averages and achievements
@@ -59,9 +59,11 @@ class Class_list extends MY_Controller {
 				$this->students_list[$key]->trend = $this->_trendLine($this->students_list[$key]->all_results);
 				$this->students_list[$key]->progression = $this->_progression($this->_linearProgression($this->students_list[$key]->all_results), 1);
 			}
+			$this->students_list[$key]->class = @$this->Classes_model->getClass($student->class)->description;
 			$this->students_list[$key]->achievements = $this->Achievements_model->getAllAchievementsByStudent($student->id);
 		}
 		$this->data['students'] = $this->students_list;
+		$this->data['page_title'] =  _('Ma classe') ;
 
 		// VIEW
 		$this->load->template('students_overview', $this->data);
@@ -99,9 +101,9 @@ class Class_list extends MY_Controller {
 		{
 			if ($array <> 'null')
 			{
-				 $y[] = $array;
-				 $x[] = $i;
-				 $i++;
+				$y[] = $array;
+				$x[] = $i;
+				$i++;
 			}
 			# code...
 		}
@@ -119,11 +121,11 @@ class Class_list extends MY_Controller {
 		$range = (int)($range) ;
 		$sum = array_sum(array_slice($data, 0, $range));
 
-	    $result = array($range - 1 => $sum / $range);
+		$result = array($range - 1 => $sum / $range);
 
-	    for ($i = $range, $n = count($data); $i != $n; ++$i) {
-	        $result[$i] = (int) ( $result[$i - 1] + ($data[$i] - $data[$i - $range]) / $range);
-	    }
+		for ($i = $range, $n = count($data); $i != $n; ++$i) {
+			$result[$i] = (int) ( $result[$i - 1] + ($data[$i] - $data[$i - $range]) / $range);
+		}
 
 		/**/
 
@@ -138,9 +140,9 @@ class Class_list extends MY_Controller {
 		{
 			if ($array <> 'null')
 			{
-				 $y[] = $array;
-				 $x[] = $i;
-				 $i++;
+				$y[] = $array;
+				$x[] = $i;
+				$i++;
 			}
 			# code...
 		}
@@ -154,20 +156,20 @@ class Class_list extends MY_Controller {
 		$xy_sum = 0;
 
 		for($i = 0; $i < $n; $i++) {
-		$xy_sum += ( $x[$i]*$y[$i] );
-		$xx_sum += ( $x[$i]*$x[$i] );
+			$xy_sum += ( $x[$i]*$y[$i] );
+			$xx_sum += ( $x[$i]*$x[$i] );
 		}
-	    // Slope
+		// Slope
 		$divider = ( ( $n * $xx_sum ) - ( $x_sum * $x_sum ) );
-	    $slope = ( ( $n * $xy_sum ) - ( $x_sum * $y_sum ) ) / ($divider === 0 ? 1 : $divider);
+		$slope = ( ( $n * $xy_sum ) - ( $x_sum * $y_sum ) ) / ($divider === 0 ? 1 : $divider);
 
-	    // calculate intercept
-	    $intercept = ( $y_sum - ( $slope * $x_sum ) ) / $n;
+		// calculate intercept
+		$intercept = ( $y_sum - ( $slope * $x_sum ) ) / $n;
 
-	    $trend = array(
-	        'slope'     => $slope,
-	        'intercept' => $intercept,
-	    );
+		$trend = array(
+			'slope'     => $slope,
+			'intercept' => $intercept,
+		);
 
 		for($x = 0 ; $x <= $n ; $x++)
 		{
