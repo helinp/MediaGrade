@@ -17,7 +17,7 @@ Class UsersManager_model extends Users_model
 		if ( ! $user_id) $user_id = $this->session->id;
 
 		// check current password
-		$check = parent::checkUserPassword($user_id, $current_password, 'id');
+		$check = $this->checkUserPassword($user_id, $current_password);
 		if( ! $check) show_error(_('Le mot de passe d\'origine n\'est pas valide'));
 
 		// check new password
@@ -27,15 +27,17 @@ Class UsersManager_model extends Users_model
 		if( ! empty($errors = $this->checkPasswordStrenght($new_password)))
 		show_error($errors);
 
-		$hash = password_hash($new_password, PASSWORD_DEFAULT);
+		$data = array('password' => $new_password);
 
-		$data = array(
-			'password' => $hash
-		);
-		$this->db->where('id', $user_id);
-		$this->db->update('users', $data);
+		$this->updateUser($user_id, $data);
 
 		return TRUE;
+	}
+
+
+	private function checkUserPassword($user_id, $current_password)
+	{
+		return $this->ion_auth->hash_password_db($user_id, $current_password);
 	}
 
 	/**
@@ -212,7 +214,6 @@ Class UsersManager_model extends Users_model
 		{
 			$this->db->insert('users_config', $data);
 		}
-
 	}
 
 	/**

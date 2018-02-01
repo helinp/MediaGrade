@@ -73,10 +73,9 @@ Class Roles_model extends CI_Model
 
 	public function getRoleIdFromName($name)
 	{
-		$groups = $this->ion_auth->groups()->result();
-		$array_key = array_search($name, array_column($groups, 'name'));
+		$role = $this->db->get_where('roles', array('name' => $name), 1)->row();
 
-		return @$groups[$array_key]->id;
+		return (isset($role->id) ? $role->id : FALSE);
 	}
 }
 

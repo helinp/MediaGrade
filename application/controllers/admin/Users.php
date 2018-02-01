@@ -67,9 +67,12 @@ class Users extends MY_AdminController {
 
 		switch($action)
 		{
-
 			case 'add_user':
 				$user_id = $this->UsersManager_model->addUser($data);
+				if ($this->UsersManager_model->username_check($data['username']))
+				{
+					show_error('Nom d\'utilisation déjà utilisé');
+				}
 				$this->Roles_model->addRoleToUser($role_id, $user_id);
 				break;
 
