@@ -34,7 +34,8 @@
 						</a>
 
 					<?php endif ?>
-					<a href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><?= _('Ouvrir dans un nouvel onglet') ?></small></a>
+
+				<a href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><span class="glyphicon glyphicon-new-window"> </span> <?= _('Ouvrir dans un nouvel onglet') ?></small></a>
 				<?php endif ?>
 			</div>
 		<?php endforeach ?>
@@ -46,7 +47,17 @@
 			<?php if (empty($submitted)): ?>
 				<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <?= LABEL_NOT_SUBMITTED ?></div>
 			<?php else: ?>
-				<div class="alert alert-info"><?= LABEL_SUBMITTED_ON . $submitted{$n_files - 1}->time ?></div>
+				<p><span class="label label-success"><?= LABEL_SUBMITTED_ON . $submitted{$n_files - 1}->time ?></span></p>
+				<?php if($exif): ?>
+					<p>
+						<span class="label label-info"><strong><?= $exif['Model'] ?></strong> </span>&nbsp;
+						<span class="label label-primary">Mode <strong><?= exif_mode_translate($exif['ExposureProgram'])?></strong> </span>&nbsp;
+						<span class="label label-primary"><strong> <?= $exif['ISOSpeedRatings'] ?> ISO</strong> </span>&nbsp;
+						<span class="label label-primary"><strong><?= exif_exposure_time($exif['ExposureTime'],  $exif['Model'] ) ?> sec</strong> </span>&nbsp;
+						<span class="label label-primary"><strong><?= $exif['COMPUTED']['ApertureFNumber'] ?></strong> </span>&nbsp;
+						<span class="label label-primary">&fnof; =  <strong><?= exif_focal_lenght($exif['FocalLength']) ?> mm</strong> </span>&nbsp;
+					</p>
+				<?php endif ?>
 			<?php endif ?>
 		</div>
 	</div>

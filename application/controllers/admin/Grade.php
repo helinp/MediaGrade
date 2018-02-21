@@ -133,12 +133,16 @@ class Grade extends MY_AdminController {
 	function assess($class, $project_id, $user_id)
 	{
 		// gather informations
+		$this->load->helper('user_message');
+		$submitted_project = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
+		$this->data['exif'] = $this->Submit_model->getExifByUserIdAndProjectId($user_id, $project_id);
+
 		$this->data['user'] = $this->Users_model->getUserInformations($user_id);
-		$this->data['submitted'] = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+		$this->data['submitted'] = $submitted_project;
 		$this->data['self_assessments'] = $this->Submit_model->getSelfAssessmentByProjectId($project_id, TRUE, $user_id);
 		$this->data['comment'] = preg_replace('<br/>', "/\n", $this->Comments_model->getCommentsByProjectIdAndUserId($project_id, $user_id)->comment);
 		$this->data['assessment_table'] = $this->Results_model->getResultsTable($user_id, $project_id);
-		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
 
 		// GET
 		$this->load->template('admin/grade', $this->data, TRUE);
