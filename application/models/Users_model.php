@@ -50,7 +50,6 @@ Class Users_model extends CI_Model
 		$avatar = $this->getUserAvatar();
 		$this->session->set_userdata('avatar', $avatar);
 
-		$class_description = $this->Classes_model->getClass($data->class)->name;
 		$this->session->set_userdata('class_name', $class_description);
 
 		$this->session->unset_userdata('password');
@@ -67,7 +66,6 @@ Class Users_model extends CI_Model
 	public function getUserInformations($user_id = FALSE)
 	{
 		if ( ! $user_id) $user_id = $this->session->id;
-
 		$user = $this->ion_auth->user($user_id)->row();
 		unset($user->password);
 		unset($user->salt);

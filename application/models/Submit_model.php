@@ -214,7 +214,6 @@ Class Submit_model extends CI_Model
 	* @param 	integer 	$user_id = $this->session->id
 	* @return	array
 	*/
-	// TODO: check mime
 	public function getAvatarConfig($user_id = FALSE)
 	{
 		if( ! $user_id) $user_id = $this->session->id;
@@ -227,7 +226,7 @@ Class Submit_model extends CI_Model
 		$config['overwrite']            = TRUE;
 		$config['file_ext_tolower']      = TRUE;
 		$config['upload_path']          = './assets/uploads/users/avatars/';
-		$config['allowed_types']        = 'gif|jpg|png|jpeg';
+		$config['allowed_types']        = 'gif|jpg|png';
 		$config['max_size']             = 50000;
 
 		return($config);
@@ -271,6 +270,30 @@ Class Submit_model extends CI_Model
 		else
 		{
 			return 0;
+		}
+	}
+
+	public function getExifByUserIdAndProjectId($user_id, $project_id)
+	{
+		$exif = FALSE;
+		$file = FALSE;
+		$submitted_project = $this->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+
+		if(isset($submitted_project[0]->file_path))
+		{
+			$file = './assets/' . $submitted_project[0]->file_path . $submitted_project[0]->file_name;
+		}
+		if(file_exists($file) && $submitted_project[0]->extension == 'jpg')
+		{
+			$exif =  @exif_read_data($file, 'IFD0');
+		}
+		if(isset($exif['Model']))
+		{
+			return $exif;
+		}
+		else
+		{
+			return FALSE;
 		}
 	}
 
