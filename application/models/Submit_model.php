@@ -214,6 +214,7 @@ Class Submit_model extends CI_Model
 	* @param 	integer 	$user_id = $this->session->id
 	* @return	array
 	*/
+	// TODO: check mime
 	public function getAvatarConfig($user_id = FALSE)
 	{
 		if( ! $user_id) $user_id = $this->session->id;
@@ -226,7 +227,7 @@ Class Submit_model extends CI_Model
 		$config['overwrite']            = TRUE;
 		$config['file_ext_tolower']      = TRUE;
 		$config['upload_path']          = './assets/uploads/users/avatars/';
-		$config['allowed_types']        = 'gif|jpg|png';
+		$config['allowed_types']        = 'gif|jpg|png|jpeg';
 		$config['max_size']             = 50000;
 
 		return($config);

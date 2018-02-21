@@ -1,9 +1,5 @@
 <div id="content" class="col-xs-12 col-md-10 ">
 	<div class="row chapeau">
-		<div class="col-xs-12  col-md-12">
-			<h1> <?= _('Mon profil') ?></h1>
-
-		</div>
 	</div>
 	<form action="profile/update" method="post" role="form">
 		<table class="table profile">
@@ -25,13 +21,13 @@
 			<tr>
 				<td><b><?= LABEL_NAME ?></b> </td>
 				<td>
-					<?=$user_data->name?></td>
+					<?=$user_data->first_name?></td>
 				<td></td>
 			</tr>
 			<tr>
 				<td><b><?= LABEL_CLASS ?>:</b> </td>
 				<td>
-					<?=( $_SESSION[ 'role']==='admin' ? LABEL_TEACHER : $user_data->class) ?></td>
+					<?= ( $this->Users_model->isAdmin() ? LABEL_TEACHER : $user_data->class) ?></td>
 				<td></td>
 			</tr>
 			<tr>

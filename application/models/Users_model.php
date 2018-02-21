@@ -64,8 +64,10 @@ Class Users_model extends CI_Model
 	* @param	integer 	$user_id = $this->session->id;
 	* @return	object
 	*/
-	public function getUserInformations($user_id)
+	public function getUserInformations($user_id = FALSE)
 	{
+		if ( ! $user_id) $user_id = $this->session->id;
+
 		$user = $this->ion_auth->user($user_id)->row();
 		unset($user->password);
 		unset($user->salt);
@@ -80,7 +82,9 @@ Class Users_model extends CI_Model
 	*/
 	public function getUserAvatar($user_id = FALSE)
 	{
-		$user = $this->ion_auth->user()->row();
+		if ( ! $user_id) $user_id = $this->session->id;
+
+		$user = $this->ion_auth->user($user_id)->row();
 		return $user->picture;
 	}
 

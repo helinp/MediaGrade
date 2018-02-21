@@ -25,7 +25,7 @@
 		<title>MediaGrade</title>
 	<?php endif ?>
 
-	<?php if( ! $this->ion_auth->logged_in()): ?>
+	<?php if( ! isset($_SESSION['logged_in'])): ?>
 		<?php if(substr(@$random_media, -3) === 'jpg') : ?>
 		<style>
 		body
@@ -49,7 +49,7 @@
 </head>
 
 <body>
-	<?php if( ! $this->ion_auth->logged_in()): ?>
+	<?php if( ! isset($_SESSION['logged_in'])): ?>
 		<?php if(substr($random_media, -3) === 'mp4') : ?>
 			<video autoplay loop id="bgvid" muted>
 				<source src="<?= $random_media ?>" type="video/mp4">
@@ -57,7 +57,7 @@
 			<?php endif ?>
 		<?php endif ?>
 		<div class="container-fluid">
-			<?php if($this->ion_auth->logged_in()): ?>
+			<?php if(isset($_SESSION['logged_in'])): ?>
 			<header class="row row-eq-height hidden-print">
 
 				<!-- Logo -->

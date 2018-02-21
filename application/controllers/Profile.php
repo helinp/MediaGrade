@@ -15,12 +15,13 @@ class Profile extends MY_Controller {
 		$this->load->helper('format');
 		$this->load->helper('school');
 	}
-	
+
 	function index()
 	{
 
 		$this->data['user_data'] =  $this->Users_model->getUserInformations();
 		$this->data['preferences_data'] = $this->Users_model->getUserPreferences('email');
+				$this->data['page_title'] =  _('Mon profil');
 		$this->load->template('profile', $this->data);
 	}
 

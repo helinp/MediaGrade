@@ -373,8 +373,6 @@ class CI_Upload {
 	 */
 	public function do_upload($field = 'userfile')
 	{
-		if($this->config->item('mode') === 'demo') return FALSE;
-
 		// Is $_FILES[$field] set? If not, no reason to continue.
 		if (isset($_FILES[$field]))
 		{
