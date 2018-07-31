@@ -96,10 +96,11 @@ Class Results_model extends CI_Model
 	{
 		if ( ! $user_id) $user_id = $this->session->id;
 		if ( ! $school_year) $school_year = $this->current_school_year;
-		if($term && ! empty($term)) $this->db->where('term', $term);
+		if($term) $this->db->where('term', $term);
 
 		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, terms.name AS term_name');
-		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
+		//$this->db->select('max_vote, user_vote, terms.name AS term_name, projects.assessment_type, school_year, projects.project_name');
+		$this->db->join('projects', 'projects.id = results.project_id', 'RIGHT');
 		$this->db->join('terms', 'projects.term = terms.id');
 		$this->db->where('user_id', $user_id);
 		$this->db->where('projects.is_activated', TRUE);
@@ -129,7 +130,7 @@ Class Results_model extends CI_Model
 		$this->db->join('terms', 'projects.term = terms.id');
 		$this->db->where('user_id', $user_id);
 		$this->db->where('projects.is_activated', TRUE);
-		$this->db->where('projects.assessment_type !=', 'diagnostic');
+		$this->db->where('projects.assessment_type <>', 'diagnostic');
 		$this->db->where('school_year', $school_year);
 
 		$result = $this->db->get('results');
@@ -329,27 +330,27 @@ Class Results_model extends CI_Model
 	* @param 	string		$school_year	FALSE
 	* @return	array
 	*/
+	/* DEPRECATED? */
 	public function studentProjectResults($student_id, $project_id, $term = FALSE)
 	{
-		$this->db->select("skills_group, projects.id as project_id,
+		// This Query include not graded criteria
+		$this->db->select("skills_group, project_id, user_id,
 		(CASE WHEN ISNULL(results.id) THEN '" . _('NE') . "' ELSE SUM(user_vote) END ) AS user_vote,
-		SUM(assessments.max_vote) as max_vote", FALSE);
+		SUM(results.max_vote) as max_vote", FALSE);
 
-		$this->db->from('users');
-		$this->db->join('projects', 'projects.class = users.class');
-		$this->db->join('projects_assessments', 'projects_assessments.project_id = projects.id');
-		$this->db->join('assessments', 'projects_assessments.assessment_id = assessments.id');
-		$this->db->join('results', 'results.project_id = projects.id AND results.user_id = users.id AND results.assessment_id = assessments.id', 'left');
+		$this->db->from('results');
+		$this->db->join('assessments', 'assessments.id = results.assessment_id');
+		$this->db->join('projects', 'projects.id = results.project_id');
 
-		$this->db->where('users.id', $student_id);
-		$this->db->where('projects.id', $project_id);
-		if($term) $this->db->where('term', $term);
+		$this->db->where('results.user_id', $student_id);
+		$this->db->where('results.project_id', $project_id);
+		if($term) $this->db->where('projects.term', $term);
 
-		$this->db->group_by('users.id, skills_group, projects.id', 'ASC');
+		$this->db->group_by('user_id, skills_group, projects.id', 'ASC');
 
 		$results = $this->db->get()->result();
 
-		if($results)
+		if( ! empty($results))
 		{
 			return $results;
 		}
@@ -801,6 +802,22 @@ Class Results_model extends CI_Model
 		{
 			return '--';
 		}
+		return $result;
+	}
+
+	public function getResultsBySkillsGroupAndUserIdAndProjectId($skill_group_name, $user_id, $project_id)
+	{
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+		$this->db->select('skills_group, SUM(user_vote) as user_vote, SUM(results.max_vote) as max_vote, project_id, user_id');
+		$this->db->join('assessments', 'assessments.id = results.assessment_id');
+		$this->db->where('results.user_id', $user_id);
+		$this->db->where('assessments.skills_group', $skill_group_name);
+		$this->db->where('project_id', $project_id);
+		$this->db->group_by('assessments.skills_group');
+	//	$this->db->limit(1);
+		$result = $this->db->get()->row();
+
 		return $result;
 	}
 

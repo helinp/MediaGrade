@@ -62,7 +62,7 @@
 
         foreach ($projects as $project)
         {
-            $string .= $delimiter . js_special_chars($project->term) . ' / ' . js_special_chars($project->project_name ). $delimiter;
+            $string .= $delimiter . js_special_chars($project->term_name) . ' / ' . js_special_chars($project->project_name ). $delimiter;
             $string .= ', ';
         }
 

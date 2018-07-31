@@ -183,7 +183,7 @@ Class Users_model extends CI_Model
 	}
 
 
-	public function CountStudentsByClass($class_id)
+	public function countStudentsByClass($class_id)
 	{
 		$this->db->where('class', $class_id);
 		return $this->db->count_all_results('users');

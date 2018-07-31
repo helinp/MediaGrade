@@ -30,9 +30,9 @@ function format_assessment_type($assessment_type)
 
 function convertPercentageToLSUCode($percentage)
 {
-	if( ! is_numeric($percentage) || $percentage < 0 || $percentage > 100 || ! $percentage)
+	if($percentage < 0)
 	{
-		return FALSE;
+		return 0;
 	}
 
 	if($percentage < 50)
@@ -57,7 +57,7 @@ function returnLSUTextFromLSUCode($code)
 {
 	if( ! is_numeric($code) || $code < 0 || $code > 4 || ! $code)
 	{
-		return FALSE;
+		return 'Non évalué';
 	}
 	else
 	{
@@ -68,7 +68,7 @@ function returnLSUTextFromLSUCode($code)
 
 function returnLSUColorFromLSUCode($code)
 {
-	if( ! is_numeric($code) || $code < 0 || $code > 4 || ! $code)
+	if( $code < 0 || $code > 4)
 	{
 		return FALSE;
 	}

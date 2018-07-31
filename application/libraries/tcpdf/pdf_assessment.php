@@ -53,7 +53,7 @@ function get_assessment_pdf($data)
 	        <tbody >
 	        <tr>
 		        <td>Nom: '. $student['last_name'] . '</td>
-		        <td>Prénom: '. $student['name'] . '</td>
+		        <td>Prénom: '. $student['first_name'] . '</td>
 	        </tr>
 
 	        <tr>
