@@ -88,7 +88,7 @@ Class Submit_model extends CI_Model
 
 		// get questions
 		$questions = explode(',', $questions);
-		$self_assessments = '';
+		$self_assessments = array();
 
 		$i = 0;
 		if( ! empty($questions[0]))
