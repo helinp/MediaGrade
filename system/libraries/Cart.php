@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
@@ -51,7 +51,7 @@ class CI_Cart {
 
 	/**
 	 * These are the regular expression rules that we use to validate the product ID and product name
-	 * alpha-numeric, dashes, underscores, or terms
+	 * alpha-numeric, dashes, underscores, or periods
 	 *
 	 * @var string
 	 */
@@ -59,7 +59,7 @@ class CI_Cart {
 
 	/**
 	 * These are the regular expression rules that we use to validate the product ID and product name
-	 * alpha-numeric, dashes, underscores, colons or terms
+	 * alpha-numeric, dashes, underscores, colons or periods
 	 *
 	 * @var string
 	 */
@@ -211,7 +211,7 @@ class CI_Cart {
 
 		// --------------------------------------------------------------------
 
-		// Validate the product ID. It can only be alpha-numeric, dashes, underscores or terms
+		// Validate the product ID. It can only be alpha-numeric, dashes, underscores or periods
 		// Not totally sure we should impose this rule, but it seems prudent to standardize IDs.
 		// Note: These can be user-specified by setting the $this->product_id_rules variable.
 		if ( ! preg_match('/^['.$this->product_id_rules.']+$/i', $items['id']))
@@ -222,7 +222,7 @@ class CI_Cart {
 
 		// --------------------------------------------------------------------
 
-		// Validate the product name. It can only be alpha-numeric, dashes, underscores, colons or terms.
+		// Validate the product name. It can only be alpha-numeric, dashes, underscores, colons or periods.
 		// Note: These can be user-specified by setting the $this->product_name_rules variable.
 		if ($this->product_name_safe && ! preg_match('/^['.$this->product_name_rules.']+$/i'.(UTF8_ENABLED ? 'u' : ''), $items['name']))
 		{
