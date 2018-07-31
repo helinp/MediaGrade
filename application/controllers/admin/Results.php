@@ -30,8 +30,9 @@ class Results extends MY_AdminController {
 		$submenu[] = array('title' => $class, 'url' => '/admin/results/' . $class);
 	}*/
 	$submenu[] = array('title' => 'Cahier de cotes', 'url' => '/admin/results');
-	$submenu[] = array('title' => 'Détail par élève', 'url' => '/admin/results/detail_by_student');
-	$submenu[] = array('title' => 'Vue d\'ensemble', 'url' => '/admin/results/detail_by_class');
+	$submenu[] = array('title' => 'Vue par classe', 'url' => '/admin/results/detail_by_class');
+	$submenu[] = array('title' => 'Fiche détaillée', 'url' => '/admin/results/detail_by_student');
+	$submenu[] = array('title' => 'Vue d\'ensemble', 'url' => '/admin/results/overview');
 	$this->data['submenu'] = $submenu;
 }
 
@@ -97,12 +98,36 @@ public function index()
 		$this->data['table_body'][$index]['deviation'] = $this->Results_model->getUserDeviationByTermAndSchoolYear($student->id, $term);
 
 		if ( ! $projects) $this->data['table_body'][$index]['results'][0][0] = $this->Results_model;
+
+		$index_project = 0;
 		foreach($projects as $project)
 		{
-			$this->data['table_body'][$index]['results'][] = $this->Results_model->studentProjectResults($student->id, $project->project_id, $term);
+
+			// foreach skill group in project
+			$skills_groups = $this->Assessment_model->getSkillsGroupByProject($project->project_id);
+
+			foreach ($skills_groups as $i => $skills_group)
+			{
+				$results = $this->Results_model->getResultsBySkillsGroupAndUserIdAndProjectId($skills_group->skills_group, $student->id, $project->project_id);
+//dump($results);
+				$this->data['table_body'][$index]['results'][$index_project][$i] = $results;
+
+				//array('skills_group' => $skills_group->skills_group,
+				//																			'project_id' 	=> $project->project_id,
+			//																				'user_vote' 	=> @$results->user_vote,
+			//																				'max_vote' 		=> @$results->max_vote);
+
+
+
+			}
+			//get result by skill group
+			//$this->data['table_body'][$index]['results'][] = $this->Results_model->studentProjectResults($student->id, $project->project_id, $term);
+			// dump($this->Results_model->studentProjectResults($student->id, $project->project_id, $term));
+			$index_project++;
 		}
 		$index++;
 	}
+	//dump($this->data['table_body']);
 
 	$this->load->helper('assessment');
 	$this->data['page_title'] = _('Cahier de cotes');
@@ -419,7 +444,55 @@ function detailled()
 	$this->load->template('admin/students_detailled', $this->data);
 }
 
+function overview($student_id = FALSE)
+{
+	/**
+	*  Filters management
+	**/
+	if(is_numeric($this->input->get('student')))
+	{
+		// get a cleaner URL
+		redirect('/admin/results/overview/' . $this->input->get('student') . '?classe=' . $this->input->get('classe'));
+	}
 
+	$class_id = $this->input->get('classe');
+	if(is_numeric($class_id))
+	{
+		$students = $this->Users_model->getAllStudentsSortedByClass($class_id);
+	}
+	else
+	{
+		$students[0] = $this->Users_model->getAllStudents();
+	}
+
+	if($student_id === FALSE)
+	{
+		$student_id = current($students)[0]->id;
+	}
+
+	$class = $this->Users_model->getUserInformations($student_id)->class;
+
+	$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($class, $this->school_year, 'ASC');
+
+	foreach($projects as $key => $project)
+	{
+		$projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
+		$projects[$key]->results = $this->Results_model->getResultsByProjectAndUser($project->project_id, $student_id);
+		$projects[$key]->submitted = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id, $student_id);
+		$projects[$key]->graded = $this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, $student_id);
+		$projects[$key]->comments = @$this->data['comments'] = preg_replace("/\r\n|\r|\n/",'<br/>', $this->Comments_model->getCommentsByProjectIdAndUserId($project->project_id)->comment, $student_id);
+	}
+
+	//dump(	$this->data['projects']);
+//	$this->data['projects'] = $this->projects;
+	$this->load->helper('deadline');
+	$this->load->helper('assessment');
+	$this->data['projects'] = $projects;
+	$this->data['students'] = $students;
+	$this->data['page_title'] = _('Remises et résultats');
+	$this->load->template('admin/results_overview', $this->data);
+
+}
 
 /* ****************************
  *

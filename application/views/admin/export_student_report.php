@@ -9,7 +9,7 @@
 				<select class="form-control input-sm" name="term" onchange="this.form.submit()">
 					<option value=""><?= _('Toutes')?></option>
 					<?php foreach($terms as $term): ?>
-						<?= '<option value="' . $term . '"' . (@$_GET['term'] === $term ? 'selected' : '') . '>' . $term . '</option>' . "\n" ?>
+						<?= '<option value="' . $term->id. '"' . (@$_GET['term'] === $term->id ? 'selected' : '') . '>' . $term->name . '</option>' . "\n" ?>
 					<?php endforeach?>
 				</select>
 				<label><?= _('Année scolaire') ?>: </label>
@@ -27,10 +27,10 @@
 	<h3><?= _('Classes') ?></h3>
 	<div class="row">
 		<form method="POST" action="/admin/export/pdf_student_report">
-			<?php foreach($students_list as $name => $class): ?>
+			<?php foreach($students_list as $id => $class): ?>
 				<div class="col-xs-12 col-md-6">
 					<div class="form-group">
-						<h4><?= $name ?></h4>
+						<h4><?= $this->Classes_model->getClass($id)->name ?></h4>
 						<select class="form-control" name="students_id[]" size="10" multiple>
 							<?php foreach($class as $student): ?>
 								<option value="<?= $student->id?>"><?= $student->first_name . ' ' . $student->last_name?></option>

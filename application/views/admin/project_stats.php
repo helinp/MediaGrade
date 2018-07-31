@@ -17,7 +17,7 @@
 					<select class="form-control input-sm" name="project" onchange="this.form.submit()">
 						<option value=""><?= _('Merci de choisir un projet')?></option>
 						<?php foreach($projects as $project): ?>
-							<?= '<option value="' . $project->project_id . '"' . ($this->uri->segment(4) === $project->project_id ? ' selected' : '') . '>' . $project->class . ' | ' . $project->project_name . '</option>' . "\n" ?>
+							<?= '<option value="' . $project->project_id . '"' . ($this->uri->segment(4) === $project->project_id ? ' selected' : '') . '>' . $project->term_name . ' | ' . $project->project_name . '</option>' . "\n" ?>
 						<?php endforeach?>
 					</select>
 				</form>

@@ -24,34 +24,35 @@
 								</span>
 							<?php endif ?></h4>
 						</div>
-						<div class="panel-body student-project-panel">
-							<p class="text-context"><?= unserialize($project->instructions_txt)['context'] ?> </p>
+						<div class="panel-body">
+							<p><?= unserialize($project->instructions_txt)['context'] ?> </p>
+							<p style="margin-bottom:4px;">
+								<span class="label label-info"><span class="glyphicon glyphicon-time"></span> <?=$project->deadline?></span>
+								<br /><span class="label label-<?= format_assessment_type($project->assessment_type)['label'] ?>"><span class="glyphicon glyphicon-pencil"> </span> <?= _('Évaluation') . ' '. format_assessment_type($project->assessment_type)['type'] ?></span>
+								<?php if (countdown($project->raw_deadline)): ?>
+									<span class="label label-info"><?= countdown($project->raw_deadline) . ' ' . (countdown($project->raw_deadline) > 1 ? _('jours restants') : _('jour restant')) ?></span></p>
+								<?php endif ?>
 
-								<span class="label label-<?= format_assessment_type($project->assessment_type)['label'] ?>"><span class="glyphicon glyphicon-pencil"> </span> <?= _('Évaluation') . ' '. format_assessment_type($project->assessment_type)['type'] ?></span>
-								<p style="margin-bottom:4px;">
-									<span class="label label-info"><span class="glyphicon glyphicon-time"></span> <?=$project->deadline?></span>
-									<?php if (countdown($project->raw_deadline)): ?>
-										<span class="label label-info"><?= countdown($project->raw_deadline) . ' ' . (countdown($project->raw_deadline) > 1 ? _('jours restants') : _('jour restant')) ?></span>
-									<?php endif ?>
-
+								<p>
 									<?php if($project->submitted): ?>
 										<span class="label label-success">Remis</span>
 									<?php else: ?>
 										<span class="label label-danger">Non remis</span>
 									<?php endif ?>
 									<?php if(countdown($project->raw_deadline)): ?>
-
+										<span class="label label-warning">En cours</span>
 									<?php else: ?>
-										<span class="label label-warning">Clôturé</span>
+										<span class="label label-info">Clôturé</span>
 									<?php endif?>
 									<?php if($project->graded): ?>
-										<span class="label label-default">Évalué</span>
+										<span class="label label-primary">Évalué</span>
 									<?php endif ?>
 								</p>
 
 								<div style="min-height:1.5em;">
+									<small><?= ($project->achievements ? _('Contribue à l\'obtention de(s) badge(s):') : '')?></small>
 									<?php foreach ($project->achievements as $achievement): ?>
-										<img src="<?= $achievement->icon?>" style="height:1.4em;vertical-align: sub;" data-toggle="tooltip" data-placement="left" title="<?=  _('Contribue à l\'obtention du badge ') . $achievement->name ?> <?= str_repeat('&#9733;', $achievement->star)?>" />
+										<img src="<?= $achievement->icon?>" style="height:1.4em;vertical-align: sub;" data-toggle="tooltip" data-placement="left" title="<?= $achievement->name ?> <?= str_repeat('&#9733;', $achievement->star)?>" />
 									<?php endforeach ?>
 								</div>
 							</div>
@@ -65,7 +66,7 @@
 										<span class="glyphicon glyphicon-download-alt"> </span> Remise</a>
 									</div>
 									<div class="btn-group" role="group">
-										<a data-toggle="modal" data-target="#projectModal" href="/student/project/results/<?= $project->project_id ?>" type="button" class="btn btn-sm <?= (countdown($project->raw_deadline) ? 'btn-primary' : 'btn-default')?>"><span class="glyphicon glyphicon-list-alt"> </span> <?= _('Résultats')?></a>
+										<a data-toggle="modal" data-target="#projectModal" href="/student/project/results/<?= $project->project_id ?>" type="button" class="btn btn-sm <?= (countdown($project->raw_deadline) ? 'btn-primary' : 'btn-default')?>"><span class="glyphicon glyphicon-list-alt"> </span> <?= _('Évaluation')?></a>
 									</div>
 
 								</div>

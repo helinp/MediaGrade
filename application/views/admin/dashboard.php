@@ -467,7 +467,7 @@
 				<div class="panel-body text-left">
 					<div id="skills_assessed" style="margin: 0 auto"></div>
 					<?php
-					$js_assessed = '';
+					$js_assessed = array();
 
 					$graph_colors = ['#8085E9','#F15C80', '#90ED7D', '#F45B5B', '#2B908F'];
 					$c_graph_colors = 5;

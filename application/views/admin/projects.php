@@ -38,9 +38,9 @@
 
 	<?php foreach ($projects as $project):?>
 		<?php
-		if ($term_tmp !== $project->term)
+		if ($term_tmp !== $project->term_name)
 		{
-			$term_tmp = $project->term;
+			$term_tmp = $project->term_name;
 			echo '<h3>' ._('Période') . ' ' . $term_tmp . '</h3>
 			<div class="row">';
 			$classe_tmp = $project->class;

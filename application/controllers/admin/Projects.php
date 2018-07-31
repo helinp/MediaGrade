@@ -52,18 +52,19 @@ class Projects extends MY_AdminController {
 
 		$current_classe = NULL;
 		$n_students = 0;
-		foreach ($admin_projects as $project)
+		foreach ($admin_projects as $index => $project)
 		{
 			$this->data['achievements_by_project'][$project->project_id] = $this->Achievements_model->getAllAchievementsByProject($project->project_id);
 
 			if($current_classe !== $project->class)
 			{
-				$n_students = $this->Users_model->CountStudentsByClass($project->class);
+				$n_students = $this->Users_model->countStudentsByClass($project->class);
 				$current_classe = $project->class;
 			}
 
+			// For progress bar
 			$n_files_to_submit = $project->number_of_files;
-			$n_submitted =  $this->Submit_model->getNSubmittedByProjectId($project->project_id) / $n_files_to_submit;
+			$n_submitted = $this->Submit_model->getNSubmittedByProjectId($project->project_id) / $n_files_to_submit;
 			$n_graded = count($this->Grade_model->listUngradedProjectsByProjectId($project->project_id));
 
 			$this->data['n_students'][$project->project_id] = $n_students;

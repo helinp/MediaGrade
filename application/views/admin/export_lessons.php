@@ -29,7 +29,7 @@
 				<div class="form-group">
 					<select class="form-control" name="projects[]" size="10" multiple>
 						<?php foreach($projects as $project): ?>
-							<option value="<?= $project->project_id?>"><?= $classes[array_search($project->class, array_column($classes, 'id'))]->name; ?> / <?= $project->term . ' / ' .  $project->project_name?></option>
+							<option value="<?= $project->project_id?>"><?= $classes[array_search($project->class, array_column($classes, 'id'))]->name; ?> / <?= $project->term_name . ' / ' .  $project->project_name?></option>
 						<?php endforeach ?>
 					</select>
 				</div>

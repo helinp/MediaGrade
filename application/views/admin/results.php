@@ -69,19 +69,21 @@
 					<?php foreach ($table_body as $student): ?>
 						<tr style="width:5em">
 							<td><?= $student['last_name'] . ' ' . $student['first_name']?></td>
-							<?php foreach ($student['results'] as $results): ?>
-								<?php foreach ($results as $result): ?>
+							<?php foreach ($student['results'] as $projects_results): ?>
+								<?php foreach ($projects_results as $result): ?>
 									<td>
-										<?php if($result->max_vote > 0): ?>
-											<span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
+										<?php if(isset($result->max_vote)): ?>
+											<span class="gradebook-lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
 												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">&nbsp;&nbsp;</span>
-												<a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) ?></a>
+												<a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) . '<small>/' . $result->max_vote?></small></a>
+											<?php else: ?>
+												NE
 											<?php endif ?>
 										</td>
 									<?php endforeach ?>
 								<?php endforeach ?>
 								<td<?php if ($student['average'] < 50 && is_numeric($student['average'])) echo(' class="text-danger dotted_underline" ') ?>>
-								<span class="lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode($student['average'])) ?>"
+								<span class="gradebook-lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode($student['average'])) ?>"
 									data-toggle="tooltip" data-placement="top" title="<?= returnLSUMentionTextFromPercentage($student['average']) ?>">&nbsp;&nbsp;</span> <?= $student['average']?></td>
 									<td<?php if ($student['deviation'] < 0 && is_numeric($student['deviation'])) echo(' class="text-danger dotted_underline" ') ?>><small><?= $student['deviation']?></small></td>
 								</tr>
