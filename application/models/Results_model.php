@@ -779,6 +779,64 @@ Class Results_model extends CI_Model
 
 	}
 
+	public function getUserResultsBySkill($skill_id, $user_id = FALSE, $school_year = FALSE)
+	{
+		if ( ! $user_id) $user_id = $this->session->id;
+		if ( ! $school_year) $school_year = get_school_year();
+
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+
+		$this->db->select('user_vote / results.max_vote * 100 as percentage', FALSE);
+		$this->db->select('criterion, cursor');
+		$this->db->select('projects.project_name, projects.id, projects.instructions_txt');
+		$this->db->select('COUNT(results.max_vote) as n_assessments', FALSE);
+
+		$this->db->join('projects', 'projects.id = project_id');
+		$this->db->join('assessments', 'assessments.id = assessment_id');
+		$this->db->where('results.user_id', $user_id);
+		$this->db->where('skill_id', $skill_id);
+		$this->db->where('school_year', $school_year);
+
+		$this->db->group_by('criterion');
+		$this->db->order_by('term', 'deadline');
+
+		$result = $this->db->get()->result();
+
+		if( ! $result)
+		{
+			return '--';
+		}
+		return $result;
+	}
+
+	public function getUserResultBySkillId($skill_id, $user_id = FALSE, $school_year = FALSE)
+	{
+		if ( ! $user_id) $user_id = $this->session->id;
+		if ( ! $school_year) $school_year = get_school_year();
+
+		// get results for each skills group , returns 'null' if no results
+		$this->db->from('results');
+
+		$this->db->select('SUM(user_vote) / SUM(results.max_vote) * 100 as percentage', FALSE);
+		$this->db->where('results.user_id', $user_id);
+		$this->db->where('skill_id', $skill_id);
+		$this->db->where('school_year', $school_year);
+		$this->db->join('assessments', 'assessments.id = assessment_id');
+		$this->db->join('projects', 'projects.id = project_id');
+
+		$this->db->group_by('skill_id');
+		$this->db->order_by('term', 'deadline');
+
+		$result = $this->db->get()->row('percentage');
+		if( ! $result)
+		{
+			return '--';
+		}
+		return $result;
+	}
+
+/*
 	public function getUserResultsBySkillAndProjectId($skill_id, $user_id = FALSE, $school_year = FALSE)
 	{
 		if ( ! $user_id) $user_id = $this->session->id;
@@ -804,7 +862,7 @@ Class Results_model extends CI_Model
 		}
 		return $result;
 	}
-
+*/
 	public function getResultsBySkillsGroupAndUserIdAndProjectId($skill_group_name, $user_id, $project_id)
 	{
 		// get results for each skills group , returns 'null' if no results

@@ -35,7 +35,7 @@ function convertPercentageToLSUCode($percentage)
 		return 0;
 	}
 
-	if($percentage < 50)
+	if($percentage < 40)
 	{
 		return 1;
 	}
@@ -43,7 +43,7 @@ function convertPercentageToLSUCode($percentage)
 	{
 		return 2;
 	}
-	elseif($percentage < 80)
+	elseif($percentage < 100)
 	{
 		return 3;
 	}
@@ -61,9 +61,15 @@ function returnLSUTextFromLSUCode($code)
 	}
 	else
 	{
-		$lsu = array('insuffisante', 'fragile', 'satisfaisante', 'très bonne');
-		return 'Maîtrise ' . $lsu[$code - 1];
+		$lsu = array('Non Acquis', 'En Acquisition', 'Acquis', 'Maitrisé');
+		return $lsu[$code - 1];
 	}
+}
+
+function returnLSUColorFromPercentage($percentage)
+{
+	if($percentage === NULL) return 'white';
+	 return returnLSUColorFromLSUCode(convertPercentageToLSUCode($percentage));
 }
 
 function returnLSUColorFromLSUCode($code)
@@ -74,7 +80,7 @@ function returnLSUColorFromLSUCode($code)
 	}
 	else
 	{
-		$lsu = array('red', 'orange', '#eeff33', '#33cc33');
+		$lsu = array('rgb(217, 83, 79)', 'rgb(240, 173, 78)', 'rgb(92, 184, 92)', 'rgb(51, 122, 183)');
 		return $lsu[$code - 1];
 	}
 
@@ -101,6 +107,76 @@ function returnLSUMentionTextFromPercentage($percentage)
 	else
 	{
 		return "Pas de mention";
+	}
+}
+
+function returnFunMentionTextFromPercentage($percentage)
+{
+	if($percentage === NULL)
+	{
+		return FALSE;
+	}
+	elseif($percentage >= 90)
+	{
+		return 'Professionnel';
+	}
+	elseif($percentage >= 70)
+	{
+		return 'Amateur confirmé';
+	}
+	elseif($percentage >= 40)
+	{
+		return 'Débutant';
+	}
+	else
+	{
+		return "Tatie à la mer";
+	}
+}
+
+function returnColorFromPercentage($percentage)
+{
+
+	if($percentage === NULL) return 'white';
+
+	$colors = array('rgb(217,83,79)',// red
+									'rgb(217,83,79)',
+									'rgb(225,113,79)',
+									'rgb(232,143,78)',
+									'rgb(240,173,78)',
+									'rgb(191,177,83)', // orange
+									'rgb(141,180,87)',
+									'rgb(92,184,92)',
+									'rgb(78,163,122)', // verrt
+									'rgb(65,143,153)',
+									'rgb(51,122,183)'// blue
+								);
+
+		$index = (int) ($percentage / 10);
+		return $colors[$index];
+}
+
+function returnTextExplainationsFromPercentage($percentage)
+{
+	if( ! is_numeric($percentage) || $percentage < 0 || $percentage > 100 || ! $percentage)
+	{
+		return FALSE;
+	}
+	elseif($percentage >= 90)
+	{
+		return 'Je suis un Dieu de l\'Audiovisuel, d\'ailleurs, c\'est moi qui donne cours aux professeurs!';
+	}
+	elseif($percentage >= 70)
+	{
+		return 'Je comprends l\'essentiel, mon travail est presque professionnel';
+	}
+	elseif($percentage >= 40)
+	{
+		return 'Je comprends un peu, mais je dois me concentrer plus et ne pas hésiter à demander de l\'aide';
+	}
+	else
+	{
+		return "Je dois bien lire les consignes, demander de l'aide, me concentrer et rendre tous mes travaux";
 	}
 }
 ?>

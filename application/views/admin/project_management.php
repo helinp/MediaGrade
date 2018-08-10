@@ -1,16 +1,16 @@
-	<!-- https://github.com/twitter/typeahead.js/ -->
-	<script src="/assets/js/typeahead.bundle.js"></script>
-	<script src="/assets/js/scripts.js"></script>
+<!-- https://github.com/twitter/typeahead.js/ -->
+<script src="/assets/js/typeahead.bundle.js"></script>
+<script src="/assets/js/scripts.js"></script>
 
-	<?php if($this->input->get('modal')):?>
+<?php if($this->input->get('modal')):?>
 	<div class="row chapeau chapeau-modal">
 		<div class="col-xs-12  col-md-12">
 			<h2 class=" text-left"> <?= _('Gestion du projet')?><small> / <?= (isset($curr_project->project_name) ? $curr_project->project_name : _('Nouveau projet') )?></small></h2>
 		</div>
 	</div>
-	<?php endif ?>
+<?php endif ?>
 
-	<?php if( ! $this->input->get('modal')):?>
+<?php if( ! $this->input->get('modal')):?>
 	<div id="content" class="col-xs-12 col-md-10 ">
 		<?php $this->view('templates/submenu'); ?>
 	<?php endif ?>
@@ -74,36 +74,36 @@
 					<?php endforeach ?>
 				</select>
 			</div>
-			</div>
-			<div class = "col-xs-3">
-				<div class="form-group">
-					<label for="title"><?= _('Cours') ?></label>
-					<select class="form-control" name="course" style=" white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;" disabled>
-					<option value="">--</option>
-					<?php foreach($courses as $course): ?>
-						<option  <?php if(@$curr_project->course === $course->id) echo(" selected"); ?>><?= $course->class_name ?> <?= $course->name ?></option>
-					<?php endforeach ?>
-				</select>
-			</div>
 		</div>
-
-	</div>
-	<div class="row">
-		<div class = "col-xs-12">
+		<div class = "col-xs-3">
 			<div class="form-group">
-				<label for="title"><?=  LABEL_SKILLS_SEEN ?></label>
-				<select id="select_skills" multiple class="form-control" name="seen_skill_ids[]" required size="10">
-					<?php foreach ($skills as $skill): ?>
-						<option<?= (@in_array($skill->skill_id, (array) @$active_skills) ? ' selected' : '') ?> value="<?= $skill->skill_id ?>">
-						<?= $skill->skill_id . ' ' . word_limiter($skill->skill, 15) ?>
-					</option>
+				<label for="title"><?= _('Cours') ?></label>
+				<select class="form-control" name="course" style=" white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;" disabled>
+				<option value="">--</option>
+				<?php foreach($courses as $course): ?>
+					<option  <?php if(@$curr_project->course === $course->id) echo(" selected"); ?>><?= $course->class_name ?> <?= $course->name ?></option>
 				<?php endforeach ?>
 			</select>
-			<p class="help-block with-errors"><?=  LABEL_PRESS_CTRL_SELECT ?></p>
 		</div>
 	</div>
+
+</div>
+<div class="row">
+	<div class = "col-xs-12">
+		<div class="form-group">
+			<label for="title"><?=  LABEL_SKILLS_SEEN ?></label>
+			<select id="select_skills" multiple class="form-control" name="seen_skill_ids[]" required size="10">
+				<?php foreach ($skills as $skill): ?>
+					<option<?= (@in_array($skill->skill_id, (array) @$active_skills) ? ' selected' : '') ?> value="<?= $skill->skill_id ?>">
+					<?= $skill->skill_id . ' ' . word_limiter($skill->skill, 15) ?>
+				</option>
+			<?php endforeach ?>
+		</select>
+		<p class="help-block with-errors"><?=  LABEL_PRESS_CTRL_SELECT ?></p>
+	</div>
+</div>
 </div>
 <div class="row">
 	<div class = "col-xs-12">
@@ -213,169 +213,170 @@
 								placeholder="<?=  LABEL_NEW_CRITERION ?>" name="cursor[]" required><?= $row->cursor ?></textarea>
 							</td>
 							<td>
-								<input class="form-control input-sm" value="<?= $row->max_vote ?>" name="max_vote[]" required size="1" /></td>
-								<td>
-									<select class="form-control input-sm" name="achievement_id[]">
-										<option value="">--</option>
-										<?php foreach($achievements as $achievement): ?>
-											<option value="<?= $achievement->id ?>"<?php if($achievement->id === @$row->achievement_id) echo(' selected') ?>><?= $achievement->name ?> <?= str_repeat('&#9734;', $achievement->star)?></option>
-										<?php endforeach ?>
-									</select>
-									<input type="hidden" name="assessment_id[]" value="<?= $row->id ?>" />
+								<input class="form-control input-sm" value="4-steps" name="grading_type[]" type="hidden" />
+								<input class="form-control input-sm" value="<?= $row->max_vote ?>" name="max_vote[]" required size="1" />
+							</td>
+							<td>
+								<select class="form-control input-sm" name="achievement_id[]">
+									<option value="">--</option>
+									<?php foreach($achievements as $achievement): ?>
+										<option value="<?= $achievement->id ?>"<?php if($achievement->id === @$row->achievement_id) echo(' selected') ?>><?= $achievement->name ?> <?= str_repeat('&#9734;', $achievement->star)?></option>
+									<?php endforeach ?>
+								</select>
+								<input type="hidden" name="assessment_id[]" value="<?= $row->id ?>" />
+							</td>
+
+							<td>
+								<button type="button" class="btn btn-info btn-xs btn-danger pull-right" onClick="deleteRow('rows', this)">
+									<span class="glyphicon glyphicon-remove"></span> </button>
 								</td>
-
-								<td>
-									<button type="button" class="btn btn-info btn-xs btn-danger pull-right" onClick="deleteRow('rows', this)">
-										<span class="glyphicon glyphicon-remove"></span> </button>
-									</td>
-								</tr>
-							<?php endforeach ?>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class = "row">
-				<div class = "col-md-12">
-					<div class="form-group">
-						<button type="button" class="btn btn-info btn-xs" onClick="addRow('rows')"><span class="glyphicon glyphicon-plus"></span> <?= LABEL_ADD_CRITERION ?></button>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class = "col-md-12">
-					<h3><?=  LABEL_SELF_ASSESSMENT ?></h3>
-					<div class="col-md-12">
-						<?php foreach($self_assessments as $self_assessment): ?>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" value="<?= $self_assessment->id ?>" name="self_assessment_id[]" <?= (@in_array($self_assessment->id, $active_self_assessments) ? 'checked' : '') ?>>
-									<?= $self_assessment->question ?>
-								</label>
-							</div>
+							</tr>
 						<?php endforeach ?>
-					</div>
-					<div class="col-md-6">
-						<div class="auto-assessments">
-							<div class="checkbox">
-								<textarea class="form-control input-sm " rows="3" placeholder="<?= _('Nouvelle question') ?>" name="new_self_assessment[]"></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<button type="button" class="btn btn-xs add_auto-assessment"><span class="glyphicon glyphicon-plus"></span> <?= _('Ajouter l\'auto-évaluation') ?></button>
-						</div>
-					</div>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class = "row">
+			<div class = "col-md-12">
+				<div class="form-group">
+					<button type="button" class="btn btn-info btn-xs" onClick="addRow('rows')"><span class="glyphicon glyphicon-plus"></span> <?= LABEL_ADD_CRITERION ?></button>
 				</div>
 			</div>
-
-			<div class = "row">
-				<div class = "col-md-12">
+		</div>
+		<div class="row">
+			<div class = "col-md-12">
+				<h3><?=  LABEL_SELF_ASSESSMENT ?></h3>
+				<div class="col-md-12">
+					<?php foreach($self_assessments as $self_assessment): ?>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" value="<?= $self_assessment->id ?>" name="self_assessment_id[]" <?= (@in_array($self_assessment->id, $active_self_assessments) ? 'checked' : '') ?>>
+								<?= $self_assessment->question ?>
+							</label>
+						</div>
+					<?php endforeach ?>
+				</div>
+				<div class="col-md-6">
+					<div class="auto-assessments">
+						<div class="checkbox">
+							<textarea class="form-control input-sm " rows="3" placeholder="<?= _('Nouvelle question') ?>" name="new_self_assessment[]"></textarea>
+						</div>
+					</div>
 					<div class="form-group">
-						<input type="hidden" name="project_id" value="<?= (isset($curr_project->id) ? $curr_project->id : '-1'); ?>">
-							<?php if(isset($curr_project->id)): ?>
-								<?php if($curr_project->school_year === get_school_year()): ?>
-								<button type="submit" class="btn btn-success" name="update_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
-								<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
-								<button type="submit" class="btn btn-danger pull-right" name="delete_project" value="<?= $curr_project->id ?>"><span class="glyphicon glyphicon-remove"></span><?=  LABEL_DEL_PROJECT ?></button>
-								<button type="submit" class="btn <?= (@$curr_project->is_activated ? 'btn-warning' : 'btn-success'); ?>  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $curr_project->id ?>">
-									<span class="glyphicon glyphicon-ban-circle"></span> <?= (@$curr_project->is_activated ?  LABEL_DISACTIVATE_PROJECT :  LABEL_ACTIVATE_PROJECT)?>
-								</button>
-
-								<?php else: ?>
-									<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
-									<p><?= _('Projet verrouillé (année scolaire ' . @$curr_project->school_year  . ').')?></p>
-								<?php endif ?>
-							<?php else: ?>
-
-								<button type="submit" class="btn btn-success" name="save_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
-							<?php endif ?>
+						<button type="button" class="btn btn-xs add_auto-assessment"><span class="glyphicon glyphicon-plus"></span> <?= _('Ajouter l\'auto-évaluation') ?></button>
 					</div>
 				</div>
 			</div>
-		</form>
-	</div>
+		</div>
 
-	<script src="/assets/js/jquery-1.10.2.min.js"></script>
-	<script src="/assets/js/typeahead.bundle.js"></script>
-	<script>
-	/**
-	*
-	*  Typeahead
-	*
-	**/
+		<div class = "row">
+			<div class = "col-md-12">
+				<div class="form-group">
+					<input type="hidden" name="project_id" value="<?= (isset($curr_project->id) ? $curr_project->id : '-1'); ?>">
+					<?php if(isset($curr_project->id)): ?>
+						<?php if($curr_project->school_year === get_school_year()): ?>
+							<button type="submit" class="btn btn-success" name="update_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
+							<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
+							<button type="submit" class="btn btn-danger pull-right" name="delete_project" value="<?= $curr_project->id ?>"><span class="glyphicon glyphicon-remove"></span><?=  LABEL_DEL_PROJECT ?></button>
+							<button type="submit" class="btn <?= (@$curr_project->is_activated ? 'btn-warning' : 'btn-success'); ?>  pull-right"  style="margin-right:0.5em;" name="disactivate_project" value="<?= $curr_project->id ?>">
+								<span class="glyphicon glyphicon-ban-circle"></span> <?= (@$curr_project->is_activated ?  LABEL_DISACTIVATE_PROJECT :  LABEL_ACTIVATE_PROJECT)?>
+							</button>
+
+						<?php else: ?>
+							<button type="submit" class="btn btn-primary" name="duplicate_project" value="1"><span class="glyphicon glyphicon-copy"></span> <?=  _('Dupliquer') ?></button>
+							<p><?= _('Projet verrouillé (année scolaire ' . @$curr_project->school_year  . ').')?></p>
+						<?php endif ?>
+					<?php else: ?>
+
+						<button type="submit" class="btn btn-success" name="save_project" value="1"><span class="glyphicon glyphicon-save"></span> <?=  LABEL_SAVE_PROJECT ?></button>
+					<?php endif ?>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="/assets/js/jquery-1.10.2.min.js"></script>
+<script src="/assets/js/typeahead.bundle.js"></script>
+<script>
+/**
+*
+*  Typeahead
+*
+**/
 
 
-	$('.typeahead_cursors').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 2
-	},
-	{
-		limit: 6,
-		async: true,
-		displayKey: 'cursor',
-		source: function (query, processSync, processAsync) {
+$('.typeahead_cursors').typeahead({
+	hint: true,
+	highlight: true,
+	minLength: 2
+},
+{
+	limit: 6,
+	async: true,
+	displayKey: 'cursor',
+	source: function (query, processSync, processAsync) {
 
-			return $.ajax({
-				url: "/typeahead",
-				type: 'GET',
-				data: {cursor: query},
-				dataType: 'json',
+		return $.ajax({
+			url: "/typeahead",
+			type: 'GET',
+			data: {cursor: query},
+			dataType: 'json',
 
-				success: function (json) {
-					return processAsync(json);
-				}
-			});
-		}
-	});
+			success: function (json) {
+				return processAsync(json);
+			}
+		});
+	}
+});
 
-	$('.typeahead_criterion').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 2
-	},
-	{
-		limit: 6,
-		async: true,
-		displayKey: 'criterion',
-		source: function (query, processSync, processAsync) {
+$('.typeahead_criterion').typeahead({
+	hint: true,
+	highlight: true,
+	minLength: 2
+},
+{
+	limit: 6,
+	async: true,
+	displayKey: 'criterion',
+	source: function (query, processSync, processAsync) {
 
-			return $.ajax({
-				url: "/typeahead",
-				type: 'GET',
-				data: {criterion: query},
-				dataType: 'json',
+		return $.ajax({
+			url: "/typeahead",
+			type: 'GET',
+			data: {criterion: query},
+			dataType: 'json',
 
-				success: function (json) {
-					return processAsync(json);
-				}
-			});
-		}
-	});
+			success: function (json) {
+				return processAsync(json);
+			}
+		});
+	}
+});
 
-	</script>
+</script>
 
-	<script src="/assets/js/bootstrap.min.js"></script>
-	<script src="/assets/js/calendar/js/bootstrap-datepicker.min.js"></script>
-	<script>
-	$('.datePicker').datepicker({
-		format: "yyyy-m-dd",
-		maxViewMode: 2,
-		todayBtn: true,
-		language: "fr",
-		calendarWeeks: true,
-		autoclose: true,
-		todayHighlight: true
-	});
-	</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/calendar/js/bootstrap-datepicker.min.js"></script>
+<script>
+$('.datePicker').datepicker({
+	format: "yyyy-m-dd",
+	maxViewMode: 2,
+	todayBtn: true,
+	language: "fr",
+	calendarWeeks: true,
+	autoclose: true,
+	todayHighlight: true
+});
+</script>
 
-	<script src="STOP/assets/js/bootstrap-datepicker.min.js"></script>
-	<script>
-	/*
-	$(document).ready(function() {
-	$('#datePicker')
-	.datepicker({
-	format: 'yyyy-mm-dd'
+<script src="STOP/assets/js/bootstrap-datepicker.min.js"></script>
+<script>
+/*
+$(document).ready(function() {
+$('#datePicker')
+.datepicker({
+format: 'yyyy-mm-dd'
 })
 .on('changeDate', function(e) {
 // Revalidate the date field
