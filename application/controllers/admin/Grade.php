@@ -29,7 +29,7 @@ class Grade extends MY_AdminController {
 	}
 
 	// TODO index (list) and grade methods
-	public function index($dest)
+	public function index($dest = NULL)
 	{
 		if( ! $dest)
 		{
