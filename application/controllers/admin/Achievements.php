@@ -8,6 +8,12 @@ class Achievements extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('Achievements_model','',TRUE);
+		$submenu = array();
+
+		$submenu[] = array('title' => 'Gestion des badges', 'url' => '/admin/achievements');
+		$submenu[] = array('title' => 'Attribution', 'url' => '#');
+		$submenu[] = array('title' => 'Liste les élèves', 'url' => '#');
+		$this->data['submenu'] = $submenu;
 	}
 
 
@@ -28,7 +34,7 @@ class Achievements extends CI_Controller {
 				case 'add':
 				$this->Achievements_model->add($data);
 				break;
-				
+
 				case 'update':
 				$this->Achievements_model->update($data);
 				break;
