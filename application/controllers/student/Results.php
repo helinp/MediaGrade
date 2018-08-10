@@ -26,6 +26,12 @@ class Results extends MY_Controller {
 			$this->school_year = get_school_year();
 		}
 
+		$submenu = array(
+			array('title' => 'Par projet', 'url' => '/student/results'),
+			array('title' => 'Par compétence', 'url' => '/student/results/by_skill'),
+		);
+		$this->data['submenu'] = $submenu;
+
 		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($this->session->class, $this->school_year, 'ASC');
 		$this->data['projects'] = $this->projects;
 
@@ -48,9 +54,27 @@ class Results extends MY_Controller {
 
 		//dump(	$this->data['projects']);
 	//	$this->data['projects'] = $this->projects;
-		$this->load->helper('deadline');
-		$this->load->helper('assessment');
+
 		$this->data['page_title'] = _('Mes résultats');
 		$this->load->template('student/results_overview', $this->data);
+	}
+
+	public function by_skill()
+	{
+		$skills = $this->Skills_model->getAllSkills();
+		$results_by_skill = array();
+
+		foreach ($skills as $skill_index => $skill)
+		{
+			$results_by_skill[$skill_index]['results'] = $this->Results_model->getUserResultsBySkill($skill->id);
+			$results_by_skill[$skill_index]['result'] = $this->Results_model->getUserResultBySkillId($skill->id);
+
+			$results_by_skill[$skill_index]['skill'] = $skill;
+		}
+
+
+		$this->data['results_by_skill'] = $results_by_skill;
+		$this->data['page_title'] = _('Mes résultats par compétence');
+		$this->load->template('results_by_skill', $this->data);
 	}
 }

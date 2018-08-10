@@ -50,11 +50,13 @@ Class Users_model extends CI_Model
 		$avatar = $this->getUserAvatar();
 		$this->session->set_userdata('avatar', $avatar);
 
-		$this->session->set_userdata('class_name', $class_description);
+		$class_name = @$this->Classes_model->getClass($this->session->class)->class_name;
+		$this->session->set_userdata('class_name', $class_name);
 
 		$this->session->unset_userdata('password');
 		$this->session->unset_userdata('salt');
 		$this->session->unset_userdata('picture');
+
 	}
 
 	/**

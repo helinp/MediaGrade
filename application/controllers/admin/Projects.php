@@ -25,7 +25,7 @@ class Projects extends MY_AdminController {
 
 		$submenu = array(
 			array('title' => 'Nouveau', 'url' => '/admin/project/management/new'),
-			array('title' => 'Vue d\'ensemble', 'url' => '/admin/projects'),
+			array('title' => 'Tous les projets', 'url' => '/admin/projects'),
 			array('title' => 'Statistiques', 'url' => '/admin/project/statistics')
 		);
 		$this->data['submenu'] = $submenu;
@@ -64,7 +64,7 @@ class Projects extends MY_AdminController {
 
 			// For progress bar
 			$n_files_to_submit = $project->number_of_files;
-			$n_submitted = $this->Submit_model->getNSubmittedByProjectId($project->project_id) / $n_files_to_submit;
+			$n_submitted = ($n_files_to_submit > 0 ? $this->Submit_model->getNSubmittedByProjectId($project->project_id) / $n_files_to_submit : 0);
 			$n_graded = count($this->Grade_model->listUngradedProjectsByProjectId($project->project_id));
 
 			$this->data['n_students'][$project->project_id] = $n_students;

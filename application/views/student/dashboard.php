@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-		<div class="col-lg-4 col-md-4 col-xs-12 ">
+	<!--	<div class="col-lg-4 col-md-4 col-xs-12 ">
 			<div class="panel panel-success">
 				<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Derniers résultats')?> <span class="badge"><?= count($graded) ?></span></div>
 				<div class="panel-body text-left">
@@ -54,8 +54,8 @@
 					</table>
 				</div>
 			</div>
-		</div>
-		<div class="col-lg-4 col-md-4 col-xs-12 ">
+		</div>-->
+    <!--<div class="col-lg-4 col-md-4 col-xs-12 ">
 			<div class="panel panel-info">
 				<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Moyenne générale')?></div>
 				<div class="panel-body text-left">
@@ -71,8 +71,28 @@
 					</table>
 				</div>
 			</div>
+		</div>-->
+
+    <div class="col-lg-4 col-md-4 col-xs-12 ">
+			<div class="panel panel-info">
+				<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Tendance générale')?></div>
+				<div class="panel-body text-left">
+					<big  class="overall-results" style="border: 1px white solid;font-size: 4em;color:white;text-align: center;display:block;background-color:<?=returnLSUColorFromPercentage($total_year_result) ?>" data-toggle="tooltip" data-placement="top" title="<?= returnTextExplainationsFromPercentage($total_year_result) ?>">
+            <?= returnFunMentionTextFromPercentage($total_year_result)?>
+          </big>
+					<table class="table small">
+						<tr style="color: white;">
+							<?php foreach ($terms_results as $overall_result): ?>
+							<td style="border: 1px solid white;width:<?= 100 / count($terms_results)?>%;text-align: center;background-color:<?=returnLSUColorFromPercentage($overall_result['results']) ?>" data-toggle="tooltip" data-placement="bottom" title="<?= returnTextExplainationsFromPercentage($overall_result['results']) ?>">
+								<b><?= $overall_result['term_name'] ?></b><br><?= ($overall_result['results'] ? returnFunMentionTextFromPercentage($overall_result['results']) : '-')  ?>
+							</td>
+							<?php endforeach; ?>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
-    </div>
+  </div>
 
 	<div class="row" style="margin-top:1em">
 			<div class="col-lg-12 col-md-12 col-xs-12 ">
@@ -101,48 +121,9 @@
 								},
 								min: 0, max: 100,
 
-								plotBands: [{
-									from: 80,
-									to: 100,
-									color: 'rgba(204, 255, 153, .5)',
-									label: {
-										text: 'Très bonne maîtrise',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 60,
-									to: 79,
-									color: 'rgba(229, 255, 204, .5)',
-									label: {
-										text: 'Maîtrise satisfaisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 50,
-									to: 59,
-									color: 'rgba(255, 229, 204, .5)',
-									label: {
-										text: 'Maîtrise fragile',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 0,
-									to: 49,
-									color: 'rgba(255, 204, 204, .5)',
-									label: {
-										text: 'Maîtrise insuffisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}
-							]},
+                <?= getPlotLinesJS() ?>
+
+								},
 						    series: [<?= $graph_results ?>, {
 						        type: 'spline',
 						        name: 'Total pondéré',
@@ -156,7 +137,6 @@
 						    }]
 						});
 						</script>
-
 
 					</div>
 				</div>
@@ -234,48 +214,7 @@
 								},
 								min: 0, max: 100,
 
-								plotBands: [{
-									from: 80,
-									to: 100,
-									color: 'rgba(204, 255, 153, .5)',
-									label: {
-										text: 'Très bonne maîtrise',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 60,
-									to: 79,
-									color: 'rgba(229, 255, 204, .5)',
-									label: {
-										text: 'Maîtrise satisfaisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 50,
-									to: 59,
-									color: 'rgba(255, 229, 204, .5)',
-									label: {
-										text: 'Maîtrise fragile',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 0,
-									to: 49,
-									color: 'rgba(255, 204, 204, .5)',
-									label: {
-										text: 'Maîtrise insuffisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}
-							]
+                <?= getPlotLinesJS() ?>
 							},
 
 							plotOptions: {
@@ -308,8 +247,7 @@
 							        },
 
 							        title: {
-							            text: '',
-							            x: -80
+							            text: ''
 							        },
 
 							        pane: {
@@ -318,16 +256,18 @@
 
 							        xAxis: {
 							            categories: ["<?= implode("\", \"", array_column((array) $criterion_results, 'conca')) ?>"],
-							            tickmarkPlacement: 'on',
-							            lineWidth: 0
+							            tickColor: '#FFFFFF',
+                          tickWidth: 3
 							        },
 
 							        yAxis: {
-							            gridLineInterpolation: 'polygon',
-							            lineWidth: 0,
+
+                          tickInterval: 100,
 							            min: 0,
-										max: 100,
- 										tickInterval: 20
+      										max: 100,
+
+                    <?= getPlotLinesJS() ?>
+
 							        },
 
 							        tooltip: {

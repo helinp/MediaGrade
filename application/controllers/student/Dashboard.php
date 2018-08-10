@@ -10,6 +10,7 @@ class Dashboard extends MY_Controller {
 		$this->load->helper('text');
 		$this->load->helper('school');
 		$this->load->helper('graph');
+		$this->load->helper('assessment');
 
 		if($this->input->get('school_year'))
 		{
