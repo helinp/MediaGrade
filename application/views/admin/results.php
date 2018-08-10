@@ -2,6 +2,19 @@
 	<?php $this->view('templates/submenu'); ?>
 	<div class="row chapeau hidden-print">
 		<div class="col-xs-6  col-md-6">
+			<form  style="margin-top:1.1em!important">
+
+				<label class="radio-inline">Vue: </label>
+		    <label class="radio-inline">
+		      <input type="radio" id="radio-colors" name="optradio" onclick="switchDisplayMode()" checked>Couleurs
+		    </label>
+		    <label class="radio-inline">
+		      <input type="radio" id="radio-votes" name="optradio" onclick="switchDisplayMode()">Points
+		    </label>
+				<label class="radio-inline">
+					<input type="radio" id="radio-both" name="optradio" onclick="switchDisplayMode()">Couleurs & Points
+				</label>
+		  </form>
 		</div>
 		<div class="col-xs-6  col-md-6">
 			<div class="form-group pull-right">
@@ -28,7 +41,7 @@
 
 	<?php if(isset($table_header)):?>
 		<div id="dvData" style="overflow-y: auto;margin-bottom: 1em;">
-			<table class="table table-hover table-striped" style="margin-top:5em">
+			<table class="table table-hover" id="table-gradebook" style="margin-top:5em">
 				<thead>
 					<tr>
 						<th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class->id?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
@@ -67,24 +80,29 @@
 				<tbody>
 					<td></td>
 					<?php foreach ($table_body as $student): ?>
-						<tr style="width:5em">
-							<td><?= $student['last_name'] . ' ' . $student['first_name']?></td>
+						<tr>
+							<td style="min-width:10em"><?= $student['last_name'] . ' ' . $student['first_name']?></td>
 							<?php foreach ($student['results'] as $projects_results): ?>
 								<?php foreach ($projects_results as $result): ?>
-									<td>
+									<td  style="width:.5em">
 										<?php if(isset($result->max_vote)): ?>
-											<span class="gradebook-lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
-												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">&nbsp;&nbsp;</span>
-												<a data-toggle="modal" data-target="#projectModal" <?php if ($result->user_vote < ($result->max_vote / 2) && is_numeric($result->user_vote)) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) . '<small>/' . $result->max_vote?></small></a>
+											<a href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>" data-toggle="modal" data-target="#projectModal"><span class="gradebook-lsu"  style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
+												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">
+													&nbsp;&nbsp;&nbsp;</span></a>
+
+											<small>	<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal" <?php if (is_numeric($result->user_vote && $result->user_vote < ($result->max_vote / 2))) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) . '/' . $result->max_vote?></small></a>
 											<?php else: ?>
-												NE
+												<span class="gradebook-lsu" style="background: white"
+													data-toggle="tooltip" data-placement="top" title="Non Evalué">&nbsp;&nbsp;&nbsp;</span>
+
+													<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal"><small>NE</small></a>
 											<?php endif ?>
 										</td>
 									<?php endforeach ?>
 								<?php endforeach ?>
 								<td<?php if ($student['average'] < 50 && is_numeric($student['average'])) echo(' class="text-danger dotted_underline" ') ?>>
 								<span class="gradebook-lsu" style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode($student['average'])) ?>"
-									data-toggle="tooltip" data-placement="top" title="<?= returnLSUMentionTextFromPercentage($student['average']) ?>">&nbsp;&nbsp;</span> <?= $student['average']?></td>
+									data-toggle="tooltip" data-placement="top" title="<?= returnLSUMentionTextFromPercentage($student['average']) ?>"><?= $student['average']?></span></td>
 									<td<?php if ($student['deviation'] < 0 && is_numeric($student['deviation'])) echo(' class="text-danger dotted_underline" ') ?>><small><?= $student['deviation']?></small></td>
 								</tr>
 							<?php endforeach ?>
@@ -184,3 +202,26 @@
 		$(e.target).removeData('bs.modal');
 	});
 	</script>
+
+	<script>
+		// display model
+		$(document).ready(function () {
+			$('.gradebook-lsu').show();
+			$('.gradebook-vote').hide();
+		});
+		function switchDisplayMode() {
+
+			if (document.getElementById("radio-votes").checked) {
+				$('.gradebook-lsu').hide();
+				$('.gradebook-vote').show();
+			}
+			else if (document.getElementById("radio-colors").checked) {
+				$('.gradebook-lsu').show();
+				$('.gradebook-vote').hide();
+			}
+			else if (document.getElementById("radio-both").checked) {
+					$('.gradebook-lsu').show();
+					$('.gradebook-vote').show();
+				}
+		}
+		</script>

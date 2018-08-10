@@ -125,48 +125,12 @@
 								title: {
 									text: '<?= _('Max. /10') ?>'
 								},
-								plotBands: [{
-									from: 8,
-									to: 10,
-									color: 'rgba(204, 255, 153, .5)',
-									label: {
-										text: 'Très bonne maîtrise',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 6,
-									to: 7.9,
-									color: 'rgba(229, 255, 204, .5)',
-									label: {
-										text: 'Maîtrise satisfaisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 5.0,
-									to: 5.9,
-									color: 'rgba(255, 229, 204, .5)',
-									label: {
-										text: 'Maîtrise fragile',
-										style: {
-											color: '#808080'
-										}
-									}
-								}, {
-									from: 0,
-									to: 4.9,
-									color: 'rgba(255, 204, 204, .5)',
-									label: {
-										text: 'Maîtrise insuffisante',
-										style: {
-											color: '#808080'
-										}
-									}
-								}
-							]
+								allowDecimals: false,
+								tickInterval: 1,
+								lineWidth: 2,
+								min: 0,
+								max: 10,
+								<?= getPlotLinesJS(1) ?>
 
 							},
 							yAxis: {

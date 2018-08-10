@@ -101,8 +101,6 @@ class Project extends MY_AdminController {
 
 			$this->load->helper('text');
 			$this->load->helper('deadline');
-
-
 		}
 		$this->load->template('admin/project_management', $this->data, $this->input->get('modal'));
 
@@ -210,6 +208,7 @@ class Project extends MY_AdminController {
 						'skill_id' 			=> $this->input->post('skill_ids')[$key],
 						'criterion'			=> $this->input->post('criterion')[$key],
 						'cursor' 			=> $this->input->post('cursor')[$key],
+						'grading_type' 			=> $this->input->post('grading_type')[$key],
 						'max_vote' 			=> $this->input->post('max_vote')[$key],
 						'achievement_id' 	=> $this->input->post('achievement_id')[$key],
 						);

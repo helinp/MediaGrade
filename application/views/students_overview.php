@@ -1,4 +1,5 @@
 <div id="content" class="col-xs-12 col-md-10 ">
+		<?php $this->view('templates/submenu'); ?>
 	<div class="row chapeau">
 		<div class="col-xs-7 col-md-7">
 		</div>
@@ -26,11 +27,12 @@
 
 	<!-- ACHIEVEMENTS -->
 	<div class="row" style="margin-top:1em">
-		<?php $class_txt = NULL?>
+		<?php $class_txt = NULL; ?>
 		<?php foreach($students as $student): ?>
 			<?php if($student->class !== $class_txt)
 			{
-				echo '<div class="col-lg-12 col-xs-12"><h3>'. $student->class . '</h3></div>';$class_txt=$student->class;
+				echo '<div class="col-lg-12 col-xs-12"><h3>'. $student->class_name . '</h3></div>';
+				$class_txt = $student->class;
 			}
 			?>
 			<div class="col-lg-2 col-md-3 col-xs-4 ">
@@ -152,28 +154,7 @@ Highcharts.SparkLine = function (a, b, c) {
 			softMin: 50,
 			max: 100,
 			tickPositions: [0],
-			plotLines: [{
-				color: 'rgba(125,125,125,.35)',
-				dashStyle: 'solid',
-				width: 1,
-				value: 50,
-				zIndex: 3,
-				opacity: 0.25,
-			},{
-				color: 'rgba(125,125,125,.45)',
-				dashStyle: 'dot',
-				width: 1,
-				value: 100,
-				zIndex: 3,
-				opacity: 0.25
-			},{
-				color: 'rgba(125,125,125,.45)',
-				dashStyle: 'dot',
-				width: 1,
-				value: 0,
-				zIndex: 3,
-				opacity: 0.25
-			}]
+			<?= getPlotLinesJS() ?>
 		},
 		legend: {
 			enabled: false

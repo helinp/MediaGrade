@@ -116,4 +116,53 @@
 
         return $gauss;
     }
+
+    function getPlotLinesJS($ratio = 10)
+    {
+      return        "plotLines: [{
+                        color: 'rgb(217, 83, 79)',
+                        dashStyle: 'dash',
+                        value: " . 0 * $ratio . ",
+                        width: 2,
+                        zIndex: 6,
+                        label: {
+                          text: 'Non acquis',
+                          align: 'left',
+
+                        }
+                      },
+                      {
+                        color: 'rgb(240, 173, 78)',
+                        dashStyle: 'dash',
+                        value:  " . 4 * $ratio . ",
+                        width: 2,
+                        zIndex: 10,
+                        label: {
+                          text: 'En Acquisition',
+                          align: 'left'
+                        }
+                      },
+                      {
+                        color: 'rgb(92, 184, 92)',
+                        dashStyle: 'dash',
+                        value:  " . 7 * $ratio . ",
+                        width: 2,
+                        zIndex: 10,
+                        label: {
+                          text: 'Acquis',
+                          align: 'left'
+                        }
+                      },
+                      {
+                        color: 'rgb(51, 122, 183)',
+                        dashStyle: 'dash',
+                        value:  " . 10 * $ratio . ",
+                        width: 2,
+                        zIndex: 10,
+                        label: {
+                          text: 'Maitrisé',
+                          align: 'left'
+                        }
+                      }]";
+    }
 ?>

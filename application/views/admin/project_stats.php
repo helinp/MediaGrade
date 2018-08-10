@@ -30,7 +30,44 @@
 	</div>
 	<script src="/assets/js/highcharts.js"></script>
 	<!-- row -->
+
 	<div class="row">
+		<!-- Detailled Results -->
+		<div class="col-lg-12 col-md-12 col-xs-12 ">
+			<div class="panel panel-primary">
+				<div class="panel-heading text-center"><?= _('Résultats détaillés')?>  </div>
+				<div class="panel-body text-left" style="overflow-y: auto">
+					<table class="table table-striped">
+						<thead>
+							<tr style="height: 6em">
+								<th>Élève</th>
+								<?php foreach ($students_results[0]['results'] as $header): ?>
+									<th class="rotate">
+										<div>
+											<span data-toggle="tooltip" title="<?= $header->criterion?> -- L'élève a <?= $header->cursor?>"><small><?= character_limiter($header->criterion, 13)?></small></span>
+										</div>
+									</th>
+								<?php endforeach ?>
+								<th>Total</th>
+								<th>Remis le</th>
+							</tr>
+						</thead>
+						<?php foreach ($students_results as $student): ?>
+							<tr>
+								<td><?= $student['first_name'] . ' ' . $student['last_name']?></td>
+								<?php foreach ($student['results'] as $result): ?>
+									<td<?= @(($result->user_vote / $result->max_vote * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($result->user_vote ? $result->user_vote . ' / ' . $result->max_vote : '-') ?></td>
+								<?php endforeach ?>
+
+								<td<?= @(($student['overall']->total_user / $student['overall']->total_max * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($student['overall']->total_user ? $student['overall']->total_user . ' / ' . $student['overall']->total_max : '-')?></td>
+								<td><?= (isset($student['submitted_time']->time) ? $student['submitted_time']->time : '-')?></td>
+							</tr>
+						<?php endforeach ?>
+
+					</table>
+				</div>
+			</div>
+		</div>
 		<?php if($students_results): ?>
 			<!-- Nombre de remises -->
 			<div class="col-lg-4 col-md-4 col-xs-12 ">
@@ -343,42 +380,7 @@
 				</div>
 			</div>
 
-			<!-- Detailled Results -->
-			<div class="col-lg-12 col-md-12 col-xs-12 ">
-				<div class="panel panel-primary">
-					<div class="panel-heading text-center"><?= _('Résultats détaillés')?>  </div>
-					<div class="panel-body text-left" style="overflow-y: auto">
-						<table class="table table-striped">
-							<thead>
-								<tr style="height: 6em">
-									<th>Élève</th>
-									<?php foreach ($students_results[0]['results'] as $header): ?>
-										<th class="rotate">
-											<div>
-												<span data-toggle="tooltip" title="<?= $header->criterion?> -- L'élève a <?= $header->cursor?>"><small><?= character_limiter($header->criterion, 13)?></small></span>
-											</div>
-										</th>
-									<?php endforeach ?>
-									<th>Total</th>
-									<th>Remis le</th>
-								</tr>
-							</thead>
-							<?php foreach ($students_results as $student): ?>
-								<tr>
-									<td><?= $student['first_name'] . ' ' . $student['last_name']?></td>
-									<?php foreach ($student['results'] as $result): ?>
-										<td<?= @(($result->user_vote / $result->max_vote * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($result->user_vote ? $result->user_vote . ' / ' . $result->max_vote : '-') ?></td>
-									<?php endforeach ?>
 
-									<td<?= @(($student['overall']->total_user / $student['overall']->total_max * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($student['overall']->total_user ? $student['overall']->total_user . ' / ' . $student['overall']->total_max : '-')?></td>
-									<td><?= (isset($student['submitted_time']->time) ? $student['submitted_time']->time : '-')?></td>
-								</tr>
-							<?php endforeach ?>
-
-						</table>
-					</div>
-				</div>
-			</div>
 		<?php else: ?>
 			<div class="col-lg-12 col-md-12 col-xs-12 ">
 				<p><?= _('Aucun projet sélectionné')?>.</p>

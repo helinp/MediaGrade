@@ -29,7 +29,7 @@
 						<select id="student-select" class="form-control input-sm" name="student" onchange="this.form.submit()">
 							<?php foreach($students as $class): ?>
 								<?php foreach($class as $row): ?>
-									<?= '<option value="' . $row->id . '"' . ( $this->uri->segment(4) === $row->id  ? ' selected' : '') . '>' . $row->class_name . ' | ' . $row->first_name . ' ' . $row->last_name . '</option>' . "\n" ?>
+									<?= '<option value="' . $row->id . '"' . ( $this->uri->segment(4) === $row->id  ? ' selected' : '') . '>' . $row->first_name . ' ' . $row->last_name . '</option>' . "\n" ?>
 								<?php endforeach ?>
 							<?php endforeach?>
 						</select>
@@ -64,6 +64,7 @@
 			</div>
 		<?php endif ?>
 		<div class="row" style="margin-top:1em">
+
 			<div class="col-lg-4 col-md-4 col-xs-12 ">
 				<div class="panel panel-danger">
 					<div class="panel-heading text-center" style="background-color:#d9534f;color:white"><?= _('À remettre')?> <span class="badge"><?= count($not_submitted) ?></span></div>
@@ -99,24 +100,28 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="col-lg-4 col-md-4 col-xs-12 ">
 				<div class="panel panel-info">
-					<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Moyenne générale')?></div>
+					<div class="panel-heading text-center"  style="background-color:#2EB2FA;color:white"><?= _('Tendance générale')?></div>
 					<div class="panel-body text-left">
-						<big style="font-size: 4em;text-align: center;display:block;"><?= $total_year_result?>%</big>
+						<big class="overall-results" style="background-color:<?=returnLSUColorFromPercentage($total_year_result) ?>" data-toggle="tooltip" data-placement="top" title="<?= returnTextExplainationsFromPercentage($total_year_result) ?>">
+							<?= returnFunMentionTextFromPercentage($total_year_result)?>
+						</big>
 						<table class="table small">
-							<tr>
+							<tr style="color: white;">
 								<?php foreach ($terms_results as $term => $overall_result): ?>
-									<td style="text-align: center">
-										<?= $term ?><br><?= ($overall_result ? $overall_result . '%' : '-')  ?>
-									</td>
+								<td style="border: 1px solid white;width:<?= 100 / count($terms_results)?>%;text-align: center;background-color:<?=returnLSUColorFromPercentage($overall_result) ?>" data-toggle="tooltip" data-placement="bottom" title="<?= returnTextExplainationsFromPercentage($overall_result) ?>">
+									<b><?= $term ?></b><br><?= returnFunMentionTextFromPercentage($overall_result) ?>
+									<br />
+									(<?=$overall_result?>%)
+								</td>
 								<?php endforeach; ?>
 							</tr>
 						</table>
 					</div>
 				</div>
 			</div>
+
 		</div><!-- . row -->
 		<div class="row" style="margin-top:1em">
 			<!--
@@ -152,109 +157,15 @@
 					text: ''
 				},
 				xAxis: {
-					categories: [<?= $graph_projects_list ?>]
+					categories: [<?= $graph_projects_list ?>],
+					reversed: true
 				},
 				yAxis: {
 					title: {
 						text: '<?= _('Pourcentage') ?>'
 					},
 					min: 0, max: 100,
-					<?php if(FALSE): ?>
-					plotBands: [{
-						from: 95,
-						to: 102,
-						color: 'rgba(0, 0, 255, 0.05)',
-						label: {
-							text: 'Super-Héro',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 82,
-						to: 95,
-						color: 'rgba(0, 0, 0, 0)',
-						label: {
-							text: 'Professionnel',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 62,
-						to: 82,
-						color: 'rgba(0, 0, 255, 0.05)',
-						label: {
-							text: 'Amateur confirmé',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 50,
-						to: 62,
-						color: 'rgba(0, 0, 0, 0)',
-						label: {
-							text: 'Amateur',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 11,
-						to: 50,
-						color: 'rgba(0, 0, 255, 0.05)',
-						label: {
-							text: 'Tantine à la mer',
-							style: {
-								color: '#808080'
-							}
-						}
-					}]
-					<?php else: ?>
-					plotBands: [{
-						from: 80,
-						to: 100,
-						color: 'rgba(204, 255, 153, .5)',
-						label: {
-							text: 'Très bonne maîtrise',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 60,
-						to: 79,
-						color: 'rgba(229, 255, 204, .5)',
-						label: {
-							text: 'Maîtrise satisfaisante',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 50,
-						to: 59,
-						color: 'rgba(255, 229, 204, .5)',
-						label: {
-							text: 'Maîtrise fragile',
-							style: {
-								color: '#808080'
-							}
-						}
-					}, {
-						from: 0,
-						to: 49,
-						color: 'rgba(255, 204, 204, .5)',
-						label: {
-							text: 'Maîtrise insuffisante',
-							style: {
-								color: '#808080'
-							}
-						}
-					}
-				]
-				<?php endif ?>
+					<?= getPlotLinesJS() ?>
 			},
 			series: [<?= $graph_results ?>, {
 				type: 'spline',
@@ -298,48 +209,7 @@
 							text: 'Pourcentage'
 						},
 						min: 0, max: 100,
-						plotBands: [{
-							from: 80,
-							to: 100,
-							color: 'rgba(204, 255, 153, .5)',
-							label: {
-								text: 'Très bonne maîtrise',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 60,
-							to: 79,
-							color: 'rgba(229, 255, 204, .5)',
-							label: {
-								text: 'Maîtrise satisfaisante',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 50,
-							to: 59,
-							color: 'rgba(255, 229, 204, .5)',
-							label: {
-								text: 'Maîtrise fragile',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 0,
-							to: 49,
-							color: 'rgba(255, 204, 204, .5)',
-							label: {
-								text: 'Maîtrise insuffisante',
-								style: {
-									color: '#808080'
-								}
-							}
-						}
-					]
+						<?= getPlotLinesJS() ?>
 				},
 				plotOptions: {
 					column: {
@@ -391,48 +261,7 @@
 						min: 0,
 						max: 100,
 						tickInterval: 20,
-						plotBands: [{
-							from: 80,
-							to: 100,
-							color: 'rgba(204, 255, 153, .5)',
-							label: {
-								text: '',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 60,
-							to: 79,
-							color: 'rgba(229, 255, 204, .5)',
-							label: {
-								text: '',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 50,
-							to: 59,
-							color: 'rgba(255, 229, 204, .5)',
-							label: {
-								text: '',
-								style: {
-									color: '#808080'
-								}
-							}
-						}, {
-							from: 0,
-							to: 49,
-							color: 'rgba(255, 204, 204, .5)',
-							label: {
-								text: '',
-								style: {
-									color: '#808080'
-								}
-							}
-						}
-					]
+						<?= getPlotLinesJS() ?>
 				},
 				tooltip: {
 					shared: true,

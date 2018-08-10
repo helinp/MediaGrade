@@ -36,6 +36,12 @@ Class Assessment_model extends CI_Model
 	public $max_vote;
 
 	/**
+	* @var string
+	*/
+	public $grading_type;
+
+
+	/**
 	* Returns assessement grid for given project
 	*
 	* @param integer $project_id
@@ -44,7 +50,7 @@ Class Assessment_model extends CI_Model
 	*/
 	public function getAssessmentsByProjectId($project_id)
 	{
-		$sql ="	SELECT assessments.id, skills_group, skill_id, criterion, `cursor`, max_vote, achievement_id
+		$sql ="	SELECT assessments.id, skills_group, skill_id, criterion, `cursor`, max_vote, achievement_id, grading_type
 		FROM projects_assessments
 		LEFT JOIN assessments
 		ON projects_assessments.assessment_id = assessments.id

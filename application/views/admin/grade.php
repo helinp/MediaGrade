@@ -94,14 +94,38 @@
 					</thead>
 					<tbody>
 
-						<?php foreach ($assessment_table as $row): ?>
+						<?php foreach ($assessment_table as $index => $row): ?>
 
 							<tr>
 								<td><?= $row->skills_group ?></td>
 								<td><?= $row->criterion ?></td>
 								<td><?= $row->cursor ?></td>
 								<td>
-									<input name="user_vote[]" class="range-assessment" type="range" value="<?= ($row->user_vote <> -1 ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
+								<?php if($row->grading_type === 'default'): ?>
+									<input name="user_vote[]" data-grading-type="default" class="range-assessment" type="range" value="<?= ($row->user_vote <> -1 ? ($row->user_vote / $row->max_vote * 10) : '-1') ?>" max="10" min="-1" step="1">
+								<?php elseif($row->grading_type === 'lsu'): ?>
+									Todo
+								<?php elseif($row->grading_type === '4-steps'): ?>
+									<?php if($row->user_vote !== NULL) $curr_value = (int) ($row->user_vote / ($row->max_vote / 10));
+												else $curr_value = -1;?>
+									<div class="btn-group buttons-4-steps" data-toggle="buttons">
+										<label class="btn btn-sm btn-default<?= ($curr_value === -1 ? ' active' : '') ?>">
+								      <input type="radio" data-toggle="tooltip" data-placement="bottom" title="Non évalué"  name="user_vote[<?= $index ?>]" value="-1"<?= ($curr_value === -1 ? ' checked' : '') ?>>NE
+								    </label>
+								    <label class="btn btn-sm btn-danger<?= ($curr_value === (int) 0 ? ' active' : '') ?>">
+								      <input type="radio" data-toggle="tooltip" data-placement="bottom" title="Non aquis"  name="user_vote[<?= $index ?>]" value="0"<?= ($curr_value === 0 ? ' checked' : '') ?>>NA
+								    </label>
+										<label class="btn btn-sm btn-warning<?= ($curr_value === (int) 4 ? ' active' : '') ?>">
+											<input type="radio" data-toggle="tooltip" data-placement="bottom" title="En acquisition"  name="user_vote[<?= $index ?>]" value="4"<?= ($curr_value === 4 ? ' checked' : '') ?>>EA
+										</label>
+										<label class="btn btn-sm btn-success<?= ($curr_value === (int) 7 ? ' active' : '') ?>">
+											<input type="radio" data-toggle="tooltip" data-placement="bottom" title="Acquis"  name="user_vote[<?= $index ?>]" value="7"<?= ($curr_value === 7 ? ' checked' : '') ?>>&nbsp;A
+										</label>
+										<label class="btn btn-sm btn-primary<?= ($curr_value === (int) 10 ? ' active' : '') ?>">
+											<input type="radio" data-toggle="tooltip" data-placement="bottom" title="Maitrisé" name="user_vote[<?= $index ?>]" value="10"<?= ($curr_value === 10 ? ' checked' : '') ?>>&nbsp;M
+										</label>
+									</div>
+								<?php endif ?>
 									<span class="small" data-onload="genAssessment()"></span>
 									<input type="hidden" name="assessments_id[]" value="<?= $row->id?>">
 								</td>
@@ -129,8 +153,7 @@
 
 
 	<script>
-	function getAssessment(currVal, maxVal) {
-
+	function getDefaultAssessment(currVal, maxVal) {
 
 		var append = " (" + currVal + " / " + maxVal + ")";
 		switch(Math.round(currVal / maxVal * 10)){
@@ -176,6 +199,30 @@
 		}
 	}
 
+	function get4StepsAssessment(currVal, maxVal) {
+
+		var append = " (" + currVal + " / " + maxVal + ")";
+		switch(currVal / maxVal){
+
+			case 4:
+			return("(A) Très bonne maitrise" + append);
+			break;
+			case 3:
+			return("(A) Satisfaisant" + append);
+			break;
+			case 2:
+			return("(EA) Faible" + append);
+			break;
+			case 1:
+			return("(NA) Non acquis" + append);
+			break;
+			case -1:
+			return("<?= _('(NE) Non évalué') ?>");
+			break;
+		}
+	}
+
+	// Show balanced vote
 	$('input.range-assessment').on( "input", function(){
 		$("input.range-assessment").change(function(){
 			var newval = $(this).val();
@@ -183,19 +230,24 @@
 		});
 	} );
 
+	// Gets text assessment
+	$('input.range-assessment').on( "input", function() {
+		var currValue = $(this).val();
+		var maxValue = $(this).attr('max');
+		var gradingType = $(this).attr('data-grading-type');
+		var maxVote = $(this).attr('data-max-vote');
+		var userVote = $(this).attr('data-user-vote');
+		var text = "";
 
-	function genAssessment() {
+		if(gradingType == "default") {
+			text = getDefaultAssessment(currValue, maxValue);
+		} else if (gradingType == "4-steps") {
+			text = get4StepsAssessment(currValue, maxValue);
+		}
+		$(this).next().text(text);
+	});
 
-		var currValue =  $( this  ).val();
-		var maxValue = $( this  ).attr('max');
 
-		var text = getAssessment(currValue, maxValue);
-
-		$( this  ).next().text(text);
-
-	}
-
-	$('input.range-assessment').on( "input", genAssessment );
 	$('input.range-assessment').trigger( "input" ); // generates input call onload
 	</script>
 
