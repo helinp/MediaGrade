@@ -135,10 +135,11 @@ Class Projects_model extends CI_Model
 		$this->db->distinct();
 		$this->db->join('classes', 'classes.id = projects.class');
 		$this->db->join('terms', 'terms.id = projects.term');
+		$this->db->join('users', 'admin_id = users.id');
 		$this->db->select("	projects.id as project_id,
 									project_name,
 									school_year,
-									class,
+									projects.class AS class,
 									classes.name AS class_name,
 									term,
 									terms.name AS term_name,
@@ -147,6 +148,7 @@ Class Projects_model extends CI_Model
 									instructions_txt,
 									number_of_files,
 									is_activated,
+									users.last_name AS teacher_name,
 									deadline as raw_deadline,
 									DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
 									material");
@@ -169,6 +171,10 @@ Class Projects_model extends CI_Model
 			{
 				$wheres[$i] = 'school_year';
 			}
+			elseif($wheres[$i] === 'Class')
+			{
+				$wheres[$i] = 'projects.class';
+			}
 			elseif($wheres[$i] === 'Order')
 			{
 				$order = strtoupper($args[$i]);
@@ -181,7 +187,7 @@ Class Projects_model extends CI_Model
 			}
 		}
 
-		$this->db->order_by('class', $order);
+		$this->db->order_by('projects.class', $order);
 		//$this->db->order_by('id', 'ASC');
 		$this->db->order_by('term', $order);
 		$this->db->order_by('raw_deadline',  $order);

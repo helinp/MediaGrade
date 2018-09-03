@@ -9,7 +9,7 @@
 
 	<?php foreach($results_by_skill as $result): ?>
 		<?php if($result['results'] !== '--'):?>
-			<div class="row" style="margin-top:1em">
+
 				<div class="row results-overview-row">
 					<div class="col-md-4" style="border-left:none">
 						<h5>Compétence</h5>
@@ -38,7 +38,7 @@
 							</table>
 						</div>
 					</div>
-				</div>
+
 			<?php endif ?>
 		<?php endforeach ?>
 	</div>

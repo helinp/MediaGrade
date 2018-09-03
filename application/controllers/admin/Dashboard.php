@@ -25,27 +25,35 @@ class Dashboard extends MY_AdminController {
 		$class = $this->input->get('classe');
 
 		$skills_groups = $this->Skills_model->getAllSkillsGroups();
-		$gauss  = array();
 
+		$gauss  = array();
 		foreach ($skills_groups as $skills_group)
 		{
 			$gauss[] = $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $this->school_year, $this->session->id, $skills_group->name);
 		}
-
 		$this->data['gauss'] =  $gauss;
 
+		$skills_stats = $this->Results_model->getSkillsStatsByClassAndSchoolYear($class, $this->school_year);
+		$this->data['skills_stats'] = $skills_stats;
 		// get skills results and stats
+		/*
 		$skills_results_query = $this->Results_model->getSkillsResultsByClassAndSchoolYear($class, $this->school_year);
 		$skills_results = array();
-		$skills_stats = $this->Results_model->getSkillsStatsByClassAndSchoolYear($class, $this->school_year);
-
 		foreach ($skills_results_query as $result)
 		{
-			$skill_id = $this->Skills_model->getSkillById($result->skill_id)->skill_id;
-			$skills_results[$skill_id] = $result->percentage;
+			if($result->skill_id > 0)
+			{
+				$skill_id = @$this->Skills_model->getSkillById($result->skill_id)->skill_id;
+				$skills_results[$skill_id] = $result->percentage;
+			}
+			else
+			{
+					$skills_results['x_error'] = $result->percentage;
+			}
 		}
 		ksort($skills_results);
-
+		$this->data['skills_results'] = $skills_results;
+*/
 		$this->data['active_projects'] = $this->Projects_model->getAllActiveAndCurrentProjects($class);
 		$this->data['assessed_skills'] = $this->_getCountAssessments($class);
 		$this->data['current_school_year'] = $this->school_year;
@@ -57,8 +65,6 @@ class Dashboard extends MY_AdminController {
 		$this->data['ranking_top'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('DESC', 60, 5, FALSE, $class, $this->school_year);
 		$this->data['ranking_bottom'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('ASC', 60, FALSE, FALSE, $class, $this->school_year);
 		$this->data['skills_groups'] = $skills_groups;
-		$this->data['skills_results'] = $skills_results;
-		$this->data['skills_stats'] = $skills_stats;
 		$this->data['skills_usage'] = $this->Skills_model->getSkillsUsageByClass($class, FALSE, $this->school_year);
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
 

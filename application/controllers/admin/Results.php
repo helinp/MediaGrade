@@ -28,11 +28,11 @@ class Results extends MY_AdminController {
 		$submenu = array();
 		$submenu[] = array('title' => 'Cahier de cotes', 'url' => '/admin/results');
 		$submenu[] = array('title' => 'Trombinoscope', 'url' => '/admin/results/detail_by_class');
-		$submenu[] = array('title' => 'Dashboard élève', 'url' => '/admin/results/detail_by_student');
+		$submenu[] = array('title' => 'Fiche élève', 'url' => '/admin/results/detail_by_student');
 		$submenu[] = array('title' => 'Résultats simplifiés élève', 'url' => '/admin/results/overview');
 		$this->data['submenu'] = $submenu;
 	}
-	
+
 	public function index()
 	{
 		if($this->input->get('classe'))

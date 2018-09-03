@@ -6,7 +6,6 @@
 
 			<?= ($instructions->txt ? $instructions->txt['instructions'] : '') ?>
 			<?= makeHtmlObjectForPdf($instructions->pdf)?>
-
 			<h3 style="margin-top:2em"><?= _('Grille d\'évaluation')?></h3>
 			<table class="table table-hover table-striped">
 				<thead>
@@ -20,7 +19,7 @@
 				<tbody>
 					<?php foreach($assessment_table as $row): ?>
 						<tr>
-							<td><?= $row->skills_group ?></td>
+							<td><span data-toggle="tooltip" title="<?= $row->skill_description ?>"><?= $row->skill_id ?></span></td>
 							<td><?= $row->criterion ?></td>
 							<td><?= $row->cursor ?></td>
 							<td><strong><?= $row->max_vote ?></strong></td>

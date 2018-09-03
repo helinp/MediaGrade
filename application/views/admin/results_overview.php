@@ -43,6 +43,8 @@
 			<div class="col-md-4">
 				<h5>Mise en situation</h5>
 				<p class="text-context"><?= ( isset($project->instructions_txt) && !empty(unserialize($project->instructions_txt)['context']) ? unserialize($project->instructions_txt)['context'] : '^_^')?></p>
+
+
 				<h5>Commentaires sur ton projet</h5>
 				<p><?= ( isset($project->comments) && !empty($project->comments) ? $project->comments : '- -')?></p>
 			</div>

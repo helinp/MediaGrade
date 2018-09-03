@@ -20,24 +20,7 @@
 
     <!-- PANELS -->
     <div class="row" style="margin-top:1em">
-        <div class="col-lg-4 col-md-4 col-xs-12 ">
-            <div class="panel panel-danger">
-                <div class="panel-heading text-center" style="background-color:#d9534f;color:white"><?= _('À remettre')?> <span class="badge"><?= count($not_submitted) ?></span></div>
-                <div class="panel-body text-left">
-                    <table class="table table-striped small">
-                        <?php foreach($not_submitted as $row): ?>
-                            <tr>
-                                <td><?= $row->term_name ?></td>
-                                <td><?= $row->project_name ?></td>
-                                <td><?= $row->deadline; ?></td>
-                                <td><a data-toggle="modal" data-target="#projectModal" href="/student/project/instructions/<?= $row->project_id?>"><span class="glyphicon glyphicon-file" data-toggle="tooltip" data-placement="top" title="Consignes"> </span></a></td>
-                                <td><a data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $row->project_id?>"><span data-toggle="tooltip" data-placement="top" title="Remise" class="glyphicon glyphicon-save"> </span></a></td>
-                            </tr>
-                        <?php endforeach ?>
-                    </table>
-                </div>
-            </div>
-        </div>
+
 	<!--	<div class="col-lg-4 col-md-4 col-xs-12 ">
 			<div class="panel panel-success">
 				<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Derniers résultats')?> <span class="badge"><?= count($graded) ?></span></div>
@@ -92,6 +75,9 @@
 				</div>
 			</div>
 		</div>
+
+
+
   </div>
 
 	<div class="row" style="margin-top:1em">
@@ -131,10 +117,13 @@
 								connectNulls: true,
 						        marker: {
 						            lineWidth: 2,
-						            lineColor: Highcharts.getOptions().colors[3],
+						            lineColor: Highcharts.getOptions().colors[1],
 						            fillColor: 'white'
 						        }
-						    }]
+						    }],
+
+
+                <?= getAutoColorsJS() ?>
 						});
 						</script>
 
@@ -226,7 +215,8 @@
 							series: [{
 								showInLegend: false,
 								data: [<?= implode(", ", $skills_results) ?>]
-							}]
+							}],
+              <?= getAutoColorsJS() ?>
 						});
 						</script>
 					</div>

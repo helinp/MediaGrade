@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |  $autoload['packages'] = array(APPPATH.'third_party', '/usr/local/shared');
 |
 */
-$autoload['packages'] = array();
+$autoload['packages'] = array(APPPATH.'third_party/ion_auth/');
 
 /*
 | -------------------------------------------------------------------
@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database', 'session');
+$autoload['libraries'] = array('database', 'session', 'ion_auth');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'dump');
+$autoload['helper'] = array('url', 'dump', 'assessment', 'graph');
 
 /*
 | -------------------------------------------------------------------
@@ -136,6 +136,7 @@ $autoload['model'] = array('Results_model',
 									'Grade_model',
 									'Skills_model',
 									'Classes_model',
+									'Courses_model',
 									'Terms_model',
 									'Projects_model',
 									'Submit_model',
@@ -143,5 +144,7 @@ $autoload['model'] = array('Results_model',
 									'Assessment_model',
 									'Comments_model',
 									'Achievements_model',
-									'Email_model'
+									'Email_model',
+									'Courses_model',
+									'Users_model'
 								);

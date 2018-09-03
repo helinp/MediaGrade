@@ -45,6 +45,7 @@ class Results extends MY_Controller {
 
 		foreach($this->projects as $key => $project)
 		{
+			$this->projects[$key]->self_assessments = $this->Submit_model->getSelfAssessmentByProjectId($project->project_id, TRUE);
 			$this->projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
 			$this->projects[$key]->results = $this->Results_model->getResultsByProjectAndUser($project->project_id, FALSE);
 			$this->projects[$key]->submitted = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id, FALSE);

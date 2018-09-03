@@ -47,6 +47,7 @@ class Projects extends MY_Controller {
 		$this->load->helper('deadline');
 		$this->load->helper('assessment');
 		$this->data['page_title'] = _('Mes projets');
-		$this->load->template('student/overview', $this->data);
+		$this->load->template('student/overview_row', $this->data);
+		//$this->load->template('student/overview', $this->data);
 	}
 }

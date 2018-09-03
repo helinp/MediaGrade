@@ -459,7 +459,8 @@ Class Results_model extends CI_Model
 		$this->db->from('results');
 		$this->db->join('projects', 'results.project_id = projects.id');
 		$this->db->join('assessments', 'assessments.id = results.assessment_id');
-		$this->db->select('assessments.max_vote, user_vote, skills_group, criterion, `cursor`');
+		$this->db->join('skills', 'assessments.skill_id = skills.id');
+		$this->db->select('assessments.max_vote, user_vote, skills.skills_group, skills.skill_id AS skill_id, skills.skill AS skill_description, criterion, `cursor`');
 		$this->db->select('(user_vote / assessments.max_vote * 100 ) AS percentage');
 
 		$this->db->where('results.project_id', $project_id);

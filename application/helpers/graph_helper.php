@@ -165,4 +165,25 @@
                         }
                       }]";
     }
+
+    function getAutoColorsJS($ratio = 10)
+    {
+      return "      plotOptions: {
+                        column: {
+                            zones: [{
+                                value: " . 4 * $ratio . ",
+                                color: 'rgb(217, 83, 79)'
+                              },{
+                                value: " . 7 * $ratio . ",
+                                color: 'rgb(240, 173, 78)'
+                              },{
+                                value: " . 10 * $ratio . ",
+                                color: 'rgb(92, 184, 92)'
+                              },{
+                                value: " . 11 * $ratio . ",
+                                color: 'rgb(51, 122, 183)'
+                              }]
+                          }
+                      },  ";
+    }
 ?>

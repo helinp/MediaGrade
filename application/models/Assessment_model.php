@@ -50,10 +50,12 @@ Class Assessment_model extends CI_Model
 	*/
 	public function getAssessmentsByProjectId($project_id)
 	{
-		$sql ="	SELECT assessments.id, skills_group, skill_id, criterion, `cursor`, max_vote, achievement_id, grading_type
+		$sql ="	SELECT assessments.id, assessments.skills_group, criterion, `cursor`, max_vote, achievement_id, grading_type, skills.skill_id, skill AS skill_description
 		FROM projects_assessments
 		LEFT JOIN assessments
 		ON projects_assessments.assessment_id = assessments.id
+		LEFT JOIN skills
+		ON skills.id = assessments.skill_id
 		WHERE project_id = ?
 		ORDER BY skills_group, assessments.id ";
 

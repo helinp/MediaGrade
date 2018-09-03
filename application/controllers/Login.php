@@ -5,12 +5,12 @@ class Login extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Users_model','',TRUE);
 
 	}
 
 	function index()
 	{
+
 		if($this->input->post())
 		{
 			$this->login_route();

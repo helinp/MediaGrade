@@ -35,6 +35,7 @@ class Dashboard extends MY_Controller {
 		$student_id = $this->session->id;
 		$skills_groups = $this->Skills_model->getAllSkillsGroups();
 		$graded_projects = array();
+
 		/**
 		 *  Get overall results for each projects
 		 **/
@@ -51,9 +52,12 @@ class Dashboard extends MY_Controller {
 				// Project has not been submitted, add to array
 				$not_submitted_projects[] = $project;
 
-				// Project has not been graded, put 'null' in array (required for highcharts)
+				// Project has not been graded, put string 'null' in array (required for highcharts)
 				$projects_overall_results[$project->project_id] = 'null';
 			}
+
+			// workaround for side menu: put on session
+			$this->session->set_userdata('not_submitted', count($not_submitted_projects));
 
 			// Note: a project can be graded even if not submitted
 			// Get overall user result

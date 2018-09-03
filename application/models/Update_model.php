@@ -9,6 +9,7 @@ Class Update_model extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->dbforge();
 	}
 
 	public function update_db()
@@ -16,10 +17,23 @@ Class Update_model extends CI_Model
 		$this->rebuild_config_table();
 	}
 
+
+	public function update_18_08()
+	{
+				$fields = array(
+		        'grading_type' => array(
+		                'type' => 'VARCHAR',
+		                'constraint' => '50',
+										'default' => 'default'
+		        ),
+					);
+				$this->dbforge->add_column('assessments', $fields);
+
+	}
+
 	private function rebuild_config_table()
 	{
 		// drop existent table
-		$this->load->dbforge();
 		$this->dbforge->drop_table('config');
 
 		// recreate it

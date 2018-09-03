@@ -53,6 +53,12 @@ function convertPercentageToLSUCode($percentage)
 	}
 }
 
+function returnLSUTextFromPercentage($percentage)
+{
+	$code = convertPercentageToLSUCode($percentage);
+	return returnLSUTextFromLSUCode($code);
+}
+
 function returnLSUTextFromLSUCode($code)
 {
 	if( ! is_numeric($code) || $code < 0 || $code > 4 || ! $code)

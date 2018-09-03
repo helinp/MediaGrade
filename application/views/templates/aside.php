@@ -40,7 +40,7 @@
 					<ul class="nav nav-sidebar" data-spy="affix" data-offset-top="90">
 						<li<?= ( $this->uri->segment(2) === 'dashboard' && !$this->uri->segment(2) ? ' class="active"' : '') ?>><a href="/student/dashboard"><span class="glyphicon glyphicon-dashboard"></span> <?= _('DASHBOARD') ?><span class="sr-only">(current)</span></a></li>
 						<li class="divider" role="separator"></li>
-						<li<?= ( $this->uri->segment(2) === 'projects'  ? ' class="active"' : '') ?>><a href="/student/projects"><span  class="glyphicon glyphicon-file"></span> <?= _('REMISES & PROJETS') ?></a></li>
+						<li<?= ( $this->uri->segment(2) === 'projects'  ? ' class="active"' : '') ?>><a href="/student/projects"><span  class="glyphicon glyphicon-file"></span> <?= _('REMISES & PROJETS') ?> <?php if($this->session->not_submitted): ?> <span class="badge"><?= $this->session->not_submitted ?></span><?php endif ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'results'  ? ' class="active"' : '') ?>><a href="/student/results"><span  class="glyphicon glyphicon-list-alt"></span> <?= _('RÉSULTATS') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'achievements'  ? ' class="active"' : '') ?>><a href="/student/achievements"><span  class="glyphicon glyphicon-education"></span> <?= _('MES BADGES') ?></a></li>
 						<li<?= ( $this->uri->segment(1) === 'gallery' && $this->uri->segment(3) ? ' class="active"' : '') ?>><a href="/gallery/0/1"><span  class="glyphicon glyphicon-sunglasses"></span> <?= _('MA GALLERIE') ?></a></li>
@@ -48,7 +48,7 @@
 						<li class="divider" role="separator"></li>
 						<li<?= ( $this->uri->segment(1) === 'gallery' && ! $this->uri->segment(3) ? ' class="active"' : '') ?>><a href="/gallery"><span  class="glyphicon glyphicon-film"></span> <?= _('GALLERIE') ?></a></li>
 						<li<?= ( $this->uri->segment(2) === 'class_list'  ? ' class="active"' : '') ?>><a href="/student/class_list">
-							<span class="glyphicon glyphicon-th"></span> <?= _('MA CLASSE') ?><span class="sr-only">(current)</span></a></li>
+							<span class="glyphicon glyphicon-th"></span> <?= _('TROMBINOSCOPE') ?><span class="sr-only">(current)</span></a></li>
 
 
 						</ul>

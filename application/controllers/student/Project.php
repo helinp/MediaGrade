@@ -145,13 +145,14 @@ class Project extends MY_Controller {
 		$extension_expected = $this->Submit_model->getAllowedSubmittedFileType($project_id);
 		$answers = '';
 
-		if ($number_of_files != $number_of_files_expected && ! empty($extension_expected))
+/*
+		if ($number_of_files !== $number_of_files_expected && ! empty($extension_expected))
 		{
 			// show_error(_("Vous avez remis $number_of_files sur $number_of_files_expected fichier(s)."));
 			$this->triggerError(_("Vous avez remis $number_of_files sur $number_of_files_expected fichier(s)."));
 		}
 		else
-		{
+		{*/
 			/**********************************************/
 			/******  Save Self assessment answers  ********/
 			/**********************************************/
@@ -167,7 +168,7 @@ class Project extends MY_Controller {
 					);
 					$i++;
 				}
-			}
+			/*}*/
 
 			/**********************************************/
 			/*************  Save Files  *******************/
@@ -270,7 +271,7 @@ class Project extends MY_Controller {
 
 		// Show success page
 		//$this->success(_('Ton projet a bien été téléversé!'));
-		echo _('Ton projet a bien été téléversé!');
+		echo _("Tu as remis $number_of_files sur $number_of_files_expected fichier(s).");
 	}
 
 	// error handler for dropzonejs
