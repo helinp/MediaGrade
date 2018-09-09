@@ -61,19 +61,20 @@ class Users extends MY_AdminController {
 			'class' 			=> $this->input->post('class'),
 			'email' 			=> $this->input->post('email'),
 			'active' 		=> $this->input->post('active'),
-			'password' 		=> $this->input->post('password')
+			'password' 		=> $this->input->post('password'),
+			'group_id' 		=> $this->Users_model->getRoleIdFromName($this->input->post('role'))
 			);
-
 
 		switch($action)
 		{
 			case 'add_user':
-				$user_id = $this->UsersManager_model->addUser($data);
-				if ($this->UsersManager_model->username_check($data['username']))
+				if ($this->Users_model->username_check($data['username']))
 				{
-					show_error('Nom d\'utilisation déjà utilisé');
+					show_error('Nom d\'utilisateur déjà utilisé');
 				}
-				$this->Roles_model->addRoleToUser($role_id, $user_id);
+
+				$user_id = $this->UsersManager_model->addUser($data);
+				//$this->Roles_model->addRoleToUser($role_id, $user_id);
 				break;
 
 			case 'update_user':

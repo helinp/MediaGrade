@@ -174,10 +174,11 @@
 				connectNulls: true,
 				marker: {
 					lineWidth: 2,
-					lineColor: Highcharts.getOptions().colors[3],
+					lineColor: Highcharts.getOptions().colors[1],
 					fillColor: 'white'
 				}
-			}]
+			}],
+			<?= getAutoColorsJS() ?>
 		});
 		</script>
 	</div>
@@ -220,7 +221,8 @@
 				series: [{
 					showInLegend: false,
 					data: [<?= implode(", ", $skills_results) ?>]
-				}]
+				}],
+				<?= getAutoColorsJS() ?>
 			});
 			</script>
 		</div>

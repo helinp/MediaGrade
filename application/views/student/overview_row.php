@@ -43,7 +43,7 @@
 
 				<div class="col-md-6">
 					<h5>Mise en situation</h5>
-					<p><?= unserialize($project->instructions_txt)['context'] ?> </p>
+					<p><?= unserialize($project->instructions_txt)['context'] ?></p>
 					--
 					<h5>
 						<a data-toggle="modal" data-target="#projectModal" href="/student/project/instructions/<?= $project->project_id ?>"><span class="glyphicon glyphicon-arrow-right"> </span> Consignes et grille d'évaluation détaillées</a>
@@ -51,6 +51,22 @@
 				</div>
 
 				<div class="col-md-3">
+					<?php if($project->submitted && $project->submitted_media[0]->extension == 'jpg' ): ?>
+						<h5>Remis</h5>
+						<div>
+							<?php foreach($project->submitted_media as $key => $media):?>
+								<a href="<?= $media->file?>" data-lightbox="project_<?= $project->project_id ?>">
+									<img class="image-clip-square" src="<?= $media->thumbnail ?>" />
+								</a>
+							<?php endforeach ?>
+							<?php $n_submitted =  count($project->submitted_media); ?>
+							<?php if($project->number_of_files > $n_submitted): ?>
+								<?php for($i = $project->number_of_files - $n_submitted ; $i <= $n_submitted ; $i++): ?>
+									<span class="image-clip-square"> </span>
+								<?php endfor ?>
+							<?php endif ?>
+						</div>
+					<?php endif ?>
 					<h5>Statut</h5>
 					<p>
 						<?php if($project->submitted): ?>
@@ -86,23 +102,30 @@
 			<!-- /. row term-->
 
 		<?php endforeach ?>
+	</div>
+
+
+
+	
+
+	<script src="/assets/js/lightbox.js"></script><!-- lightbox -->
+	<script>
+	lightbox.option({
+		'resizeDuration': 200,
+		'wrapAround': true,
+		'fitImagesInViewport':true
+	})
+</script> <!-- lightbox -->
+
+<!-- Modal -->
+<div class="modal sudo"  id="projectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content" style="padding:1em;"></div>
+	</div>
 </div>
-
-
-
-
-
-
-
-		<!-- Modal -->
-		<div class="modal sudo"  id="projectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content" style="padding:1em;"></div>
-			</div>
-		</div>
-		<!-- Updates modal-->
-		<script>
-		$(document).on('hidden.bs.modal', function (e) {
-			$(e.target).removeData('bs.modal');
-		});
-	</script>
+<!-- Updates modal-->
+<script>
+$(document).on('hidden.bs.modal', function (e) {
+	$(e.target).removeData('bs.modal');
+});
+</script>

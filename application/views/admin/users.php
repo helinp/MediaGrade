@@ -5,7 +5,7 @@
 	<div class="alert alert-danger" style="margin-top:1em;" role="alert"><?= LABEL_ADMIN_DANGER ?></div>
 	<div class="alert alert-info" style="margin-top:1em;" role="info"><?= _('<b>Conseil:</b> Le nom d\'utilisateur devrait toujours se présenter sous la forme <i>nom.prenom</i> et ne comporter ni d\'accent ni de caractères spéciaux.') ?></div>
 	<h3><?= _('Ajouter un élève')?></h3>
-	<form action="/admin/users/add_user" method="post">
+	<form action="/admin/users/<?= $this->uri->segment(3)?>/add_user" method="post">
 		<table id="rows" class="table">
 			<col width="5%">
 			<col width="15%">
@@ -17,19 +17,25 @@
 			<col width="10%">
 			<thead>
 				<tr>
-					<th><?= LABEL_CLASS ?></th>
-					<th><?= LABEL_LAST_NAME ?></th>
-					<th><?= LABEL_NAME ?></th>
+					<th><?= LABEL_CLASS ?>*</th>
+					<th><?= LABEL_LAST_NAME ?>*</th>
+					<th><?= LABEL_NAME ?>*</th>
 					<th><?= LABEL_EMAIL ?></th>
-					<th><?= LABEL_USERNAME ?></th>
-					<th><?= LABEL_PASSWORD ?></th>
+					<th><?= LABEL_USERNAME ?>*</th>
+					<th><?= LABEL_PASSWORD ?>*</th>
 					<th><?= _('Actif?')?></th>
 					<th><?= _('Actions')?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td><input name="class" class="form-control input-sm"></td>
+					<td>
+							<select class="form-control" name="class">
+									<?php foreach ($classes as $class):?>
+									<option value="<?= $class->id?>"><?= $class->name ?></option>
+									<?php endforeach ?>
+								</select>
+							</td>
 					<td><input name="last_name" class="form-control input-sm" required></td>
 					<td><input name="name" class="form-control input-sm" required></td>
 					<td><input name="email" class="form-control input-sm"></td>
@@ -46,7 +52,7 @@
 	<h3><?= _('Liste des élèves')?></h3>
 
 	<?php foreach($users as $class): ?>
-		<h4> <?= $classes[array_search($class{0}->class, array_column($classes, 'id'))]->description; ?> (<?= count($class) . ' ' . _('élèves')?>)</h4>
+		<h4> <?= @$this->Classes_model->getClass($class[0]->class)->description ?> (<?= count($class) . ' ' . _('élèves')?>)</h4>
 
 		<table class="table table-striped">
 			<col width="5%">

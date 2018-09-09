@@ -10,10 +10,8 @@ class Logout extends CI_Controller {
 	function index()
 	{
 		$this->ion_auth->logout();
-		$this->session->sess_destroy();
 		redirect('/', 'refresh');
 	}
 }
 
 ?>
-  

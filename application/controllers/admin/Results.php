@@ -443,6 +443,7 @@ class Results extends MY_AdminController {
 
 		foreach($projects as $key => $project)
 		{
+			$projects[$key]->self_assessments = $this->Submit_model->getSelfAssessmentByProjectId($project->project_id, TRUE);
 			$projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
 			$projects[$key]->results = $this->Results_model->getResultsByProjectAndUser($project->project_id, $student_id);
 			$projects[$key]->submitted = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id, $student_id);
@@ -456,6 +457,7 @@ class Results extends MY_AdminController {
 		$this->load->helper('assessment');
 		$this->data['projects'] = $projects;
 		$this->data['students'] = $students;
+		$this->data['student_id'] = $student_id;
 		$this->data['page_title'] = _('Remises et résultats');
 		$this->load->template('admin/results_overview', $this->data);
 

@@ -11,26 +11,24 @@
 				<h4><?= $project->project_name; ?><br /><small><?= $project->teacher_name . ' / '  .  $project->term_name; ?></small></h4>
 
 				<?php if(isset($project->submitted[0]) && isset($project->submitted[0]->file)): ?>
-					<?php foreach($project->submitted as $key => $media): ?>
-
+					<div>
+						<?php foreach($project->submitted as $key => $media): ?>
 							<?php if ($media->extension === 'mp4' || $media->extension ===  'mov' || $media->extension === 'avi' || $media->extension === 'mp3' || $media->extension === 'wav'):?>
-							<div class="embed-responsive embed-responsive-16by9 " >
-								<video class="embed-responsive-item thumbnail-180" preload="metadata" controls>
-									<source src="<?= $media->file?>" type="video/mp4">
-									</video>
-							</div>
-							<?php else: ?>
-							<div>
-								<a href="<?= $media->file?>" <?= ($key > 0 ? 'style="display:none;"': '') ?> data-lightbox="project_<?= $project->project_id ?>">
-									<img class="imageClip results-overview-thumb img-responsive" src="<?= $media->thumbnail?>" alt="Travail effectué mais non affiché." />
-								</a>
-							</div>
-								<?php if($key === 1):?>
-									<a href="<?= $media->file?>" data-lightbox="project_<?= $project->project_id ?>" style="margin-top:.5em"><span class="glyphicon glyphicon-plus-sign"> </span> <small>Voir les <?= count($project->submitted) ?> photographies</small></a>
-								<?php endif ?>
-							<?php endif ?>
-						<?php endforeach ?>
+								<div class="embed-responsive embed-responsive-16by9 " >
+									<video class="embed-responsive-item thumbnail-180" preload="metadata" controls>
+										<source src="<?= $media->file?>" type="video/mp4">
+										</video>
+									</div>
 
+								<?php else: ?>
+									<a href="<?= $media->file?>"  data-lightbox="project_<?= $project->project_id ?>">
+										<img <?= ($key > 0 ? 'class="image-clip-square"': 'class="imageClip results-overview-thumb img-responsive" style="border: solid 1px lightgray"') ?>  src="<?= $media->thumbnail?>" alt="Travail effectué mais non affiché." />
+									</a>
+
+								<?php endif ?>
+
+							<?php endforeach ?>
+						</div>
 					<?php else: ?>
 						<p class="text-danger">Travail non remis.</p>
 					<?php endif ?>
@@ -39,17 +37,27 @@
 					<h5>Mise en situation</h5>
 					<p class="text-context"><?= ( isset($project->instructions_txt) && !empty(unserialize($project->instructions_txt)['context']) ? unserialize($project->instructions_txt)['context'] : '^_^')?></p>
 					<?php if($project->self_assessments): ?>
-					<h5>Auto-évaluation</h5>
-					<a  data-toggle="collapse" href="#collapse_<?= $project->project_id ?>" aria-expanded="false" aria-controls="collapse_<?= $project->project_id ?>">
-						<span class="glyphicon glyphicon-resize-vertical"> </span> Voir les réponses...
-					</a>
-					<div class="collapse" id="collapse_<?= $project->project_id ?>">
-						<?php foreach($project->self_assessments as $self_assessment): ?>
-							<h6><?= $self_assessment['question'] ?></h6>
-							<p><?= (isset($self_assessment['answer']) ? '"' . $self_assessment['answer'] . '"' : 'Pas de réponse.') ?></p>
+						<h5>Auto-évaluation</h5>
+						<?php foreach($project->self_assessments as $key => $self_assessment): ?>
+							<?php if($key === 0): ?>
+								<h6><?= $self_assessment['question'] ?></h6>
+								<p><?= (isset($self_assessment['answer']) ? '"' . $self_assessment['answer'] . '"' : 'Pas de réponse.') ?></p>
+							<?php elseif($key === 1): ?>
+								<a  data-toggle="collapse" href="#collapse_<?= $project->project_id ?>" aria-expanded="false" aria-controls="collapse_<?= $project->project_id ?>">
+									<span class="glyphicon glyphicon-resize-vertical"> </span> ...
+								</a>
+								<div class="collapse" id="collapse_<?= $project->project_id ?>">
+									<h6><?= $self_assessment['question'] ?></h6>
+									<p><?= (isset($self_assessment['answer']) ? '"' . $self_assessment['answer'] . '"' : 'Pas de réponse.') ?></p>
+								<?php else: ?>
+									<h6><?= $self_assessment['question'] ?></h6>
+									<p><?= (isset($self_assessment['answer']) ? '"' . $self_assessment['answer'] . '"' : 'Pas de réponse.') ?></p>
+								<?php endif ?>
+								<?php if(count($project->self_assessments) > 1 && $key === count($project->self_assessments) - 1): ?>
+								</div>
+							<?php endif ?>
 						<?php endforeach ?>
-					</div>
-				<?php endif ?>
+					<?php endif ?>
 					<h5>Commentaires sur ton projet</h5>
 					<p><?= ( isset($project->comments) && !empty($project->comments) ? $project->comments : '- -')?></p>
 				</div>

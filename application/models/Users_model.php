@@ -230,6 +230,17 @@ Class Users_model extends CI_Model
 		return $this->ion_auth->users($groups[$group_key])->result();
 	}
 
+	public function getRoleIdFromName($name)
+	{
+		$this->db->where('name', $name);
+		return $this->db->get('roles')->row('id');
+	}
+
+	public function username_check($user_name)
+	{
+		$this->db->where('username', $user_name);
+		return ($this->db->get('users')->row('id') ? TRUE : FALSE);
+	}
 
 }
 

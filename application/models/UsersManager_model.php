@@ -104,7 +104,7 @@ Class UsersManager_model extends Users_model
 	*/
 	public function addUser($data = array())
 	{
-		return $this->ion_auth->register($data['username'], $data['password'], $data['email'], $data, $data['group_id']);
+			return $this->ion_auth->register($data['username'], $data['password'], $data['email'], $data, array($data['group_id']));
 	}
 
 	/**
