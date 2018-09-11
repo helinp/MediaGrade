@@ -62,7 +62,8 @@
 							<?php $n_submitted =  count($project->submitted_media); ?>
 							<?php if($project->number_of_files > $n_submitted): ?>
 								<?php for($i = $project->number_of_files - $n_submitted ; $i <= $n_submitted ; $i++): ?>
-									<span class="image-clip-square"> </span>
+									<!--<span class="image-clip-square"> </span>-->
+									<img class="image-clip-square" src="/assets/img/not-found.jpg" alt="Projet non remis"/>
 								<?php endfor ?>
 							<?php endif ?>
 						</div>
@@ -74,7 +75,7 @@
 						<?php else: ?>
 							<span class="label label-danger">Non remis</span>
 						<?php endif ?>
-						<?php if(countdown($project->raw_deadline)): ?>
+						<?php if(countdown($project->raw_deadline) > 0): ?>
 
 						<?php else: ?>
 							<span class="label label-success">Clôturé</span>
@@ -84,11 +85,15 @@
 						<?php endif ?>
 					</p>
 
-					<?php if(countdown($project->raw_deadline) && $project->graded): ?>
-						<?php if($project->submitted && !$project->graded ): ?>
-							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-download-alt"> </span> Remettre</a></p>
-						<?php else: ?>
-							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-download-alt"> </span> Remettre à nouveau</a></p>
+					<?php if(countdown($project->raw_deadline) > 0): ?>
+						<?php if(!$project->submitted && !$project->graded ): ?>
+							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-primary btn-xs">
+									<span class="glyphicon glyphicon-download-alt"> </span> Remettre</a>
+							</p>
+						<?php elseif($project->submitted && ! $project->graded ): ?>
+							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-default btn-sm">
+								<span class="glyphicon glyphicon-download-alt"> </span> Remettre à nouveau</a>
+							</p>
 						<?php endif ?>
 					<?php else: ?>
 
@@ -106,7 +111,7 @@
 
 
 
-	
+
 
 	<script src="/assets/js/lightbox.js"></script><!-- lightbox -->
 	<script>
