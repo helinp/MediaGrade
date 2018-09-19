@@ -686,3 +686,19 @@ header > div {
 label {
 	font-weight: 300;
 }
+
+.image-clip-square {
+	height: 88px;
+	width: 88px;
+  object-fit: cover;
+	display: inline-block;
+	margin: 1px;
+	margin-left: 0;
+	margin-top: 3px;
+	border: 1px lightgray solid;
+	vertical-align: baseline;
+}
+
+.missing {
+	border-color: red;
+}
