@@ -110,7 +110,7 @@ Class Assessment_model extends CI_Model
 	* @param integer $project_id
 	* @return array
 	*/
-	private function _getAssessmentsIdByProject($project_id)
+	public function _getAssessmentsIdByProject($project_id)
 	{
 		$sql ="SELECT assessment_id
 		FROM projects_assessments
@@ -128,6 +128,8 @@ Class Assessment_model extends CI_Model
 
 		return $assessment_ids;
 	}
+
+
 
 	/**
 	* Returns self assessments questions used in a given project
@@ -183,11 +185,15 @@ Class Assessment_model extends CI_Model
 		return $this->db->update('assessments', $assessment);
 	}
 
+	public function deleteAssessment($assessment_id)
+	{
+		return $this->db->delete('assessments', array('id' => $assessment_id));
+	}
+
 	public function addAssessment($assessment)
 	{
 		$this->db->insert('assessments', $assessment);
 		$assessment_id = $this->db->insert_id();
-
 		return $assessment_id;
 	}
 
@@ -215,6 +221,13 @@ Class Assessment_model extends CI_Model
 		{
 			return $q->row('id');
 		}
+	}
+ 
+	public function deleteProjects_Assessments($project_id, $assessment_id)
+	{
+		$data = array('project_id' => $project_id, 'assessment_id' => $assessment_id);
+
+		$this->db->delete('projects_assessments', $data);
 	}
 
 }
