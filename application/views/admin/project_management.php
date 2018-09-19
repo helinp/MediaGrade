@@ -11,7 +11,7 @@
 <?php endif ?>
 
 <?php if( ! $this->input->get('modal')):?>
-	<div id="content" class="col-xs-12 col-md-10 ">
+	<div id="content" class="col-xs-10 col-md-10 ">
 		<?php $this->view('templates/submenu'); ?>
 	<?php endif ?>
 	<form action="/admin/project/record/<?= @$curr_project->id ?>" method="post" enctype="multipart/form-data" id="form"  style="margin-top: 1em;">
@@ -182,7 +182,8 @@
 					<th><?= ($this->config->item('assessment_mode') === 'skills_group' ? _('Pôle') : _('Compétence')) ?></th>
 					<th><?= LABEL_CRITERION?></th>
 					<th><?= LABEL_CURSOR?></th>
-					<th><?= LABEL_COEFFICIENT?></th>
+					<th><?= _('Type d\'évaluation') ?></th>
+					<th><?= LABEL_COEFFICIENT ?></th>
 					<th><?= _('Badge') ?></th>
 					<th></th>
 				</tr>
@@ -200,7 +201,7 @@
 									<select class="form-control input-sm" name="skill_ids[]" required>
 										<option value="0">--</option>
 										<?php foreach($skills as $skill): ?>
-											<option value="<?= $skill->id ?>"<?php if($skill->id === @$row->skill_id) echo(' selected') ?>><?= $skill->skill_id ?></option>
+											<option value="<?= $skill->id ?>"<?php if($skill->skill_id === @$row->skill_id) echo(' selected') ?>><?= $skill->skill_id ?></option>
 										<?php endforeach ?>
 									<?php endif ?>
 								</select>
@@ -213,7 +214,12 @@
 								placeholder="<?=  LABEL_NEW_CRITERION ?>" name="cursor[]" required><?= $row->cursor ?></textarea>
 							</td>
 							<td>
-								<input class="form-control input-sm" value="4-steps" name="grading_type[]" type="hidden" />
+								<select class="form-control input-sm" name="grading_type[]" required>
+									<option value="4-steps"  <?php if('4-steps' === @$row->grading_type) echo(' selected') ?>>NA-EA-A-M</option>
+									<option value="default"  <?php if('default' === @$row->grading_type) echo(' selected') ?>>1-10</option>
+								</select>
+							</td>
+							<td>
 								<input class="form-control input-sm" value="<?= $row->max_vote ?>" name="max_vote[]" required size="1" />
 							</td>
 							<td>

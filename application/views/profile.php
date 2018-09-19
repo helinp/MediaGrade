@@ -1,4 +1,4 @@
-<div id="content" class="col-xs-12 col-md-10 ">
+<div id="content" class="col-xs-10 col-md-10 ">
 	<div class="row chapeau">
 	</div>
 	<form action="profile/update" method="post" role="form">

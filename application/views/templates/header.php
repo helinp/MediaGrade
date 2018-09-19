@@ -68,7 +68,7 @@
 				<!-- title -->
 				<div class="col-xs-8 col-md-8" >
 					<h1><?= @$page_title ?></h1>
-					<p class="muted"><?= $this->session->first_name . ' ' . $this->session->last_name ?>, <?= ($this->Users_model->isAdmin() ? _('Professeur') : $this->session->class_name) ?></p>
+					<p class="muted"><?= $this->session->first_name . ' ' . $this->session->last_name ?>, <?= ($this->Users_model->isAdmin() ? _('Professeur') : $this->session->class_name) ?>.</p>
 				</div>
 
 				<!-- Avatar -->

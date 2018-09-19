@@ -1,4 +1,4 @@
-<div id="content" class="col-xs-12 col-md-10 ">
+<div id="content" class="col-xs-10 col-md-10 ">
 	<div class="row chapeau">
 		<div class="col-md-12">
 		</div>
@@ -63,7 +63,7 @@
 							<?php if($project->number_of_files > $n_submitted): ?>
 								<?php for($i = $project->number_of_files - $n_submitted ; $i <= $n_submitted ; $i++): ?>
 									<!--<span class="image-clip-square"> </span>-->
-									<img class="image-clip-square" src="/assets/img/not-found.jpg" alt="Projet non remis"/>
+									<img class="image-clip-square" src="/assets/img/not-found.jpg" alt="Projet non remis" data-toggle="tooltip" data-placement="left" title="Arf! Tout n'est pas remis!"/>
 								<?php endfor ?>
 							<?php endif ?>
 						</div>

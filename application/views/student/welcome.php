@@ -1,4 +1,4 @@
-<div id="content" class="col-xs-12 col-md-10 ">
+<div id="content" class="col-xs-10 col-md-10 ">
     <div class="row chapeau">
         <div class="col-xs-10  col-md-10">
             <h1> <?= _('Tableau de bord') ?>

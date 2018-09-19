@@ -1,4 +1,4 @@
-<div id="content" class="col-xs-12 col-md-10 ">
+<div id="content" class="col-xs-10 col-md-10 ">
 	<?php $this->view('templates/submenu'); ?>
 	<div class="row chapeau hidden-print">
 		<div class="col-xs-6  col-md-6">

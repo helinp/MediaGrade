@@ -1,5 +1,5 @@
 <?php if( ! $this->input->get('modal')): ?>
-	<div id="content" class="col-xs-12 col-md-10 ">
+	<div id="content" class="col-xs-10 col-md-10 ">
 		<?php $this->view('templates/submenu'); ?>
 		<div class="row chapeau">
 			<div class="col-xs-4  col-md-4">

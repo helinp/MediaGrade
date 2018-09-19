@@ -1,9 +1,9 @@
-<div id="content" class="col-xs-12 col-md-10 ">
+<div id="content" class="col-xs-10 col-md-10 ">
 	<?php $this->view('templates/submenu'); ?>
 	<div class="row chapeau">
 	</div>
 
-	<form action="/admin/settings/mail_test" method="post">
+	<form action="/admin/maintenance/system/mail_test" method="post">
 		<h3><?= LABEL_MAIL_TEST ?></h3>
 		<label class="control-label"><?= LABEL_SUBJECT ?></label>
 		<div class="form-group">
