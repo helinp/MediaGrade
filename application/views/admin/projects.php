@@ -70,7 +70,7 @@
 
 					<span class="classe pull-right"><?php echo $project->class_name ?></span>
 					<?php if($achievements_by_project[$project->project_id]): ?>
-						<div style="min-height:1.5em;"
+						<div style="min-height:1.5em;">
 						<?php $badge_ctrl = ''?>
 						<?php foreach ($achievements_by_project[$project->project_id] as $achievement): ?>
 							<?php if($badge_ctrl !== $achievement->name): ?>
