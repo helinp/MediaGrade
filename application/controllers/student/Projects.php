@@ -44,7 +44,7 @@ class Projects extends MY_Controller {
 			$this->projects[$key]->submitted_media = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id);
 			$this->projects[$key]->graded = $this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, FALSE);
 		}
-dump($this->session);
+
 		$this->load->helper('deadline');
 		$this->load->helper('assessment');
 		$this->data['page_title'] = _('Mes projets');
