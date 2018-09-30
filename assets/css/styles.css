@@ -130,8 +130,14 @@ big.overall-results {
 
 /** GRADEBOOK**/
 #table-gradebook > thead > tr > th {
-	padding: 8px 0;
 }
+
+#table-gradebook tr td:first-child{
+    width:1%;
+    white-space:nowrap;
+		padding-right: 2em;
+}
+
 
 /*** LSU ****/
 span.lsu {
@@ -143,10 +149,11 @@ span.lsu {
 }
 
 .gradebook-lsu {
+	margin-right:.5em;
 
 	border: 1px solid #ddd;
 	width: 20px;
-	display: block;
+	display: inline-block;
 	height: 20px;
 }
 
