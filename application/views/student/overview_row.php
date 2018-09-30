@@ -18,8 +18,8 @@
 		?>
 		<div class="row results-overview-row" style="<?= (countdown($project->raw_deadline) ? 'border-left: rgb(51, 122, 183) solid 5px;' : 'border-left: lightgray solid 5px;')?>">
 			<div class="col-md-3">
-				<h4><?= $project->teacher_name . ' / '  . $project->project_name; ?>
-					<br /><small><?= $project->deadline; ?></small></h4>
+				<h4><?= $project->project_name; ?>
+					<br /><small><?= $project->teacher_name . ' / '  . $project->course_description  . ' <br /> ' . $project->deadline; ?></small></h4>
 
 					<!-- Labels -->
 					<p style="margin-bottom:4px;">
@@ -87,7 +87,7 @@
 
 					<?php if(countdown($project->raw_deadline) > 0): ?>
 						<?php if(!$project->submitted && !$project->graded ): ?>
-							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-primary btn-xs">
+							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-primary btn-sm">
 									<span class="glyphicon glyphicon-download-alt"> </span> Remettre</a>
 							</p>
 						<?php elseif($project->submitted && ! $project->graded ): ?>

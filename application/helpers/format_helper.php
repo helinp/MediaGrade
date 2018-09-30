@@ -120,4 +120,18 @@ function remove_accents($string) {
 
     return $string;
   }
+
+
+  /**
+	* Generate a filname from a project id
+	*/
+	function generateProjectFileName($project_data, $user_data, $page_number = 0)
+	{
+		$sanitized_user_name = sanitize_name(strtoupper($user_data->last_name) . "_" .  $user_data->first_name);
+		$sanitized_project_name = sanitize_name($project_data->project_name);
+
+		$file_name =  $sanitized_user_name . '_' . $sanitized_project_name . '_' . sprintf("%02d", $page_number) . '.' . $project_data->extension;
+
+		return $file_name;
+	}
  ?>

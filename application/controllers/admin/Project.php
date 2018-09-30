@@ -150,25 +150,27 @@ class Project extends MY_AdminController {
 				* HYDRATE PROJECT
 				*/
 				$project = array(
-					'id' 							=> $this->input->post('project_id'),
-					'project_name' 			=> $this->input->post('project_name'),
+					'id' 									=> $this->input->post('project_id'),
+					'project_name' 				=> $this->input->post('project_name'),
 					'assessment_type' 		=> $this->input->post('assessment_type'),
-					'term' 						=> $this->input->post('term'),
-					'class' 						=> $this->input->post('class'),
-					'deadline' 					=> $this->input->post('deadline'),
-					'start_date'				=> $this->input->post('start_date'),
-					'school_year'				=> get_school_year(),
-					'skill_ids' 				=> implode(',', $this->input->post('seen_skill_ids')),
-					'material'					=> $this->input->post('material'),
-					'extension' 				=> $this->input->post('extension'),
-					'instructions_txt' 		=> serialize(array(
-						'instructions'  => $this->input->post('instructions_txt'),
-						'context'		=>  $this->input->post('context_txt')
+					'term' 								=> $this->input->post('term'),
+					'class' 							=> $this->Courses_model->getClassIdFromCourseId($this->input->post('course_id')),
+					'deadline' 						=> $this->input->post('deadline'),
+					'start_date'					=> $this->input->post('start_date'),
+					'school_year'					=> get_school_year(),
+					'skill_ids' 					=> implode(',', $this->input->post('seen_skill_ids')),
+					'external' 						=> $this->input->post('external') == TRUE,
+					'material'						=> $this->input->post('material'),
+					'extension' 					=> $this->input->post('extension'),
+					'course_id' 					=> $this->input->post('course_id'),
+					'instructions_txt'		=> serialize(array(
+						'instructions'  			=> $this->input->post('instructions_txt'),
+						'context'							=>  $this->input->post('context_txt')
 					)),
 					'number_of_files'			=> $this->input->post('number_of_files'),
-					'self_assessment_ids' 	=> implode(',', $self_assessment_ids),
-					'is_activated' 			=> '1',
-					'admin_id'					=> $this->session->id
+					'self_assessment_ids' => implode(',', $self_assessment_ids),
+					'is_activated' 				=> '1',
+					'admin_id'						=> $this->session->id
 				);
 
 				/**
@@ -196,7 +198,7 @@ class Project extends MY_AdminController {
 				}
 
 				// TODO IF update, check removed assessments
-				if($this->input->post('update_project')) 
+				if($this->input->post('update_project'))
 				{
 					// find removed ASSESSMENTS
 					$post_assessements = $this->input->post('assessment_id');

@@ -25,7 +25,6 @@ class Import extends MY_AdminController {
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
 
-		$submenu[] = array('title' => 'Manuel', 'url' => '/admin/import/manual');
 		$submenu[] = array('title' => 'Automatique', 'url' => '/admin/import/automatic');
 		$this->data['submenu'] = $submenu;
 	}
@@ -47,7 +46,7 @@ class Import extends MY_AdminController {
 			$term = FALSE;
 		}
 
-		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByTermAndSchoolYear($term, $this->school_year);
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByExternalAndSchoolYear(TRUE, $this->school_year);
 		$this->data['page_title'] = _('Importer des évaluations papier');
 		$this->load->template('admin/import_assessments_automatic', $this->data);
 	}
@@ -74,7 +73,6 @@ class Import extends MY_AdminController {
 		{
 			$data = array('upload_data' => $this->upload->data());
 		}
-
 		//
 		// convert to image
 		//
@@ -122,25 +120,55 @@ class Import extends MY_AdminController {
 			unset($qrcode); // freememory
 		}
 
-		// create dirs (2018-2019/classe/imp_project_name/ ) sanitize_name
-		// TODO
+
+		//
+		// Save files
+		//
+		$not_found = array();
+
+		// get project data
+		$project_data = $this->Projects_model->getProjectDataByProjectId($this->input->post('project_id'));
 
 		foreach ($temp_files as $key => $temp_file)
 		{
-			if(empty($qr_codes[$key]))
+			// get user
+			$qr_data = explode(';', $qr_codes[$key]);
+			if( ! isset($qr_data[0]) || ! isset($qr_data[0]))
 			{
+				// qr ot readeable not found
+				$not_found[] = $qr_codes[$key]  . ' (QR code not readable)';;
 				continue;
 			}
+
+			$user_id = $this->Users_model->getUserIdByName(trim($qr_data[1]), trim($qr_data[0]));
+			if(empty($user_id))
+			{
+				// user  not found
+				$not_found[] = $qr_codes[$key] . ' (user not found)';
+				continue;
+			}
+			$user_data = $this->Users_model->getUserInformations($user_id);
+
+			$file_name = generateProjectFileName($project_data, $user_data);
+
 			$file = $data['upload_data']['file_path'] . $temp_file;
 			$imagick = new Imagick($file);
 			$imagick->levelImage(7000, 1, 45000);
 
-			// get names
-			$qr_data = explode(';', $qr_codes[$key]);
-			$file_path = './assets/uploads/import/' . trim($qr_data[0]) . '_' . trim($qr_data[1]) . '.jpg';
+			$dir = './assets/uploads/importations/' . get_school_year() . '/' . $project_data->class_name . '/' . $project_data->term_name . '/';
+			$file_path = $dir . $file_name . 'jpg';
 
+			if ( ! file_exists($dir))
+			{
+				mkdir($dir, 0777, true);
+			}
 			$imagick->writeImage($file_path);
 			$imagick->clear();
+
+			//
+			// update db
+			//
+			$this->Submit_ext_model->add($project_data->id, $user_id, $dir, $file_name . 'jpg');
 		}
 
 		//
@@ -155,15 +183,11 @@ class Import extends MY_AdminController {
 			}
 		}
 
-		dump($qr_codes);
 
-		//
-		// update db
-		//
-		// TODO
 
-		// return errors and report
-		// TODO
+		// load template
+		$this->data['not_found'] = $not_found;
+		$this->automatic();
 
 	}
 

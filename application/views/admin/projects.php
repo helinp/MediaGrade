@@ -16,7 +16,7 @@
 					<label><?= _('Période') ?>: </label>
 					<div class="input-group">
 						<select class="form-control input-sm" name="term" onchange="this.form.submit()">
-								<option value=""><?php echo _('Toutes') ?></option>
+							<option value=""><?php echo _('Toutes') ?></option>
 							<?php foreach($terms as $term): ?>
 								<?= '<option value="' . $term->id . '"' . (@$_GET['term'] === $term->id ? ' selected' : '') . '>' . $term->name . '</option>' . "\n" ?>
 							<?php endforeach?>
@@ -61,16 +61,21 @@
 
 			?>">
 			<div class="panel-body projects-panel-body" style="min-height: 9em">
-				<h4 style="margin-top: 0;"><span data-toggle="tooltip" data-placement="left" title="<?= $project->project_name ?>"><b><?= character_limiter($project->project_name, 15) ?></b></span></h4>
-				<p><span class="label pull-right label-<?= format_assessment_type($project->assessment_type)['label'] ?>"><?= format_assessment_type($project->assessment_type)['type'] ?></span>
-					<p style="font-size:small">
-						<span class="glyphicon glyphicon-pslay" data-toggle="tooltip" data-placement="left" title="<?=  _('Date de début') ?>"> </span> <?= ($project->start_date ? date_format(date_create($project->start_date),"d M.") : '--'); ?>
-						<span class="glyphicon glyphicon-chevron-right" data-toggle="tooltip" data-placement="left" title="<?=  _('Deadline') ?>"> </span> <?= date_format(date_create($project->raw_deadline),"d M. Y"); ?>
-					</p>
+				<h4 style="margin-top: 0;"><span data-toggle="tooltip" data-placement="left" title="<?= $project->project_name ?>"><b><?= $project->course_name . ' / ' . character_limiter($project->project_name, 15) ?></b></span></h4>
+				<p class="pull-right">
+					<span class="label label-<?= format_assessment_type($project->assessment_type)['label'] ?>"><?= format_assessment_type($project->assessment_type)['type'] ?></span>
+					<?= ($project->external ? ' <span class="label label-info">Externe</span> ' : '') ?>
+				</p>
+				<p style="font-size:small">
+					<?php if( ! $project->external): ?>
+						<span data-toggle="tooltip" data-placement="left" title="<?=  _('Date de début') ?>"><?= ($project->start_date ? date_format(date_create($project->start_date),"d M.") : '--'); ?></span>
+						<span class="glyphicon glyphicon-chevron-right" > </span>
+					<?php endif ?>
+					<span data-toggle="tooltip" data-placement="left" title="<?=  _('Deadline') ?>"><?= date_format(date_create($project->raw_deadline),"d M. Y"); ?></span>
+				</p>
 
-					<span class="classe pull-right"><?php echo $project->class_name ?></span>
-					<?php if($achievements_by_project[$project->project_id]): ?>
-						<div style="min-height:1.5em;">
+				<?php if($achievements_by_project[$project->project_id]): ?>
+					<div style="min-height:1.5em;">
 						<?php $badge_ctrl = ''?>
 						<?php foreach ($achievements_by_project[$project->project_id] as $achievement): ?>
 							<?php if($badge_ctrl !== $achievement->name): ?>
@@ -80,6 +85,7 @@
 						<?php endforeach ?>
 					</div>
 				<?php endif ?>
+				<span class="classe"><?php echo $project->class_name ?></span>
 			</div>
 			<div class="progress progress-modal"  data-toggle="tooltip" data-placement="left" title="<?= _('Non remis:') . ' ' . ($n_students[$project->project_id] - $n_graded[$project->project_id]) ?>">
 				<div class="progress-bar progress-bar-primary" style="width: <?= round($n_graded[$project->project_id] / $n_students[$project->project_id] * 100) ?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Corrigés:') . ' ' . $n_graded[$project->project_id] ?>">
@@ -121,8 +127,8 @@
 			</span>
 
 			<div class="dropdown pull-right">
-				<a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/<?= $project->project_id; ?>?modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Modifier')?>> <span class="glyphicon glyphicon-file"></span></a>
-				<a data-toggle="modal" data-target="#projectModal"  href="/admin/project/instructions/<?= $project->project_id ?>?modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Corriger')?>> <span class="glyphicon glyphicon-pencil"></span> </a>
+				<a data-toggle="modal" data-target="#projectModal" href="/admin/project/management/<?= $project->project_id; ?>?modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Modifier')?>> <span class="glyphicon glyphicon-pencil"></span></a>
+				<a data-toggle="modal" data-target="#projectModal"  href="/admin/project/instructions/<?= $project->project_id ?>?modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Consignes')?>> <span class="glyphicon glyphicon-file"></span> </a>
 				<a data-toggle="modal" data-target="#projectModal"  href="/admin/project/statistics/<?= $project->project_id ?>?modal=1" class="btn btn-default btn-xs" role="button" data-toggle="tooltip" title=<?= _('Statistiques')?>> <span class="glyphicon glyphicon-stats"></span> </a>
 			</div>
 		</div>

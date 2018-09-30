@@ -277,7 +277,7 @@
 					     }, {
 							  color: '#F45B5B',
 					         name: 'Échecs',
-					         data: [-<?= implode(", -", array_column($skills_stats, 'failed') ) ?>]
+					         data: [<?= implode(", -", array_column($skills_stats, 'failed') ) ?>]
 					     }]
 					 });
 						/**

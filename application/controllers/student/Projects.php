@@ -25,7 +25,7 @@ class Projects extends MY_Controller {
 			$this->school_year = get_school_year();
 		}
 
-		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($this->session->class, $this->school_year, 'ASC');
+		$this->projects = $this->Projects_model->getAllActiveProjectsByClassAndExternalAndSchoolYearAndOrder($this->session->class, FALSE, $this->school_year, 'ASC');
 		$this->data['projects'] = $this->projects;
 
 		$this->data['school_year'] = $this->school_year;

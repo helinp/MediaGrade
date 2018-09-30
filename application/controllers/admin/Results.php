@@ -11,10 +11,17 @@ class Results extends MY_AdminController {
 		$this->load->helper('school');
 		$this->load->helper('text');
 		$this->load->helper('assessment');
+		$this->load->helper('round');
+		$this->load->model('TableResults_model','',TRUE);
 
-		$this->data['classes'] = $this->Classes_model->getAllClasses();
+
+		// Get data for select in view
+
+		$this->Courses_model->orderBy('name', 'ASC');
+		$this->data['courses'] = $this->Courses_model->getAllCoursesByTeacherId($this->session->user_id);
 		$this->data['terms'] = $this->Terms_model->getAll();
 
+		// Get School Year if not set
 		if($this->input->get('school_year'))
 		{
 			$this->school_year = $this->input->get('school_year');
@@ -25,6 +32,7 @@ class Results extends MY_AdminController {
 		}
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
 
+		// Submenu
 		$submenu = array();
 		$submenu[] = array('title' => 'Cahier de cotes', 'url' => '/admin/results');
 		$submenu[] = array('title' => 'Trombinoscope', 'url' => '/admin/results/detail_by_class');
@@ -35,14 +43,14 @@ class Results extends MY_AdminController {
 
 	public function index()
 	{
-		if($this->input->get('classe'))
+		if($this->input->get('course'))
 		{
-			$class = $this->Classes_model->getClass($this->input->get('classe'));
+			$course = $this->Courses_model->getCourse($this->input->get('course'));
 		}
 		else
 		{
 			// get first class as default value
-			$class = $this->data['classes'][0];
+			$course = $this->data['courses'][0];
 		}
 
 		if($this->input->get('term'))
@@ -54,16 +62,15 @@ class Results extends MY_AdminController {
 			$term = FALSE;
 		}
 
-		$students_in_class = $this->Users_model->getAllStudentsSortedByClass($class->id);
+		$students_in_class = $this->Users_model->getAllStudentsSortedByClass($course->class_id);
 
-		$this->load->helper('text');
-		$this->load->helper('round');
-
-		$this->load->model('TableResults_model','',TRUE);
-
+		/*
+		 *	TABLE
+		 *
+		 */
 		// make table header
 		$header = array();
-		$projects = $this->Projects_model->getAllActiveProjectsByClassAndTermAndSchoolYearAndOrder($class->id, $term, $this->school_year, 'ASC');
+		$projects = $this->Projects_model->getAllActiveProjectsByCourseAndTermAndSchoolYearAndOrder($course->id, $term, $this->school_year, 'ASC');
 
 		// prepare data for body table
 		foreach ($projects as $project)
@@ -78,12 +85,10 @@ class Results extends MY_AdminController {
 		}
 
 		$this->data['table_header'] = $header;
-		// OBSOLETE $this->data['table_body'] = $this->Results_model->tableBodyClassResultsBySkillsGroup($class, $term, $this->school_year);
-
 		$this->data['table_body'] = array();
 
 		$index = 0;
-		foreach ($students_in_class[$class->id] as $student)
+		foreach ($students_in_class[$course->class_id] as $student)
 		{
 			$user_info = $this->Users_model->getUserInformations($student->id);
 
@@ -115,7 +120,7 @@ class Results extends MY_AdminController {
 
 		$this->load->helper('assessment');
 		$this->data['page_title'] = _('Cahier de cotes');
-		$this->data['class'] = $class;
+		$this->data['course'] = $course;
 		$this->load->template('admin/results', $this->data);
 	}
 
@@ -124,7 +129,7 @@ class Results extends MY_AdminController {
 	{
 		// get project info
 		$project = $this->Projects_model->getProjectDataByProjectId($project_id);
-		$class = $project->class;
+		$course = $project->class;
 
 		// if one student only, create dummy array
 		if ($user_id)
@@ -136,7 +141,7 @@ class Results extends MY_AdminController {
 		else
 		{
 			// get all students
-			$students_in_class = $this->Users_model->getAllStudentsSortedByClass($class)[$class];
+			$students_in_class = $this->Users_model->getAllStudentsSortedByClass($course)[$course];
 		}
 
 		$students_assessments_results = array();
@@ -189,10 +194,10 @@ class Results extends MY_AdminController {
 			redirect('/admin/results/detail_by_student/' . $this->input->get('student') . '?classe=' . $this->input->get('classe'));
 		}
 
-		$class_id = $this->input->get('classe');
-		if(is_numeric($class_id))
+		$course_id = $this->input->get('classe');
+		if(is_numeric($course_id))
 		{
-			$students = $this->Users_model->getAllStudentsSortedByClass($class_id);
+			$students = $this->Users_model->getAllStudentsSortedByClass($course_id);
 		}
 		else
 		{
@@ -213,8 +218,8 @@ class Results extends MY_AdminController {
 		$skills_result_by_project = array();
 		$not_submitted_projects = array();
 		$graded_projects = array();
-		$class_id = $this->Users_model->getUserInformations($student_id)->class;
-		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($class_id, $this->school_year);
+		$course_id = $this->Users_model->getUserInformations($student_id)->class;
+		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYear($course_id, $this->school_year);
 
 		foreach ($projects as $project)
 		{
@@ -370,10 +375,10 @@ class Results extends MY_AdminController {
 		$this->data['skills_groups'] = $this->skills_groups;
 
 		// FILTERS
-		$class_id = $this->input->get('classe');
-		if($class_id && is_numeric($class_id))
+		$course_id = $this->input->get('classe');
+		if($course_id && is_numeric($course_id))
 		{
-			$this->students_list = $this->Users_model->getAllStudentsSortedByClass($class_id)[$class_id];
+			$this->students_list = $this->Users_model->getAllStudentsSortedByClass($course_id)[$course_id];
 		}
 		else
 		{
@@ -422,10 +427,10 @@ class Results extends MY_AdminController {
 			redirect('/admin/results/overview/' . $this->input->get('student') . '?classe=' . $this->input->get('classe'));
 		}
 
-		$class_id = $this->input->get('classe');
-		if(is_numeric($class_id))
+		$course_id = $this->input->get('classe');
+		if(is_numeric($course_id))
 		{
-			$students = $this->Users_model->getAllStudentsSortedByClass($class_id);
+			$students = $this->Users_model->getAllStudentsSortedByClass($course_id);
 		}
 		else
 		{
@@ -437,9 +442,9 @@ class Results extends MY_AdminController {
 			$student_id = current($students)[0]->id;
 		}
 
-		$class = $this->Users_model->getUserInformations($student_id)->class;
+		$course = $this->Users_model->getUserInformations($student_id)->class;
 
-		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($class, $this->school_year, 'ASC');
+		$projects = $this->Projects_model->getAllActiveProjectsByClassAndSchoolYearAndOrder($course, $this->school_year, 'DESC');
 
 		foreach($projects as $key => $project)
 		{

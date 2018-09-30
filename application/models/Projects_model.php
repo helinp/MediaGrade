@@ -136,18 +136,24 @@ Class Projects_model extends CI_Model
 		$this->db->join('classes', 'classes.id = projects.class');
 		$this->db->join('terms', 'terms.id = projects.term');
 		$this->db->join('users', 'admin_id = users.id');
+		$this->db->join('courses', 'course_id = courses.id', 'LEFT');
 		$this->db->select("	projects.id as project_id,
 									project_name,
 									school_year,
+									courses.id AS course_id,
+									courses.name AS course_name,
+									courses.description AS course_description,
 									projects.class AS class,
 									classes.name AS class_name,
 									term,
+									external,
 									terms.name AS term_name,
 									assessment_type,
 									start_date,
 									instructions_txt,
 									number_of_files,
 									is_activated,
+									course_id,
 									users.last_name AS teacher_name,
 									deadline as raw_deadline,
 									DATE_FORMAT(deadline, '%W %d %M %Y') as deadline,
@@ -166,6 +172,10 @@ Class Projects_model extends CI_Model
 			if($wheres[$i] === 'User')
 			{
 				$wheres[$i] = 'user_id';
+			}
+			elseif($wheres[$i] === 'Course')
+			{
+				$wheres[$i] = 'course_id';
 			}
 			elseif($wheres[$i] === 'SchoolYear')
 			{
@@ -210,7 +220,7 @@ Class Projects_model extends CI_Model
 		if ( ! $class) $class = $this->session->class;
 
 		$this->db->distinct();
-		$this->db->select('projects.id as project_id, project_name, term, deadline, start_date, instructions_txt', FALSE);
+		$this->db->select('projects.id as project_id, project_name, term, deadline, external, start_date, instructions_txt, course_id', FALSE);
 
 		$this->db->where('is_activated', TRUE);
 		$this->db->where('class', $class);
@@ -277,7 +287,9 @@ Class Projects_model extends CI_Model
 		is_activated,
 		assessment_type,
 		start_date,
+		external,
 		number_of_files,
+		course_id,
 		class", TRUE);
 		$this->db->distinct();
 		$this->db->where('admin_id', $this->session->id);
@@ -309,6 +321,7 @@ Class Projects_model extends CI_Model
 		deadline,
 		assessment_type,
 		is_activated,
+		course_id,
 		class,
 		classes.name AS class_name,
 		terms.name AS term_name');
@@ -346,7 +359,10 @@ Class Projects_model extends CI_Model
 
 		$this->db->from('projects');
 		$this->db->limit(1);
-		$this->db->where('id', $project_id);
+		$this->db->select('projects.*, classes.name AS class_name, terms.name AS term_name');
+		$this->db->join('classes', 'classes.id = projects.class');
+		$this->db->join('terms', 'terms.id = projects.term');
+		$this->db->where('projects.id', $project_id);
 		$results = $this->db->get()->row();
 
 		if(isset($results->instructions_txt) && $results->instructions_txt)
@@ -408,15 +424,15 @@ Class Projects_model extends CI_Model
 	*
 	* @return	object|boolean
 	*/
-	public function getSchoolYears()
+	public function getSchoolYears($order = 'DESC')
 	{
 		$this->db->distinct();
 		$this->db->select('school_year');
 		$this->db->from('projects');
-		$this->db->order_by('school_year', 'DESC');
-		$result = $this->db->get();
+		$this->db->order_by('school_year', $order);
+		$result = $this->db->get()->result();
 
-		if($result) return $result->result();
+		if($result) return $result;
 
 		return FALSE;
 	}

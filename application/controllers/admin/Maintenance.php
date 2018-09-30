@@ -65,9 +65,17 @@ class Maintenance extends MY_AdminController {
 
 	}
 
+
 	/************************************************/
 	/***************** manual update ****************/
 	/************************************************/
+	/* Run once on update 01/10/2018 (career) */
+	function build_career() {
+		$this->Careers_model->orderBy('last_name');
+		$this->Careers_model->orderBy('school_year');
+		$this->Careers_model->orderBy('classes.name');
+		$this->Careers_model->firstBuildt();
+	}
 
 	/* Run once on update 31/12/2017 (ion auth) */
 	public function auto_assign_roles()
@@ -158,7 +166,7 @@ class Maintenance extends MY_AdminController {
 	function update_db($confirm)
 	{
 		$this->load->model('Update_model','',TRUE);
-		$this->Update_model->update_db();
+		$this->Update_model->update_30_10();
 	}
 
 	function system($action = FALSE)

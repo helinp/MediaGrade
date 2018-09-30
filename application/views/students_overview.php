@@ -31,7 +31,7 @@
 		<?php foreach($students as $student): ?>
 			<?php if($student->class !== $class_txt)
 			{
-				echo '<div class="col-lg-12 col-xs-12"><h3>'. $student->class . '</h3></div>';
+				echo '<div class="col-lg-12 col-xs-12"><h3>'. $student->class_name . '</h3></div>';
 				$class_txt = $student->class;
 			}
 			?>

@@ -8,7 +8,7 @@
 	<?php foreach ($projects as $project):?>
 		<div class="row results-overview-row">
 			<div class="col-md-3">
-				<h4><?= $project->project_name; ?><br /><small><?= $project->teacher_name . ' / '  .  $project->term_name; ?></small></h4>
+				<h4><?= $project->project_name; ?><br /><small><?= $project->teacher_name . ' / '  . $project->course_description . ' / '  . $project->term_name; ?></small></h4>
 
 				<?php if(isset($project->submitted[0]) && isset($project->submitted[0]->file)): ?>
 					<div>

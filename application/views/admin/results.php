@@ -20,10 +20,10 @@
 			<div class="form-group pull-right">
 				<form id="filter" action="" method="get" class="form-inline" style="margin-top:1.5em">
 					<div class="pull-right">
-						<label><?= _('Classe: ') ?></label>
-						<select class="form-control input-sm" name="classe" onchange="this.form.submit()">
-							<?php foreach($classes as $classe): ?>
-								<?= '<option value="' . $classe->id . '"' . (@$_GET['classe'] === $classe->id ? 'selected' : '') . '>' . $classe->description . '</option>' . "\n" ?>
+						<label><?= _('Cours: ') ?></label>
+						<select class="form-control input-sm" name="course" onchange="this.form.submit()">
+							<?php foreach($courses as $course): ?>
+								<?= '<option value="' . $course->id . '"' . (@$_GET['course'] === $course->id ? ' selected' : '') . '>' . $course->name . '</option>' . "\n" ?>
 							<?php endforeach?>
 						</select>
 						<label><?= _('Période: ') ?></label>
@@ -44,8 +44,9 @@
 			<table class="table table-hover" id="table-gradebook" style="margin-top:5em">
 				<thead>
 					<tr>
-						<th><span class="visible-print"><?= $this->session->last_name ?> / <?= $class->id?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
+						<th><span class="visible-print"><?= $this->session->last_name ?> / <?= $course->name?> / <?= ($this->input->get('term') ? $this->input->get('term') : _('Année')) ?></span> <!-- Leave for CVS export --></th>
 						<?php foreach ($table_header as $row): ?>
+
 							<?php foreach ($row['skills_groups'] as $skills_group): ?>
 								<th class="rotate"><div><span><small><a data-toggle="modal" data-target="#projectModal" href="/admin/results/details/<?= $row['project_id'] ?>"  data-toggle="tooltip" data-placement="right" title="<?= _('Détails par projet')?>"><?= character_limiter($row['project_name'], 13) ?></a></small></span></div></th>
 
@@ -78,13 +79,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<td></td>
 					<?php foreach ($table_body as $student): ?>
 						<tr>
-							<td style="min-width:10em"><?= $student['last_name'] . ' ' . $student['first_name']?></td>
+							<td><?= $student['last_name'] . ' ' . $student['first_name']?></td>
 							<?php foreach ($student['results'] as $projects_results): ?>
 								<?php foreach ($projects_results as $result): ?>
-									<td  style="width:.5em">
+									<td>
 										<?php if(isset($result->max_vote)): ?>
 											<a href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>" data-toggle="modal" data-target="#projectModal"><span class="gradebook-lsu"  style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
 												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">

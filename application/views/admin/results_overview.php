@@ -29,11 +29,11 @@
 			</form>
 		</div>
 	</div>
-	<?php $term_tmp = NULL; $curr = 0; $projects = array_reverse($projects); ?>
+	<?php $term_tmp = NULL; $curr = 0; ?>
 	<?php foreach ($projects as $project):?>
 		<div class="row results-overview-row">
 			<div class="col-md-3">
-				<h4><?= $project->project_name; ?><br /><small><?= $project->term_name; ?> / <?= $project->deadline; ?></small></h4>
+				<h4><small><?= $project->course_name; ?> /</small> <?= $project->project_name; ?><br /><small><?= $project->term_name; ?> / <?= $project->deadline; ?></small></h4>
 				<?php if(isset($project->submitted[0]) && isset($project->submitted[0]->file)): ?>
 					<div>
 						<?php foreach($project->submitted as $key => $media): ?>

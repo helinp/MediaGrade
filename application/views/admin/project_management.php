@@ -25,6 +25,7 @@
 			<div class = "col-xs-3">
 				<label for="title"><?=  LABEL_ASSESSMENT_TYPE ?></label>
 				<select class="form-control" name="assessment_type" required>
+					<option  <?php if( ! isset($curr_project->assessment_type)) echo(" selected"); ?> hidden disabled>--</option>
 					<option value="diagnostic"<?php if(@$curr_project->assessment_type ===  'diagnostic') echo(" selected"); ?>><?= LABEL_ASSESSMENT_DIAGNOSTIC?></option>
 					<option value="type_1"<?php if(@$curr_project->assessment_type ===  'type_1') echo(" selected"); ?>><?= LABEL_ASSESSMENT_TYPE_1?></option>
 					<option value="type_2"<?php if(@$curr_project->assessment_type ===  'type_2') echo(" selected"); ?>><?= LABEL_ASSESSMENT_TYPE_2?></option>
@@ -34,6 +35,7 @@
 			<div class = "col-xs-3">
 				<label for="title"><?= LABEL_PERIOD ?></label>
 				<select class="form-control" name="term">
+					<option  <?php if( ! isset($curr_project->term)) echo(" selected"); ?> hidden disabled>--</option>
 					<?php foreach($terms as $term): ?>
 						<option<?php if(@$curr_project->term === $term->id) echo(' selected'); ?> value="<?= $term->id ?>"><?= $term->name ?></option>
 					<?php endforeach ?>
@@ -62,36 +64,36 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class = "col-xs-3">
+			</div><!-- DEPREACED
+			<div class="col-xs-3">
 				<div class="form-group">
 					<label for="title"><?=  LABEL_CLASS ?></label>
 					<select class="form-control" name="class" style=" white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;" required>
+					<option  <?php if( ! isset($curr_project->class)) echo(" selected"); ?> hidden disabled>--</option>
 					<?php foreach($classes as $class): ?>
 						<option  <?php if(@$curr_project->class === $class->id) echo(" selected"); ?> value="<?= $class->id?>"><?= $class->description ?></option>
 					<?php endforeach ?>
 				</select>
 			</div>
-		</div>
-		<div class = "col-xs-3">
+		</div> -->
+		<div class="col-xs-3">
 			<div class="form-group">
 				<label for="title"><?= _('Cours') ?></label>
-				<select class="form-control" name="course" style=" white-space: nowrap;
+				<select class="form-control" name="course_id" style=" white-space: nowrap;
 				overflow: hidden;
-				text-overflow: ellipsis;" disabled>
-				<option value="">--</option>
+				text-overflow: ellipsis;" required>
+				<option  <?php if( ! isset($curr_project->course_id)) echo(" selected"); ?> hidden disabled>--</option>
 				<?php foreach($courses as $course): ?>
-					<option  <?php if(@$curr_project->course === $course->id) echo(" selected"); ?>><?= $course->class_name ?> <?= $course->name ?></option>
+					<option  <?php if(@$curr_project->course_id === $course->id) echo(" selected"); ?> value="<?= $course->id ?>"><?= $course->name ?></option>
 				<?php endforeach ?>
 			</select>
 		</div>
 	</div>
-
 </div>
 <div class="row">
-	<div class = "col-xs-12">
+	<div class="col-xs-12">
 		<div class="form-group">
 			<label for="title"><?=  LABEL_SKILLS_SEEN ?></label>
 			<select id="select_skills" multiple class="form-control" name="seen_skill_ids[]" required size="10">
@@ -154,25 +156,21 @@
 	<div class = "col-xs-4">
 		<div class="form-group">
 			<label class="control-label"><?= LABEL_HOW_MANY_FILES ?></label>
-			<select class="form-control" name="number_of_files">
-				<?php $n = 0; while($n <= 8): ?>
-					<option<?= (@$curr_project->number_of_files == $n ? " selected" : "")?>><?= $n ?></option>
-					<?php $n++; endwhile ?>
-				</select>
-			</div>
+			<input class="form-control" name="number_of_files" type="number" step="1" min="0" max="12" value="0" />
 		</div>
-		<div class = "col-xs-4">
-			<!-- <div class="form-group">
-			<label class="control-label"><?=  _('Nombre minimum de fichiers à remettre') ?></label>
-			<select class="form-control" name="minimum_number_of_files">
-			<?php $n = 1; while($n <= 8): ?>
-			<option<?= (@$curr_project->number_of_files == $n ? " selected" : "")?>><?= $n ?></option>
-			<?php $n++; endwhile ?>
-		</select>
-	</div> -->
+	</div>
+	<div class = "col-xs-4">
+	</div>
 </div>
+<div class="row">
+	<div class="col-xs-4">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" name="external" value="1" <?=(@$curr_project->external ? 'checked' : '' )?>> <?= _('Travail papier téléversé par le professeur?') ?>
+			</label>
+		</div>
+	</div>
 </div>
-
 <div class="row">
 	<div class="col-md-12">
 		<h3><?=  LABEL_ASSESSMENT_GRID ?></h3>
@@ -220,7 +218,7 @@
 								</select>
 							</td>
 							<td>
-								<input class="form-control input-sm" value="<?= $row->max_vote ?>" name="max_vote[]" required size="1" />
+								<input class="form-control input-sm" value="<?=($row->max_vote ? $row->max_vote : 0 )?>" name="max_vote[]" type="number" step="1" min="0" max="200"/>
 							</td>
 							<td>
 								<select class="form-control input-sm" name="achievement_id[]">
@@ -376,20 +374,6 @@ $('.datePicker').datepicker({
 });
 </script>
 
-<script src="STOP/assets/js/bootstrap-datepicker.min.js"></script>
-<script>
-/*
-$(document).ready(function() {
-$('#datePicker')
-.datepicker({
-format: 'yyyy-mm-dd'
-})
-.on('changeDate', function(e) {
-// Revalidate the date field
-$('#eventForm').formValidation('revalidateField', 'date');
-});
-});*/
-</script>
 
 <script src="/assets/js/tinymce/tinymce.min.js"></script>
 <script>

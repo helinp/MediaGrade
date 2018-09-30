@@ -19,6 +19,27 @@ Class Users_model extends CI_Model
 		$this->setSession($user);
 	}
 
+
+	public function getUserIdByName($first_name, $last_name)
+	{
+		$this->db->like('lower(last_name)', strtolower($last_name));
+		$query = $this->db->get('users');
+
+		// serach by last_name
+		if($this->db->count_all_results() == 1)
+		{
+			return $query->row('id');
+		}
+		// if not unique, add firstname
+		else
+		{
+			$this->db->like('lower(first_name)', strtolower($first_name));
+			$query = $this->db->get('users');
+			return $query->row('id');
+		}
+
+	}
+
 	/**
 	* Returns user email from id
 	*

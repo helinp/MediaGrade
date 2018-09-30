@@ -22,6 +22,12 @@ Class Courses_model extends CI_Model
 	*/
 	public $teacher_id;
 
+
+	public function orderBy($column, $asc = 'ASC')
+	{
+		$this->db->order_by($column, $asc);
+	}
+	
 	/*
 	 * Get Course by id
 	 */
@@ -29,11 +35,15 @@ Class Courses_model extends CI_Model
 	{
 		 return $this->db->get_where('courses', array('id'=>$id))->row();
 	}
+	function getClassIdFromCourseId($id)
+	{
+		 return $this->db->get_where('courses', array('id'=>$id))->row('class_id');
+	}
 
 
 	function getAllCoursesByTeacherId($teacher_id)
 	{
-		 return $this->db->get_where('courses',array('teacher_id'=>$teacher_id))->results();
+		 return $this->db->get_where('courses',array('teacher_id'=>$teacher_id))->result();
 	}
 
 	/*
