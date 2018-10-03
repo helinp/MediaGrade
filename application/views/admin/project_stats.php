@@ -32,6 +32,7 @@
 	<!-- row -->
 
 	<div class="row">
+		<?php if($students_results): ?>
 		<!-- Detailled Results -->
 		<div class="col-lg-12 col-md-12 col-xs-12 ">
 			<div class="panel panel-primary">
@@ -68,7 +69,6 @@
 				</div>
 			</div>
 		</div>
-		<?php if($students_results): ?>
 			<!-- Nombre de remises -->
 			<div class="col-lg-4 col-md-4 col-xs-12 ">
 				<div class="panel panel-primary">
