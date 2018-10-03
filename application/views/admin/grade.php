@@ -22,20 +22,20 @@
 			<?php if (isset($submitted[$count]->file_path)): ?>
 				<?php if ($submitted[$count]->extension == 'mp4' || $submitted[$count]->extension == 'mov' || $submitted[$count]->extension == 'avi'  || $submitted[$count]->extension == 'wav' || $submitted[$count]->extension == 'mp3'): ?>
 					<video width="50%" controls preload = "auto">
-						<source src="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" type="video/mp4">
+						<source src="/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" type="video/mp4">
 							<p><?= LABEL_NO_HTML5_VIDEO ?> <a href="<?= $submitted[$count]->file_path .  $submitted[$count]->file_name?>"><?= LABEL_HERE ?></a></p>
 						</video>
 					<?php elseif($submitted[$count]->extension == 'jpg' || $submitted[$count]->extension == 'jpeg' || $submitted[$count]->extension == 'png' || $submitted[$count]->extension == 'gif'): ?>
 
-						<a data-lightbox="projects" href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
+						<a data-lightbox="projects" href="/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
 							<img alt="<?= $user->first_name . " " . $user->last_name . " / " . $project->project_name?>"
 							style="max-height:200px;"
-							src="/assets/<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
+							src="/<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
 						</a>
 
 					<?php endif ?>
 
-				<a href="/assets/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><span class="glyphicon glyphicon-new-window"> </span> <?= _('Ouvrir dans un nouvel onglet') ?></small></a>
+				<a href="/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><span class="glyphicon glyphicon-new-window"> </span> <?= _('Ouvrir dans un nouvel onglet') ?></small></a>
 				<?php endif ?>
 			</div>
 		<?php endforeach ?>
@@ -259,7 +259,7 @@
 	});
 	</script>
 
-	<script src="/assets/js/lightbox.js"></script><!-- lightbox -->
+	<script src="/js/lightbox.js"></script><!-- lightbox -->
 	<script>
 	lightbox.option({
 		'resizeDuration': 200,

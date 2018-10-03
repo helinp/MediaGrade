@@ -149,6 +149,7 @@ class Import extends MY_AdminController {
 			}
 			$user_data = $this->Users_model->getUserInformations($user_id);
 
+			// Save file
 			$file_name = generateProjectFileName($project_data, $user_data);
 
 			$file = $data['upload_data']['file_path'] . $temp_file;
@@ -163,6 +164,12 @@ class Import extends MY_AdminController {
 				mkdir($dir, 0777, true);
 			}
 			$imagick->writeImage($file_path);
+
+			// Save makeThumbnail
+			$file_path = $dir . 'thumb_' . $file_name . 'jpg';
+			$imagick->adaptiveResizeImage(1024,768, TRUE);
+			$imagick->writeImage($file_path);
+
 			$imagick->clear();
 
 			//
@@ -182,8 +189,6 @@ class Import extends MY_AdminController {
 				unlink($file);
 			}
 		}
-
-
 
 		// load template
 		$this->data['not_found'] = $not_found;

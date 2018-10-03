@@ -40,9 +40,20 @@ class Projects extends MY_Controller {
 		{
 			$this->projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
 			$this->projects[$key]->result = $this->Results_model->getUserProjectOverallResult(FALSE, $project->project_id);
-			$this->projects[$key]->submitted = $this->Submit_model->IsSubmittedByUserAndProjectId(FALSE, $project->project_id);
-			$this->projects[$key]->submitted_media = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id);
+
+			if($project->external)
+			{
+				$this->projects[$key]->submitted = $this->Submit_ext_model->IsSubmittedByUserAndProjectId(FALSE, $project->project_id);
+				$this->projects[$key]->submitted_media = $this->Submit_ext_model->getSubmittedFilesPathsByProjectAndUser($project->project_id);
+			}
+			else
+			{
+				$this->projects[$key]->submitted = $this->Submit_model->IsSubmittedByUserAndProjectId(FALSE, $project->project_id);
+				$this->projects[$key]->submitted_media = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id);
+			}
 			$this->projects[$key]->graded = $this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, FALSE);
+
+
 		}
 
 		$this->load->helper('deadline');

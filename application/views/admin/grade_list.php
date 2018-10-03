@@ -47,7 +47,7 @@
 										<span style="color:gray" class="glyphicon glyphicon-inbox"></span>
 									<?php endif ?>
 									<a data-toggle="modal" data-target="#projectModal"  href="/admin/grade/assess/<?= $user_projects['user']->class ?>/<?= $project->project_id ?>/<?= $user_projects['user']->id?>?origin=<?= htmlentities($_SERVER['REQUEST_URI']) ?>" class="text-muted" >
-										<small><?= $project->term_name ?> - </small>  <?= $project->project_name?>
+										<small><?= $project->term_name ?> - <?= $project->course_name ?> - </small>  <?= $project->project_name?> <?= ($project->external ? '<small>(Externe)</small>' : '') ?>
 									</a>
 								</li>
 							<?php endforeach ?>

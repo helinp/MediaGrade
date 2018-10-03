@@ -174,7 +174,7 @@ Class Submit_model extends CI_Model
 		$sql = "SET lc_time_names = 'fr_FR'";
 		$this->db->query($sql);
 
-		$sql = "SELECT file_name, file_path, answers, time as raw_time, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
+		$sql = "SELECT file_name, CONCAT('/assets/', file_path) as file_path, answers, time as raw_time, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
 		CONCAT('/assets/', file_path, 'thumb_', file_name) as thumbnail
 		FROM submitted
 		WHERE user_id = ?

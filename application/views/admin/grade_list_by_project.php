@@ -42,7 +42,7 @@
 				<div class="col-md-3 thumb">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<?=  $project['project']->class_name . ' / ' . $project['project']->term_name . ' / ' . $project['project']->project_name?>
+							<?=  $project['project']->term_name . ' / ' . $project['project']->course_name . ' / ' . $project['project']->project_name?> <?= ($project['project']->external ? '<small>(Externe)</small>' : '') ?>
 						</div>
 
 						<ul class="list-group">

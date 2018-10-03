@@ -26,12 +26,9 @@
 						<span class="label label-<?= format_assessment_type($project->assessment_type)['label'] ?>"><span class="glyphicon glyphicon-pencil"> </span> <?= _('Évaluation') . ' '. format_assessment_type($project->assessment_type)['type'] ?></span>
 					</p>
 					<p style="margin-bottom:4px;">
-
 						<?php if (countdown($project->raw_deadline)): ?>
 							<span class="label label-info"><?= (countdown($project->raw_deadline) - 1) . ' ' . (countdown($project->raw_deadline) > 1 ? _('jours restants') : _('jour restant')) ?></span>
 						<?php endif ?>
-
-
 					</p>
 					<div style="min-height:1.5em;">
 						<?php foreach ($project->achievements as $achievement): ?>
@@ -70,23 +67,27 @@
 					<?php endif ?>
 					<h5>Statut</h5>
 					<p>
-						<?php if($project->submitted): ?>
+						<?php if($project->external): ?>
+						<!-- Nothing -->
+						<span class="label label-default">Projet papier</span>
+						<?php elseif($project->submitted): ?>
 							<span class="label label-success">Remis</span>
 						<?php else: ?>
 							<span class="label label-danger">Non remis</span>
 						<?php endif ?>
-						<?php if(countdown($project->raw_deadline) > 0): ?>
 
+						<?php if(countdown($project->raw_deadline) > 0 || $project->external): ?>
 						<?php else: ?>
 							<span class="label label-success">Clôturé</span>
 						<?php endif?>
+
 						<?php if($project->graded): ?>
 							<span class="label label-success">Évalué</span>
 						<?php endif ?>
 					</p>
 
-					<?php if(countdown($project->raw_deadline) > 0): ?>
-						<?php if(!$project->submitted && !$project->graded ): ?>
+					<?php if(countdown($project->raw_deadline) > 0 && ! $project->external): ?>
+						<?php if( ! $project->submitted && ! $project->graded): ?>
 							<p><a  data-toggle="modal" data-target="#projectModal" href="/student/project/submit/<?= $project->project_id ?>"  type="button" class="btn btn-primary btn-sm">
 									<span class="glyphicon glyphicon-download-alt"> </span> Remettre</a>
 							</p>
@@ -95,6 +96,8 @@
 								<span class="glyphicon glyphicon-download-alt"> </span> Remettre à nouveau</a>
 							</p>
 						<?php endif ?>
+					<?php elseif($project->external): ?>
+
 					<?php else: ?>
 
 						<p><button  type="button" class="btn btn-default btn-xs" disabled="1">Clôturé</button></p>

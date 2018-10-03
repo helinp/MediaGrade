@@ -77,7 +77,15 @@ class Grade extends MY_AdminController {
 				{
 					$projects[$key]->term_name = @$this->Terms_model->getTerm($projects[$key]->term)->name;
 					$projects[$key]->is_graded = $this->Results_model->IsProjectGraded($user->id, $project->project_id);
-					$projects[$key]->is_submitted = $this->Submit_model->IsSubmittedByUserAndProjectId($user->id, $project->project_id);
+
+					if($project->external)
+					{
+						$projects[$key]->is_submitted = $this->Submit_ext_model->IsSubmittedByUserAndProjectId($user->id, $project->project_id);
+					}
+					else
+					{
+						$projects[$key]->is_submitted = $this->Submit_model->IsSubmittedByUserAndProjectId($user->id, $project->project_id);
+					}
 				}
 				$table[$class][$user->id]['projects'] = $projects;
 			}
@@ -119,7 +127,16 @@ class Grade extends MY_AdminController {
 			foreach ($students as $student)
 			{
 				$status['is_graded'] = $this->Results_model->IsProjectGraded($student->id, $project->project_id);
-				$status['is_submitted'] = $this->Submit_model->IsSubmittedByUserAndProjectId($student->id, $project->project_id);
+
+				if($project->external)
+				{
+					$status['is_submitted'] = $this->Submit_ext_model->IsSubmittedByUserAndProjectId($student->id, $project->project_id);
+				}
+				else
+				{
+					$status['is_submitted'] = $this->Submit_model->IsSubmittedByUserAndProjectId($student->id, $project->project_id);
+				}
+
 				$table[$project->project_id]['students'][$student->id]['student'] = $student;
 				$table[$project->project_id]['students'][$student->id]['status'] = $status;
 			}
@@ -134,8 +151,17 @@ class Grade extends MY_AdminController {
 	{
 		// gather informations
 		$this->load->helper('user_message');
-		$submitted_project = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
-		$this->data['project'] = $this->Projects_model->getProjectDataByProjectId($project_id);
+		$project = $this->Projects_model->getProjectDataByProjectId($project_id);
+		if($project->external)
+		{
+			$submitted_project = $this->Submit_ext_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+		}
+		else
+		{
+			$submitted_project = $this->Submit_model->getSubmittedInfosByUserIdAndProjectId($user_id, $project_id);
+		}
+
+		$this->data['project'] = $project;
 		$this->data['exif'] = $this->Submit_model->getExifByUserIdAndProjectId($user_id, $project_id);
 
 		$this->data['user'] = $this->Users_model->getUserInformations($user_id);

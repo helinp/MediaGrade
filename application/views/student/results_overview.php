@@ -30,7 +30,11 @@
 							<?php endforeach ?>
 						</div>
 					<?php else: ?>
-						<p class="text-danger">Travail non remis.</p>
+						<?php if($project->external):?>
+							<p class="text-default">Travail non disponible en ligne.</p>
+						<?php else: ?>
+							<p class="text-danger">Travail non remis.</p>
+						<?php endif ?>
 					<?php endif ?>
 				</div>
 				<div class="col-md-4">
