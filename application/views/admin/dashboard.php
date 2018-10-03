@@ -57,7 +57,7 @@
 						<?php foreach($active_projects as $row): ?>
 							<tr>
 								<td><?= $row->class_name ?></td>
-								<td><?= $row->term ?></td>
+								<td><?= $row->term_name ?></td>
 								<td><?= $row->project_name ?></td>
 								<td><?= date_format(date_create($row->deadline),"d/m/Y"); ?></td>
 								<td><a title="Modifier le projet" data-toggle="modal" data-target="#projectModal" href="/admin/project/management/<?= $row->project_id ?>"><span class="glyphicon glyphicon-file"> </span></a></td>
