@@ -27,15 +27,15 @@
 						</video>
 					<?php elseif($submitted[$count]->extension == 'jpg' || $submitted[$count]->extension == 'jpeg' || $submitted[$count]->extension == 'png' || $submitted[$count]->extension == 'gif'): ?>
 
-						<a data-lightbox="projects" href="/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
+						<a data-lightbox="projects" href="<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>">
 							<img alt="<?= $user->first_name . " " . $user->last_name . " / " . $project->project_name?>"
 							style="max-height:200px;"
-							src="/<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
+							src="<?= $submitted[$count]->file_path . "thumb_" . $submitted[$count]->file_name?>" />
 						</a>
 
 					<?php endif ?>
 
-				<a href="/<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><span class="glyphicon glyphicon-new-window"> </span> <?= _('Ouvrir dans un nouvel onglet') ?></small></a>
+				<a href="<?= $submitted[$count]->file_path . $submitted[$count]->file_name ?>" target="_blank"><small><span class="glyphicon glyphicon-new-window"> </span> <?= _('Ouvrir dans un nouvel onglet') ?></small></a>
 				<?php endif ?>
 			</div>
 		<?php endforeach ?>
