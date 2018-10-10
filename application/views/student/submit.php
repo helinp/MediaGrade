@@ -31,6 +31,7 @@
 		autoProcessQueue: false,
 		maxFilesize: <?= (int) (MAX_UPLOAD_FILE_SIZE / 1000 / 1000) ?>, // MB
 		uploadMultiple: true,
+		parallelUploads: <?= $submit->number_of_files ?>,
 		acceptedFiles: '<?= implode(',', $project->mime)?>', // MIME
 		maxFiles: <?= $submit->number_of_files ?>,
 		dictRemoveFile: 'Retirer',
@@ -95,7 +96,7 @@
 
 		<h4><span class="glyphicon glyphicon-save-file"></span> <?= _('Fichiers') ?></h4>
 		<p><?= _('Extension demandée') . ': <em style="font-weight:600">.' . $project->extension . '</em>
-		<br /> ' . _('Nombre à remettre:') . ' <em style="font-weight:600">' . $submit->number_of_files . '</em><br />'.
+		<br /> ' . _('Nombre à remettre:') . ' <em style="font-weight:600"><big>' . $submit->number_of_files . '</big></em><br />'.
 		_('Taille maximale:') . ' <em style="font-weight:600">' . format_bytes(MAX_UPLOAD_FILE_SIZE) . '</em></p>' ?>
 
 		<div class="dropzone" id="my-awesome-dropzone"></div>
