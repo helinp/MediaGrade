@@ -40,9 +40,9 @@ class Gallery extends CI_Controller {
 		}
 
 		$filters = array(	'projects.class' => $class,
-		'project_id' => $project_id,
-		'user_id' => $user_id
-	);
+			'project_id' => $project_id,
+			'user_id' => $user_id
+		);
 
 		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByClass($class);
 		$this->data['medias'] =  $this->Gallery_model->getProjectsGalleryBy($filters, $offset * $this->limit, $this->limit);
@@ -52,7 +52,7 @@ class Gallery extends CI_Controller {
 
 		$this->pag_config['base_url'] = '/gallery/';
 		$this->pag_config['num_links'] =  10;
-		$this->pag_config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($filters));
+		$this->pag_config['total_rows'] = count($this->Gallery_model->getProjectsGalleryBy($filters, FALSE, FALSE));
 		$this->pagination->initialize($this->pag_config);
 
 		$this->load->template('gallery/gallery', $this->data);
