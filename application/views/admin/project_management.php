@@ -156,7 +156,7 @@
 	<div class = "col-xs-4">
 		<div class="form-group">
 			<label class="control-label"><?= LABEL_HOW_MANY_FILES ?></label>
-			<input class="form-control" name="number_of_files" type="number" step="1" min="0" max="12" value="0" />
+			<input class="form-control" name="number_of_files" type="number" step="1" min="0" max="12" value="<?=(@$curr_project->number_of_files ? $curr_project->number_of_files : 0 )?>" />
 		</div>
 	</div>
 	<div class = "col-xs-4">
