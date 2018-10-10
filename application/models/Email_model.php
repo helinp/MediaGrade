@@ -96,7 +96,7 @@ Class Email_model extends CI_Model
 		// loads get_user_ip() helper
 		$this->load->helper('system');
 
-		$message = '<p>Bonjour Maître,</p><p>Le Padawan ' . $_SESSION['name'] . ' ' . $_SESSION['last_name'] . ' a remis le projet "'
+		$message = '<p>Bonjour Maître,</p><p>Le Padawan ' . $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] . ' a remis le projet "'
 		. $project_name . '" ce ' . $date . ' depuis l\'adresse ' . get_user_ip() . '.</p>';
 
 		if($thumbs_url ==! FALSE )
