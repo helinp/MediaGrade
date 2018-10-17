@@ -26,7 +26,21 @@ class Import extends MY_AdminController {
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
 
 		$submenu[] = array('title' => 'Automatique', 'url' => '/admin/import/automatic');
+		$submenu[] = array('title' => 'Manuel', 'url' => '/admin/import/manual');
 		$this->data['submenu'] = $submenu;
+
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByExternalAndSchoolYear(TRUE, $this->school_year);
+
+		$this->Users_model->orderBy('class, last_name, first_name');
+		if($this->input->get('class'))
+		{
+			$this->data['students'] = $this->Users_model->getAllStudentsByClass($this->input->get('class'));
+		}
+		else
+		{
+			$this->data['students'] = $this->Users_model->getAllStudents();
+		}
+
 	}
 
 
@@ -37,18 +51,15 @@ class Import extends MY_AdminController {
 
 	public function automatic()
 	{
-		if( ! empty($this->input->get('term')))
-		{
-			$term = $this->input->get('term');
-		}
-		else
-		{
-			$term = FALSE;
-		}
-
-		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByExternalAndSchoolYear(TRUE, $this->school_year);
 		$this->data['page_title'] = _('Importer des évaluations papier');
 		$this->load->template('admin/import_assessments_automatic', $this->data);
+	}
+
+	public function manual()
+	{
+		$this->data['projects'] = $this->Projects_model->getAllActiveProjectsByExternalAndSchoolYear(TRUE, $this->school_year);
+		$this->data['page_title'] = _('Importer des évaluations papier');
+		$this->load->template('admin/import_assessments_manual', $this->data);
 	}
 
 
@@ -68,6 +79,7 @@ class Import extends MY_AdminController {
 		{
 
 			$data = array('error' => $this->upload->display_errors());
+			dump($data);
 		}
 		else
 		{
@@ -120,7 +132,6 @@ class Import extends MY_AdminController {
 			unset($qrcode); // freememory
 		}
 
-
 		//
 		// Save files
 		//
@@ -131,26 +142,37 @@ class Import extends MY_AdminController {
 
 		foreach ($temp_files as $key => $temp_file)
 		{
-			// get user
-			$qr_data = explode(';', $qr_codes[$key]);
-			if( ! isset($qr_data[0]) || ! isset($qr_data[0]))
+			if($this->input->post('user_id')) // manual importation
 			{
-				// qr ot readeable not found
-				$not_found[] = $qr_codes[$key]  . ' (QR code not readable)';;
-				continue;
+				$user_id = $this->input->post('user_id');
 			}
-
-			$user_id = $this->Users_model->getUserIdByName(trim($qr_data[1]), trim($qr_data[0]));
-			if(empty($user_id))
+			else // automatic importation
 			{
-				// user  not found
-				$not_found[] = $qr_codes[$key] . ' (user not found)';
-				continue;
+				// get user
+				$qr_data = explode(';', $qr_codes[$key]);
+				if( ! isset($qr_data[0]) && ! isset($qr_data[1]))
+				{
+					// qr ot readeable not found
+					$not_found[] = $qr_codes[$key]  . ' (QR code not readable)';;
+					continue;
+				}
+
+				$user_id = $this->Users_model->getUserIdByName(@trim($qr_data[1]), trim($qr_data[0]));
+				if(empty($user_id))
+				{
+					// user  not found
+					$not_found[] = $qr_codes[$key] . ' (user not found)';
+					continue;
+				}
 			}
 			$user_data = $this->Users_model->getUserInformations($user_id);
 
+			// get page number
+			// TODO:
+			$page_number = 0;
+
 			// Save file
-			$file_name = generateProjectFileName($project_data, $user_data);
+			$file_name = generateProjectFileName($project_data, $user_data, $page_number);
 
 			$file = $data['upload_data']['file_path'] . $temp_file;
 			$imagick = new Imagick($file);
@@ -175,7 +197,7 @@ class Import extends MY_AdminController {
 			//
 			// update db
 			//
-			$this->Submit_ext_model->add($project_data->id, $user_id, $dir, $file_name . 'jpg');
+			$this->Submit_ext_model->add($project_data->id, $user_id, ltrim($dir, '.'), $file_name . 'jpg');
 		}
 
 		//
