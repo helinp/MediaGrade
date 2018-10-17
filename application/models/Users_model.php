@@ -2,6 +2,11 @@
 Class Users_model extends CI_Model
 {
 
+	public function orderBy($column, $asc = 'ASC')
+	{
+		$this->db->order_by($column, $asc);
+	}
+
 	public function logUser($username, $password, $remember = FALSE)
 	{
 		return $this->ion_auth->login($username, $password, $remember);
@@ -220,6 +225,8 @@ Class Users_model extends CI_Model
 	public function getAllUsers()
 	{
 		$this->ion_auth->order_by('last_name, first_name', 'ASC');
+		$this->db->join('classes', 'classes.id = users.class', 'left');
+
 		return $this->ion_auth->users()->result();
 	}
 
@@ -230,7 +237,14 @@ Class Users_model extends CI_Model
 
 	public function getAllStudents()
 	{
-		return $this->getUsersByRole('student');
+		$this->db->join('users_roles', 'users_roles.user_id = users.id', 'left');
+		$this->db->join('roles', 'roles.id = users_roles.role_id', 'left');
+		$this->db->join('classes', 'classes.id = users.class', 'left');
+
+		$this->db->select('last_name, first_name, users.id as id, email, class, motto, picture, picture AS avatar, classes.name AS class_name');
+		$this->db->where('roles.name', 'student');
+		$this->db->where('users.active', 1);
+		return $this->db->get('users')->result();
 	}
 
 	public function getAllTeachers()
