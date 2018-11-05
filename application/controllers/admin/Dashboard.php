@@ -35,8 +35,8 @@ class Dashboard extends MY_AdminController {
 
 		$skills_stats = $this->Results_model->getSkillsStatsByClassAndSchoolYear($class, $this->school_year);
 		$this->data['skills_stats'] = $skills_stats;
+
 		// get skills results and stats
-		/*
 		$skills_results_query = $this->Results_model->getSkillsResultsByClassAndSchoolYear($class, $this->school_year);
 		$skills_results = array();
 		foreach ($skills_results_query as $result)
@@ -53,7 +53,7 @@ class Dashboard extends MY_AdminController {
 		}
 		ksort($skills_results);
 		$this->data['skills_results'] = $skills_results;
-*/
+
 		$this->data['active_projects'] = $this->Projects_model->getAllActiveAndCurrentProjects($class);
 		$this->data['assessed_skills'] = $this->_getCountAssessments($class);
 		$this->data['current_school_year'] = $this->school_year;
@@ -62,8 +62,8 @@ class Dashboard extends MY_AdminController {
 		$this->data['gauss_overall'] =  $this->Results_model->getGaussDataByClassAndSchoolYearAndAdmin($class, $this->school_year, $this->session->id);
 		$this->data['materials_stats'] = $this->Projects_model->getMaterialStatisticsByAdminAndClassAndShoolYear($this->session->id, $class, $this->school_year);
 		$this->data['not_graded_projects'] = $this->Grade_model->listUngradedProjects($class, $this->school_year);
-		$this->data['ranking_top'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('DESC', 60, 5, FALSE, $class, $this->school_year);
-		$this->data['ranking_bottom'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('ASC', 60, FALSE, FALSE, $class, $this->school_year);
+		$this->data['ranking_top'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('DESC', 60, 10, FALSE, $class, $this->school_year);
+		$this->data['ranking_bottom'] = $this->Results_model->getStudentsRankingByTermAndClassAndSchoolYear('ASC', 60, 10, FALSE, $class, $this->school_year);
 		$this->data['skills_groups'] = $skills_groups;
 		$this->data['skills_usage'] = $this->Skills_model->getSkillsUsageByClass($class, FALSE, $this->school_year);
 		$this->data['school_years'] = $this->Projects_model->getSchoolYears();
