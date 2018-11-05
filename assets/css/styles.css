@@ -58,6 +58,11 @@ span.classe {
 	font-weight: 200;
 }
 
+.progress-bar-na {background-color:rgb(217, 83, 79);}
+.progress-bar-ea {background-color:rgb(240, 173, 78);}
+.progress-bar-a {background-color:rgb(92, 184, 92);}
+.progress-bar-m {background-color:rgb(51, 122, 183);}
+
 .progress-modal {
 	height: 6px;
 	margin-bottom: 0;
@@ -121,7 +126,7 @@ div.buttons-4-steps > .btn.active {
 /** STUDENT DASHBOARD **/
 big.overall-results {
 	border: 1px white solid;
-	font-size: 4em;
+	font-size: 3em;
 	color:white;
 	text-align: center;
 	display:block;
@@ -172,11 +177,11 @@ span.lsu {
 	content: "\e088"!important;
 }
 .lsu-1 {
-	color: red;
+	color: rgb(217, 83, 79);
 }
 
 .lsu-2 {
-	color: orange;
+	color: rgb(240, 173, 78);
 }
 
 .lsu-3:before {
@@ -184,7 +189,7 @@ span.lsu {
 }
 
 .lsu-3 {
-	color: #33cc33;
+	color: rgb(92, 184, 92);
 }
 
 .lsu-4:before {
@@ -192,7 +197,7 @@ span.lsu {
 }
 
 .lsu-4 {
-	background-color: #33cc33;
+	background-color: rgb(51, 122, 183);
 	background: url('../img/trophy.png') no-repeat center;
 	border: 0!important;
 	border-radius: 0!important;
