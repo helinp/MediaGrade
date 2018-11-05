@@ -96,8 +96,8 @@ class Results extends MY_AdminController {
 			$this->data['table_body'][$index]['first_name'] = $user_info->first_name;
 			$this->data['table_body'][$index]['last_name'] = $user_info->last_name;
 			$this->data['table_body'][$index]['term'] = $term;
-			$this->data['table_body'][$index]['average'] = $this->Results_model->getUserVoteAverageByTermAndSchoolYear($student->id, $term);
-			$this->data['table_body'][$index]['deviation'] = $this->Results_model->getUserDeviationByTermAndSchoolYear($student->id, $term);
+			$this->data['table_body'][$index]['average'] = $this->Results_model->getUserVoteAverageByCourseIdAndTermAndSchoolYear($student->id, $course->id, $term);
+			$this->data['table_body'][$index]['deviation'] = $this->Results_model->getUserDeviationByCourseIdAndTermAndSchoolYear($student->id, $course->id, $term);
 
 			if ( ! $projects) $this->data['table_body'][$index]['results'][0][0] = $this->Results_model;
 
@@ -160,6 +160,10 @@ class Results extends MY_AdminController {
 					if($assessment_result->user_vote === -1)  // student has not been graded, keep it for future compability
 					{
 						$students_assessments_results[$key]->results[$student->id] = 'NE';
+					}
+					elseif($assessment_result->user_vote === -1000)  // student was absent
+					{
+						$students_assessments_results[$key]->results[$student->id] = 'ABS';
 					}
 					else
 					{
@@ -449,7 +453,7 @@ class Results extends MY_AdminController {
 		foreach($projects as $key => $project)
 		{
 			$projects[$key]->self_assessments = $this->Submit_model->getSelfAssessmentByProjectId($project->project_id, TRUE);
-			$projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProject($project->project_id, TRUE);
+			$projects[$key]->achievements = $this->Achievements_model->getAllAchievementsByProjectAndSchoolYear($project->project_id, TRUE, get_school_year());
 			$projects[$key]->results = $this->Results_model->getResultsByProjectAndUser($project->project_id, $student_id);
 			$projects[$key]->submitted = $this->Submit_model->getSubmittedFilesPathsByProjectAndUser($project->project_id, $student_id);
 			$projects[$key]->graded = $this->Grade_model->isProjectGradedByProjectAndUser($project->project_id, $student_id);
