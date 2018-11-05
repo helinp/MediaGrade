@@ -80,7 +80,7 @@ function returnLSUColorFromPercentage($percentage)
 
 function returnLSUColorFromLSUCode($code)
 {
-	if( $code < 0 || $code > 4)
+	if( $code < 1 || $code > 4)
 	{
 		return FALSE;
 	}
