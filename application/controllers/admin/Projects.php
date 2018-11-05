@@ -54,7 +54,7 @@ class Projects extends MY_AdminController {
 		$n_students = 0;
 		foreach ($admin_projects as $index => $project)
 		{
-			$this->data['achievements_by_project'][$project->project_id] = $this->Achievements_model->getAllAchievementsByProject($project->project_id);
+			$this->data['achievements_by_project'][$project->project_id] = $this->Achievements_model->getAllAchievementsByProjectAndSchoolYear($project->project_id, FALSE, get_school_year());
 
 			if($current_classe !== $project->class)
 			{

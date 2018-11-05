@@ -58,6 +58,7 @@ Class Results_model extends CI_Model
 		$this->db->join('projects', 'projects.id = results.project_id', 'left');
 		$this->db->join('assessments', 'assessments.id = results.assessment_id', 'left');
 		$this->db->where('projects.is_activated', TRUE);
+		$this->db->where('user_vote >= 0');
 		$this->db->where('projects.assessment_type !=', 'diagnostic');
 
 		if($class) $this->db->where('class', $class);
@@ -103,6 +104,36 @@ Class Results_model extends CI_Model
 		$this->db->join('projects', 'projects.id = results.project_id', 'RIGHT');
 		$this->db->join('terms', 'projects.term = terms.id');
 		$this->db->where('user_id', $user_id);
+		$this->db->where('user_vote >= 0');
+		$this->db->where('projects.is_activated', TRUE);
+		$this->db->where('projects.assessment_type <>', 'diagnostic');
+		$this->db->where('school_year', $school_year);
+
+
+		$result = $this->db->get('results');
+
+		if ($result)
+		{
+			return $result->row('average');
+		}
+		else
+		{
+			return 'NE';
+		}
+	}
+	public function getUserVoteAverageByCourseIdAndTermAndSchoolYear($user_id, $course_id, $term = FALSE, $school_year = FALSE)
+	{
+		if ( ! $user_id) $user_id = $this->session->id;
+		if ( ! $school_year) $school_year = $this->current_school_year;
+		if($term) $this->db->where('term', $term);
+
+		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, terms.name AS term_name');
+		//$this->db->select('max_vote, user_vote, terms.name AS term_name, projects.assessment_type, school_year, projects.project_name');
+		$this->db->join('projects', 'projects.id = results.project_id', 'RIGHT');
+		$this->db->join('terms', 'projects.term = terms.id');
+		$this->db->where('user_id', $user_id);
+		$this->db->where('user_vote >= 0');
+		$this->db->where('course_id', $course_id);
 		$this->db->where('projects.is_activated', TRUE);
 		$this->db->where('projects.assessment_type <>', 'diagnostic');
 		$this->db->where('school_year', $school_year);
@@ -128,6 +159,7 @@ Class Results_model extends CI_Model
 		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as average, user_vote, terms.name AS term_name');
 		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
 		$this->db->join('terms', 'projects.term = terms.id');
+		$this->db->where('user_vote >= 0');
 		$this->db->where('user_id', $user_id);
 		$this->db->where('projects.is_activated', TRUE);
 		$this->db->where('projects.assessment_type <>', 'diagnostic');
@@ -145,7 +177,7 @@ Class Results_model extends CI_Model
 		}
 	}
 
-	public function getUserDeviationByTermAndSchoolYear($user_id, $term = FALSE, $school_year = FALSE)
+	public function getUserDeviationByCourseIdAndTermAndSchoolYear($user_id, $course_id, $term = FALSE, $school_year = FALSE)
 	{
 		if ( ! $user_id) $user_id = $this->session->id;
 		if ( ! $school_year) $school_year = $this->current_school_year;
@@ -153,8 +185,10 @@ Class Results_model extends CI_Model
 		$this->db->select('ROUND(SUM(user_vote) / SUM(max_vote) * 100, 0) as class_average');
 		$this->db->join('projects', 'projects.id = results.project_id', 'LEFT');
 		$this->db->where('projects.is_activated', TRUE);
+		$this->db->where('user_vote >= 0');
 		$this->db->where('projects.assessment_type !=', 'diagnostic');
 		$this->db->where('school_year', $school_year);
+		$this->db->where('course_id', $course_id);
 		if($term)
 		{
 			$this->db->where('term', $term);
@@ -162,7 +196,7 @@ Class Results_model extends CI_Model
 		$result = $this->db->get('results');
 
 		$class_average = $result->row('class_average');
-		$user_average = $this->getUserVoteAverageByTermAndSchoolYear($user_id, $term, $school_year);
+		$user_average = $this->getUserVoteAverageByCourseIdAndTermAndSchoolYear($user_id, $course_id, $term, $school_year);
 		$deviation = $user_average - $class_average;
 
 		if ($result)
@@ -194,6 +228,7 @@ Class Results_model extends CI_Model
 		$this->db->join('users', 'users.id = results.user_id', 'LEFT');
 		$this->db->join('classes', 'classes.id = projects.class');
 		$this->db->group_by('user_id');
+		$this->db->where('user_vote >= 0');
 		$this->db->where('projects.assessment_type !=', 'diagnostic');
 		$this->db->where('projects.is_activated', TRUE);
 		$this->db->where('school_year', $school_year);
