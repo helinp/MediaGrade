@@ -77,9 +77,7 @@ class Import extends MY_AdminController {
 		$this->upload->initialize($config);
 		if ( ! $this->upload->do_upload('userfile'))
 		{
-
 			$data = array('error' => $this->upload->display_errors());
-			dump($data);
 		}
 		else
 		{
@@ -149,7 +147,7 @@ class Import extends MY_AdminController {
 			else // automatic importation
 			{
 				// get user
-				$qr_data = explode(';', $qr_codes[$key]);
+				$qr_data = explode(',', $qr_codes[$key]);
 				if( ! isset($qr_data[0]) && ! isset($qr_data[1]))
 				{
 					// qr ot readeable not found
@@ -158,18 +156,23 @@ class Import extends MY_AdminController {
 				}
 
 				$user_id = $this->Users_model->getUserIdByName(@trim($qr_data[1]), trim($qr_data[0]));
+
 				if(empty($user_id))
 				{
 					// user  not found
 					$not_found[] = $qr_codes[$key] . ' (user not found)';
 					continue;
 				}
+				else
+				{
+					$success[] = $qr_codes[$key];
+				}
 			}
 			$user_data = $this->Users_model->getUserInformations($user_id);
 
 			// get page number
 			// TODO:
-			$page_number = 0;
+			$page_number = $this->input->post('page_number');
 
 			// Save file
 			$file_name = generateProjectFileName($project_data, $user_data, $page_number);
@@ -178,7 +181,7 @@ class Import extends MY_AdminController {
 			$imagick = new Imagick($file);
 			$imagick->levelImage(7000, 1, 45000);
 
-			$dir = './assets/uploads/importations/' . get_school_year() . '/' . $project_data->class_name . '/' . $project_data->term_name . '/';
+			$dir = './assets/uploads/importations/' . get_school_year() . '/' . sanitize_name($project_data->class_name) . '/' . sanitize_name($project_data->term_name) . '/' .  sanitize_name($project_data->project_name)  . '/';
 			$file_path = $dir . $file_name . 'jpg';
 
 			if ( ! file_exists($dir))
@@ -197,7 +200,7 @@ class Import extends MY_AdminController {
 			//
 			// update db
 			//
-			$this->Submit_ext_model->add($project_data->id, $user_id, ltrim($dir, '.'), $file_name . 'jpg');
+			$this->Submit_ext_model->add($project_data->id, $user_id, ltrim($dir, '.'), $file_name . 'jpg', $page_number);
 		}
 
 		//
@@ -213,6 +216,7 @@ class Import extends MY_AdminController {
 		}
 
 		// load template
+		$this->data['success'] = $success;
 		$this->data['not_found'] = $not_found;
 		$this->automatic();
 
