@@ -16,6 +16,7 @@ class Project extends MY_AdminController {
 		// helpers
 		$this->load->helper('school');
 		$this->load->helper('text');
+		$this->load->helper('round');
 
 		$this->data['classes'] = $this->Classes_model->getAllClasses();
 		$this->data['courses'] = $this->Courses_model->getAllCourses();
@@ -312,17 +313,18 @@ class Project extends MY_AdminController {
 			$project = $this->Projects_model->getProjectDataByProjectId($project_id);
 			// Pourcentage de réussites
 			$results = $this->Results_model->getStudentsAverageByProjectId($project->id);
-			$n_students = $n_success = $n_pass = $n_fail = 0;
+			$n_students = $n_master = $n_success = $n_pass = $n_fail = 0;
 			foreach ($results as $result)
 			{
 				$percentage = $result->user_vote / $result->max_vote * 100;
 
-				if($percentage > 79) $n_success++;
-				elseif($percentage > 49) $n_pass++;
-				elseif($percentage < 50) $n_fail++;
+				if($percentage = 100) $n_master++;
+				elseif($percentage > 69) $n_success++;
+				elseif($percentage > 39) $n_pass++;
+				elseif($percentage < 0) $n_fail++;
 				$n_students++;
 			}
-			$this->data['success'] = array('success' => $n_success, 'pass' => $n_pass, 'fail' => $n_fail);
+			$this->data['success'] = array('master' => $n_master, 'success' => $n_success, 'pass' => $n_pass, 'fail' => $n_fail);
 
 			// results by skills getAllSkillsGroups
 			$skills_groups = $this->Skills_model->getAllSkillsGroups();

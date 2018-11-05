@@ -97,14 +97,17 @@
 			</div>
 			<!-- results -->
 			<div class="progress progress-modal">
-				<div class="progress-bar progress-bar-danger" style="width: <?= @round($success[$project->project_id]['fail'] / $n_students[$project->project_id] * 100) ?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Moins de 50%:') . ' ' .  $success[$project->project_id]['fail'] ?>">
+				<div class="progress-bar progress-bar-na" style="width: <?= @round($success[$project->project_id]['fail'] / $n_students[$project->project_id] * 100) ?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Moins de 39%:') . ' ' .  $success[$project->project_id]['fail'] ?>">
 					<span class="sr-only">Echecs</span>
 				</div>
-				<div class="progress-bar progress-bar-warning" style="width: <?= @round($success[$project->project_id]['pass'] / $n_students[$project->project_id] * 100)?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Entre 50 et 79%:') . ' ' . $success[$project->project_id]['pass'] ?>">
-					<span class="sr-only">Entre 50 et 79%</span>
+				<div class="progress-bar progress-bar-ea" style="width: <?= @round($success[$project->project_id]['pass'] / $n_students[$project->project_id] * 100)?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Entre 40 et 69%:') . ' ' . $success[$project->project_id]['pass'] ?>">
+					<span class="sr-only">Entre 40 et 69%</span>
 				</div>
-				<div class="progress-bar progress-bar-success" style="width: <?= @round($success[$project->project_id]['success'] / $n_students[$project->project_id] * 100)?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Plus de 79%:') . ' ' .  $success[$project->project_id]['success'] ?>">
-					<span class="sr-only">Plus de 79%</span>
+				<div class="progress-bar progress-bar-a" style="width: <?= @round($success[$project->project_id]['success'] / $n_students[$project->project_id] * 100)?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Plus de 69%:') . ' ' .  $success[$project->project_id]['success'] ?>">
+					<span class="sr-only">entre 70 et 99%</span>
+				</div>
+				<div class="progress-bar progress-bar-m" style="width: <?= @round($success[$project->project_id]['master'] / $n_students[$project->project_id] * 100)?>%" data-toggle="tooltip" data-placement="left" title="<?= _('Plus de 79%:') . ' ' .  $success[$project->project_id]['success'] ?>">
+					<span class="sr-only">100%</span>
 				</div>
 			</div>
 			<div class="panel-footer clearfix">
