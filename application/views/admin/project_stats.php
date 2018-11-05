@@ -60,7 +60,7 @@
 									<td<?= @(($result->user_vote / $result->max_vote * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($result->user_vote ? $result->user_vote . ' / ' . $result->max_vote : '-') ?></td>
 								<?php endforeach ?>
 
-								<td<?= @(($student['overall']->total_user / $student['overall']->total_max * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($student['overall']->total_user ? $student['overall']->total_user . ' / ' . $student['overall']->total_max : '-')?></td>
+								<td<?= @(($student['overall']->total_user / $student['overall']->total_max * 100) > 50 ? '' : ' class="text-danger"')?>><?= ($student['overall']->total_user ? custom_round($student['overall']->total_user) . ' / ' . $student['overall']->total_max : '-')?></td>
 								<td><?= (isset($student['submitted_time']->time) ? $student['submitted_time']->time : '-')?></td>
 							</tr>
 						<?php endforeach ?>

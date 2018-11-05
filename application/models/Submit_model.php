@@ -281,8 +281,9 @@ Class Submit_model extends CI_Model
 
 		if(isset($submitted_project[0]->file_path))
 		{
-			$file = './assets/' . $submitted_project[0]->file_path . $submitted_project[0]->file_name;
+			$file = '.' . $submitted_project[0]->file_path . $submitted_project[0]->file_name;
 		}
+
 		if(file_exists($file) && $submitted_project[0]->extension == 'jpg')
 		{
 			$exif =  @exif_read_data($file, 'IFD0');

@@ -185,7 +185,7 @@
 	</div>
 	<div class="col-lg-3 col-md-3 col-xs-12 ">
 		<div class="panel panel-success">
-			<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Élèves à surveiller')?></div>
+			<div class="panel-heading text-center"  style="background-color:#d9534f;color:white"><?= _('Bottom 10')?></div>
 			<div class="panel-body text-left">
 				<table class="table table-striped small">
 					<?php foreach($ranking_bottom as $row): ?>
@@ -201,13 +201,13 @@
 	</div>
 	<div class="col-lg-3 col-md-3 col-xs-12 ">
 		<div class="panel panel-success">
-			<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Meilleures moyennes')?></div>
+			<div class="panel-heading text-center"  style="background-color:#5cb85c;color:white"><?= _('Top 10')?></div>
 			<div class="panel-body text-left">
 				<table class="table table-striped small">
 					<?php foreach($ranking_top as $row): ?>
 						<tr>
 							<td><?= $row->class_name ?></td>
-							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/student/details'<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->first_name . ' ' . $row->last_name ?></a></td>
+							<td><a data-toggle="modal" data-target="#projectModal" href="/admin/results/detail_by_student/<?= $row->user_id?>?modal=true&school_year=<?= $current_school_year ?>&class=<?= $row->class ?>"><?= $row->first_name . ' ' . $row->last_name ?></a></td>
 							<td<?= ($row->average < 50 ? ' class="text-danger" ' : '')?><?= ($row->average < 50 ? ' class="text-danger" ' : '')?>><?= $row->average ?> %</td>
 						</tr>
 					<?php endforeach ?>
