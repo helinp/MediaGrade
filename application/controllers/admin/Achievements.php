@@ -61,7 +61,7 @@ class Achievements extends CI_Controller {
 	private function _achievement_reward()
 	{
 		// get all projects with assessment
-		$projects_achievements = $this->Achievements_model->getAllAchievementsByProject(FALSE, $group = FALSE);
+		$projects_achievements = $this->Achievements_model->getAllAchievementsByProjectAndSchoolYear(FALSE, $group = FALSE, get_school_year());
 		$eligible_users = array();
 		$results = array();
 
@@ -118,7 +118,7 @@ class Achievements extends CI_Controller {
 				$percentage = @($total_user / $total_max * 100);
 				$eligible = $this->Achievements_model->isEligible($percentage, $count, $typ_key);
 
-				/* for dump debug only
+				// for dump debug only
 				$results[$res_key][$ach_key][$typ_key] = array(
 				'number' 		=> $count,
 				'total_max'		=> $total_max,
@@ -126,8 +126,8 @@ class Achievements extends CI_Controller {
 				'percentage'	=> $percentage,
 				'eligible'		=> $eligible
 			);
-			*/
 
+	
 			if($eligible)
 			{
 				$eligible_users[] = array(
@@ -139,7 +139,8 @@ class Achievements extends CI_Controller {
 	}
 }
 
-foreach ($eligible_users as $u) {
+foreach ($eligible_users as $u)
+{
 	// finally, awards students
 	$this->Achievements_model->award($u['user_id'], $u['achievement_id']);
 }

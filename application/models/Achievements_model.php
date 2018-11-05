@@ -83,13 +83,15 @@ Class Achievements_model extends CI_Model
 	* @param 	int		$student_id
 	* @return	boolean
 	*/
-	public function getAllAchievementsByProject($project_id = FALSE, $group_achievements = FALSE)
+	public function getAllAchievementsByProjectAndSchoolYear($project_id = FALSE, $group_achievements = FALSE, $school_year)
 	{
 		$this->db->distinct();
 		$this->db->select('achievement_id, achievements.name, achievements.star, achievements.icon, project_id, assessment_id, description');
 		$this->db->from('projects_assessments');
 		$this->db->join('assessments', 'assessments.id = projects_assessments.assessment_id');
 		$this->db->join('achievements', 'achievements.id = assessments.achievement_id');
+		$this->db->join('projects', 'projects.id = project_id');
+		$this->db->where('school_year', $school_year);
 
 		if($project_id !== FALSE)
 		{
