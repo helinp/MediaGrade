@@ -6,21 +6,24 @@ Class Submit_ext_model extends CI_Model
 	{
 	}
 
+
 	/**
 	* Insert submitted project in database
 	*/
-	public function add($project_id, $user_id, $file_path, $file_name)
+	public function add($project_id, $user_id, $file_path, $file_name, $page_number)
 	{
 		$data = array(
 			'project_id' => $project_id,
 			'user_id' => $user_id,
 			'file_path' => $file_path,
 			'file_name' => $file_name,
+			'page_number' => $page_number
 		);
 
 		$where = array(
 			'project_id' => $project_id,
-			'user_id' => $user_id
+			'user_id' => $user_id,
+			'page_number' => $page_number
 		);
 
 		// checks if record exists
@@ -78,7 +81,7 @@ Class Submit_ext_model extends CI_Model
 		$this->db->query($sql);
 
 		$sql = "SELECT file_name, file_path, time as raw_time, DATE_FORMAT(`time`, '%d %M %Y à %H:%i') as `time`,  RIGHT(file_name, 3) as extension,
-		CONCAT(file_path, file_name) as thumbnail
+		CONCAT(file_path, file_name) as thumbnail, page_number
 		FROM submitted_ext
 		WHERE user_id = ?
 		AND project_id = ?";
