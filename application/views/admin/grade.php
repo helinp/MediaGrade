@@ -16,7 +16,7 @@
 	?>
 
 
-	<?php foreach(range(0, $max_files - 1) as $count): ?>
+	<?php foreach(range(0, $n_files - 1) as $count): ?>
 		<div class="col-md-<?= $cols ?>"  style="padding-bottom: 1em;">
 
 			<?php if (isset($submitted[$count]->file_path)): ?>
@@ -51,8 +51,8 @@
 				<?php if($exif): ?>
 					<p>
 						<span class="label label-info"><strong><?= $exif['Model'] ?></strong> </span>&nbsp;
-						<span class="label label-primary">Mode <strong><?= exif_mode_translate($exif['ExposureProgram'])?></strong> </span>&nbsp;
-						<span class="label label-primary"><strong> <?= $exif['ISOSpeedRatings'] ?> ISO</strong> </span>&nbsp;
+						<span class="label label-primary">Mode <strong><?= @exif_mode_translate($exif['ExposureProgram'])?></strong> </span>&nbsp;
+						<span class="label label-primary"><strong> <?= @$exif['ISOSpeedRatings'] ?> ISO</strong> </span>&nbsp;
 						<span class="label label-primary"><strong><?= exif_exposure_time($exif['ExposureTime'],  $exif['Model'] ) ?> sec</strong> </span>&nbsp;
 						<span class="label label-primary"><strong><?= $exif['COMPUTED']['ApertureFNumber'] ?></strong> </span>&nbsp;
 						<span class="label label-primary">&fnof; =  <strong><?= exif_focal_lenght($exif['FocalLength']) ?> mm</strong> </span>&nbsp;
@@ -109,6 +109,9 @@
 									<?php if($row->user_vote !== NULL) $curr_value = (int) ($row->user_vote / ($row->max_vote / 10));
 												else $curr_value = -1;?>
 									<div class="btn-group buttons-4-steps" data-toggle="buttons">
+										<label class="btn btn-sm btn-default<?= ($curr_value === -1 ? ' active' : '') ?>">
+								      <input type="radio" data-toggle="tooltip" data-placement="bottom" title="Absent"  name="user_vote[<?= $index ?>]" value="-1000"<?= ($curr_value === -1000 ? ' checked' : '') ?>>ABS
+								    </label>
 										<label class="btn btn-sm btn-default<?= ($curr_value === -1 ? ' active' : '') ?>">
 								      <input type="radio" data-toggle="tooltip" data-placement="bottom" title="Non évalué"  name="user_vote[<?= $index ?>]" value="-1"<?= ($curr_value === -1 ? ' checked' : '') ?>>NE
 								    </label>

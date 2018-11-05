@@ -85,16 +85,19 @@
 							<?php foreach ($student['results'] as $projects_results): ?>
 								<?php foreach ($projects_results as $result): ?>
 									<td>
-										<?php if(isset($result->max_vote)): ?>
+										<?php if(isset($result->user_vote) && $result->user_vote > -1): ?>
 											<a href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>" data-toggle="modal" data-target="#projectModal"><span class="gradebook-lsu"  style="background: <?=returnLSUColorFromLSUCode(convertPercentageToLSUCode(@$result->user_vote / $result->max_vote * 100)) ?>"
 												data-toggle="tooltip" data-placement="top" title="<?= returnLSUTextFromLSUCode(convertPercentageToLSUCode($result->user_vote / $result->max_vote * 100)) ?>">
 													&nbsp;&nbsp;&nbsp;</span></a>
 
-											<small>	<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal" <?php if (is_numeric($result->user_vote && $result->user_vote < ($result->max_vote / 2))) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><?= custom_round($result->user_vote) . '/' . $result->max_vote?></small></a>
+											<small>	<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal" <?php if (is_numeric($result->user_vote && $result->user_vote < ($result->max_vote / 2))) echo(' class="text-danger dotted_underline" ') ?> href="/admin/results/details/<?= $result->project_id ?>/<?= $student['user_id'] ?>"><span style="color: <?= (custom_round($result->user_vote) / $result->max_vote < .5 ? 'red' : '')?>"><?= custom_round($result->user_vote) ?></span></small></a>
+											<?php elseif(isset($result->user_vote) && $result->user_vote == -1000): ?>
+												<span class="gradebook-lsu" style="background: lightgray"
+													data-toggle="tooltip" data-placement="top" title="Absent">&nbsp;&nbsp;&nbsp;</span>
+													<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal"><small>ABS</small></a>
 											<?php else: ?>
 												<span class="gradebook-lsu" style="background: white"
 													data-toggle="tooltip" data-placement="top" title="Non Evalué">&nbsp;&nbsp;&nbsp;</span>
-
 													<a class="gradebook-vote" data-toggle="modal" data-target="#projectModal"><small>NE</small></a>
 											<?php endif ?>
 										</td>
@@ -185,7 +188,7 @@
 		$("#export").click(function (event) {
 			// var outputFile = 'export'
 			<?php $this->load->helper('school'); ?>
-			var outputFile = '<?=  get_school_year() . '_' . $this->uri->segment(4, 0)  . '_' . $class->id ?>' + '.csv'
+			var outputFile = '<?=  get_school_year() . '_' . $this->uri->segment(4, 0) ?>' + '.csv'
 
 			// CSV
 			exportTableToCSV.apply(this, [$('#dvData>table'), outputFile]);
